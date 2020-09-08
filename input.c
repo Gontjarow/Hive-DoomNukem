@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/08 19:59:56 by msuarez-          #+#    #+#             */
+/*   Updated: 2020/09/08 19:59:57 by msuarez-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "doom_nukem.h"
 
 int		window_close(t_doom *p)
@@ -31,7 +43,7 @@ int		mouse_key(int key, int x, int y, t_doom *p)
 	(void)x;
 	(void)y;
 	(void)p;
-	return (TRUE);
+	return (1);
 }
 
 int		mouse_move(int x, int y, t_doom *p)
@@ -39,5 +51,5 @@ int		mouse_move(int x, int y, t_doom *p)
 	(void)x;
 	(void)y;
 	(void)p;
-	return (TRUE);
+	return (1);
 }

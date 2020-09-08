@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/09/08 19:59:39 by msuarez-          #+#    #+#              #
+#    Updated: 2020/09/08 20:26:20 by msuarez-         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = doom_nukem
 
 SOURCES =	doom_nukem.c \
@@ -8,10 +20,7 @@ OBJECTS = $(subst .c,.o,$(SOURCES))
 
 LIBFT = libft/libft.a
 
-FLAGS = -Wall -Wextra -g
-LINKS = -I libft -L libft -l ft \
-		-I ./mlx -L ./mlx -l mlx \
-		-framework OpenGL -framework Appkit
+FLAGS = -Wall -Wextra -Werror
 
 LINUX_LINKS = -I libft -L libft -l ft \
 		-I ./mlx -L ./mlx -l mlx \
@@ -25,7 +34,8 @@ END = \033[0m
 all: $(NAME)
 
 $(NAME): $(OBJECTS)
-	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) $(LINKS)
+	@gcc $(FLAGS) -Imlx/mlx.h $(SOURCES) $(LIBFT) \
+	-lmlx -framework OpenGL -framework AppKit -o $(NAME)
 	@echo "$(MSG)Done!$(END)"
 
 linux: $(OBJECTS)

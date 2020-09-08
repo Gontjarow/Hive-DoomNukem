@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/08 19:19:45 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/08 19:59:07 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 # define DOOM_NUKEM_H
 
 # include "libft/libft.h"
-# include "mlx.h"
+# include "mlx/mlx.h"
+# include <stdlib.h>
 
 # define WIN_WIDTH 800
 # define WIN_HEIGHT 450
