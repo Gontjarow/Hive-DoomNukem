@@ -18,27 +18,31 @@ void	ft_die(const char *error_message)
 	exit(0);
 }
 
-void	setup(char *arg, t_doom *p)
-{
-	(void)arg;
-	p->mlx = mlx_init();
-	p->win = mlx_new_window(p->mlx, WIN_WIDTH, WIN_HEIGHT, "Doom Nukem");
-	p->buffer = ft_new_image(p->mlx, WIN_WIDTH, WIN_HEIGHT);
-}
-
 int		main(int argc, char **argv)
 {
-	t_doom doom;
+	t_doom		doom;
 
-	if (argc != 2)
-		ft_die("usage: ./doom_nukem [mapname]");
-	setup(argv[1], &doom);
-	mlx_hook(doom.win, EVT_KEY_DN, EVT_KEY_DN, keyboard_press, &doom);
-	mlx_hook(doom.win, EVT_KEY_UP, EVT_KEY_UP, keyboard_release, &doom);
-	mlx_mouse_hook(doom.win, mouse_key, &doom);
-	mlx_hook(doom.win, EVT_MOUSE_MV, 0, mouse_move, &doom);
-	mlx_hook(doom.win, EVT_CLOSE_WIN, 0, window_close, &doom);
-	mlx_loop_hook(doom.mlx, movement, &doom);
-	// render();
-	mlx_loop(doom.mlx);
+	(void)argc;
+	(void)argv;
+	doom.quit = 0;
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		ft_die("Fatal error: Failed initialization of SDL2.");
+	doom.win = SDL_CreateWindow("Hive-DoomNukem", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, 0);
+	doom.ren = SDL_CreateRenderer(doom.win, -1, 1);
+	if (doom.win == NULL || doom.ren == NULL)
+		ft_die("Fatal error: Failed initialization of SDL2 window with renderer.");
+	SDL_RenderClear(doom.ren);
+	while (!doom.quit)
+	{
+		SDL_RenderPresent(doom.ren);
+		while (SDL_PollEvent(&doom.event) != 0)
+		{
+			if (doom.event.type == SDL_QUIT)
+				doom.quit = 1;
+		}
+	}
+	SDL_DestroyRenderer(doom.ren);
+	SDL_DestroyWindow(doom.win);
+	SDL_Quit();
+	return (0);
 }

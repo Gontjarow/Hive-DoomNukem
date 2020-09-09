@@ -15,6 +15,7 @@
 
 # include "libft/libft.h"
 # include "mlx/mlx.h"
+# include <SDL2/SDL.h>
 # include <stdlib.h>
 
 # define WIN_WIDTH 800
@@ -52,9 +53,10 @@ typedef struct	s_image
 
 typedef struct	s_doom
 {
-	void		*mlx;
-	void		*win;
-	t_image		buffer;
+	int 			quit;
+	SDL_Window		*win;
+	SDL_Renderer	*ren;
+	SDL_Event		event;
 }				t_doom;
 
 /*

@@ -24,7 +24,7 @@ FLAGS = -Wall -Wextra -Werror
 
 LINUX_LINKS = -I libft -L libft -l ft \
 		-I ./mlx -L ./mlx -l mlx \
-		-lm -lXext -lX11
+		-lm -lXext -lX11 -lSDL2
 
 MSG = \033[38;5;214m
 END = \033[0m
@@ -35,7 +35,7 @@ all: $(NAME)
 
 $(NAME): $(OBJECTS)
 	@gcc $(FLAGS) -Imlx/mlx.h $(SOURCES) $(LIBFT) \
-	-lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	-lmlx -lSDL2 -framework OpenGL -framework AppKit -o $(NAME)
 	@echo "$(MSG)Done!$(END)"
 
 linux: $(OBJECTS)
