@@ -55,7 +55,7 @@ typedef struct	s_doom
 {
 	int 			quit;
 	SDL_Window		*win;
-	SDL_Renderer	*ren;
+	SDL_Surface 	*buff;
 	SDL_Event		event;
 }				t_doom;
 
