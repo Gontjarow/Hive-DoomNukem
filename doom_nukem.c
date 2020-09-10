@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/08 20:00:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/10 16:51:52 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,28 @@ int		main(int argc, char **argv)
 	int				dir_horz;
 	int 			dir_vert;
 
-	i = 0;
-	dir_horz = 1;
-	dir_vert = 1;
 	(void)argc;
 	(void)argv;
-	doom.quit = 0;
+
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		ft_die("Fatal error: Failed initialization of SDL2.");
+
 	doom.win = SDL_CreateWindow("Hive-DoomNukem", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, 0);
 	doom.buff = SDL_GetWindowSurface(doom.win);
 	pixels = doom.buff->pixels;
 	if (doom.win == NULL || doom.buff == NULL)
 		ft_die("Fatal error: Failed initialization of SDL_Window or SDL_Surface with SDL_CreateWindow and SDL_GetWindowSurface.");
+
+	i = 0;
+	dir_horz = 1;
+	dir_vert = 1;
 	keystates = SDL_GetKeyboardState(NULL);
+	doom.quit = 0;
+
 	while (!doom.quit)
 	{
+		uint32_t frame_start = SDL_GetTicks();
+
 		if (keystates[SDL_SCANCODE_RETURN])
 		{
 			i += dir_horz;
@@ -65,6 +71,13 @@ int		main(int argc, char **argv)
 				doom.quit = 1;
 		}
 		SDL_UpdateWindowSurface(doom.win);
+
+		// Delay until next frame
+		uint32_t frame_ticks = SDL_GetTicks() - frame_start;
+		if (frame_ticks < TICKS_PER_FRAME)
+		{
+			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
+		}
 	}
 	SDL_DestroyWindow(doom.win);
 	SDL_Quit();

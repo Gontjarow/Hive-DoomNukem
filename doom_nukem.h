@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/08 19:59:07 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/10 16:43:25 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,13 @@
 # include "mlx/mlx.h"
 # include <SDL2/SDL.h>
 # include <stdlib.h>
+# include <time.h>
 
 # define WIN_WIDTH 800
 # define WIN_HEIGHT 450
+
+# define FPS 60
+# define TICKS_PER_FRAME 1000.0 / FPS
 
 # define EVT_KEY_DN 2
 # define EVT_KEY_UP 3
