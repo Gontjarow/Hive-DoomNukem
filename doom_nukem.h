@@ -16,6 +16,7 @@
 # include "libft/libft.h"
 # include "mlx/mlx.h"
 # include <SDL2/SDL.h>
+# include <SDL2/SDL_mixer.h>
 # include <stdlib.h>
 # include <time.h>
 
@@ -31,6 +32,8 @@
 # define EVT_MOUSE_UP 5
 # define EVT_MOUSE_MV 6
 # define EVT_CLOSE_WIN 17
+
+# define THUNDER_WAV "wav/thunder.wav"
 
 /*
 ** *
@@ -61,6 +64,7 @@ typedef struct	s_doom
 	SDL_Window		*win;
 	SDL_Surface 	*buff;
 	SDL_Event		event;
+	Mix_Chunk 		*mcThunder;
 }				t_doom;
 
 /*
