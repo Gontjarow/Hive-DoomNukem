@@ -6,15 +6,13 @@
 #    By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/08 19:59:39 by msuarez-          #+#    #+#              #
-#    Updated: 2020/09/08 20:26:20 by msuarez-         ###   ########.fr        #
+#    Updated: 2020/09/11 13:29:56 by msuarez-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = doom_nukem
+NAME = doom-nukem
 
-SOURCES =	doom_nukem.c \
-			input.c \
-			image.c
+SOURCES = doom_nukem.c input.c image.c texture.c
 
 OBJECTS = $(subst .c,.o,$(SOURCES))
 
@@ -24,7 +22,7 @@ FLAGS = -Wall -Wextra -Werror
 
 LINUX_LINKS = -I libft -L libft -l ft \
 		-I ./mlx -L ./mlx -l mlx \
-		-lm -lXext -lX11 -lSDL2 -lSDL2_mixer
+		-lm -lXext -lX11 -lSDL2 -lSDL2_mixer -lSDL2_image
 
 MSG = \033[38;5;214m
 END = \033[0m
@@ -35,7 +33,8 @@ all: $(NAME)
 
 $(NAME): $(OBJECTS)
 	@gcc $(FLAGS) -Imlx/mlx.h $(SOURCES) $(LIBFT) \
-	-lmlx -lSDL2 -lSDL2_mixer -framework OpenGL -framework AppKit -o $(NAME)
+	-lmlx -lSDL2 -lSDL2_mixer -lSDL2_image \
+	-framework OpenGL -framework AppKit -o $(NAME)
 	@echo "$(MSG)Done!$(END)"
 
 linux: $(OBJECTS)

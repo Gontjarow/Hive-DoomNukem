@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/10 16:43:25 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/11 14:01:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,14 @@
 # include "mlx/mlx.h"
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_mixer.h>
+# include <SDL2/SDL_image.h>
+# include <fcntl.h>
+# include <unistd.h>
 # include <stdlib.h>
 # include <time.h>
 
 # define WIN_WIDTH 800
-# define WIN_HEIGHT 450
+# define WIN_HEIGHT 640
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
@@ -33,7 +36,8 @@
 # define EVT_MOUSE_MV 6
 # define EVT_CLOSE_WIN 17
 
-# define THUNDER_WAV "wav/thunder.wav"
+# define WAV_THUNDER "wav/thunder.wav"
+# define IMG_BLUEBRICKS "img/bluebricks.png"
 
 /*
 ** *
@@ -138,7 +142,12 @@ int				movement(t_doom *p);
 int				mouse_key(int key, int x, int y, t_doom *p);
 int				mouse_move(int x, int y, t_doom *p);
 
+void			ft_die(const char *error_message);
+
 t_image			ft_new_image(int *mlx, int width, int height);
 t_image			ft_new_xpm_image(int *mlx, char *filename);
 
+Uint32			get_exact_pixel(SDL_Surface *surface, int x, int y);
+SDL_Surface		*load_png(char *path);
+SDL_Surface		*load_texture(t_doom *doom, char *path);
 #endif
