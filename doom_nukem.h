@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/08 19:59:07 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/11 14:01:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # include "libft/libft.h"
 # include "mlx/mlx.h"
 # include <SDL2/SDL.h>
+# include <SDL2/SDL_image.h>
+# include <fcntl.h>
+# include <unistd.h>
 # include <stdlib.h>
 
 # define WIN_WIDTH 800
@@ -44,6 +47,12 @@ typedef struct	s_image
 	int		line;
 	int		endian;
 }				t_image;
+
+typedef struct  s_texture
+{
+    SDL_Surface *surface;
+	int			tex_pixels;
+}               t_texture;
 
 /*
 ** *
@@ -130,7 +139,12 @@ int				movement(t_doom *p);
 int				mouse_key(int key, int x, int y, t_doom *p);
 int				mouse_move(int x, int y, t_doom *p);
 
+void			ft_die(const char *error_message);
+
 t_image			ft_new_image(int *mlx, int width, int height);
 t_image			ft_new_xpm_image(int *mlx, char *filename);
+
+SDL_Surface		*load_png(char *path);
+SDL_Surface		*load_texture(t_doom *doom, char *path);
 
 #endif
