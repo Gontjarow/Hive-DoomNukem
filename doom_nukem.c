@@ -42,8 +42,9 @@ static void		render_animation(t_doom *doom)
 		i = i == ani_surface->w ? 0 : i;
 		pixels[i++ + j] = reference[k++];
 	}
-	print_alphabet("hive doom nukem", doom, 512 - 196, 29);
-	print_alphabet("by", doom, 512 - 28, 29 + 29);
+	doom->alphabet_scale = 2;
+	print_alphabet("hive doom nukem", doom, 512 - 420, 29);
+	doom->alphabet_scale = 1;
 	print_alphabet("ngontjar krusthol msuarez", doom, 512 - 364, 29 + 29 + 29);
 	print_alphabet("sdl sound and png load demo", doom, 512 - 392, 290 + 29 + 29 + 29 + 29);
 	print_alphabet("alphabet font rendering", doom, 512 - 322, 290 + 29 + 29 + 29 + 29 + 29);
@@ -77,7 +78,6 @@ static void		load_animation(t_doom *doom)
 		if (doom->ani_thunder.surfaces[i] == NULL)
 			ft_die("Fatal error: Could not load_texture for doom->ani_thunder->surfaces.");
 		i++;
-		ft_putendl("Loaded animation texture.");
 	}
 }
 

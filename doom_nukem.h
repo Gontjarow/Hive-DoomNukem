@@ -77,6 +77,7 @@ typedef struct	s_doom
 	union SDL_Event		event;
 	struct Mix_Chunk 	*mcThunder;
 	struct SDL_Surface	*alphabet[128];
+	int 				alphabet_scale;
 	struct s_animation	ani_thunder;
 }				t_doom;
 

@@ -44,6 +44,42 @@ void 		load_alphabet(t_doom *doom)
 	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_space.png");
 }
 
+static void render_character2x(char c, t_doom *doom, int x, int y)
+{
+	unsigned int 	*reference;
+	unsigned int	*pixels;
+	int 			i;
+	int 			j;
+	int 			k;
+
+	if (c >= 'A' && c <= 'Z')
+		c += 48;
+	i = 0;
+	k = 0;
+	pixels = doom->buff->pixels;
+	if (doom->alphabet[(int)c])
+	{
+		// K is the raw index for reading all single pixels from reference
+		// I is the rolling pixel index offset as column changes (single increments)
+		// J is the x, y offset (total offset)
+		reference = doom->alphabet[(int)c]->pixels;
+		j = x + (WIN_WIDTH * y);
+		while (k < (doom->alphabet[(int)c]->w * doom->alphabet[(int)c]->h))
+		{
+			j = i >= doom->alphabet[(int)c]->w * 2 ? j + WIN_WIDTH * 2: j;
+			i = i >= doom->alphabet[(int)c]->w * 2 ? 0 : i;
+			pixels[i + j] = reference[k];
+			pixels[i + j + 1] = reference[k];
+			j += WIN_WIDTH;
+			pixels[i + j] = reference[k];
+			pixels[i + j + 1] = reference[k];
+			j -= WIN_WIDTH;
+			i += 2;
+			k++;
+		}
+	}
+}
+
 static void render_character(char c, t_doom *doom, int x, int y)
 {
 	unsigned int 	*reference;
@@ -77,8 +113,11 @@ void 	print_alphabet(const char *str, t_doom *doom, int x, int y)
 {
 	while (*str)
 	{
-		render_character(*str, doom, x, y);
-		x += 28;
+		if(doom->alphabet_scale == 2)
+			render_character2x(*str, doom, x, y);
+		else
+			render_character(*str, doom, x, y);
+		x += 28 * doom->alphabet_scale;
 		str++;
 	}
 }
