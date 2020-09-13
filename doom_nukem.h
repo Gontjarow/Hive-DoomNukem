@@ -23,8 +23,8 @@
 # include <stdlib.h>
 # include <time.h>
 
-# define WIN_WIDTH 800
-# define WIN_HEIGHT 640
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 512
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
@@ -37,13 +37,20 @@
 # define EVT_CLOSE_WIN 17
 
 # define WAV_THUNDER "wav/thunder.wav"
-# define IMG_BLUEBRICKS "img/bluebricks.png"
+# define IMG_THUNDER0 "img/thunder/0.png"
 
 /*
 ** *
 ** Basic structs
 ** *
 */
+
+typedef struct	s_animation
+{
+	SDL_Surface **surfaces;
+	int 		frames;
+	int 		current;
+}				t_animation;
 
 typedef struct	s_image
 {
@@ -64,11 +71,13 @@ typedef struct	s_image
 
 typedef struct	s_doom
 {
-	int 			quit;
-	SDL_Window		*win;
-	SDL_Surface 	*buff;
-	SDL_Event		event;
-	Mix_Chunk 		*mcThunder;
+	int 				quit;
+	struct SDL_Window	*win;
+	struct SDL_Surface	*buff;
+	union SDL_Event		event;
+	struct Mix_Chunk 	*mcThunder;
+	struct SDL_Surface	*alphabet[128];
+	struct s_animation	ani_thunder;
 }				t_doom;
 
 /*
@@ -150,4 +159,7 @@ t_image			ft_new_xpm_image(int *mlx, char *filename);
 Uint32			get_exact_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface		*load_png(char *path);
 SDL_Surface		*load_texture(t_doom *doom, char *path);
+
+void 			load_alphabet(t_doom *doom);
+void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
 #endif

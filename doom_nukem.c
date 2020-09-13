@@ -18,6 +18,61 @@ void	ft_die(const char *error_message)
 	exit(0);
 }
 
+static void		render_animation(t_doom *doom)
+{
+	unsigned int	*pixels;
+	unsigned int 	*reference;
+	SDL_Surface     *ani_surface;
+	int 			i;
+	int 			j;
+	int 			k;
+
+	pixels = doom->buff->pixels;
+	ani_surface = doom->ani_thunder.surfaces[doom->ani_thunder.current];
+	i = 0;
+	k = 0;
+	reference = ani_surface->pixels;
+	j = (WIN_WIDTH - ani_surface->w) / 2 + ((WIN_HEIGHT - ani_surface->h) / 2 * WIN_WIDTH);
+	while (k < (ani_surface->w * ani_surface->h))
+	{
+		j = i == ani_surface->w ? j + WIN_WIDTH : j;
+		i = i == ani_surface->w ? 0 : i;
+		pixels[i++ + j] = reference[k++];
+	}
+	print_alphabet("DOOM NUKEM", doom, 512 - 140, 70);
+}
+
+static void		load_animation(t_doom *doom)
+{
+	int i;
+	char *path;
+	char *join;
+
+	i = 0;
+	doom->ani_thunder.frames = 11;
+	doom->ani_thunder.current = 0;
+	doom->ani_thunder.surfaces = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * doom->ani_thunder.frames);
+	if (doom->ani_thunder.surfaces == NULL)
+		ft_die("Fatal error: Could not malloc SDL_Surfaces in doom->ani_thunder.");
+	while (i < doom->ani_thunder.frames)
+	{
+		join = ft_itoa(i);
+		path = ft_strjoin("img/thunder/", join);
+		free(join);
+		join = path;
+		path = ft_strjoin(path, ".png");
+		free(join);
+		if (!(doom->ani_thunder.surfaces[i] = (SDL_Surface*)malloc(sizeof(SDL_Surface))))
+			ft_die("Fatal error: Could not malloc SDL_Surface in doom->ani_thunder->surfaces.");
+		doom->ani_thunder.surfaces[i] = load_texture(doom, path);
+		free(path);
+		if (doom->ani_thunder.surfaces[i] == NULL)
+			ft_die("Fatal error: Could not load_texture for doom->ani_thunder->surfaces.");
+		i++;
+		ft_putendl("Loaded animation texture.");
+	}
+}
+
 static void		init_doom(t_doom *doom)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -42,6 +97,7 @@ int		main(int argc, char **argv)
 	unsigned int	*pixels;
 	unsigned int 	*reference;
 	uint32_t 		frame_start;
+	uint32_t 		app_start;
 	SDL_Surface		*test;
 	int 			i;
 	int 			j;
@@ -61,7 +117,10 @@ int		main(int argc, char **argv)
 	dir_vert = 1;
 	keystates = SDL_GetKeyboardState(NULL);
 	Mix_PlayChannel( -1, doom.mcThunder, 0 );
-	test = (argc > 1) ? load_texture(&doom, argv[1]) : load_texture(&doom, IMG_BLUEBRICKS);
+	test = NULL;
+	// Disabled argv loading/default img_bluebricks demo in favor of thunder animation demo
+	//test = (argc > 1) ? load_texture(&doom, argv[1]) : load_texture(&doom, IMG_BLUEBRICKS);
+	test = load_texture(&doom, IMG_THUNDER0);
 	if (test)
 	{
 
@@ -89,7 +148,11 @@ int		main(int argc, char **argv)
 	}
 	else
 		ft_die("Fatal error: Texture loading failure.");
+	load_alphabet(&doom);
+	print_alphabet("DOOM NUKEM", &doom, 512 - 140, 70);
+	load_animation(&doom);
 	i = 0;
+	app_start = SDL_GetTicks();
 	while (!doom.quit)
 	{
 		frame_start = SDL_GetTicks();
@@ -117,6 +180,17 @@ int		main(int argc, char **argv)
 		SDL_UpdateWindowSurface(doom.win);
 		// Delay until next frame
 		uint32_t frame_ticks = SDL_GetTicks() - frame_start;
+		if (doom.ani_thunder.current < doom.ani_thunder.frames && frame_start - app_start > (unsigned int)doom.ani_thunder.current * 66)
+		{
+			doom.ani_thunder.current++;
+			printf("as - fs = %d\n", app_start - frame_start);
+			if (doom.ani_thunder.current == doom.ani_thunder.frames)
+			{
+				doom.ani_thunder.current = 0;
+				app_start = frame_start;
+			}
+			render_animation(&doom);
+		}
 		if (frame_ticks < TICKS_PER_FRAME)
 		{
 			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
