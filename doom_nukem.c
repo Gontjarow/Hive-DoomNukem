@@ -96,6 +96,7 @@ static void		init_doom(t_doom *doom)
 	if (!(doom->mcThunder = Mix_LoadWAV(WAV_THUNDER)))
 		ft_die("Fatal error: SDL_mixer failed to load THUNDER_WAV!");
 	doom->quit = 0;
+	doom->alphabet_scale = 1;
 }
 
 int		main(int argc, char **argv)
