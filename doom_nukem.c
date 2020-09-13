@@ -26,6 +26,7 @@ static void		render_animation(t_doom *doom)
 	int 			i;
 	int 			j;
 	int 			k;
+	int 			cutoff;
 
 	pixels = doom->buff->pixels;
 	ani_surface = doom->ani_thunder.surfaces[doom->ani_thunder.current];
@@ -33,13 +34,20 @@ static void		render_animation(t_doom *doom)
 	k = 0;
 	reference = ani_surface->pixels;
 	j = (WIN_WIDTH - ani_surface->w) / 2 + ((WIN_HEIGHT - ani_surface->h) / 2 * WIN_WIDTH);
-	while (k < (ani_surface->w * ani_surface->h))
+	cutoff = 45 * WIN_WIDTH;
+	j += cutoff;
+	while (k < ((ani_surface->w * ani_surface->h) - cutoff))
 	{
 		j = i == ani_surface->w ? j + WIN_WIDTH : j;
 		i = i == ani_surface->w ? 0 : i;
 		pixels[i++ + j] = reference[k++];
 	}
-	print_alphabet("DOOM NUKEM", doom, 512 - 140, 70);
+	print_alphabet("hive doom nukem", doom, 512 - 196, 29);
+	print_alphabet("by", doom, 512 - 28, 29 + 29);
+	print_alphabet("ngontjar krusthol msuarez", doom, 512 - 364, 29 + 29 + 29);
+	print_alphabet("sdl sound and png load demo", doom, 512 - 392, 290 + 29 + 29 + 29 + 29);
+	print_alphabet("alphabet font rendering", doom, 512 - 322, 290 + 29 + 29 + 29 + 29 + 29);
+	print_alphabet("press esc to quit", doom, 512 - 238, 290 + 29 + 29 + 29 + 29 + 29 + 29);
 }
 
 static void		load_animation(t_doom *doom)
@@ -149,7 +157,6 @@ int		main(int argc, char **argv)
 	else
 		ft_die("Fatal error: Texture loading failure.");
 	load_alphabet(&doom);
-	print_alphabet("DOOM NUKEM", &doom, 512 - 140, 70);
 	load_animation(&doom);
 	i = 0;
 	app_start = SDL_GetTicks();
@@ -183,7 +190,6 @@ int		main(int argc, char **argv)
 		if (doom.ani_thunder.current < doom.ani_thunder.frames && frame_start - app_start > (unsigned int)doom.ani_thunder.current * 66)
 		{
 			doom.ani_thunder.current++;
-			printf("as - fs = %d\n", app_start - frame_start);
 			if (doom.ani_thunder.current == doom.ani_thunder.frames)
 			{
 				doom.ani_thunder.current = 0;

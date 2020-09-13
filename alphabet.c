@@ -12,24 +12,34 @@
 
 #include "doom_nukem.h"
 
+static char *extension_path(char *folder, char c, char *extension)
+{
+	char *path;
+	char *join;
+
+	join = ft_strnew(1);
+	join[0] = c;
+	path = ft_strjoin(folder, join);
+	free(join);
+	join = path;
+	path = ft_strjoin(path, extension);
+	free(join);
+	return (path);
+}
+
 void 		load_alphabet(t_doom *doom)
 {
 	char c;
+	char *path;
 
-	c = 'D';
-	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_d.png");
-	c = 'O';
-	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_o.png");
-	c = 'M';
-	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_m.png");
-	c = 'N';
-	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_n.png");
-	c = 'U';
-	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_u.png");
-	c = 'K';
-	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_k.png");
-	c = 'E';
-	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_e.png");
+	c = 'a';
+	while (c <= 'z')
+	{
+		path = extension_path("img/robo/robo_", c, ".png");
+		doom->alphabet[(int)c] = load_texture(doom, path);
+		free(path);
+		c++;
+	}
 	c = ' ';
 	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_space.png");
 }
@@ -42,6 +52,8 @@ static void render_character(char c, t_doom *doom, int x, int y)
 	int 			j;
 	int 			k;
 
+	if (c >= 'A' && c <= 'Z')
+		c += 48;
 	i = 0;
 	k = 0;
 	pixels = doom->buff->pixels;
