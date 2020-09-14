@@ -25,6 +25,8 @@
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 512
+# define LE_WIN_WIDTH 1024
+# define LE_WIN_HEIGHT 512
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
@@ -36,6 +38,9 @@
 # define EVT_MOUSE_MV 6
 # define EVT_CLOSE_WIN 17
 
+# define WAV_PLOP "wav/plop.wav"
+# define WAV_STEAM0 "wav/steam/0.wav"
+# define WAV_SWORD "wav/sword.wav"
 # define WAV_THUNDER "wav/thunder.wav"
 # define IMG_THUNDER0 "img/thunder/0.png"
 
@@ -72,13 +77,21 @@ typedef struct	s_image
 typedef struct	s_doom
 {
 	int 				quit;
+	int 				le_quit;
 	struct SDL_Window	*win;
+	struct SDL_Window	*le_win;
 	struct SDL_Surface	*buff;
+	struct SDL_Surface	*le_buff;
 	union SDL_Event		event;
 	struct Mix_Chunk 	*mcThunder;
+	struct Mix_Chunk 	*mcSteam;
+	struct Mix_Chunk	*mcPlop;
+	struct Mix_Chunk	*mcSword;
 	struct SDL_Surface	*alphabet[128];
 	int 				alphabet_scale;
 	struct s_animation	ani_thunder;
+	int 				selected_le;
+	int 				esc_lock;
 }				t_doom;
 
 /*
@@ -163,4 +176,11 @@ SDL_Surface		*load_texture(t_doom *doom, char *path);
 
 void 			load_alphabet(t_doom *doom);
 void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
+
+void			render_animation(t_doom *doom);
+void			load_animation(t_doom *doom);
+
+void			le_mouse_motion(t_doom *doom);
+void 			le_mouse_down(t_doom *doom);
+void			le_render(t_doom *doom);
 #endif

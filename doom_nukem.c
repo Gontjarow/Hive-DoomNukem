@@ -18,69 +18,6 @@ void	ft_die(const char *error_message)
 	exit(0);
 }
 
-static void		render_animation(t_doom *doom)
-{
-	unsigned int	*pixels;
-	unsigned int 	*reference;
-	SDL_Surface     *ani_surface;
-	int 			i;
-	int 			j;
-	int 			k;
-	int 			cutoff;
-
-	pixels = doom->buff->pixels;
-	ani_surface = doom->ani_thunder.surfaces[doom->ani_thunder.current];
-	i = 0;
-	k = 0;
-	reference = ani_surface->pixels;
-	j = (WIN_WIDTH - ani_surface->w) / 2 + ((WIN_HEIGHT - ani_surface->h) / 2 * WIN_WIDTH);
-	cutoff = 45 * WIN_WIDTH;
-	j += cutoff;
-	while (k < ((ani_surface->w * ani_surface->h) - cutoff))
-	{
-		j = i == ani_surface->w ? j + WIN_WIDTH : j;
-		i = i == ani_surface->w ? 0 : i;
-		pixels[i++ + j] = reference[k++];
-	}
-	doom->alphabet_scale = 2;
-	print_alphabet("hive doom nukem", doom, 512 - 420, 29);
-	doom->alphabet_scale = 1;
-	print_alphabet("ngontjar krusthol msuarez", doom, 512 - 364, 29 + 29 + 29);
-	print_alphabet("sdl sound and png load demo", doom, 512 - 392, 290 + 29 + 29 + 29 + 29);
-	print_alphabet("alphabet font rendering", doom, 512 - 322, 290 + 29 + 29 + 29 + 29 + 29);
-	print_alphabet("press esc to quit", doom, 512 - 238, 290 + 29 + 29 + 29 + 29 + 29 + 29);
-}
-
-static void		load_animation(t_doom *doom)
-{
-	int i;
-	char *path;
-	char *join;
-
-	i = 0;
-	doom->ani_thunder.frames = 11;
-	doom->ani_thunder.current = 0;
-	doom->ani_thunder.surfaces = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * doom->ani_thunder.frames);
-	if (doom->ani_thunder.surfaces == NULL)
-		ft_die("Fatal error: Could not malloc SDL_Surfaces in doom->ani_thunder.");
-	while (i < doom->ani_thunder.frames)
-	{
-		join = ft_itoa(i);
-		path = ft_strjoin("img/thunder/", join);
-		free(join);
-		join = path;
-		path = ft_strjoin(path, ".png");
-		free(join);
-		if (!(doom->ani_thunder.surfaces[i] = (SDL_Surface*)malloc(sizeof(SDL_Surface))))
-			ft_die("Fatal error: Could not malloc SDL_Surface in doom->ani_thunder->surfaces.");
-		doom->ani_thunder.surfaces[i] = load_texture(doom, path);
-		free(path);
-		if (doom->ani_thunder.surfaces[i] == NULL)
-			ft_die("Fatal error: Could not load_texture for doom->ani_thunder->surfaces.");
-		i++;
-	}
-}
-
 static void		init_doom(t_doom *doom)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -94,9 +31,20 @@ static void		init_doom(t_doom *doom)
 	if (doom->win == NULL || doom->buff == NULL)
 		ft_die("Fatal error: Failed initialization of SDL_Window or SDL_Surface with SDL_CreateWindow and SDL_GetWindowSurface.");
 	if (!(doom->mcThunder = Mix_LoadWAV(WAV_THUNDER)))
-		ft_die("Fatal error: SDL_mixer failed to load THUNDER_WAV!");
+		ft_die("Fatal error: SDL_mixer failed to load WAV_THUNDER!");
+	if (!(doom->mcSteam = Mix_LoadWAV(WAV_STEAM0)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_STEAM0!");
+	if (!(doom->mcPlop = Mix_LoadWAV(WAV_PLOP)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_PLOP!");
+	if (!(doom->mcSword = Mix_LoadWAV(WAV_SWORD)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_SWORD!");
 	doom->quit = 0;
+	doom->le_quit = 1;
 	doom->alphabet_scale = 1;
+	doom->selected_le = 1;
+	doom->le_win = NULL;
+	doom->le_buff = NULL;
+	doom->esc_lock = 0;
 }
 
 int		main(int argc, char **argv)
@@ -111,24 +59,17 @@ int		main(int argc, char **argv)
 	int 			i;
 	int 			j;
 	int 			k;
-	int				dir_horz;
-	int 			dir_vert;
 
 	i = 0;
-	dir_horz = 1;
-	dir_vert = 1;
+
 	(void)argc;
 	init_doom(&doom);
 	pixels = doom.buff->pixels;
 	i = 0;
 	k = 0;
-	dir_horz = 1;
-	dir_vert = 1;
 	keystates = SDL_GetKeyboardState(NULL);
 	Mix_PlayChannel( -1, doom.mcThunder, 0 );
 	test = NULL;
-	// Disabled argv loading/default img_bluebricks demo in favor of thunder animation demo
-	//test = (argc > 1) ? load_texture(&doom, argv[1]) : load_texture(&doom, IMG_BLUEBRICKS);
 	test = load_texture(&doom, IMG_THUNDER0);
 	if (test)
 	{
@@ -164,26 +105,63 @@ int		main(int argc, char **argv)
 	while (!doom.quit)
 	{
 		frame_start = SDL_GetTicks();
-		if (keystates[SDL_SCANCODE_RETURN])
+		if (keystates[SDL_SCANCODE_UP] && (!doom.selected_le))
 		{
-			i += dir_horz;
-			if (i >= (WIN_HEIGHT * WIN_WIDTH) || i <= 0)
-				dir_horz *= -1;
-			else
-				pixels[i] = 0xffffffff;
+			doom.selected_le = 1;
+			Mix_PlayChannel( -1, doom.mcSteam, 0 );
 		}
-		if (keystates[SDL_SCANCODE_SPACE])
+		else if (keystates[SDL_SCANCODE_DOWN] && (doom.selected_le))
 		{
-			i += dir_vert * WIN_WIDTH;
-			if (i >= (WIN_HEIGHT * WIN_WIDTH) || i <= 0)
-				dir_vert *= -1;
-			else
-				pixels[i] = 0xffffffff;
+			doom.selected_le = 0;
+			Mix_PlayChannel( -1, doom.mcSteam, 0 );
+		}
+		else if (keystates[SDL_SCANCODE_RETURN] && doom.selected_le && doom.le_quit)
+		{
+			SDL_MinimizeWindow(doom.win);
+			doom.le_win = SDL_CreateWindow("DoomNukem Level Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LE_WIN_WIDTH, LE_WIN_HEIGHT, 0);
+			doom.le_buff = SDL_GetWindowSurface(doom.le_win);
+			SDL_UpdateWindowSurface(doom.le_win);
+			Mix_PlayChannel( -1, doom.mcSword, 0 );
+			doom.le_quit = 0;
+		}
+		else if (keystates[SDL_SCANCODE_RETURN] && !doom.selected_le)
+		{
+			Mix_PlayChannel( -1, doom.mcSword, 0 );
+			SDL_Delay(300);
+			doom.quit = 1;
 		}
 		while (SDL_PollEvent(&doom.event) != 0)
 		{
-			if (doom.event.type == SDL_QUIT || doom.event.button.button == SDL_SCANCODE_ESCAPE)
+			if (doom.event.type == SDL_MOUSEMOTION && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le_win))
+				le_mouse_motion(&doom);
+			else if (doom.event.type == SDL_MOUSEBUTTONDOWN && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le_win))
+				le_mouse_down(&doom);
+			else if (doom.event.type == SDL_WINDOWEVENT && doom.event.window.event == SDL_WINDOWEVENT_CLOSE && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le_win))
+			{
+				doom.le_quit = 1;
+				SDL_FreeSurface(doom.le_buff);
+				SDL_DestroyWindow(doom.le_win);
+				doom.le_win = NULL;
+				doom.le_buff = NULL;
+			}
+			else if (doom.event.type == SDL_QUIT || (doom.event.type == SDL_KEYDOWN && doom.event.button.button == SDL_SCANCODE_ESCAPE && doom.le_quit && !doom.esc_lock))
+			{
+				Mix_PlayChannel( -1, doom.mcSword, 0 );
+				SDL_Delay(300);
 				doom.quit = 1;
+			}
+			else if (doom.event.type == SDL_QUIT || (doom.event.type == SDL_KEYDOWN && doom.event.button.button == SDL_SCANCODE_ESCAPE && !doom.le_quit))
+			{
+				doom.le_quit = 1;
+				SDL_FreeSurface(doom.le_buff);
+				SDL_DestroyWindow(doom.le_win);
+				doom.le_win = NULL;
+				doom.le_buff = NULL;
+				doom.esc_lock = 40;
+				SDL_RestoreWindow(doom.win);
+				Mix_PlayChannel( -1, doom.mcSword, 0 );
+				doom.buff = SDL_GetWindowSurface(doom.win);
+			}
 		}
 		SDL_UpdateWindowSurface(doom.win);
 		// Delay until next frame
@@ -198,6 +176,10 @@ int		main(int argc, char **argv)
 			}
 			render_animation(&doom);
 		}
+		if (!doom.le_quit)
+			le_render(&doom);
+		if (doom.esc_lock)
+			doom.esc_lock--;
 		if (frame_ticks < TICKS_PER_FRAME)
 		{
 			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
@@ -206,7 +188,10 @@ int		main(int argc, char **argv)
 	SDL_FreeSurface(doom.buff);
 	SDL_FreeSurface(test);
 	SDL_DestroyWindow(doom.win);
+	if (!doom.le_quit)
+		SDL_DestroyWindow(doom.le_win);
 	Mix_FreeChunk(doom.mcThunder);
+	Mix_FreeChunk(doom.mcSteam);
 	Mix_Quit();
 	SDL_Quit();
 	return (0);
