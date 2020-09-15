@@ -40,11 +40,37 @@ static void		init_doom(t_doom *doom)
 		ft_die("Fatal error: SDL_mixer failed to load WAV_SWORD!");
 	doom->quit = 0;
 	doom->le_quit = 1;
+	doom->le = NULL;
 	doom->alphabet_scale = 1;
 	doom->selected_le = 1;
-	doom->le_win = NULL;
-	doom->le_buff = NULL;
 	doom->esc_lock = 0;
+}
+
+static void 	init_le(t_doom *doom)
+{
+	doom->le = (t_le*)malloc(sizeof(t_le));
+	if (!doom->le)
+		ft_die("Fatal error: Mallocing level editor struct failed at init_le.");
+	doom->le->win = SDL_CreateWindow("DoomNukem Level Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LE_WIN_WIDTH, LE_WIN_HEIGHT, 0);
+	doom->le->buff = SDL_GetWindowSurface(doom->le->win);
+	doom->le->walls = (t_wall*)malloc(sizeof(t_wall));
+	if (!doom->le->walls)
+		ft_die("Fatal error: Mallocing walls struct failed at init_le.");
+	doom->le->wall_count = 0;
+	doom->le->wall_begin = NULL;
+	doom->le->is_wall_start = 1;
+}
+
+static void 	destroy_le(t_doom *doom)
+{
+	SDL_FreeSurface(doom->le->buff);
+	SDL_DestroyWindow(doom->le->win);
+	doom->le->win = NULL;
+	doom->le->buff = NULL;
+	free(doom->le->walls);
+	doom->le->walls = NULL;
+	free(doom->le);
+	doom->le = NULL;
 }
 
 int		main(int argc, char **argv)
@@ -118,9 +144,8 @@ int		main(int argc, char **argv)
 		else if (keystates[SDL_SCANCODE_RETURN] && doom.selected_le && doom.le_quit)
 		{
 			SDL_MinimizeWindow(doom.win);
-			doom.le_win = SDL_CreateWindow("DoomNukem Level Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LE_WIN_WIDTH, LE_WIN_HEIGHT, 0);
-			doom.le_buff = SDL_GetWindowSurface(doom.le_win);
-			SDL_UpdateWindowSurface(doom.le_win);
+			init_le(&doom);
+			SDL_UpdateWindowSurface(doom.le->win);
 			Mix_PlayChannel( -1, doom.mcSword, 0 );
 			doom.le_quit = 0;
 		}
@@ -132,17 +157,14 @@ int		main(int argc, char **argv)
 		}
 		while (SDL_PollEvent(&doom.event) != 0)
 		{
-			if (doom.event.type == SDL_MOUSEMOTION && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le_win))
+			if (doom.event.type == SDL_MOUSEMOTION && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le->win))
 				le_mouse_motion(&doom);
-			else if (doom.event.type == SDL_MOUSEBUTTONDOWN && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le_win))
+			else if (doom.event.type == SDL_MOUSEBUTTONDOWN && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le->win))
 				le_mouse_down(&doom);
-			else if (doom.event.type == SDL_WINDOWEVENT && doom.event.window.event == SDL_WINDOWEVENT_CLOSE && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le_win))
+			else if (doom.event.type == SDL_WINDOWEVENT && doom.event.window.event == SDL_WINDOWEVENT_CLOSE && !doom.le_quit && doom.event.window.windowID == SDL_GetWindowID(doom.le->win))
 			{
 				doom.le_quit = 1;
-				SDL_FreeSurface(doom.le_buff);
-				SDL_DestroyWindow(doom.le_win);
-				doom.le_win = NULL;
-				doom.le_buff = NULL;
+				destroy_le(&doom);
 			}
 			else if (doom.event.type == SDL_QUIT || (doom.event.type == SDL_KEYDOWN && doom.event.button.button == SDL_SCANCODE_ESCAPE && doom.le_quit && !doom.esc_lock))
 			{
@@ -153,10 +175,7 @@ int		main(int argc, char **argv)
 			else if (doom.event.type == SDL_QUIT || (doom.event.type == SDL_KEYDOWN && doom.event.button.button == SDL_SCANCODE_ESCAPE && !doom.le_quit))
 			{
 				doom.le_quit = 1;
-				SDL_FreeSurface(doom.le_buff);
-				SDL_DestroyWindow(doom.le_win);
-				doom.le_win = NULL;
-				doom.le_buff = NULL;
+				destroy_le(&doom);
 				doom.esc_lock = 40;
 				SDL_RestoreWindow(doom.win);
 				Mix_PlayChannel( -1, doom.mcSword, 0 );
@@ -189,7 +208,7 @@ int		main(int argc, char **argv)
 	SDL_FreeSurface(test);
 	SDL_DestroyWindow(doom.win);
 	if (!doom.le_quit)
-		SDL_DestroyWindow(doom.le_win);
+		destroy_le(&doom);
 	Mix_FreeChunk(doom.mcThunder);
 	Mix_FreeChunk(doom.mcSteam);
 	Mix_Quit();

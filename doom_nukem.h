@@ -73,15 +73,36 @@ typedef struct	s_image
 ** Main struct
 ** *
 */
+typedef struct 			s_point
+{
+	int 				x;
+	int 				y;
+}						t_point;
+
+typedef struct 			s_wall
+{
+	struct s_point		start;
+	struct s_point		end;
+	int 				id;
+	struct s_wall		*next;
+}						t_wall;
+
+typedef struct 			s_le
+{
+	struct SDL_Window	*win;
+	struct SDL_Surface	*buff;
+	struct s_wall		*walls;
+	struct s_wall		*wall_begin;
+	int 				wall_count;
+	int 				is_wall_start;
+}						t_le;
 
 typedef struct	s_doom
 {
 	int 				quit;
 	int 				le_quit;
 	struct SDL_Window	*win;
-	struct SDL_Window	*le_win;
 	struct SDL_Surface	*buff;
-	struct SDL_Surface	*le_buff;
 	union SDL_Event		event;
 	struct Mix_Chunk 	*mcThunder;
 	struct Mix_Chunk 	*mcSteam;
@@ -92,7 +113,23 @@ typedef struct	s_doom
 	struct s_animation	ani_thunder;
 	int 				selected_le;
 	int 				esc_lock;
-}				t_doom;
+	struct s_le			*le;
+}						t_doom;
+
+typedef struct 			s_line
+{
+	int					x1;
+	int 				x2;
+	int 				y1;
+	int 				y2;
+	int 				fx;
+	int 				fy;
+	int 				px;
+	int 				py;
+	uint32_t 			color;
+	struct SDL_Surface 	*buff;
+	struct s_doom		*doom;
+}						t_line;
 
 /*
 ** *
@@ -183,4 +220,7 @@ void			load_animation(t_doom *doom);
 void			le_mouse_motion(t_doom *doom);
 void 			le_mouse_down(t_doom *doom);
 void			le_render(t_doom *doom);
+
+void 			render_line(t_line *l);
+void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 #endif
