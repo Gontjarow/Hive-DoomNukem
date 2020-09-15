@@ -18,11 +18,18 @@ OBJECTS = $(subst .c,.o,$(SOURCES))
 
 LIBFT = libft/libft.a
 
+SDL2 = libsdl/libSDL2.a
+
+SDL2_IMAGE = libsdl/libSDL2_image.a
+
+SDL2_MIXER = libsdl/libSDL2_mixer.a
+
 FLAGS = -Wall -Wextra -Werror
 
 LINUX_LINKS = -I libft -L libft -l ft \
 		-I ./mlx -L ./mlx -l mlx \
-		-lm -lXext -lX11 -lSDL2 -lSDL2_mixer -lSDL2_image
+		-lm -lXext -lX11 -lpthread \
+        -I ./libsdl -L ./libsdl -ldl
 
 MSG = \033[38;5;214m
 END = \033[0m
@@ -38,7 +45,7 @@ $(NAME): $(OBJECTS)
 	@echo "$(MSG)Done!$(END)"
 
 linux: $(OBJECTS)
-	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) $(LINUX_LINKS)
+	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) $(SDL2) $(SDL2_IMAGE) $(SDL2_MIXER) $(LINUX_LINKS) $(LINUX_LINKS)
 	@echo "$(MSG)Done!$(END)"
 
 $(OBJECTS): $(LIBFT) $(SOURCES)

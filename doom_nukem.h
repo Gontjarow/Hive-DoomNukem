@@ -15,9 +15,21 @@
 
 # include "libft/libft.h"
 # include "mlx/mlx.h"
+
+# ifndef __linux__
+
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_mixer.h>
 # include <SDL2/SDL_image.h>
+
+# else
+
+# include "libsdl/SDL.h"
+# include "libsdl/SDL_image.h"
+# include "libsdl/SDL_mixer.h"
+
+# endif
+
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
