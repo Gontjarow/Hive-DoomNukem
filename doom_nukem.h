@@ -107,6 +107,13 @@ typedef struct 			s_le
 	struct s_wall		*wall_begin;
 	int 				wall_count;
 	int 				is_wall_start;
+	char 				*map_string;
+	char 				*join_string;
+	int 				polygon_start_x;
+	int 				polygon_start_y;
+	int 				polygon_binding;
+	int 				write_maps;
+	char 				*map_path;
 }						t_le;
 
 typedef struct	s_doom

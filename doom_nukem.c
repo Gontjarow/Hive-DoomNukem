@@ -46,7 +46,7 @@ static void		init_doom(t_doom *doom)
 	doom->esc_lock = 0;
 }
 
-static void 	init_le(t_doom *doom)
+static void 	init_le(t_doom *doom, int argc, char **argv)
 {
 	doom->le = (t_le*)malloc(sizeof(t_le));
 	if (!doom->le)
@@ -58,7 +58,19 @@ static void 	init_le(t_doom *doom)
 		ft_die("Fatal error: Mallocing walls struct failed at init_le.");
 	doom->le->wall_count = 0;
 	doom->le->wall_begin = NULL;
+	doom->le->map_string = NULL;
+	doom->le->join_string = NULL;
+	doom->le->map_path = NULL;
 	doom->le->is_wall_start = 1;
+	doom->le->polygon_start_x = -1;
+	doom->le->polygon_start_y = -1;
+	doom->le->polygon_binding = 0;
+	doom->le->write_maps = 0;
+	if (argc == 2)
+	{
+		doom->le->write_maps = 1;
+		doom->le->map_path = argv[1];
+	}
 }
 
 static void 	destroy_le(t_doom *doom)
@@ -69,6 +81,12 @@ static void 	destroy_le(t_doom *doom)
 	doom->le->buff = NULL;
 	free(doom->le->walls);
 	doom->le->walls = NULL;
+	if (doom->le->map_string)
+		free(doom->le->map_string);
+	if (doom->le->join_string)
+		free(doom->le->join_string);
+	doom->le->map_string = NULL;
+	doom->le->join_string = NULL;
 	free(doom->le);
 	doom->le = NULL;
 }
@@ -88,7 +106,6 @@ int		main(int argc, char **argv)
 
 	i = 0;
 
-	(void)argc;
 	init_doom(&doom);
 	pixels = doom.buff->pixels;
 	i = 0;
@@ -144,7 +161,7 @@ int		main(int argc, char **argv)
 		else if (keystates[SDL_SCANCODE_RETURN] && doom.selected_le && doom.le_quit)
 		{
 			SDL_MinimizeWindow(doom.win);
-			init_le(&doom);
+			init_le(&doom, argc, argv);
 			SDL_UpdateWindowSurface(doom.le->win);
 			Mix_PlayChannel( -1, doom.mcSword, 0 );
 			doom.le_quit = 0;

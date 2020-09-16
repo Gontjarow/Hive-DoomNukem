@@ -45,7 +45,7 @@ $(NAME): $(OBJECTS)
 	@echo "$(MSG)Done!$(END)"
 
 linux: $(OBJECTS)
-	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) $(SDL2) $(SDL2_IMAGE) $(SDL2_MIXER) $(LINUX_LINKS) $(LINUX_LINKS)
+	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) $(SDL2) $(SDL2_IMAGE) $(SDL2_MIXER) $(LINUX_LINKS)
 	@echo "$(MSG)Done!$(END)"
 
 $(OBJECTS): $(LIBFT) $(SOURCES)
