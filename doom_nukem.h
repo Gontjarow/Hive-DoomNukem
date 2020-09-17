@@ -105,15 +105,29 @@ typedef struct 			s_le
 	struct SDL_Surface	*buff;
 	struct s_wall		*walls;
 	struct s_wall		*wall_begin;
+	struct s_wall		*portals;
+	struct s_wall		*portal_begin;
 	int 				wall_count;
+	int 				portal_count;
 	int 				is_wall_start;
 	char 				*map_string;
+	char 				*portal_string;
 	char 				*join_string;
 	int 				polygon_start_x;
 	int 				polygon_start_y;
 	int 				polygon_binding;
+	int 				portalization_binding;
+	int 				portalization_ending;
+	int					portal_x;
+	int 				portal_y;
+	int					new_portal_x;
+	int					new_portal_y;
+	struct s_wall		*portalization_a;
+	struct s_wall		*portalization_b;
+	struct s_wall		*new_portal;
 	int 				write_maps;
 	char 				*map_path;
+	struct s_doom		*parent;
 }						t_le;
 
 typedef struct	s_doom
@@ -242,4 +256,5 @@ void			le_render(t_doom *doom);
 
 void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
+int				write_mapfile(t_le *le);
 #endif

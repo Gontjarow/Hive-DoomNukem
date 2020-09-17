@@ -51,6 +51,7 @@ static void 	init_le(t_doom *doom, int argc, char **argv)
 	doom->le = (t_le*)malloc(sizeof(t_le));
 	if (!doom->le)
 		ft_die("Fatal error: Mallocing level editor struct failed at init_le.");
+	doom->le->parent = doom;
 	doom->le->win = SDL_CreateWindow("DoomNukem Level Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LE_WIN_WIDTH, LE_WIN_HEIGHT, 0);
 	doom->le->buff = SDL_GetWindowSurface(doom->le->win);
 	doom->le->walls = (t_wall*)malloc(sizeof(t_wall));
@@ -61,10 +62,24 @@ static void 	init_le(t_doom *doom, int argc, char **argv)
 	doom->le->map_string = NULL;
 	doom->le->join_string = NULL;
 	doom->le->map_path = NULL;
+	doom->le->portalization_a = NULL;
+	doom->le->portalization_b = NULL;
+	doom->le->new_portal = NULL;
+	doom->le->portals = (t_wall*)malloc(sizeof(t_wall));
+	doom->le->portal_count = 0;
+	if (!doom->le->walls)
+		ft_die("Fatal error: Mallocing portals struct failed at init_le.");
+	doom->le->portal_begin = NULL;
 	doom->le->is_wall_start = 1;
 	doom->le->polygon_start_x = -1;
 	doom->le->polygon_start_y = -1;
 	doom->le->polygon_binding = 0;
+	doom->le->portalization_binding = 0;
+	doom->le->portalization_ending = 0;
+	doom->le->portal_x = -1;
+	doom->le->portal_y = -1;
+	doom->le->new_portal_x = -1;
+	doom->le->new_portal_y = -1;
 	doom->le->write_maps = 0;
 	if (argc == 2)
 	{
@@ -75,6 +90,8 @@ static void 	init_le(t_doom *doom, int argc, char **argv)
 
 static void 	destroy_le(t_doom *doom)
 {
+	if (doom->le->write_maps && doom->le->wall_count > 0)
+		write_mapfile(doom->le);
 	SDL_FreeSurface(doom->le->buff);
 	SDL_DestroyWindow(doom->le->win);
 	doom->le->win = NULL;
