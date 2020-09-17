@@ -57,30 +57,40 @@ static void 	init_le(t_doom *doom, int argc, char **argv)
 	doom->le->walls = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->le->walls)
 		ft_die("Fatal error: Mallocing walls struct failed at init_le.");
-	doom->le->wall_count = 0;
+	doom->le->portals = (t_wall*)malloc(sizeof(t_wall));
+	if (!doom->le->portals)
+		ft_die("Fatal error: Mallocing portals struct failed at init_le.");
+	doom->le->enemies = (t_enemy*)malloc(sizeof(t_enemy));
+	if (!doom->le->enemies)
+		ft_die("Fatal error: Mallocing enemies struct failed at init_le.");
 	doom->le->wall_begin = NULL;
+	doom->le->enemy_first = NULL;
 	doom->le->map_string = NULL;
 	doom->le->join_string = NULL;
 	doom->le->map_path = NULL;
 	doom->le->portalization_a = NULL;
 	doom->le->portalization_b = NULL;
 	doom->le->new_portal = NULL;
-	doom->le->portals = (t_wall*)malloc(sizeof(t_wall));
-	doom->le->portal_count = 0;
-	if (!doom->le->walls)
-		ft_die("Fatal error: Mallocing portals struct failed at init_le.");
 	doom->le->portal_begin = NULL;
-	doom->le->is_wall_start = 1;
-	doom->le->polygon_start_x = -1;
-	doom->le->polygon_start_y = -1;
+	doom->le->wall_count = 0;
+	doom->le->portal_count = 0;
+	doom->le->enemy_count = 0;
+	doom->le->player_set = 0;
+	doom->le->enemy_set = 0;
 	doom->le->polygon_binding = 0;
 	doom->le->portalization_binding = 0;
 	doom->le->portalization_ending = 0;
+	doom->le->write_maps = 0;
+	doom->le->player.x = -1;
+	doom->le->player.y = -1;
+	doom->le->player.rot = -1;
+	doom->le->is_wall_start = 1;
+	doom->le->polygon_start_x = -1;
+	doom->le->polygon_start_y = -1;
 	doom->le->portal_x = -1;
 	doom->le->portal_y = -1;
 	doom->le->new_portal_x = -1;
 	doom->le->new_portal_y = -1;
-	doom->le->write_maps = 0;
 	if (argc == 2)
 	{
 		doom->le->write_maps = 1;

@@ -48,6 +48,39 @@ int			write_mapfile(t_le *le)
 	return (0);
 }
 
+static void print_characters(t_le *le)
+{
+	t_enemy *enemy;
+	t_line	line;
+	int 	ec;
+
+	if (le->player_set == 1)
+	{
+		line.x1 = le->player.x;
+		line.y1 = le->player.y;
+		line.x2 = le->tail.x;
+		line.y2 = le->tail.y;
+		line.color = 0xffffff00;
+		line.buff = le->buff;
+		render_line(&line);
+	}
+	ec = le->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = le->enemy_first;
+	while (ec--)
+	{
+		line.x1 = enemy->x;
+		line.y1 = enemy->y;
+		line.x2 = enemy->tail.x;
+		line.y2 = enemy->tail.y;
+		line.color = 0xff00ff00;
+		line.buff = le->buff;
+		render_line(&line);
+		enemy = enemy->next;
+	}
+}
+
 static void print_portals(t_le *le)
 {
 	int		pc;
@@ -58,11 +91,11 @@ static void print_portals(t_le *le)
 	if (pc == 0)
 		return ;
 	portal = le->portal_begin;
-	printf("Portals | portal_count %d\n------------------\n\n", pc);
+	//printf("Portals | portal_count %d\n------------------\n\n", pc);
 	while (pc--)
 	{
-		printf("Portal id: %d | start: %d, %d | end: %d, %d\n",
-			   portal->id, portal->start.x, portal->start.y, portal->end.x, portal->end.y);
+		//printf("Portal id: %d | start: %d, %d | end: %d, %d\n",
+		//	   portal->id, portal->start.x, portal->start.y, portal->end.x, portal->end.y);
 		line.x1 = portal->start.x;
 		line.y1 = portal->start.y;
 		line.x2 = portal->end.x;
@@ -82,11 +115,11 @@ static void print_walls(t_le *le)
 
 	wc = le->wall_count;
 	wall = le->wall_begin;
-	printf("Walls | wall_count %d\n------------------\n\n", wc);
+	//printf("Walls | wall_count %d\n------------------\n\n", wc);
 	while (wc--)
 	{
-		printf("Wall id: %d | start: %d, %d | end: %d, %d\n",
-		 		wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
+		//printf("Wall id: %d | start: %d, %d | end: %d, %d\n",
+		//		wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
 		line.x1 = wall->start.x;
 		line.y1 = wall->start.y;
 		line.x2 = wall->end.x;
@@ -96,6 +129,7 @@ static void print_walls(t_le *le)
 		render_line(&line);
 		wall = wall->next;
 	}
+	print_characters(le);
 	print_portals(le);
 }
 
@@ -132,7 +166,6 @@ static void set_portalization_xy(t_le *le)
 			le->portal_y = -1;
 			le->portalization_binding = 0;
 		}
-
 	}
 	else
 	{
@@ -183,33 +216,73 @@ static void test_end_portalization(int x, int y, t_le *le)
 	}
 }
 
-static void record_wall(int x, int y, t_le *le)
+static void record_enemy(int x, int y, t_le *le)
 {
-	t_wall *next_wall;
+	t_point		rot_point;
+	t_point		enemy_point;
+	t_enemy		*next_enemy;
 
-	if (le->is_wall_start)
+	if (!le->enemy_set)
 	{
-		le->walls->id = le->wall_count;
-		le->walls->start.x = x;
-		le->walls->start.y = y;
-		le->is_wall_start = 0;
+		le->enemies->id = le->enemy_count;
+		le->enemies->x = x;
+		le->enemies->y = y;
+		le->enemy_set = 1;
+		return ;
 	}
-	else
+	rot_point.x = x;
+	rot_point.y = y;
+	enemy_point.x = le->enemies->x;
+	enemy_point.y = le->enemies->y;
+	modify_line_length(15, &enemy_point, &rot_point, &le->enemies->tail);
+	le->last_enemy.x = le->enemies->x;
+	le->last_enemy.y = le->enemies->y;
+	// UNDER CONSTRUCTION!!!
+	le->enemies->rot = 50;
+	//expand_enemy_string(le);
+	next_enemy = (t_enemy*)malloc(sizeof(t_enemy));
+	if (!next_enemy)
+		ft_die("Fatal error: Could not malloc t_enemy at record_enemy.");
+	if (le->enemy_count == 0)
+		le->enemy_first = le->enemies;
+	le->enemy_count++;
+	le->enemies->next = next_enemy;
+	le->enemies = next_enemy;
+	le->enemy_set = 0;
+	print_walls(le);
+}
+
+static void record_player(int x, int y, t_le *le)
+{
+	t_point	start;
+
+	if (!le->player_set)
 	{
-		le->walls->end.x = x;
-		le->walls->end.y = y;
-		expand_map_string(le);
-		le->wall_count++;
-		next_wall = (t_wall*)malloc(sizeof(t_wall));
-		if (!next_wall)
-			ft_die("Fatal error: Could not malloc t_wall at record_wall.");
-		if (le->wall_count == 1)
-			le->wall_begin = le->walls;
-		le->walls->next = next_wall;
-		le->walls = next_wall;
-		le->is_wall_start = 1;
-		print_walls(le);
+		le->player.x = x;
+		le->player.y = y;
+		le->player_set = -1;
+		//ft_putnbr(le->player.x);
+		//ft_putstr(" x | y ");
+		//ft_putnbr(le->player.y);
+		//ft_putendl(" | Set player position.");
 	}
+	else if (le->player_set == -1)
+	{
+		le->tail.x = x;
+		le->tail.y = y;
+		start.x = le->player.x;
+		start.y = le->player.y;
+		modify_line_length(15, &start, &le->tail, &le->tail);
+		// UNDER CONSTRUCTION!!!!
+		// le->player.rot = 50;
+		le->player_set = 1;
+		//ft_putnbr(le->tail.x);
+		//ft_putstr(" x | y ");
+		//ft_putnbr(le->tail.y);
+		//ft_putendl(" | Set player tail.");
+		//update_player_string(le);
+	}
+	print_walls(le);
 }
 
 static void expand_portal_string(t_le *le)
@@ -349,7 +422,6 @@ static void le_left_click(t_doom *doom) {
 		i = doom->le->portal_x;
 		j = doom->le->portal_y * LE_WIN_WIDTH;
 		color = 0xffff0000;
-		// EXPERIMENTAL LOGIC!!!!
 		doom->le->portalization_binding = 0;
 		doom->le->portalization_ending = 1;
 	}
@@ -370,22 +442,86 @@ static void le_left_click(t_doom *doom) {
 	Mix_PlayChannel( -1, doom->mcPlop, 0 );
 }
 
+static void circle_player(t_doom *doom)
+{
+	unsigned int *pixels;
+	int radius;
+	int x;
+	int y;
+
+	pixels = doom->le->buff->pixels;
+	radius = 6;
+	y = -radius;
+	x = -radius;
+	while (y <= radius)
+	{
+		while (x <= radius)
+		{
+			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
+				pixels[doom->le->player.x + x + ((doom->le->player.y + y) * LE_WIN_WIDTH)] = 0xffffff00;
+			x++;
+		}
+		y++;
+		x = -radius;
+	}
+}
+
+static void circle_enemy(t_doom *doom)
+{
+	unsigned int *pixels;
+	int radius;
+	int x;
+	int y;
+
+	pixels = doom->le->buff->pixels;
+	radius = 6;
+	y = -radius;
+	x = -radius;
+	while (y <= radius)
+	{
+		while (x <= radius)
+		{
+			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
+				pixels[doom->le->last_enemy.x + x + ((doom->le->last_enemy.y + y) * LE_WIN_WIDTH)] = 0xff00ff00;
+			x++;
+		}
+		y++;
+		x = -radius;
+	}
+}
+
 static void le_right_click(t_doom *doom)
 {
 	unsigned int *pixels;
 	int j;
 	int i;
+	uint32_t color;
 
+	color = 0xff00ff00;
+	if (doom->le->player_set < 1)
+		color = 0xffffff00;
 	i = doom->event.motion.x;
 	j = doom->event.motion.y * LE_WIN_WIDTH;
+	if (doom->le->player_set < 1)
+	{
+		record_player(doom->event.motion.x, doom->event.motion.y, doom->le);
+		Mix_PlayChannel( -1, doom->mcSword, 0);
+		if (doom->le->player_set == 1)
+			return (circle_player(doom));
+	}
+	else
+	{
+		record_enemy(doom->event.motion.x, doom->event.motion.y, doom->le);
+		Mix_PlayChannel( -1, doom->mcSteam, 0);
+		if (doom->le->enemy_set == 0)
+			return (circle_enemy(doom));
+	}
 	pixels = doom->le->buff->pixels;
-	pixels[i + j] = 0xffffffff;
-	pixels[i + j - 1] = 0xffffffff;
-	pixels[i + j + 1] = 0xffffffff;
-	pixels[i + j + LE_WIN_WIDTH] = 0xffffffff;
-	pixels[i + j - LE_WIN_WIDTH] = 0xffffffff;
-	record_wall(doom->event.motion.x, doom->event.motion.y, doom->le);
-	Mix_PlayChannel( -1, doom->mcPlop, 0 );
+	pixels[i + j] = color;
+	pixels[i + j - 1] = color;
+	pixels[i + j + 1] = color;
+	pixels[i + j + LE_WIN_WIDTH] = color;
+	pixels[i + j - LE_WIN_WIDTH] = color;
 }
 
 void 		le_mouse_down(t_doom *doom)

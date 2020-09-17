@@ -80,16 +80,29 @@ typedef struct	s_image
 	int		endian;
 }				t_image;
 
-/*
-** *
-** Main struct
-** *
-*/
+
 typedef struct 			s_point
 {
 	int 				x;
 	int 				y;
 }						t_point;
+
+typedef struct 			s_player
+{
+	int 				x;
+	int 				y;
+	int 				rot;
+}						t_player;
+
+typedef struct 			s_enemy
+{
+	int 				id;
+	int 				x;
+	int 				y;
+	int 				rot;
+	struct s_point		tail;
+	struct s_enemy		*next;
+}						t_enemy;
 
 typedef struct 			s_wall
 {
@@ -98,6 +111,12 @@ typedef struct 			s_wall
 	int 				id;
 	struct s_wall		*next;
 }						t_wall;
+
+/*
+** *
+** Level Editor struct
+** *
+*/
 
 typedef struct 			s_le
 {
@@ -109,6 +128,12 @@ typedef struct 			s_le
 	struct s_wall		*portal_begin;
 	int 				wall_count;
 	int 				portal_count;
+	int 				enemy_count;
+	struct s_player		player;
+	struct s_enemy		*enemies;
+	struct s_enemy		*enemy_first;
+	struct s_point		tail;
+	struct s_point		last_enemy;
 	int 				is_wall_start;
 	char 				*map_string;
 	char 				*portal_string;
@@ -122,6 +147,8 @@ typedef struct 			s_le
 	int 				portal_y;
 	int					new_portal_x;
 	int					new_portal_y;
+	int 				player_set;
+	int 				enemy_set;
 	struct s_wall		*portalization_a;
 	struct s_wall		*portalization_b;
 	struct s_wall		*new_portal;
@@ -129,6 +156,12 @@ typedef struct 			s_le
 	char 				*map_path;
 	struct s_doom		*parent;
 }						t_le;
+
+/*
+** *
+** Main struct
+** *
+*/
 
 typedef struct	s_doom
 {
@@ -254,6 +287,7 @@ void			le_mouse_motion(t_doom *doom);
 void 			le_mouse_down(t_doom *doom);
 void			le_render(t_doom *doom);
 
+void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
 void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 int				write_mapfile(t_le *le);
