@@ -37,8 +37,10 @@
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 512
-# define LE_WIN_WIDTH 1024
-# define LE_WIN_HEIGHT 512
+# define EDT_WIN_WIDTH 1024
+# define EDT_WIN_HEIGHT 512
+# define GAME_WIN_WIDTH 1024
+# define GAME_WIN_HEIGHT 512
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
@@ -80,6 +82,12 @@ typedef struct	s_image
 	int		endian;
 }				t_image;
 
+/*
+** *
+** Bit and bob structs to construct the game data for the Model etc.
+** *
+*/
+
 
 typedef struct 			s_point
 {
@@ -87,11 +95,30 @@ typedef struct 			s_point
 	int 				y;
 }						t_point;
 
+typedef struct 			s_health
+{
+	int 				max;
+	int 				cur;
+}						t_health;
+
+typedef struct 			s_weapon
+{
+	int 				dmg;
+	int 				ammo_cur;
+	int 				ammo_max;
+	int 				cooldown;
+	int 				reload_time;
+	struct Mix_Chunk 	*fire_sound;
+	struct Mix_Chunk	*reload_sound;
+}						t_weapon;
+
 typedef struct 			s_player
 {
 	int 				x;
 	int 				y;
 	int 				rot;
+	struct s_health		hp;
+	struct s_weapon		wep;
 }						t_player;
 
 typedef struct 			s_enemy
@@ -101,6 +128,8 @@ typedef struct 			s_enemy
 	int 				y;
 	int 				rot;
 	struct s_point		tail;
+	struct s_health		hp;
+	struct s_weapon		wep;
 	struct s_enemy		*next;
 }						t_enemy;
 
@@ -114,11 +143,36 @@ typedef struct 			s_wall
 
 /*
 ** *
+** Model struct (>Model<-View-Controller) - Game (Controller) modifies this with the input, logic code
+ * and needs and utilizes this data during gameplay. So does Renderer (View) to create the graphic
+ * representation of the game.
+** *
+*/
+
+typedef struct			s_model
+{
+	struct s_doom		*parent;
+	struct s_player		player;
+	int 				current_portal;
+	struct s_enemy		*enemies;
+	struct s_wall		*walls;
+	struct s_wall		*portals;
+	struct s_enemy		*enemy_first;
+	struct s_wall		*wall_first;
+	struct s_wall		*portal_first;
+	int 				wall_count;
+	int 				portal_count;
+	int 				enemy_count;
+} 						t_model;
+
+
+/*
+** *
 ** Level Editor struct
 ** *
 */
 
-typedef struct 			s_le
+typedef struct 			s_editor
 {
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
@@ -155,31 +209,77 @@ typedef struct 			s_le
 	int 				write_maps;
 	char 				*map_path;
 	struct s_doom		*parent;
-}						t_le;
+}						t_editor;
 
 /*
 ** *
-** Main struct
+** Sound Effects struct
+** *
+*/
+
+typedef struct 			s_sounds
+{
+	struct Mix_Chunk 	*mcThunder;
+	struct Mix_Chunk 	*mcSteam;
+	struct Mix_Chunk	*mcPlop;
+	struct Mix_Chunk	*mcSword;
+}						t_sounds;
+
+/*
+** *
+** Main Menu struct
+** *
+*/
+
+typedef struct			s_menu
+{
+	int 				selected;
+	struct s_animation	ani_thunder;
+	int 				esc_lock;
+	struct SDL_Surface	*alphabet[128];
+	int 				alphabet_scale;
+	SDL_Surface			*thunder;
+	struct s_doom		*parent;
+}						t_menu;
+
+/*
+** *
+** Game struct
+** *
+*/
+
+typedef struct			s_game
+{
+	struct SDL_Window	*win;
+	struct SDL_Surface	*buff;
+	struct s_model		*mdl;
+	struct s_doom		*parent;
+	char 				*map_path;
+}						t_game;
+
+/*
+** *
+** Main Parent Father God struct
 ** *
 */
 
 typedef struct	s_doom
 {
 	int 				quit;
-	int 				le_quit;
+	int 				edt_quit;
+	int 				game_quit;
+	int 				menu_out_of_focus;
+	const Uint8* 		keystates;
+	uint32_t 			app_start;
+	uint32_t 			frame_start;
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	union SDL_Event		event;
-	struct Mix_Chunk 	*mcThunder;
-	struct Mix_Chunk 	*mcSteam;
-	struct Mix_Chunk	*mcPlop;
-	struct Mix_Chunk	*mcSword;
-	struct SDL_Surface	*alphabet[128];
-	int 				alphabet_scale;
-	struct s_animation	ani_thunder;
-	int 				selected_le;
-	int 				esc_lock;
-	struct s_le			*le;
+	struct s_sounds		*sounds;
+	struct s_menu		*menu;
+	struct s_editor		*edt;
+	struct s_model		*mdl;
+	struct s_game		*game;
 }						t_doom;
 
 typedef struct 			s_line
@@ -277,18 +377,32 @@ Uint32			get_exact_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface		*load_png(char *path);
 SDL_Surface		*load_texture(t_doom *doom, char *path);
 
-void 			load_alphabet(t_doom *doom);
+void 			load_alphabet(t_menu *menu);
+void	 		destroy_alphabet(t_menu *menu);
 void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
 
+void 			init_menu(t_doom *doom);
+void 			destroy_menu(t_doom *doom);
 void			render_animation(t_doom *doom);
-void			load_animation(t_doom *doom);
+void			load_animation(t_menu *menu);
+void			main_menu_loop(t_doom *doom, int argc, char **argv);
 
-void			le_mouse_motion(t_doom *doom);
-void 			le_mouse_down(t_doom *doom);
-void			le_render(t_doom *doom);
+void 			init_game(t_doom *doom, int argc, char **argv);
+void 			destroy_game(t_doom *doom);
+void			game_render(t_doom *doom);
+void	 		game_loop(t_doom *doom);
+void			game_mouse_motion(t_doom *doom);
+void 			game_mouse_down(t_doom *doom);
+
+void 			init_edt(t_doom *doom, int argc, char **argv);
+void	 		destroy_edt(t_doom *doom);
+
+void			edt_mouse_motion(t_doom *doom);
+void 			edt_mouse_down(t_doom *doom);
+void			edt_render(t_doom *doom);
 
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
 void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
-int				write_mapfile(t_le *le);
+int				write_mapfile(t_editor *le);
 #endif

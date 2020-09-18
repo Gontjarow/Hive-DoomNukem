@@ -27,7 +27,21 @@ static char *extension_path(char *folder, char c, char *extension)
 	return (path);
 }
 
-void 		load_alphabet(t_doom *doom)
+void 		destroy_alphabet(t_menu *menu)
+{
+	char c;
+
+	c = 'a';
+	while (c <= 'z')
+	{
+		SDL_FreeSurface(menu->alphabet[(int)c]);
+		c++;
+	}
+	c = ' ';
+	SDL_FreeSurface(menu->alphabet[(int)c]);
+}
+
+void 		load_alphabet(t_menu *menu)
 {
 	char c;
 	char *path;
@@ -36,12 +50,12 @@ void 		load_alphabet(t_doom *doom)
 	while (c <= 'z')
 	{
 		path = extension_path("img/robo/robo_", c, ".png");
-		doom->alphabet[(int)c] = load_texture(doom, path);
+		menu->alphabet[(int)c] = load_texture(menu->parent, path);
 		free(path);
 		c++;
 	}
 	c = ' ';
-	doom->alphabet[(int)c] = load_texture(doom, "img/robo/robo_space.png");
+	menu->alphabet[(int)c] = load_texture(menu->parent, "img/robo/robo_space.png");
 }
 
 static void render_character2x(char c, t_doom *doom, int x, int y)
@@ -57,17 +71,14 @@ static void render_character2x(char c, t_doom *doom, int x, int y)
 	i = 0;
 	k = 0;
 	pixels = doom->buff->pixels;
-	if (doom->alphabet[(int)c])
+	if (doom->menu->alphabet[(int)c])
 	{
-		// K is the raw index for reading all single pixels from reference
-		// I is the rolling pixel index offset as column changes (single increments)
-		// J is the x, y offset (total offset)
-		reference = doom->alphabet[(int)c]->pixels;
+		reference = doom->menu->alphabet[(int)c]->pixels;
 		j = x + (WIN_WIDTH * y);
-		while (k < (doom->alphabet[(int)c]->w * doom->alphabet[(int)c]->h))
+		while (k < (doom->menu->alphabet[(int)c]->w * doom->menu->alphabet[(int)c]->h))
 		{
-			j = i >= doom->alphabet[(int)c]->w * 2 ? j + WIN_WIDTH * 2: j;
-			i = i >= doom->alphabet[(int)c]->w * 2 ? 0 : i;
+			j = i >= doom->menu->alphabet[(int)c]->w * 2 ? j + WIN_WIDTH * 2: j;
+			i = i >= doom->menu->alphabet[(int)c]->w * 2 ? 0 : i;
 			pixels[i + j] = reference[k];
 			pixels[i + j + 1] = reference[k];
 			j += WIN_WIDTH;
@@ -93,17 +104,14 @@ static void render_character(char c, t_doom *doom, int x, int y)
 	i = 0;
 	k = 0;
 	pixels = doom->buff->pixels;
-	if (doom->alphabet[(int)c])
+	if (doom->menu->alphabet[(int)c])
 	{
-		// K is the raw index for reading all single pixels from reference
-		// I is the rolling pixel index offset as column changes (single increments)
-		// J is the x, y offset (total offset)
-		reference = doom->alphabet[(int)c]->pixels;
+		reference = doom->menu->alphabet[(int)c]->pixels;
 		j = x + (WIN_WIDTH * y);
-		while (k < (doom->alphabet[(int)c]->w * doom->alphabet[(int)c]->h))
+		while (k < (doom->menu->alphabet[(int)c]->w * doom->menu->alphabet[(int)c]->h))
 		{
-			j = i == doom->alphabet[(int)c]->w ? j + WIN_WIDTH : j;
-			i = i == doom->alphabet[(int)c]->w ? 0 : i;
+			j = i == doom->menu->alphabet[(int)c]->w ? j + WIN_WIDTH : j;
+			i = i == doom->menu->alphabet[(int)c]->w ? 0 : i;
 			pixels[i++ + j] = reference[k++];
 		}
 	}
@@ -113,11 +121,11 @@ void 	print_alphabet(const char *str, t_doom *doom, int x, int y)
 {
 	while (*str)
 	{
-		if(doom->alphabet_scale == 2)
+		if(doom->menu->alphabet_scale == 2)
 			render_character2x(*str, doom, x, y);
 		else
 			render_character(*str, doom, x, y);
-		x += 28 * doom->alphabet_scale;
+		x += 28 * doom->menu->alphabet_scale;
 		str++;
 	}
 }
