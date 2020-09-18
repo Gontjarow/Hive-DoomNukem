@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/18 21:19:44 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 00:50:04 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,11 @@ typedef struct 			s_weapon
 
 typedef struct 			s_player
 {
-	int 				x;
-	int 				y;
-	int 				rot;
+	t_xyz				pos; // Player position
+	t_euler				angle; // Player rotation (NOT normalized)
+	int					x;
+	int					y;
+	int					rot;
 	struct s_health		hp;
 	struct s_weapon		wep;
 }						t_player;
@@ -296,6 +298,7 @@ typedef struct	s_doom
 	struct s_editor		*edt;
 	struct s_model		*mdl;
 	struct s_game		*game;
+	struct s_player		*player;
 }						t_doom;
 
 typedef struct 			s_line
@@ -421,4 +424,7 @@ void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *ne
 void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 int				write_mapfile(t_editor *le);
+
+// Vector 3 stuff
+t_xyz			vec3_zero();
 #endif
