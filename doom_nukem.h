@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/11 14:01:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/18 21:19:44 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@
 # define EDT_WIN_HEIGHT 512
 # define GAME_WIN_WIDTH 1024
 # define GAME_WIN_HEIGHT 512
+# define GAME_MID_X ((GAME_WIN_WIDTH) / 2)
+# define GAME_MID_Y ((GAME_WIN_HEIGHT) / 2)
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
@@ -57,6 +59,9 @@
 # define WAV_SWORD "wav/sword.wav"
 # define WAV_THUNDER "wav/thunder.wav"
 # define IMG_THUNDER0 "img/thunder/0.png"
+
+# define RAD_TO_DEG 57.29577951308232087679815481410517033
+# define DEG_TO_RAD 0.01745329251994329576923690768488612
 
 /*
 ** *
@@ -81,6 +86,17 @@ typedef struct	s_image
 	int		line;
 	int		endian;
 }				t_image;
+
+typedef struct	s_xyz
+{
+	double x;
+	double y;
+	double z;
+}				t_xyz;
+
+typedef t_xyz	t_euler; // Euler angles (X, Y, Z)
+typedef double	t_deg; // Degrees
+typedef double	t_rad; // Radians
 
 /*
 ** *

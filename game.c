@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/18 14:34:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/09/18 21:20:23 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void 		init_game(t_doom *doom, int argc, char **argv)
 	if (!doom->game->win)
 		ft_die("Fatal error: SDL_CreateWindow failed at init_game.");
 	doom->game->buff = SDL_GetWindowSurface(doom->game->win);
-	if (!doom->game->win)
+	if (!doom->game->buff)
 		ft_die("Fatal error: SDL_GetWindowSurface failed at init_game.");
 	if (argc == 2)
 		doom->game->map_path = argv[1];
@@ -43,7 +43,9 @@ void 		destroy_game(t_doom *doom)
 
 void 		game_mouse_motion(t_doom *doom)
 {
-	set_pixel(doom->game->buff,doom->event.motion.x, doom->event.motion.y, 0xffffffff);
+	set_pixel(doom->game->buff,
+		GAME_MID_X + doom->event.motion.xrel,
+		GAME_MID_Y + doom->event.motion.yrel, 0xffffffff);
 }
 
 void 		game_mouse_down(t_doom *doom)
