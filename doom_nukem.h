@@ -103,6 +103,7 @@ typedef struct 			s_health
 
 typedef struct 			s_weapon
 {
+	int 				type_id;
 	int 				dmg;
 	int 				ammo_cur;
 	int 				ammo_max;
@@ -117,6 +118,7 @@ typedef struct 			s_player
 	int 				x;
 	int 				y;
 	int 				rot;
+	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;
 }						t_player;
@@ -141,6 +143,14 @@ typedef struct 			s_wall
 	struct s_wall		*next;
 }						t_wall;
 
+typedef struct 			s_mapfile
+{
+	char 				*wall_string;
+	char 				*portal_string;
+	char 				*enemy_string;
+	char 				*player_string;
+	char 				*join_string;
+}						t_mapfile;
 /*
 ** *
 ** Model struct (>Model<-View-Controller) - Game (Controller) modifies this with the input, logic code
@@ -189,8 +199,10 @@ typedef struct 			s_editor
 	struct s_point		tail;
 	struct s_point		last_enemy;
 	int 				is_wall_start;
-	char 				*map_string;
+	char 				*wall_string;
 	char 				*portal_string;
+	char 				*enemy_string;
+	char 				*player_string;
 	char 				*join_string;
 	int 				polygon_start_x;
 	int 				polygon_start_y;
@@ -206,6 +218,7 @@ typedef struct 			s_editor
 	struct s_wall		*portalization_a;
 	struct s_wall		*portalization_b;
 	struct s_wall		*new_portal;
+	int 				load_map;
 	int 				write_maps;
 	char 				*map_path;
 	struct s_doom		*parent;
@@ -255,6 +268,7 @@ typedef struct			s_game
 	struct s_model		*mdl;
 	struct s_doom		*parent;
 	char 				*map_path;
+	int 				map_supplied;
 }						t_game;
 
 /*
@@ -275,6 +289,7 @@ typedef struct	s_doom
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	union SDL_Event		event;
+	struct s_mapfile	map;
 	struct s_sounds		*sounds;
 	struct s_menu		*menu;
 	struct s_editor		*edt;
@@ -394,6 +409,7 @@ void	 		game_loop(t_doom *doom);
 void			game_mouse_motion(t_doom *doom);
 void 			game_mouse_down(t_doom *doom);
 
+void			transfer_model_to_editor(t_doom *doom);
 void 			init_edt(t_doom *doom, int argc, char **argv);
 void	 		destroy_edt(t_doom *doom);
 
@@ -404,5 +420,13 @@ void			edt_render(t_doom *doom);
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
 void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
+
+void			expand_wall_string(t_editor *edt);
+void			expand_portal_string(t_editor *edt);
+void			expand_enemy_string(t_editor *edt);
+void			update_player_string(t_editor *edt);
 int				write_mapfile(t_editor *le);
+
+void			load_model(t_doom *doom);
+void	 		destroy_model(t_doom *doom);
 #endif

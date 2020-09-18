@@ -25,8 +25,13 @@ void 		init_game(t_doom *doom, int argc, char **argv)
 	doom->game->buff = SDL_GetWindowSurface(doom->game->win);
 	if (!doom->game->win)
 		ft_die("Fatal error: SDL_GetWindowSurface failed at init_game.");
+	doom->game->map_supplied = 0;
+	doom->game->map_path = NULL;
 	if (argc == 2)
+	{
 		doom->game->map_path = argv[1];
+		doom->game->map_supplied = 1;
+	}
 	else
 		ft_die("Fatal error: No map specified as argument to load with Play Level.");
 }
@@ -43,11 +48,13 @@ void 		destroy_game(t_doom *doom)
 
 void 		game_mouse_motion(t_doom *doom)
 {
+	// Random placeholder demo
 	set_pixel(doom->game->buff,doom->event.motion.x, doom->event.motion.y, 0xffffffff);
 }
 
 void 		game_mouse_down(t_doom *doom)
 {
+	// Random placeholder demo
 	uint32_t  color;
 
 	color = 0xff00ff00;
@@ -64,7 +71,6 @@ void 		game_loop(t_doom *doom)
 	static int cooldown = 0;
 	if (!cooldown)
 	{
-		ft_putendl("Game looping!");
 		cooldown = 100;
 	} else
 		cooldown--;

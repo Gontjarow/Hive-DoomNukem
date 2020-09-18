@@ -72,6 +72,8 @@ static int	destroy_and_quit(t_doom *doom)
 		destroy_edt(doom);
 	if (!doom->game_quit)
 		destroy_game(doom);
+	if (doom->mdl)
+		destroy_model(doom);
 	destroy_sounds(doom);
 	SDL_FreeSurface(doom->buff);
 	SDL_DestroyWindow(doom->win);

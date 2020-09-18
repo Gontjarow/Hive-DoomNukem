@@ -173,19 +173,22 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 	{
 		SDL_MinimizeWindow(doom->win);
 		init_game(doom, argc, argv);
-		SDL_UpdateWindowSurface(doom->game->win);
-		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 		doom->game_quit = 0;
 		doom->menu_out_of_focus = 1;
+		load_model(doom);
+		SDL_UpdateWindowSurface(doom->game->win);
+		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}
 	else if (doom->keystates[SDL_SCANCODE_RETURN] && doom->menu->selected == 1 && doom->edt_quit && doom->game_quit)
 	{
 		SDL_MinimizeWindow(doom->win);
 		init_edt(doom, argc, argv);
-		SDL_UpdateWindowSurface(doom->edt->win);
-		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 		doom->edt_quit = 0;
 		doom->menu_out_of_focus = 1;
+		load_model(doom);
+		transfer_model_to_editor(doom);
+		SDL_UpdateWindowSurface(doom->edt->win);
+		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}
 	else if (doom->keystates[SDL_SCANCODE_RETURN] && doom->menu->selected == 2)
 	{

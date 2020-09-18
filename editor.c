@@ -14,6 +14,8 @@
 
 void 		init_edt(t_doom *doom, int argc, char **argv)
 {
+	int opened;
+
 	doom->edt = (t_editor*)malloc(sizeof(t_editor));
 	if (!doom->edt)
 		ft_die("Fatal error: Mallocing level editor struct failed at init_edt.");
@@ -31,14 +33,14 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	if (!doom->edt->enemies)
 		ft_die("Fatal error: Mallocing enemies struct failed at init_edt.");
 	doom->edt->wall_begin = NULL;
+	doom->edt->portal_begin = NULL;
 	doom->edt->enemy_first = NULL;
-	doom->edt->map_string = NULL;
+	doom->edt->wall_string = NULL;
 	doom->edt->join_string = NULL;
 	doom->edt->map_path = NULL;
 	doom->edt->portalization_a = NULL;
 	doom->edt->portalization_b = NULL;
 	doom->edt->new_portal = NULL;
-	doom->edt->portal_begin = NULL;
 	doom->edt->wall_count = 0;
 	doom->edt->portal_count = 0;
 	doom->edt->enemy_count = 0;
@@ -58,28 +60,59 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->portal_y = -1;
 	doom->edt->new_portal_x = -1;
 	doom->edt->new_portal_y = -1;
+	doom->edt->load_map = 0;
+	doom->edt->write_maps = 0;
 	if (argc == 2)
 	{
-		doom->edt->write_maps = 1;
+		opened = open(argv[1], O_RDONLY);
+		if (opened > 1)
+		{
+			ft_putendl("Hive-DoomNukem: Loading map enabled. Map file detected.");
+			doom->edt->load_map = 1;
+			close(opened);
+		}
+		else
+		{
+			ft_putendl("Hive-DoomNukem: Saving maps enabled. Map file will be written, when closing Level Editor.");
+			doom->edt->write_maps = 1;
+		}
 		doom->edt->map_path = argv[1];
 	}
 }
 
 void 		destroy_edt(t_doom *doom)
 {
+	// INCOMPLETE!!! MUST DESTRYOY LINKED LIST STRUCTURES FROM BEGINNING TO END
+	// - krusthol
 	if (doom->edt->write_maps && doom->edt->wall_count > 0)
 		write_mapfile(doom->edt);
 	SDL_FreeSurface(doom->edt->buff);
 	SDL_DestroyWindow(doom->edt->win);
 	doom->edt->win = NULL;
 	doom->edt->buff = NULL;
-	free(doom->edt->walls);
-	doom->edt->walls = NULL;
-	if (doom->edt->map_string)
-		free(doom->edt->map_string);
+	if (!doom->mdl)
+	{
+		free(doom->edt->walls);
+		doom->edt->walls = NULL;
+		free(doom->edt->portals);
+		doom->edt->portals = NULL;
+		free(doom->edt->enemies);
+		doom->edt->enemies = NULL;
+	}
+	if (doom->edt->wall_string)
+		free(doom->edt->wall_string);
+	if (doom->edt->portal_string)
+		free(doom->edt->portal_string);
+	if (doom->edt->enemy_string)
+		free(doom->edt->enemy_string);
+	if (doom->edt->player_string)
+		free(doom->edt->player_string);
 	if (doom->edt->join_string)
 		free(doom->edt->join_string);
-	doom->edt->map_string = NULL;
+	doom->edt->wall_string = NULL;
+	doom->edt->portal_string = NULL;
+	doom->edt->enemy_string = NULL;
+	doom->edt->player_string = NULL;
 	doom->edt->join_string = NULL;
 	free(doom->edt);
 	doom->edt = NULL;
@@ -99,28 +132,6 @@ void 		edt_mouse_motion(t_doom *doom)
 	}
 }
 
-int			write_mapfile(t_editor *edt)
-{
-	int opened;
-	char new_line[2];
-
-	new_line[0] = '\n';
-	new_line[1] = '\0';
-	if (!edt->write_maps)
-		return (0);
-	opened = open(edt->map_path, O_WRONLY | O_CREAT, 0666);
-	if (opened > 1)
-	{
-		write(opened, edt->map_string, ft_strlen(edt->map_string));
-		write(opened, new_line, 1);
-		if (edt->portal_count > 0)
-			write(opened, edt->portal_string, ft_strlen(edt->portal_string));
-		close(opened);
-		return (1);
-	}
-	return (0);
-}
-
 static void print_characters(t_editor *edt)
 {
 	t_enemy *enemy;
@@ -131,8 +142,8 @@ static void print_characters(t_editor *edt)
 	{
 		line.x1 = edt->player.x;
 		line.y1 = edt->player.y;
-		line.x2 = edt->tail.x;
-		line.y2 = edt->tail.y;
+		line.x2 = edt->player.tail.x;
+		line.y2 = edt->player.tail.y;
 		line.color = 0xffffff00;
 		line.buff = edt->buff;
 		render_line(&line);
@@ -206,20 +217,7 @@ static void print_walls(t_editor *edt)
 	print_portals(edt);
 }
 
-static void expand_map_string(t_editor *edt)
-{
-	if (edt->write_maps)
-	{
-		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Wall id: %d | start: %d, %d | end: %d, %d\n",
-				edt->walls->id, edt->walls->start.x, edt->walls->start.y, edt->walls->end.x, edt->walls->end.y);
-		if (!edt->map_string)
-			edt->map_string = ft_strnew(1);
-		edt->map_string = ft_strjoin(edt->map_string, edt->join_string);
-		free(edt->join_string);
-		edt->join_string = NULL;
-	}
-}
+
 
 static void set_portalization_xy(t_editor *edt)
 {
@@ -310,9 +308,11 @@ static void record_enemy(int x, int y, t_editor *edt)
 	modify_line_length(15, &enemy_point, &rot_point, &edt->enemies->tail);
 	edt->last_enemy.x = edt->enemies->x;
 	edt->last_enemy.y = edt->enemies->y;
+	edt->enemies->wep.type_id = 0;
+	edt->enemies->hp.max = 100;
 	// UNDER CONSTRUCTION!!!
-	edt->enemies->rot = 50;
-	//expand_enemy_string(edt);
+	edt->enemies->rot = 0;
+	expand_enemy_string(edt);
 	next_enemy = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!next_enemy)
 		ft_die("Fatal error: Could not malloc t_enemy at record_enemy.");
@@ -341,36 +341,17 @@ static void record_player(int x, int y, t_editor *edt)
 	}
 	else if (edt->player_set == -1)
 	{
-		edt->tail.x = x;
-		edt->tail.y = y;
+		edt->player.tail.x = x;
+		edt->player.tail.y = y;
 		start.x = edt->player.x;
 		start.y = edt->player.y;
-		modify_line_length(15, &start, &edt->tail, &edt->tail);
+		modify_line_length(15, &start, &edt->player.tail, &edt->player.tail);
 		// UNDER CONSTRUCTION!!!!
-		// edt->player.rot = 50;
+		edt->player.rot = 0;
 		edt->player_set = 1;
-		//ft_putnbr(edt->tail.x);
-		//ft_putstr(" x | y ");
-		//ft_putnbr(edt->tail.y);
-		//ft_putendl(" | Set player tail.");
-		//update_player_string(edt);
+		update_player_string(edt);
 	}
 	print_walls(edt);
-}
-
-static void expand_portal_string(t_editor *edt)
-{
-	if (edt->write_maps)
-	{
-		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Portal id: %d | start: %d, %d | end: %d, %d\n",
-				edt->portals->id, edt->portals->start.x, edt->portals->start.y, edt->portals->end.x, edt->portals->end.y);
-		if (!edt->portal_string)
-			edt->portal_string = ft_strnew(1);
-		edt->portal_string = ft_strjoin(edt->portal_string, edt->join_string);
-		free(edt->join_string);
-		edt->join_string = NULL;
-	}
 }
 
 static void record_portal(t_editor *edt)
@@ -422,7 +403,7 @@ static void record_polygon(int x, int y, t_editor *edt)
 	{
 		edt->walls->end.x = edt->polygon_start_x;
 		edt->walls->end.y = edt->polygon_start_y;
-		expand_map_string(edt);
+		expand_wall_string(edt);
 		edt->wall_count++;
 		next_wall = (t_wall*)malloc(sizeof(t_wall));
 		if (!next_wall)
@@ -458,7 +439,7 @@ static void record_polygon(int x, int y, t_editor *edt)
 				//ft_putendl("Negative.");
 			}
 		}
-		expand_map_string(edt);
+		expand_wall_string(edt);
 		edt->wall_count++;
 		next_wall = (t_wall*)malloc(sizeof(t_wall));
 		if (!next_wall)
@@ -612,4 +593,37 @@ void 		edt_mouse_down(t_doom *doom)
 void		edt_render(t_doom *doom)
 {
 	SDL_UpdateWindowSurface(doom->edt->win);
+}
+
+void			transfer_model_to_editor(t_doom *doom)
+{
+	int	ec;
+
+	doom->edt->walls = doom->mdl->walls;
+	doom->edt->enemies = doom->mdl->enemies;
+	doom->edt->portals = doom->mdl->portals;
+	doom->edt->enemy_first = doom->mdl->enemy_first;
+	doom->edt->portal_begin = doom->mdl->portal_first;
+	doom->edt->wall_begin = doom->mdl->wall_first;
+	doom->edt->wall_count = doom->mdl->wall_count;
+	doom->edt->enemy_count = doom->mdl->enemy_count;
+	doom->edt->portal_count = doom->mdl->portal_count;
+	doom->edt->player = doom->mdl->player;
+	doom->edt->player_set = 1;
+	print_walls(doom->edt);
+	ec = doom->edt->enemy_count;
+	if (ec == 0)
+		return ;
+	doom->edt->enemies = doom->edt->enemy_first;
+	doom->edt->last_enemy.x = doom->edt->enemies->x;
+	doom->edt->last_enemy.y = doom->edt->enemies->y;
+	while (ec--)
+	{
+		circle_enemy(doom);
+		doom->edt->enemies = doom->edt->enemies->next;
+		doom->edt->last_enemy.x = doom->edt->enemies->x;
+		doom->edt->last_enemy.y = doom->edt->enemies->y;
+	}
+	doom->edt->enemies = doom->mdl->enemies;
+	circle_player(doom);
 }

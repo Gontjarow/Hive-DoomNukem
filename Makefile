@@ -13,7 +13,7 @@
 NAME = doom-nukem
 
 SOURCES = doom_nukem.c input.c image.c texture.c alphabet.c menu.c editor.c \
-		line.c pixel.c vec2d.c game.c
+		line.c pixel.c vec2d.c game.c mapfile.c load_model.c
 
 OBJECTS = $(subst .c,.o,$(SOURCES))
 
