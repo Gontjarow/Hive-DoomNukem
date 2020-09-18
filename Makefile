@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+         #
+#    By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/08 19:59:39 by msuarez-          #+#    #+#              #
-#    Updated: 2020/09/11 13:29:56 by msuarez-         ###   ########.fr        #
+#    Updated: 2020/09/18 22:56:23 by ngontjar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = doom-nukem
 
 SOURCES = doom_nukem.c input.c image.c texture.c alphabet.c menu.c editor.c \
-		line.c pixel.c vec2d.c game.c
+		line.c pixel.c vec2d.c vec3d.c game.c
 
 OBJECTS = $(subst .c,.o,$(SOURCES))
 

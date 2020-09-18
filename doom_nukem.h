@@ -427,4 +427,13 @@ int				write_mapfile(t_editor *le);
 
 // Vector 3 stuff
 t_xyz			vec3_zero();
+t_xyz			vec3_add(t_xyz a, t_xyz b);
+t_xyz			vec3_sub(t_xyz a, t_xyz b);
+t_xyz			vec3_mul(t_xyz v, double scalar);
+double			vec3_mag(t_xyz v);
+t_xyz			vec3_norm(t_xyz v);
+double			vec3_dot(t_xyz a, t_xyz b);
+t_xyz			vec3_cross(t_xyz a, t_xyz b);
+double			vec3_dist(t_xyz a, t_xyz b);
+
 #endif
