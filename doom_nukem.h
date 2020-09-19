@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 04:48:24 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 06:05:37 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -446,6 +446,11 @@ double			vec3_dist(t_xyz a, t_xyz b);
 
 // Matrix stuff
 
+t_matrix		rotate_z(t_rad angle);
+t_matrix		rotate_y(t_rad angle);
+t_matrix		rotate_x(t_rad angle);
+t_matrix		translation(double x, double y, double z);
+t_matrix		scale(double x, double y, double z);
 t_matrix		perspective(t_deg fov, double near, double far);
 t_xyz			vec3_transform(t_xyz v, t_matrix m);
 

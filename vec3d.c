@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 22:21:21 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 04:41:08 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 06:05:28 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,89 @@ double	vec3_dist(t_xyz a, t_xyz b)
 }
 
 /*
+** Rotate around Z
+** \param angle angle in radians
+*/
+t_matrix	rotate_z(t_rad angle)
+{
+	double c;
+	double s;
+
+	c = cos(angle);
+	s = sin(angle);
+	return ((t_matrix){.m = {
+		{ c, s, 0, 0},
+		{-s, c, 0, 0},
+		{ 0, 0, 1, 0},
+		{ 0, 0, 0, 1}
+	}});
+}
+
+/*
+** Rotate around Y
+** \param angle angle in radians
+*/
+t_matrix	rotate_y(t_rad angle)
+{
+	double c;
+	double s;
+
+	c = cos(angle);
+	s = sin(angle);
+	return ((t_matrix){.m = {
+		{c, 0, -s, 0},
+		{0, 1, 0, 0},
+		{s, 0, c, 0},
+		{0, 0, 0, 1}
+	}});
+}
+
+/*
+** Rotate around X
+** \param angle angle in radians
+*/
+t_matrix	rotate_x(t_rad angle)
+{
+	double c;
+	double s;
+
+	c = cos(angle);
+	s = sin(angle);
+	return ((t_matrix){.m = {
+		{1,  0, 0, 0},
+		{0,  c, s, 0},
+		{0, -s, c, 0},
+		{0,  0, 0, 1}
+	}});
+}
+
+/*
+** Translation matrix
+*/
+t_matrix	translation(double x, double y, double z)
+{
+	return ((t_matrix){.m = {
+		{1, 0, 0, 0},
+		{0, 1, 0, 0},
+		{0, 0, 1, 0},
+		{x, y, z, 1},
+	}});
+}
+
+/*
+** Scaling matrix
+*/
+t_matrix	scale(double x, double y, double z)
+{
+	return ((t_matrix){.m = {
+		{x, 0, 0, 0},
+		{0, y, 0, 0},
+		{0, 0, z, 0},
+		{0, 0, 0, 1},
+	}});
+}
+
+/*
 ** Projection Matrix
 ** \param near near plane
 ** \param far far plane
@@ -148,14 +231,14 @@ double	vec3_dist(t_xyz a, t_xyz b)
 */
 t_matrix	perspective(t_deg fov, double near, double far)
 {
-	double	ar = (double)GAME_WIN_HEIGHT / GAME_WIN_WIDTH;
-	t_rad	rad = 1 / tan(fov * 0.5 * DEG_TO_RAD);
+	double	ar = (double)GAME_WIN_HEIGHT / (double)GAME_WIN_WIDTH;
+	t_rad	rad = 1.0 / tan(fov * 0.5 * DEG_TO_RAD);
 
 	return ((t_matrix){.m = {
 		{ar * rad,    0,                            0,  0},
 		{       0,  rad,                            0,  0},
-		{       0,    0,           far / (far - near),  (-far * near) / (far - near)},
-		{       0,    0, 1,  0}
+		{       0,    0,           far / (far - near),  1},
+		{       0,    0, (-far * near) / (far - near),  0}
 	}});
 }
 
