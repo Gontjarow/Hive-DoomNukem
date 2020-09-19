@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 18:47:22 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/19 04:21:29 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 06:12:05 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void ft_draw(unsigned int *pixel, t_xyz start, t_xyz end, int color)
 	int i = 0;
 	while (i <= step)
 	{
-		index = start.x + start.y * GAME_WIN_WIDTH;
+		index = (int)start.x + (int)start.y * GAME_WIN_WIDTH;
 		if (index >= 0 && index < max)
 			pixel[index] = color;
 		start.x += dir.x;
