@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 22:21:21 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 06:05:28 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 06:26:31 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,4 +262,37 @@ t_xyz	vec3_transform(t_xyz v, t_matrix m)
 	if (w != 0.0)
 		vec3_div(out, w);
 	return (out);
+}
+
+/*
+** Matrix Multiplication
+** \see https://www.mathsisfun.com/algebra/matrix-multiplying.html
+** \param a any matrix
+** \param b any matrix
+*/
+t_matrix	multiply_m(t_matrix a, t_matrix b)
+{
+	t_matrix	matrix;
+	int			x;
+	int			y;
+	int			i;
+
+	y = 0;
+	while (y < 4)
+	{
+		x = 0;
+		while (x < 4)
+		{
+			matrix.m[y][x] = 0;
+			i = 0;
+			while (i < 4)
+			{
+				matrix.m[y][x] += (a.m[y][i] * b.m[i][x]);
+				++i;
+			}
+			++x;
+		}
+		++y;
+	}
+	return (matrix);
 }

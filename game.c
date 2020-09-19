@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/19 04:56:26 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 06:30:18 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,52 +98,29 @@ void 		game_mouse_motion(t_doom *doom)
 	if (rot->y < -90)  rot->y = -90;
 	printf("player pitch %f, yaw %f\n", rot->y, rot->z);
 
+	// Create all relevant matrices first.
+	t_matrix ry = rotate_y(rot->y * DEG_TO_RAD);
+	t_matrix rz = rotate_z(rot->z * DEG_TO_RAD);
+	t_matrix t = translation(2, 2, 0);
+	t_matrix m = perspective(90, 0.1, 1000);
+	t_matrix s = scale(GAME_MID_X, GAME_MID_Y, 1);
+
+	// Then combine them into a single matrix.
+	t_matrix neo = multiply_m(ry, rz);
+	neo = multiply_m(neo, t);
+	neo = multiply_m(neo, m);
+	neo = multiply_m(neo, s);
+
 	// Create 3 points to form a triangle (or any shape)
 	// Note: The center or ORIGIN of the object is {0,0,0}
 	t_xyz A = (t_xyz){0, 1, 0};
 	t_xyz B = (t_xyz){1, 1, 0};
 	t_xyz C = (t_xyz){1, 0, 0};
 	t_xyz D = (t_xyz){1.5, 1.5, 0};
-	t_xyz TA = A;
-	t_xyz TB = B;
-	t_xyz TC = C;
-	t_xyz TD = D;
-
-	// 1. First rotate the points around their origin
-	t_matrix ry = rotate_y(rot->y * DEG_TO_RAD);
-	TA = vec3_transform(TA, ry);
-	TB = vec3_transform(TB, ry);
-	TC = vec3_transform(TC, ry);
-	TD = vec3_transform(TD, ry);
-	t_matrix rz = rotate_z(rot->z * DEG_TO_RAD);
-	TA = vec3_transform(TA, rz);
-	TB = vec3_transform(TB, rz);
-	TC = vec3_transform(TC, rz);
-	TD = vec3_transform(TD, rz);
-
-	// 2. Then translate them into world coordinates
-	// Note: this triangle's new origin will be {2,2,0}
-	// Note: Points A,B,C,D will be relative to the new origin.
-	// Note: This becomes more relevant with other objects.
-	t_matrix t = translation(2, 2, 0);
-	TA = vec3_transform(TA, t);
-	TB = vec3_transform(TB, t);
-	TC = vec3_transform(TC, t);
-	TD = vec3_transform(TD, t);
-
-	// 3. Finally transform them by the projection matrix
-	t_matrix m = perspective(90, 0.1, 1000);
-	TA = vec3_transform(TA, m);
-	TB = vec3_transform(TB, m);
-	TC = vec3_transform(TC, m);
-	TD = vec3_transform(TD, m);
-
-	// 4. Scale the NDC space (-1:1) to real pixel coordinates.
-	t_matrix s = scale(GAME_MID_X, GAME_MID_Y, 1);
-	TA = vec3_transform(TA, s);
-	TB = vec3_transform(TB, s);
-	TC = vec3_transform(TC, s);
-	TD = vec3_transform(TD, s);
+	t_xyz TA = vec3_transform(A, neo);
+	t_xyz TB = vec3_transform(B, neo);
+	t_xyz TC = vec3_transform(C, neo);
+	t_xyz TD = vec3_transform(D, neo);
 	show_vec(TA, "4 TA");
 	show_vec(TB, "4 TB");
 	show_vec(TC, "4 TC");
@@ -172,7 +149,7 @@ void 		game_loop(t_doom *doom)
 	static int cooldown = 0;
 	if (!cooldown)
 	{
-		ft_putendl("Game looping!");
+		// ft_putendl("Game looping!");
 		cooldown = 100;
 	} else
 		cooldown--;
