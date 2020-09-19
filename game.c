@@ -110,6 +110,16 @@ void 		game_mouse_motion(t_doom *doom)
 	t_xyz TD = D;
 
 	// 1. First rotate the points around their origin
+	t_matrix ry = rotate_y(rot->y * DEG_TO_RAD);
+	TA = vec3_transform(TA, ry);
+	TB = vec3_transform(TB, ry);
+	TC = vec3_transform(TC, ry);
+	TD = vec3_transform(TD, ry);
+	t_matrix rz = rotate_z(rot->z * DEG_TO_RAD);
+	TA = vec3_transform(TA, rz);
+	TB = vec3_transform(TB, rz);
+	TC = vec3_transform(TC, rz);
+	TD = vec3_transform(TD, rz);
 
 	// 2. Then translate them into world coordinates
 
