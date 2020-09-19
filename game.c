@@ -139,17 +139,14 @@ void 		game_mouse_motion(t_doom *doom)
 	TD = vec3_transform(TD, m);
 
 	// 4. Scale the NDC space (-1:1) to real pixel coordinates.
-	// Note: This could be done by a matrix.
-	TA.x *= GAME_MID_X;
-	TA.y *= GAME_MID_Y;
-	TB.x *= GAME_MID_X;
-	TB.y *= GAME_MID_Y;
-	TC.x *= GAME_MID_X;
-	TC.y *= GAME_MID_Y;
-
-	show_vec(TA, "TA");
-	show_vec(TB, "TB");
-	show_vec(TC, "TC");
+	t_matrix s = scale(GAME_MID_X, GAME_MID_Y, 1);
+	TA = vec3_transform(TA, s);
+	TB = vec3_transform(TB, s);
+	TC = vec3_transform(TC, s);
+	TD = vec3_transform(TD, s);
+	show_vec(TA, "4 TA");
+	show_vec(TB, "4 TB");
+	show_vec(TC, "4 TC");
 
 	ft_draw(surface->pixels, TA, TB, 0xFF0000);
 	ft_draw(surface->pixels, TB, TC, 0x00FF00);
