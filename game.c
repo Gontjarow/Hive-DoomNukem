@@ -98,25 +98,27 @@ void 		game_mouse_motion(t_doom *doom)
 	if (rot->y < -90)  rot->y = -90;
 	printf("player pitch %f, yaw %f\n", rot->y, rot->z);
 
-	// Create a projection matrix (yes, every frame for now...)
-	t_matrix m = perspective(90, 0.1, 1000);
-
-	#define V3(x,y,z) (t_xyz){x,y,z}
-
 	// Create 3 points to form a triangle (or any shape)
 	// Note: The center or ORIGIN of the object is {0,0,0}
 	t_xyz A = (t_xyz){0, 1, 0};
-	t_xyz B = (t_xyz){1, 0, 0};
-	t_xyz C = (t_xyz){1, 1, 0};
+	t_xyz B = (t_xyz){1, 1, 0};
+	t_xyz C = (t_xyz){1, 0, 0};
+	t_xyz D = (t_xyz){1.5, 1.5, 0};
+	t_xyz TA = A;
+	t_xyz TB = B;
+	t_xyz TC = C;
+	t_xyz TD = D;
 
 	// 1. First rotate the points around their origin
 
 	// 2. Then translate them into world coordinates
 
 	// 3. Finally transform them by the projection matrix
-	t_xyz TA = vec3_transform(A, m);
-	t_xyz TB = vec3_transform(B, m);
-	t_xyz TC = vec3_transform(C, m);
+	t_matrix m = perspective(90, 0.1, 1000);
+	TA = vec3_transform(TA, m);
+	TB = vec3_transform(TB, m);
+	TC = vec3_transform(TC, m);
+	TD = vec3_transform(TD, m);
 
 	// 4. Scale the NDC space (-1:1) to real pixel coordinates.
 	// Note: This could be done by a matrix.
@@ -134,6 +136,7 @@ void 		game_mouse_motion(t_doom *doom)
 	ft_draw(surface->pixels, TA, TB, 0xFF0000);
 	ft_draw(surface->pixels, TB, TC, 0x00FF00);
 	ft_draw(surface->pixels, TC, TA, 0x0000FF);
+	ft_draw(surface->pixels, TB, TD, 0xFF8000);
 }
 
 void 		game_mouse_down(t_doom *doom)
