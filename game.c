@@ -122,6 +122,14 @@ void 		game_mouse_motion(t_doom *doom)
 	TD = vec3_transform(TD, rz);
 
 	// 2. Then translate them into world coordinates
+	// Note: this triangle's new origin will be {2,2,0}
+	// Note: Points A,B,C,D will be relative to the new origin.
+	// Note: This becomes more relevant with other objects.
+	t_matrix t = translation(2, 2, 0);
+	TA = vec3_transform(TA, t);
+	TB = vec3_transform(TB, t);
+	TC = vec3_transform(TC, t);
+	TD = vec3_transform(TD, t);
 
 	// 3. Finally transform them by the projection matrix
 	t_matrix m = perspective(90, 0.1, 1000);
