@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 22:21:21 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 01:02:45 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 04:41:08 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,20 @@ t_xyz	vec3_mul(t_xyz v, double scalar)
 		v.x * scalar,
 		v.y * scalar,
 		v.z * scalar,
+	});
+}
+
+/*
+** Uniformly scales a vector while maintaining direction.
+** \param v vector
+** \param scalar divides each component
+*/
+t_xyz	vec3_div(t_xyz v, double scalar)
+{
+	return ((t_xyz){
+		v.x / scalar,
+		v.y / scalar,
+		v.z / scalar,
 	});
 }
 
@@ -124,4 +138,45 @@ double	vec3_dist(t_xyz a, t_xyz b)
 		(b.x - a.x) * (b.x - a.x) +
 		(b.y - a.y) * (b.y - a.y) +
 		(b.z - a.z) * (b.z - a.z)));
+}
+
+/*
+** Projection Matrix
+** \param near near plane
+** \param far far plane
+** \param fov FOV in degrees
+*/
+t_matrix	perspective(t_deg fov, double near, double far)
+{
+	double	ar = (double)GAME_WIN_HEIGHT / GAME_WIN_WIDTH;
+	t_rad	rad = 1 / tan(fov * 0.5 * DEG_TO_RAD);
+
+	return ((t_matrix){.m = {
+		{ar * rad,    0,                            0,  0},
+		{       0,  rad,                            0,  0},
+		{       0,    0,           far / (far - near),  (-far * near) / (far - near)},
+		{       0,    0, 1,  0}
+	}});
+}
+
+/*
+** Apply Matrix to Vector
+** \see https://youtu.be/ih20l3pJoeU?t=1832
+** \param v any vector
+** \param m any matrix
+*/
+t_xyz	vec3_transform(t_xyz v, t_matrix m)
+{
+	t_xyz	out;
+	double	w;
+
+	out = (t_xyz){
+		v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0],
+		v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1],
+		v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + m.m[3][2]
+	};
+	w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
+	if (w != 0.0)
+		vec3_div(out, w);
+	return (out);
 }

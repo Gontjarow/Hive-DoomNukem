@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 00:50:04 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 04:48:24 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,11 @@ typedef struct	s_xyz
 typedef t_xyz	t_euler; // Euler angles (X, Y, Z)
 typedef double	t_deg; // Degrees
 typedef double	t_rad; // Radians
+
+typedef struct	s_matrix
+{
+	double	m[4][4];
+}				t_matrix;
 
 /*
 ** *
@@ -427,14 +432,21 @@ void			ft_draw(unsigned int *pixel, t_xyz start, t_xyz end, int color);
 int				write_mapfile(t_editor *le);
 
 // Vector 3 stuff
+
 t_xyz			vec3_zero();
 t_xyz			vec3_add(t_xyz a, t_xyz b);
 t_xyz			vec3_sub(t_xyz a, t_xyz b);
 t_xyz			vec3_mul(t_xyz v, double scalar);
+t_xyz			vec3_div(t_xyz v, double scalar);
 double			vec3_mag(t_xyz v);
 t_xyz			vec3_norm(t_xyz v);
 double			vec3_dot(t_xyz a, t_xyz b);
 t_xyz			vec3_cross(t_xyz a, t_xyz b);
 double			vec3_dist(t_xyz a, t_xyz b);
+
+// Matrix stuff
+
+t_matrix		perspective(t_deg fov, double near, double far);
+t_xyz			vec3_transform(t_xyz v, t_matrix m);
 
 #endif

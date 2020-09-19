@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/18 23:29:48 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 04:56:26 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,13 @@ void 		destroy_game(t_doom *doom)
 	doom->game = NULL;
 }
 
+static void show_vec(t_xyz v, const char *name)
+{
+	printf("'%4.4s' { %8.3f | %8.3f | %8.3f }\n",
+		name, v.x, v.y, v.z
+	);
+}
+
 void 		game_mouse_motion(t_doom *doom)
 {
 	SDL_MouseMotionEvent	e = doom->event.motion;
@@ -88,9 +95,42 @@ void 		game_mouse_motion(t_doom *doom)
 	if (rot->y < -90)  rot->y = -90;
 	printf("player pitch %f, yaw %f\n", rot->y, rot->z);
 
-	set_pixel(doom->game->buff,
-		GAME_MID_X + e.xrel,
-		GAME_MID_Y + e.yrel, 0xffffffff);
+	// Create a projection matrix (yes, every frame for now...)
+	t_matrix m = perspective(90, 0.1, 1000);
+
+	#define V3(x,y,z) (t_xyz){x,y,z}
+
+	// Create 3 points to form a triangle (or any shape)
+	// Note: The center or ORIGIN of the object is {0,0,0}
+	t_xyz A = (t_xyz){0, 1, 0};
+	t_xyz B = (t_xyz){1, 0, 0};
+	t_xyz C = (t_xyz){1, 1, 0};
+
+	// 1. First rotate the points around their origin
+
+	// 2. Then translate them into world coordinates
+
+	// 3. Finally transform them by the projection matrix
+	t_xyz TA = vec3_transform(A, m);
+	t_xyz TB = vec3_transform(B, m);
+	t_xyz TC = vec3_transform(C, m);
+
+	// 4. Scale the NDC space (-1:1) to real pixel coordinates.
+	// Note: This could be done by a matrix.
+	TA.x *= GAME_MID_X;
+	TA.y *= GAME_MID_Y;
+	TB.x *= GAME_MID_X;
+	TB.y *= GAME_MID_Y;
+	TC.x *= GAME_MID_X;
+	TC.y *= GAME_MID_Y;
+
+	show_vec(TA, "TA");
+	show_vec(TB, "TB");
+	show_vec(TC, "TC");
+
+	ft_draw(doom->game->buff->pixels, TA, TB, 0xFF0000);
+	ft_draw(doom->game->buff->pixels, TB, TC, 0x00FF00);
+	ft_draw(doom->game->buff->pixels, TC, TA, 0x0000FF);
 }
 
 void 		game_mouse_down(t_doom *doom)
