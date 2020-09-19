@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   line.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 18:47:22 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/15 15:31:27 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/09/19 04:21:29 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,27 @@ void			render_line(t_line *l)
 		else
 			l = quad(3, l);
 		line_mirror(l, delta_x, delta_y);
+	}
+}
+
+void ft_draw(unsigned int *pixel, t_xyz start, t_xyz end, int color)
+{
+	int max = GAME_WIN_WIDTH * GAME_WIN_HEIGHT;
+	int index;
+	t_xyz dir = vec3_sub(end, start);
+
+	t_xyz abs = (t_xyz){fabs(dir.x), fabs(dir.y), 0};
+	float step = (abs.x > abs.y) ? abs.x : abs.y;
+	dir = vec3_div(dir, step);
+
+	int i = 0;
+	while (i <= step)
+	{
+		index = start.x + start.y * GAME_WIN_WIDTH;
+		if (index >= 0 && index < max)
+			pixel[index] = color;
+		start.x += dir.x;
+		start.y += dir.y;
+		++i;
 	}
 }

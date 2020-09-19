@@ -423,6 +423,7 @@ void			edt_render(t_doom *doom);
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
 void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
+void			ft_draw(unsigned int *pixel, t_xyz start, t_xyz end, int color);
 int				write_mapfile(t_editor *le);
 
 // Vector 3 stuff
