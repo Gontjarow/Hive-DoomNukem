@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 06:27:26 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/19 23:11:03 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft/libft.h"
 # include "mlx/mlx.h"
+# include "ft_math.h"
 
 # ifndef __linux__
 
@@ -60,9 +61,6 @@
 # define WAV_THUNDER "wav/thunder.wav"
 # define IMG_THUNDER0 "img/thunder/0.png"
 
-# define RAD_TO_DEG 57.29577951308232087679815481410517033
-# define DEG_TO_RAD 0.01745329251994329576923690768488612
-
 /*
 ** *
 ** Basic structs
@@ -86,22 +84,6 @@ typedef struct	s_image
 	int		line;
 	int		endian;
 }				t_image;
-
-typedef struct	s_xyz
-{
-	double x;
-	double y;
-	double z;
-}				t_xyz;
-
-typedef t_xyz	t_euler; // Euler angles (X, Y, Z)
-typedef double	t_deg; // Degrees
-typedef double	t_rad; // Radians
-
-typedef struct	s_matrix
-{
-	double	m[4][4];
-}				t_matrix;
 
 /*
 ** *
@@ -430,29 +412,5 @@ void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 void			ft_draw(unsigned int *pixel, t_xyz start, t_xyz end, int color);
 int				write_mapfile(t_editor *le);
-
-// Vector 3 stuff
-
-t_xyz			vec3_zero();
-t_xyz			vec3_add(t_xyz a, t_xyz b);
-t_xyz			vec3_sub(t_xyz a, t_xyz b);
-t_xyz			vec3_mul(t_xyz v, double scalar);
-t_xyz			vec3_div(t_xyz v, double scalar);
-double			vec3_mag(t_xyz v);
-t_xyz			vec3_norm(t_xyz v);
-double			vec3_dot(t_xyz a, t_xyz b);
-t_xyz			vec3_cross(t_xyz a, t_xyz b);
-double			vec3_dist(t_xyz a, t_xyz b);
-
-// Matrix stuff
-
-t_matrix		rotate_z(t_rad angle);
-t_matrix		rotate_y(t_rad angle);
-t_matrix		rotate_x(t_rad angle);
-t_matrix		translation(double x, double y, double z);
-t_matrix		scale(double x, double y, double z);
-t_matrix		perspective(t_deg fov, double near, double far);
-t_xyz			vec3_transform(t_xyz v, t_matrix m);
-t_matrix		multiply_m(t_matrix a, t_matrix b);
 
 #endif
