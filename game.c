@@ -70,17 +70,20 @@ void 		game_mouse_motion(t_doom *doom)
 {
 	SDL_MouseMotionEvent	e = doom->event.motion;
 	t_euler					*rot = &(doom->player->angle);
+	SDL_Surface				*surface = doom->game->buff;
 	printf("%d %d %d %d\n", e.x, e.y, e.xrel, e.yrel);
+
+	SDL_memset(surface->pixels, 0, surface->h * surface->pitch);
 
 	// X is the "forward" axis. Rotating around it would barrelroll our camera.
 
 	// Z is the "up" axis. Horizontal mouse movement turns us left/right.
 	//	To turn left/right, we must rotate around the up-axis.
-	rot->z += e.xrel;
+	rot->z += e.xrel * 0.5;
 
 	// Y is the "side" (left or right, TBD) axis. Vertical mouse movement turns us up/down.
 	//	To turn up/down, we must rotate around the side-axis.
-	rot->y += e.yrel;
+	rot->y += e.yrel * 0.5;
 
 	// Note: Right now, Y is effectively left-handed (towards right)
 	//	because of the natural Y direction of screen coordinates.
@@ -128,9 +131,9 @@ void 		game_mouse_motion(t_doom *doom)
 	show_vec(TB, "TB");
 	show_vec(TC, "TC");
 
-	ft_draw(doom->game->buff->pixels, TA, TB, 0xFF0000);
-	ft_draw(doom->game->buff->pixels, TB, TC, 0x00FF00);
-	ft_draw(doom->game->buff->pixels, TC, TA, 0x0000FF);
+	ft_draw(surface->pixels, TA, TB, 0xFF0000);
+	ft_draw(surface->pixels, TB, TC, 0x00FF00);
+	ft_draw(surface->pixels, TC, TA, 0x0000FF);
 }
 
 void 		game_mouse_down(t_doom *doom)
