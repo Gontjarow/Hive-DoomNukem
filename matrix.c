@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <ngontjar@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/19 23:16:31 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 23:31:55 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/20 04:52:18 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 /*
 ** Rotate around Z
+** \see https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
 ** \param angle angle in radians
 */
 t_matrix	rotate_z(t_rad angle)
@@ -24,15 +25,16 @@ t_matrix	rotate_z(t_rad angle)
 	c = cos(angle);
 	s = sin(angle);
 	return ((t_matrix){.m = {
-		{ c, s, 0, 0},
-		{-s, c, 0, 0},
-		{ 0, 0, 1, 0},
-		{ 0, 0, 0, 1}
+		{ c, -s, 0, 0},
+		{ s,  c, 0, 0},
+		{ 0,  0, 1, 0},
+		{ 0,  0, 0, 1}
 	}});
 }
 
 /*
 ** Rotate around Y
+** \see https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
 ** \param angle angle in radians
 */
 t_matrix	rotate_y(t_rad angle)
@@ -43,15 +45,16 @@ t_matrix	rotate_y(t_rad angle)
 	c = cos(angle);
 	s = sin(angle);
 	return ((t_matrix){.m = {
-		{c, 0, -s, 0},
-		{0, 1, 0, 0},
-		{s, 0, c, 0},
-		{0, 0, 0, 1}
+		{ c, 0, s, 0},
+		{ 0, 1, 0, 0},
+		{-s, 0, c, 0},
+		{ 0, 0, 0, 1}
 	}});
 }
 
 /*
 ** Rotate around X
+** \see https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
 ** \param angle angle in radians
 */
 t_matrix	rotate_x(t_rad angle)
@@ -62,10 +65,10 @@ t_matrix	rotate_x(t_rad angle)
 	c = cos(angle);
 	s = sin(angle);
 	return ((t_matrix){.m = {
-		{1,  0, 0, 0},
-		{0,  c, s, 0},
-		{0, -s, c, 0},
-		{0,  0, 0, 1}
+		{1,  0,  0, 0},
+		{0,  c, -s, 0},
+		{0,  s,  c, 0},
+		{0,  0,  0, 1}
 	}});
 }
 
