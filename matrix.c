@@ -6,11 +6,25 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/19 23:16:31 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/20 04:52:18 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/20 08:07:08 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom_nukem.h"
+
+/*
+** Identity matrix
+** \return a matrix that causes no changes
+*/
+t_matrix	identity()
+{
+	return ((t_matrix){.m = {
+		{1, 0, 0, 0},
+		{0, 1, 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1}
+	}});
+}
 
 /*
 ** Rotate around Z
@@ -152,7 +166,6 @@ t_matrix	multiply_m(t_matrix a, t_matrix b)
 	t_matrix	matrix;
 	int			x;
 	int			y;
-	int			i;
 
 	y = 0;
 	while (y < 4)
@@ -160,16 +173,64 @@ t_matrix	multiply_m(t_matrix a, t_matrix b)
 		x = 0;
 		while (x < 4)
 		{
-			matrix.m[y][x] = 0;
-			i = 0;
-			while (i < 4)
-			{
-				matrix.m[y][x] += (a.m[y][i] * b.m[i][x]);
-				++i;
-			}
+			matrix.m[y][x] =
+				a.m[y][0] * b.m[0][x] +
+				a.m[y][1] * b.m[1][x] +
+				a.m[y][2] * b.m[2][x] +
+				a.m[y][3] * b.m[3][x];
 			++x;
 		}
 		++y;
 	}
 	return (matrix);
+}
+
+/*
+** Point-at Matrix
+** \see https://youtu.be/HXSuNxpCzdM?t=1122
+*/
+t_matrix	point_at(t_xyz pos, t_xyz target, t_xyz up)
+{
+	t_xyz fwd;
+	t_xyz adjust;
+	t_xyz newup;
+	t_xyz right;
+
+	fwd = vec3_norm(vec3_sub(target, pos));
+	adjust = vec3_mul(fwd, vec3_dot(up, fwd));
+	newup = vec3_norm(vec3_sub(up, adjust));
+	right = vec3_cross(newup, fwd);
+	return ((t_matrix){.m = {
+		{right.x, right.y, right.z, 0},
+		{newup.x, newup.y, newup.z, 0},
+		{  fwd.x,   fwd.y,   fwd.z, 0},
+		{  pos.x,   pos.y,   pos.z, 1}
+	}});
+}
+
+/*
+** Quick Inverse-Matrix
+** Used specifically to create a look-at matrix from point-at.
+** \see https://youtu.be/HXSuNxpCzdM?t=1466
+*/
+t_matrix	inverse_m(t_matrix m)
+{
+	t_matrix out;
+
+	out = (t_matrix){.m = {
+		{m.m[0][0], m.m[1][0], m.m[2][0], 0},
+		{m.m[0][1], m.m[1][1], m.m[2][1], 0},
+		{m.m[0][2], m.m[1][2], m.m[2][2], 0},
+		{0, 0, 0, 1}
+	}};
+	out.m[3][0] = -(m.m[3][0] * out.m[0][0] +
+					m.m[3][1] * out.m[1][0] +
+					m.m[3][2] * out.m[2][0]);
+	out.m[3][1] = -(m.m[3][0] * out.m[0][1] +
+					m.m[3][1] * out.m[1][1] +
+					m.m[3][2] * out.m[2][1]);
+	out.m[3][2] = -(m.m[3][0] * out.m[0][2] +
+					m.m[3][1] * out.m[1][2] +
+					m.m[3][2] * out.m[2][2]);
+	return (out);
 }

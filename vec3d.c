@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vec3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <ngontjar@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 22:21:21 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 23:16:28 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/20 07:53:53 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@
 t_xyz	vec3_zero()
 {
 	return ((t_xyz){0, 0, 0});
+}
+
+t_xyz	vec3(double x, double y, double z)
+{
+	return ((t_xyz){x, y, z});
 }
 
 /*

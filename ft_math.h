@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_math.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <ngontjar@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/19 23:13:19 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 23:13:24 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/20 08:05:44 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct	s_matrix
 // Vector 3 stuff
 
 t_xyz			vec3_zero();
+t_xyz			vec3(double x, double y, double z);
 t_xyz			vec3_add(t_xyz a, t_xyz b);
 t_xyz			vec3_sub(t_xyz a, t_xyz b);
 t_xyz			vec3_mul(t_xyz v, double scalar);
@@ -49,6 +50,7 @@ double			vec3_dist(t_xyz a, t_xyz b);
 
 // Matrix stuff
 
+t_matrix		identity();
 t_matrix		rotate_z(t_rad angle);
 t_matrix		rotate_y(t_rad angle);
 t_matrix		rotate_x(t_rad angle);
@@ -57,5 +59,7 @@ t_matrix		scale(double x, double y, double z);
 t_matrix		perspective(t_deg fov, double near, double far);
 t_xyz			vec3_transform(t_xyz v, t_matrix m);
 t_matrix		multiply_m(t_matrix a, t_matrix b);
+t_matrix		point_at(t_xyz pos, t_xyz target, t_xyz up);
+t_matrix		inverse_m(t_matrix m);
 
 #endif
