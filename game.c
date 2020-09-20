@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/19 06:30:18 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/20 07:41:14 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,11 @@ void 		game_mouse_motion(t_doom *doom)
 
 	// Z is the "up" axis. Horizontal mouse movement turns us left/right.
 	//	To turn left/right, we must rotate around the up-axis.
-	rot->z += e.xrel * 0.5;
+	rot->z += e.xrel * 0.15;
 
 	// Y is the "side" (left or right, TBD) axis. Vertical mouse movement turns us up/down.
 	//	To turn up/down, we must rotate around the side-axis.
-	rot->y += e.yrel * 0.5;
+	rot->y += e.yrel * 0.15;
 
 	// Note: Right now, Y is effectively left-handed (towards right)
 	//	because of the natural Y direction of screen coordinates.
@@ -99,36 +99,106 @@ void 		game_mouse_motion(t_doom *doom)
 	printf("player pitch %f, yaw %f\n", rot->y, rot->z);
 
 	// Create all relevant matrices first.
-	t_matrix ry = rotate_y(rot->y * DEG_TO_RAD);
 	t_matrix rz = rotate_z(rot->z * DEG_TO_RAD);
-	t_matrix t = translation(2, 2, 0);
-	t_matrix m = perspective(90, 0.1, 1000);
+	t_matrix ry = rotate_y(rot->y * DEG_TO_RAD);
+	t_matrix t = translation(0, 2, -1);
+	t_matrix m = perspective(90, 0.1, 64);
 	t_matrix s = scale(GAME_MID_X, GAME_MID_Y, 1);
 
-	// Then combine them into a single matrix.
-	t_matrix neo = multiply_m(ry, rz);
-	neo = multiply_m(neo, t);
-	neo = multiply_m(neo, m);
-	neo = multiply_m(neo, s);
+	// Object -> World transformation
+	t_matrix world;
+	world = multiply_m(rz, ry);
+	world = multiply_m(world, t);
 
-	// Create 3 points to form a triangle (or any shape)
+	// World -> View transformation
+	t_matrix view;
+	t_xyz c_pos = (t_xyz){0, 0, 0};
+
+	t_xyz c_dir = (t_xyz){1, 0, 0};
+	t_xyz c_up = (t_xyz){0, 0, -1};
+	t_xyz target = vec3_add(c_pos, c_dir);
+	view = inverse_m(point_at(c_pos, target, c_up));
+	view = multiply_m(world, view);
+
+	// View -> Screen transformation
+	t_matrix screen;
+	screen = multiply_m(view, m);
+	screen = multiply_m(screen, s);
+
+	// Create 2 quads
 	// Note: The center or ORIGIN of the object is {0,0,0}
-	t_xyz A = (t_xyz){0, 1, 0};
-	t_xyz B = (t_xyz){1, 1, 0};
-	t_xyz C = (t_xyz){1, 0, 0};
-	t_xyz D = (t_xyz){1.5, 1.5, 0};
-	t_xyz TA = vec3_transform(A, neo);
-	t_xyz TB = vec3_transform(B, neo);
-	t_xyz TC = vec3_transform(C, neo);
-	t_xyz TD = vec3_transform(D, neo);
-	show_vec(TA, "4 TA");
-	show_vec(TB, "4 TB");
-	show_vec(TC, "4 TC");
+	t_xyz A = (t_xyz){ 0.5, -0.5, -0.5};
+	t_xyz B = (t_xyz){-0.5, -0.5, -0.5};
+	t_xyz C = (t_xyz){-0.5,  0.5, -0.5};
+	t_xyz D = (t_xyz){ 0.5,  0.5, -0.5};
 
+	t_xyz E = (t_xyz){ 0.5, -0.5,  0.5};
+	t_xyz F = (t_xyz){-0.5, -0.5,  0.5};
+	t_xyz G = (t_xyz){-0.5,  0.5,  0.5};
+	t_xyz H = (t_xyz){ 0.5,  0.5,  0.5};
+
+	t_xyz fwdX = (t_xyz){1, 0, 0};
+	t_xyz fwdY = (t_xyz){0, 1, 0};
+	t_xyz fwdZ = (t_xyz){0, 0, 1};
+	t_xyz zero = (t_xyz){0, 0, 0};
+
+	// base axes in screen coordinates only
+	t_xyz TX = vec3_transform(fwdX, m);
+	t_xyz TY = vec3_transform(fwdY, m);
+	t_xyz TZ = vec3_transform(fwdZ, m);
+	t_xyz TO = vec3_transform(zero, m);
+	TX = vec3_transform(TX, s);
+	TY = vec3_transform(TY, s);
+	TZ = vec3_transform(TZ, s);
+	TO = vec3_transform(TO, s);
+
+	// base axes
+	t_xyz WX = vec3_transform(fwdX, screen);
+	t_xyz WY = vec3_transform(fwdY, screen);
+	t_xyz WZ = vec3_transform(fwdZ, screen);
+	t_xyz WO = vec3_transform(zero, screen);
+
+	t_xyz TA = vec3_transform(A, screen);
+	t_xyz TB = vec3_transform(B, screen);
+	t_xyz TC = vec3_transform(C, screen);
+	t_xyz TD = vec3_transform(D, screen);
+
+	t_xyz TE = vec3_transform(E, screen);
+	t_xyz TF = vec3_transform(F, screen);
+	t_xyz TG = vec3_transform(G, screen);
+	t_xyz TH = vec3_transform(H, screen);
+
+	show_vec(TB, "4 TB");
+	show_vec(TG, "4 TG");
+
+	// Just connecting the dots...
+
+	// Screen axes
+	ft_draw(surface->pixels, TO, TX, 0xFF0000);
+	ft_draw(surface->pixels, TO, TY, 0x00FF00);
+	ft_draw(surface->pixels, TO, TZ, 0x0000FF);
+	// Object axes
+	ft_draw(surface->pixels, WO, WX, 0xFF0000);
+	ft_draw(surface->pixels, WO, WY, 0x00FF00);
+	ft_draw(surface->pixels, WO, WZ, 0x0000FF);
+
+	// First quad, red
 	ft_draw(surface->pixels, TA, TB, 0xFF0000);
-	ft_draw(surface->pixels, TB, TC, 0x00FF00);
-	ft_draw(surface->pixels, TC, TA, 0x0000FF);
-	ft_draw(surface->pixels, TB, TD, 0xFF8000);
+	ft_draw(surface->pixels, TB, TC, 0xFF0000);
+	ft_draw(surface->pixels, TC, TD, 0xFF0000);
+	ft_draw(surface->pixels, TD, TA, 0xFF0000);
+
+	// Second quad, green
+	ft_draw(surface->pixels, TE, TF, 0x00FF00);
+	ft_draw(surface->pixels, TF, TG, 0x00FF00);
+	ft_draw(surface->pixels, TG, TH, 0x00FF00);
+	ft_draw(surface->pixels, TH, TE, 0x00FF00);
+
+	// connecting lines, white
+	ft_draw(surface->pixels, TA, TE, 0xFFFFFF);
+	ft_draw(surface->pixels, TB, TF, 0xFFFFFF);
+	ft_draw(surface->pixels, TC, TG, 0xFFFFFF);
+	ft_draw(surface->pixels, TD, TH, 0xFFFFFF);
 }
 
 void 		game_mouse_down(t_doom *doom)
