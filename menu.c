@@ -185,8 +185,9 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 		init_edt(doom, argc, argv);
 		doom->edt_quit = 0;
 		doom->menu_out_of_focus = 1;
-		load_model(doom);
-		transfer_model_to_editor(doom);
+		if (load_model(doom))
+			if (doom->map.was_filled)
+				transfer_model_to_editor(doom);
 		SDL_UpdateWindowSurface(doom->edt->win);
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}

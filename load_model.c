@@ -168,9 +168,21 @@ static void parse_mapfile(t_doom *doom, t_model *mdl)
 	//  - krusthol
 	int tokens;
 
-	scan_walls(doom, mdl);
-	scan_portals(doom, mdl);
-	scan_enemies(doom, mdl);
+	doom->map.was_filled = 1;
+	if (doom->map.wall_string)
+		scan_walls(doom, mdl);
+	if (doom->map.portal_string)
+		scan_portals(doom, mdl);
+	if (doom->map.enemy_string)
+		scan_enemies(doom, mdl);
+	if (!doom->map.wall_string && !doom->map.portal_string && !doom->map.enemy_string && !doom->map.player_string)
+	{
+		ft_putendl("Warning: Map data strings empty at parse_mapfile.");
+		doom->map.was_filled = 0;
+		return ;
+	}
+	if (!doom->map.player_string)
+		ft_die("Fatal error: parse_mapfile player data missing from mapfile.");
 	tokens = sscanf(doom->map.player_string, "Player spawn: %d %d | rot: %d | tail: %d %d\n",
 		   &mdl->player.x, &mdl->player.y, &mdl->player.rot, &mdl->player.tail.x, &mdl->player.tail.y);
 	if (tokens != 5)
@@ -182,6 +194,8 @@ static char *expand_string(char *base, char *add)
 	char *join;
 	char *nl;
 
+	if (base == NULL)
+		base = ft_strnew(1);
 	join = base;
 	base = ft_strjoin(base, add);
 	free(join);
@@ -203,10 +217,6 @@ static int read_mapfile(t_doom *doom, char *map_path)
 	opened = open(map_path, O_RDONLY);
 	if (opened > 1)
 	{
-		doom->map.wall_string = ft_strnew(1);
-		doom->map.portal_string = ft_strnew(1);
-		doom->map.enemy_string = ft_strnew(1);
-		doom->map.player_string = ft_strnew(1);
 		while (get_next_line(opened, &line))
 		{
 			if (ft_strlen(line) < 3)
@@ -268,26 +278,27 @@ void 		destroy_model(t_doom *doom)
 	doom->mdl = NULL;
 }
 
-void		load_model(t_doom *doom)
+int			load_model(t_doom *doom)
 {
 	init_model(doom);
 	if (!doom->edt_quit)
 	{
 		if (!doom->edt->load_map)
-			return;
+			return (0);
 		if (!read_mapfile(doom, doom->edt->map_path))
-			return;
+			return (0);
 		ft_putstr("Loaded mapfile data from file: ");
 		ft_putendl(doom->edt->map_path);
 		parse_mapfile(doom, doom->mdl);
 	}
 	else if (!doom->game_quit) {
 		if (!doom->game->map_supplied)
-			return;
+			return (0);
 		if (!read_mapfile(doom, doom->game->map_path))
-			return;
+			return (0);
 		ft_putstr("Loaded mapfile data from file: ");
 		ft_putendl(doom->game->map_path);
 		parse_mapfile(doom, doom->mdl);
 	}
+	return (1);
 }

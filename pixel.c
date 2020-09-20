@@ -15,12 +15,17 @@
 void 	set_pixel(SDL_Surface *buff, int x, int y, uint32_t color)
 {
 	unsigned int	*pixels;
-	int 			i;
-	int 			j;
+	int 			location;
+	int 			limit;
 
-	i = x;
-	j = buff->w * y;
+	location = x + buff->w * y;
+	limit = buff->w * buff->h;
 	pixels = buff->pixels;
-	pixels[i + j] = color;
+	if (location >= limit || location < 0)
+	{
+		//printf("Warning: Set pixel tried to set pixel at %d, %d which is outside buffer memory area. Operation was blocked.\n", x, y);
+		return ;
+	}
+	pixels[location] = color;
 }
 

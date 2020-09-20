@@ -15,6 +15,8 @@
 
 # include "libft/libft.h"
 # include "mlx/mlx.h"
+# include "objects.h"
+# include "editor.h"
 
 # ifndef __linux__
 
@@ -82,75 +84,7 @@ typedef struct	s_image
 	int		endian;
 }				t_image;
 
-/*
-** *
-** Bit and bob structs to construct the game data for the Model etc.
-** *
-*/
 
-
-typedef struct 			s_point
-{
-	int 				x;
-	int 				y;
-}						t_point;
-
-typedef struct 			s_health
-{
-	int 				max;
-	int 				cur;
-}						t_health;
-
-typedef struct 			s_weapon
-{
-	int 				type_id;
-	int 				dmg;
-	int 				ammo_cur;
-	int 				ammo_max;
-	int 				cooldown;
-	int 				reload_time;
-	struct Mix_Chunk 	*fire_sound;
-	struct Mix_Chunk	*reload_sound;
-}						t_weapon;
-
-typedef struct 			s_player
-{
-	int 				x;
-	int 				y;
-	int 				rot;
-	struct s_point		tail;
-	struct s_health		hp;
-	struct s_weapon		wep;
-}						t_player;
-
-typedef struct 			s_enemy
-{
-	int 				id;
-	int 				x;
-	int 				y;
-	int 				rot;
-	struct s_point		tail;
-	struct s_health		hp;
-	struct s_weapon		wep;
-	struct s_enemy		*next;
-}						t_enemy;
-
-typedef struct 			s_wall
-{
-	struct s_point		start;
-	struct s_point		end;
-	int 				id;
-	struct s_wall		*next;
-}						t_wall;
-
-typedef struct 			s_mapfile
-{
-	char 				*wall_string;
-	char 				*portal_string;
-	char 				*enemy_string;
-	char 				*player_string;
-	char 				*join_string;
-}						t_mapfile;
 /*
 ** *
 ** Model struct (>Model<-View-Controller) - Game (Controller) modifies this with the input, logic code
@@ -174,55 +108,6 @@ typedef struct			s_model
 	int 				portal_count;
 	int 				enemy_count;
 } 						t_model;
-
-
-/*
-** *
-** Level Editor struct
-** *
-*/
-
-typedef struct 			s_editor
-{
-	struct SDL_Window	*win;
-	struct SDL_Surface	*buff;
-	struct s_wall		*walls;
-	struct s_wall		*wall_begin;
-	struct s_wall		*portals;
-	struct s_wall		*portal_begin;
-	int 				wall_count;
-	int 				portal_count;
-	int 				enemy_count;
-	struct s_player		player;
-	struct s_enemy		*enemies;
-	struct s_enemy		*enemy_first;
-	struct s_point		tail;
-	struct s_point		last_enemy;
-	int 				is_wall_start;
-	char 				*wall_string;
-	char 				*portal_string;
-	char 				*enemy_string;
-	char 				*player_string;
-	char 				*join_string;
-	int 				polygon_start_x;
-	int 				polygon_start_y;
-	int 				polygon_binding;
-	int 				portalization_binding;
-	int 				portalization_ending;
-	int					portal_x;
-	int 				portal_y;
-	int					new_portal_x;
-	int					new_portal_y;
-	int 				player_set;
-	int 				enemy_set;
-	struct s_wall		*portalization_a;
-	struct s_wall		*portalization_b;
-	struct s_wall		*new_portal;
-	int 				load_map;
-	int 				write_maps;
-	char 				*map_path;
-	struct s_doom		*parent;
-}						t_editor;
 
 /*
 ** *
@@ -409,14 +294,6 @@ void	 		game_loop(t_doom *doom);
 void			game_mouse_motion(t_doom *doom);
 void 			game_mouse_down(t_doom *doom);
 
-void			transfer_model_to_editor(t_doom *doom);
-void 			init_edt(t_doom *doom, int argc, char **argv);
-void	 		destroy_edt(t_doom *doom);
-
-void			edt_mouse_motion(t_doom *doom);
-void 			edt_mouse_down(t_doom *doom);
-void			edt_render(t_doom *doom);
-
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
 void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
@@ -426,7 +303,8 @@ void			expand_portal_string(t_editor *edt);
 void			expand_enemy_string(t_editor *edt);
 void			update_player_string(t_editor *edt);
 int				write_mapfile(t_editor *le);
+int				overwrite_mapfile(t_editor *edt);
 
-void			load_model(t_doom *doom);
+int 			load_model(t_doom *doom);
 void	 		destroy_model(t_doom *doom);
 #endif

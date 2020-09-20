@@ -14,8 +14,6 @@
 
 void	update_player_string(t_editor *edt)
 {
-	if (edt->write_maps)
-	{
 		edt->join_string = ft_strnew(255);
 		sprintf(edt->join_string, "Player spawn: %d %d | rot: %d | tail: %d %d\n",
 				edt->player.x, edt->player.y, edt->player.rot, edt->player.tail.x, edt->player.tail.y);
@@ -25,13 +23,10 @@ void	update_player_string(t_editor *edt)
 		edt->player_string = ft_strjoin(edt->player_string, edt->join_string);
 		free(edt->join_string);
 		edt->join_string = NULL;
-	}
 }
 
 void	expand_enemy_string(t_editor *edt)
 {
-	if (edt->write_maps)
-	{
 		edt->join_string = ft_strnew(255);
 		sprintf(edt->join_string, "Enemy id: %d | start: %d %d | rot: %d | tail: %d %d | hp: %d | wep id: %d\n",
 				edt->enemies->id, edt->enemies->x, edt->enemies->y, edt->enemies->rot,
@@ -41,13 +36,10 @@ void	expand_enemy_string(t_editor *edt)
 		edt->enemy_string = ft_strjoin(edt->enemy_string, edt->join_string);
 		free(edt->join_string);
 		edt->join_string = NULL;
-	}
 }
 
 void	expand_wall_string(t_editor *edt)
 {
-	if (edt->write_maps)
-	{
 		edt->join_string = ft_strnew(255);
 		sprintf(edt->join_string, "Wall id: %d | start: %d %d | end: %d %d\n",
 				edt->walls->id, edt->walls->start.x, edt->walls->start.y, edt->walls->end.x, edt->walls->end.y);
@@ -56,13 +48,10 @@ void	expand_wall_string(t_editor *edt)
 		edt->wall_string = ft_strjoin(edt->wall_string, edt->join_string);
 		free(edt->join_string);
 		edt->join_string = NULL;
-	}
 }
 
 void	expand_portal_string(t_editor *edt)
 {
-	if (edt->write_maps)
-	{
 		edt->join_string = ft_strnew(255);
 		sprintf(edt->join_string, "Portal id: %d | start: %d %d | end: %d %d\n",
 				edt->portals->id, edt->portals->start.x, edt->portals->start.y, edt->portals->end.x, edt->portals->end.y);
@@ -71,7 +60,6 @@ void	expand_portal_string(t_editor *edt)
 		edt->portal_string = ft_strjoin(edt->portal_string, edt->join_string);
 		free(edt->join_string);
 		edt->join_string = NULL;
-	}
 }
 
 int		write_mapfile(t_editor *edt)
@@ -98,11 +86,26 @@ int		write_mapfile(t_editor *edt)
 			write(opened, edt->enemy_string, ft_strlen(edt->enemy_string));
 		write(opened, new_line, 1);
 		write(opened, edt->player_string, ft_strlen(edt->player_string));
-		ft_putendl("Hive-DoomNukem: write_mapfile saved mapdata to mapfile:");
+		ft_putstr("Hive-DoomNukem: write_mapfile saved mapdata to mapfile: ");
 		ft_putendl(edt->map_path);
 		close(opened);
 		return (1);
 	}
 	return (0);
+}
+
+int 	overwrite_mapfile(t_editor *edt)
+{
+	char *backup;
+
+	backup = ft_strjoin(edt->map_path, ".backup");
+	rename(edt->map_path, backup);
+	ft_putstr("Hive-DoomNukem: renamed earlier version of mapfile as: ");
+	ft_putendl(backup);
+	free(backup);
+	edt->write_maps = 1;
+	write_mapfile(edt);
+	edt->write_maps = 0;
+	return (1);
 }
 

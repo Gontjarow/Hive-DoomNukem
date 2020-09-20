@@ -36,7 +36,10 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->portal_begin = NULL;
 	doom->edt->enemy_first = NULL;
 	doom->edt->wall_string = NULL;
+	doom->edt->portal_string = NULL;
 	doom->edt->join_string = NULL;
+	doom->edt->player_string = NULL;
+	doom->edt->enemy_string = NULL;
 	doom->edt->map_path = NULL;
 	doom->edt->portalization_a = NULL;
 	doom->edt->portalization_b = NULL;
@@ -62,6 +65,7 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->new_portal_y = -1;
 	doom->edt->load_map = 0;
 	doom->edt->write_maps = 0;
+	doom->edt->overwrite_map = 0;
 	if (argc == 2)
 	{
 		opened = open(argv[1], O_RDONLY);
@@ -69,6 +73,7 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 		{
 			ft_putendl("Hive-DoomNukem: Loading map enabled. Map file detected.");
 			doom->edt->load_map = 1;
+			doom->edt->overwrite_map = 1;
 			close(opened);
 		}
 		else
@@ -86,6 +91,8 @@ void 		destroy_edt(t_doom *doom)
 	// - krusthol
 	if (doom->edt->write_maps && doom->edt->wall_count > 0)
 		write_mapfile(doom->edt);
+	if (doom->edt->overwrite_map)
+		overwrite_mapfile(doom->edt);
 	SDL_FreeSurface(doom->edt->buff);
 	SDL_DestroyWindow(doom->edt->win);
 	doom->edt->win = NULL;
@@ -285,6 +292,7 @@ static void test_end_portalization(int x, int y, t_editor *edt)
 		edt->new_portal_x = edt->portalization_b->end.x;
 		edt->new_portal_y = edt->portalization_b->end.y;
 	}
+	//ft_putendl("Tested end_portalization");
 }
 
 static void record_enemy(int x, int y, t_editor *edt)
@@ -328,7 +336,6 @@ static void record_enemy(int x, int y, t_editor *edt)
 static void record_player(int x, int y, t_editor *edt)
 {
 	t_point	start;
-
 	if (!edt->player_set)
 	{
 		edt->player.x = x;
@@ -428,11 +435,11 @@ static void record_polygon(int x, int y, t_editor *edt)
 				edt->walls->end.x = edt->new_portal_x;
 				edt->walls->end.y = edt->new_portal_y;
 				record_portal(edt);
-				//ft_putendl("Portal created.");
 				edt->portalization_ending = 0;
 				edt->portalization_a = NULL;
 				edt->portalization_b = NULL;
 				edt->is_wall_start = 1;
+				//ft_putendl("Portal created.");
 			}
 			else
 			{
@@ -599,6 +606,7 @@ void			transfer_model_to_editor(t_doom *doom)
 {
 	int	ec;
 
+	ft_putendl("Transferring model to editor.");
 	doom->edt->walls = doom->mdl->walls;
 	doom->edt->enemies = doom->mdl->enemies;
 	doom->edt->portals = doom->mdl->portals;
@@ -610,6 +618,14 @@ void			transfer_model_to_editor(t_doom *doom)
 	doom->edt->portal_count = doom->mdl->portal_count;
 	doom->edt->player = doom->mdl->player;
 	doom->edt->player_set = 1;
+	if (doom->map.player_string)
+		doom->edt->player_string = doom->map.player_string;
+	if (doom->map.wall_string)
+		doom->edt->wall_string = doom->map.wall_string;
+	if (doom->map.portal_string)
+		doom->edt->portal_string = doom->map.portal_string;
+	if (doom->map.enemy_string)
+		doom->edt->enemy_string = doom->map.enemy_string;
 	print_walls(doom->edt);
 	ec = doom->edt->enemy_count;
 	if (ec == 0)

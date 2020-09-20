@@ -54,7 +54,13 @@ static void	init_doom(t_doom *doom)
 	doom->menu_out_of_focus = 0;
 	doom->edt = NULL;
 	doom->keystates = NULL;
+	doom->mdl = NULL;
 	doom->app_start = SDL_GetTicks();
+	doom->map.enemy_string = NULL;
+	doom->map.player_string = NULL;
+	doom->map.portal_string = NULL;
+	doom->map.wall_string = NULL;
+	doom->map.was_filled = 0;
 }
 
 static void	destroy_sounds(t_doom *doom)
