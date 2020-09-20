@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/11 14:01:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/20 18:23:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@
 # define WAV_SWORD "wav/sword.wav"
 # define WAV_THUNDER "wav/thunder.wav"
 # define IMG_THUNDER0 "img/thunder/0.png"
+
+# define DEBUG 1
 
 /*
 ** *
@@ -242,6 +244,17 @@ typedef struct			s_menu
 	struct s_doom		*parent;
 }						t_menu;
 
+typedef struct			s_minimap
+{
+	int					wall_id;
+	t_point				start;
+	t_point				end;
+	double				scale;
+	int					wall_count;
+	int					win_x;
+	int					win_y;
+}						t_minimap;
+
 /*
 ** *
 ** Game struct
@@ -273,7 +286,10 @@ typedef struct	s_doom
 	uint32_t 			app_start;
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;
+	struct s_minimap	*minimap_main;
+	struct SDL_Window	*minimap_win;
 	struct SDL_Surface	*buff;
+	struct SDL_Surface	*minimap_buff;
 	union SDL_Event		event;
 	struct s_sounds		*sounds;
 	struct s_menu		*menu;
@@ -405,4 +421,6 @@ void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *ne
 void 			render_line(t_line *l);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 int				write_mapfile(t_editor *le);
+
+void			init_minimap(t_doom *doom, char *argv);
 #endif

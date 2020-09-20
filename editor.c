@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   editor.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:41:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/14 18:02:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/09/18 18:23:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ static void expand_map_string(t_editor *edt)
 	if (edt->write_maps)
 	{
 		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Wall id: %d | start: %d, %d | end: %d, %d\n",
+		sprintf(edt->join_string, "Id: %d | start: %d, %d | end: %d, %d |\n",
 				edt->walls->id, edt->walls->start.x, edt->walls->start.y, edt->walls->end.x, edt->walls->end.y);
 		if (!edt->map_string)
 			edt->map_string = ft_strnew(1);

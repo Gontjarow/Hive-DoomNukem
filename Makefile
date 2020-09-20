@@ -6,14 +6,14 @@
 #    By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/08 19:59:39 by msuarez-          #+#    #+#              #
-#    Updated: 2020/09/11 13:29:56 by msuarez-         ###   ########.fr        #
+#    Updated: 2020/09/18 17:36:22 by msuarez-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = doom-nukem
 
 SOURCES = doom_nukem.c input.c image.c texture.c alphabet.c menu.c editor.c \
-		line.c pixel.c vec2d.c game.c
+		line.c pixel.c vec2d.c game.c minimap.c
 
 OBJECTS = $(subst .c,.o,$(SOURCES))
 
