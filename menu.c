@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   menu.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:44:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/18 13:14:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/09/20 22:08:42 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,8 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 		doom->game_quit = 0;
 		doom->menu_out_of_focus = 1;
 		load_model(doom);
+		if (DEBUG == 1)
+			init_minimap(doom);
 		SDL_UpdateWindowSurface(doom->game->win);
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}

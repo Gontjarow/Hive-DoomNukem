@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/11 14:01:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/20 21:42:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "mlx/mlx.h"
 # include "objects.h"
 # include "editor.h"
+# include "minimap.h"
 
 # ifndef __linux__
 
@@ -59,6 +60,8 @@
 # define WAV_SWORD "wav/sword.wav"
 # define WAV_THUNDER "wav/thunder.wav"
 # define IMG_THUNDER0 "img/thunder/0.png"
+
+# define DEBUG 1
 
 /*
 ** *
@@ -177,6 +180,7 @@ typedef struct	s_doom
 	struct s_mapfile	map;
 	struct s_sounds		*sounds;
 	struct s_menu		*menu;
+	struct s_minimap    *minimap;
 	struct s_editor		*edt;
 	struct s_model		*mdl;
 	struct s_game		*game;
