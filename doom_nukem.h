@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/20 21:42:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/22 15:29:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@
 # define EDT_WIN_HEIGHT 512
 # define GAME_WIN_WIDTH 1024
 # define GAME_WIN_HEIGHT 512
+# define MINIMAP_WIN_WIDTH 400
+# define MINIMAP_WIN_HEIGHT 400
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
@@ -54,6 +56,15 @@
 # define EVT_MOUSE_UP 5
 # define EVT_MOUSE_MV 6
 # define EVT_CLOSE_WIN 17
+
+# define GAME_KEY_W 26
+# define GAME_KEY_A 4
+# define GAME_KEY_S 22
+# define GAME_KEY_D 7
+# define GAME_KEY_LSHIFT 225
+# define GAME_KEY_SPACEBAR 44
+# define GAME_KEY_E_ACTION 8
+# define GAME_KEY_ESC 41
 
 # define WAV_PLOP "wav/plop.wav"
 # define WAV_STEAM0 "wav/steam/0.wav"
@@ -170,6 +181,7 @@ typedef struct	s_doom
 	int 				quit;
 	int 				edt_quit;
 	int 				game_quit;
+	int					minimap_quit;
 	int 				menu_out_of_focus;
 	const Uint8* 		keystates;
 	uint32_t 			app_start;
@@ -297,6 +309,7 @@ void			game_render(t_doom *doom);
 void	 		game_loop(t_doom *doom);
 void			game_mouse_motion(t_doom *doom);
 void 			game_mouse_down(t_doom *doom);
+void			game_key_down(t_doom *doom);
 
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
 void 			render_line(t_line *l);

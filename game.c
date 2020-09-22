@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/18 14:34:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/09/22 15:57:32 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,66 @@ void 		game_mouse_down(t_doom *doom)
 	set_pixel(doom->game->buff,doom->event.motion.x+1, doom->event.motion.y-1, color);
 	set_pixel(doom->game->buff,doom->event.motion.x-1, doom->event.motion.y+1, color);
 	set_pixel(doom->game->buff,doom->event.motion.x-1, doom->event.motion.y-1, color);
+}
+
+// void		game_key_up(t_doom *doom)
+// {
+
+// }
+
+void		game_key_down(t_doom *doom)
+{
+	// These will be the doom->game key handling, right now it only supports the minimap
+	// but once the game can be tested with 3D rendering, these will work for both
+	if (doom->event.button.button == GAME_KEY_ESC)
+	{
+		// Open menu, quit game...
+		printf("ESC key pressed!\n");
+	}
+	else if (doom->event.button.button == GAME_KEY_W)
+	{
+		// Walk forward
+		doom->mdl->player.y--;
+		doom->mdl->player.tail.y--;
+		printf("W key pressed!\n");
+	}
+	else if (doom->event.button.button == GAME_KEY_S)
+	{
+		// Walk backward
+		doom->mdl->player.y++;
+		doom->mdl->player.tail.y++;
+		printf("S key pressed!\n");
+	}
+	else if (doom->event.button.button == GAME_KEY_A)
+	{
+		// Rotate left or walk left (if free camera implemented)
+		doom->mdl->player.x--;
+		doom->mdl->player.tail.x--;
+		printf("A key pressed!\n");
+	}
+	else if (doom->event.button.button == GAME_KEY_D)
+	{
+		// Rotate right or walk right (if free camera implemented)
+		doom->mdl->player.x++;
+		doom->mdl->player.tail.x++;
+		printf("D key pressed!\n");
+	}
+	else if (doom->event.button.button == GAME_KEY_E_ACTION)
+	{
+		// Use button, open doors, talk to NPC's...
+		printf("E key pressed!\n");
+	}
+	else if (doom->event.button.button == GAME_KEY_SPACEBAR)
+	{
+		// Jump
+		printf("Spacebar key pressed!\n");
+	}
+	else if (doom->event.button.button == GAME_KEY_LSHIFT)
+	{
+		// Increase player's speed, sprint
+		printf("Left Shift key pressed!\n");
+	}
+	update_minimap(doom);
 }
 
 void 		game_loop(t_doom *doom)

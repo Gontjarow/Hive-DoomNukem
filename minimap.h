@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 21:42:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/20 21:54:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/22 15:34:55 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@ typedef struct		s_minimap
 	double				scale;
 }					t_minimap;
 
-void		init_minimap(t_doom *doom);
+void			init_minimap(t_doom *doom);
+void			update_minimap(t_doom *doom);
+void			print_minimap_player(t_doom *doom);
+void			print_minimap_walls(t_doom *doom);
+void			destroy_minimap(t_doom *doom);
 
 #endif
 

@@ -6,14 +6,14 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/20 22:28:29 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/22 15:30:45 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom_nukem.h"
 #include "minimap.h"
 
-static void	print_walls(t_doom *doom)
+void	print_minimap_walls(t_doom *doom)
 {
 	int		wc;
 	t_wall	*wall;
@@ -45,7 +45,7 @@ static void	print_walls(t_doom *doom)
 	}
 }
 
-static void	print_player(t_doom *doom)
+void		print_minimap_player(t_doom *doom)
 {
 	t_line	line;
 
@@ -56,6 +56,25 @@ static void	print_player(t_doom *doom)
 	line.color = 0xffffff00;
 	line.buff = doom->minimap->buff;
 	render_line(&line);
+}
+
+void		destroy_minimap(t_doom *doom)
+{
+	SDL_FreeSurface(doom->minimap->buff);
+	SDL_DestroyWindow(doom->minimap->win);
+	doom->minimap->win = NULL;
+	doom->minimap->buff = NULL;
+	free(doom->minimap);
+	doom->minimap = NULL;
+}
+
+void		update_minimap(t_doom *doom)
+{
+	// SDL_FillRect serving as a mere clear window to update the drawing
+	SDL_FillRect(doom->minimap->buff, NULL, 0x000000);
+	print_minimap_walls(doom);
+	print_minimap_player(doom);
+	SDL_UpdateWindowSurface(doom->minimap->win);
 }
 
 void		init_minimap(t_doom *doom)
@@ -75,7 +94,5 @@ void		init_minimap(t_doom *doom)
 	doom->minimap->scale = 1.0;
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
 	SDL_SetWindowPosition(doom->minimap->win, win_x + WIN_WIDTH, win_y);
-	print_walls(doom);
-	print_player(doom);
-	SDL_UpdateWindowSurface(doom->minimap->win);
+	update_minimap(doom);
 }

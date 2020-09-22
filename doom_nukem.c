@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/11 14:02:23 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/22 15:09:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ static void	init_doom(t_doom *doom)
 	doom->quit = 0;
 	doom->edt_quit = 1;
 	doom->game_quit = 1;
+	doom->minimap_quit = 1;
 	doom->menu_out_of_focus = 0;
 	doom->edt = NULL;
 	doom->keystates = NULL;
+	doom->minimap = NULL;
 	doom->mdl = NULL;
 	doom->app_start = SDL_GetTicks();
 	doom->map.enemy_string = NULL;
@@ -78,6 +80,8 @@ static int	destroy_and_quit(t_doom *doom)
 		destroy_edt(doom);
 	if (!doom->game_quit)
 		destroy_game(doom);
+	if (!doom->minimap_quit)
+		destroy_minimap(doom);
 	if (doom->mdl)
 		destroy_model(doom);
 	destroy_sounds(doom);
@@ -100,6 +104,8 @@ static void handle_events(t_doom *doom)
 			game_mouse_motion(doom);
 		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
 			game_mouse_down(doom);
+		else if (doom->event.type == SDL_KEYDOWN && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
+			game_key_down(doom);
 		else if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->edt_quit && doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
 		{
 			doom->edt_quit = 1;
@@ -108,6 +114,11 @@ static void handle_events(t_doom *doom)
 		else if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
 		{
 			doom->game_quit = 1;
+			if (DEBUG == 1)
+			{
+				doom->minimap_quit = 1;
+				destroy_minimap(doom);
+			}
 			destroy_game(doom);
 		}
 		else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && doom->edt_quit && !doom->menu->esc_lock))
@@ -129,6 +140,11 @@ static void handle_events(t_doom *doom)
 		else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->game_quit))
 		{
 			doom->game_quit = 1;
+			if (DEBUG == 1 && !doom->minimap_quit)
+			{
+				doom->minimap_quit = 1;
+				destroy_minimap(doom);
+			}
 			destroy_game(doom);
 			doom->menu->esc_lock = 40;
 			SDL_RestoreWindow(doom->win);
