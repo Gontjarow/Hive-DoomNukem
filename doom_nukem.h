@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <ngontjar@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/19 23:11:03 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/21 23:21:08 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "libft/libft.h"
 # include "mlx/mlx.h"
 # include "ft_math.h"
+# include "ft_camera.h"
+# include "ft_object.h"
 
 # ifndef __linux__
 

@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/21 22:20:58 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/09/22 03:38:12 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,24 @@ void 		destroy_game(t_doom *doom)
 	doom->game = NULL;
 }
 
-void show_vec(t_xyz v, const char *name)
+void	show_mat(t_matrix m, const char *name)
 {
-	printf("'%4.4s' { %8.3f | %8.3f | %8.3f }\n",
+	printf("\n"
+		"'%4.4s' { %8.3f | %8.3f | %8.3f | %8.3f }\n"
+		"       { %8.3f | %8.3f | %8.3f | %8.3f }\n"
+		"       { %8.3f | %8.3f | %8.3f | %8.3f }\n"
+		"       { %8.3f | %8.3f | %8.3f | %8.3f }\n",
+		name,
+		m.m[0][0], m.m[0][1], m.m[0][2], m.m[0][3],
+		m.m[1][0], m.m[1][1], m.m[1][2], m.m[1][3],
+		m.m[2][0], m.m[2][1], m.m[2][2], m.m[2][3],
+		m.m[3][0], m.m[3][1], m.m[3][2], m.m[3][3]
+	);
+}
+
+void	show_vec(t_xyz v, const char *name)
+{
+	printf("\n'%4.4s' { %8.3f | %8.3f | %8.3f }\n",
 		name, v.x, v.y, v.z
 	);
 }
@@ -112,142 +127,65 @@ void 		game_mouse_motion(t_doom *doom)
 	t_matrix s = scale(GAME_MID_X, GAME_MID_Y, 1);
 
 
+	t_camera render;
 	t_matrix cam_rot = identity(); // Camera Rotation
-	cam_rot = rz;
-
+	{
+		cam_rot = rz;
+	}
+	render.rot = cam_rot;
 
 	t_matrix world = identity(); // Object -> World transformation
-	world = multiply_m(rotate_x(0), rotate_y(0));
-	world = multiply_m(world, t);
+	{
+		world = multiply_m(rotate_x(0), rotate_y(0));
+		world = multiply_m(world, t);
+	}
+	render.world_m = world;
 
 	t_matrix view = identity(); // World -> View transformation
-	t_xyz c_up = vec3(0, 0, -1);
-	t_xyz target = vec3(1, 0, 0);
-	target = vec3_transform(target, cam_rot);
-	target = vec3_add(pos, target);
-	t_matrix camera_m = point_at(pos, target, c_up);
-	view = inverse_m(camera_m);
-
+	{
+		t_xyz c_up = vec3(0, 0, -1);
+		t_xyz target = vec3(1, 0, 0);
+		target = vec3_transform(target, render.rot);
+		render.dir = target;
+		target = vec3_add(pos, target);
+		t_matrix camera_m = point_at(pos, target, c_up);
+		view = inverse_m(camera_m);
+	}
+	render.view_m = view;
 
 	t_matrix screen = identity(); // View -> Screen transformation
-	screen = multiply_m(m, s);
-
 	{
-		// Create 2 quads
-		// Note: The center or ORIGIN of the object is {0,0,0}
-		t_xyz A, B, C, D;
-		t_xyz E, F, G, H;
-		t_xyz zero, fwdX, fwdY, fwdZ;
-		{
-			A = vec3( 0.5, -0.5, -0.5);
-			B = vec3(-0.5, -0.5, -0.5);
-			C = vec3(-0.5,  0.5, -0.5);
-			D = vec3( 0.5,  0.5, -0.5);
-
-			E = vec3( 0.5, -0.5,  0.5);
-			F = vec3(-0.5, -0.5,  0.5);
-			G = vec3(-0.5,  0.5,  0.5);
-			H = vec3( 0.5,  0.5,  0.5);
-
-			fwdX = vec3(1, 0, 0);
-			fwdY = vec3(0, 1, 0);
-			fwdZ = vec3(0, 0, 1);
-			zero = vec3(0, 0, 0);
-		}
-
-		// base axes in screen coordinates only
-		t_xyz SX, SY, SZ, SO;
-		{
-			SX = vec3_transform(fwdX, screen);
-			SY = vec3_transform(fwdY, screen);
-			SZ = vec3_transform(fwdZ, screen);
-			SO = vec3_transform(zero, screen);
-		}
-
-		// base axes in world coordinates
-		t_xyz WX, WY, WZ, WO;
-		{
-			WX = vec3_transform(fwdX, world);
-			WY = vec3_transform(fwdY, world);
-			WZ = vec3_transform(fwdZ, world);
-			WO = vec3_transform(zero, world);
-			WX = vec3_transform(WX, view);
-			WY = vec3_transform(WY, view);
-			WZ = vec3_transform(WZ, view);
-			WO = vec3_transform(WO, view);
-			WX = vec3_transform(WX, screen);
-			WY = vec3_transform(WY, screen);
-			WZ = vec3_transform(WZ, screen);
-			WO = vec3_transform(WO, screen);
-
-			// WX = vec3_transform(fwdX, view);
-			// WY = vec3_transform(fwdY, view);
-			// WZ = vec3_transform(fwdZ, view);
-			// WO = vec3_transform(zero, view);
-			// WX = vec3_transform(WX, screen);
-			// WY = vec3_transform(WY, screen);
-			// WZ = vec3_transform(WZ, screen);
-			// WO = vec3_transform(WO, screen);
-		}
-
-		// Debug cube in world coordinates
-		t_xyz TA, TB, TC, TD;
-		t_xyz TE, TF, TG, TH;
-		{
-			TA = vec3_transform(A, view);
-			TB = vec3_transform(B, view);
-			TC = vec3_transform(C, view);
-			TD = vec3_transform(D, view);
-			TE = vec3_transform(E, view);
-			TF = vec3_transform(F, view);
-			TG = vec3_transform(G, view);
-			TH = vec3_transform(H, view);
-
-			// Transformed debug cube in screen coordinates
-			TA = vec3_transform(TA, screen);
-			TB = vec3_transform(TB, screen);
-			TC = vec3_transform(TC, screen);
-			TD = vec3_transform(TD, screen);
-			TE = vec3_transform(TE, screen);
-			TF = vec3_transform(TF, screen);
-			TG = vec3_transform(TG, screen);
-			TH = vec3_transform(TH, screen);
-		}
-
-		// Just connecting the dots...
-		{
-			show_vec(WO, "WO");
-			show_vec(WX, "WX");
-
-			// Screen axes
-			ft_draw(surface->pixels, SO, SX, 0xC97064);
-			ft_draw(surface->pixels, SO, SY, 0xA6B07E);
-			ft_draw(surface->pixels, SO, SZ, 0x759EB8);
-
-			// Object axes
-			ft_draw(surface->pixels, WO, WX, 0xff0000);//0xDC0073);
-			ft_draw(surface->pixels, WO, WY, 0xff00);//0x540d6e);
-			ft_draw(surface->pixels, WO, WZ, 0xff);//0x00A1E4);
-
-			// First quad, red
-			ft_draw(surface->pixels, TA, TB, 0xFF0000);
-			ft_draw(surface->pixels, TB, TC, 0xFF0000);
-			ft_draw(surface->pixels, TC, TD, 0xFF0000);
-			ft_draw(surface->pixels, TD, TA, 0xFF0000);
-
-			// Second quad, green
-			ft_draw(surface->pixels, TE, TF, 0x00FF00);
-			ft_draw(surface->pixels, TF, TG, 0x00FF00);
-			ft_draw(surface->pixels, TG, TH, 0x00FF00);
-			ft_draw(surface->pixels, TH, TE, 0x00FF00);
-
-			// connecting lines, white
-			ft_draw(surface->pixels, TA, TE, 0xFFFFFF);
-			ft_draw(surface->pixels, TB, TF, 0xFFFFFF);
-			ft_draw(surface->pixels, TC, TG, 0xFFFFFF);
-			ft_draw(surface->pixels, TD, TH, 0xFFFFFF);
-		}
+		screen = multiply_m(m, s);
 	}
+	render.screen_m = screen;
+
+	render.full_m = multiply_m(multiply_m(
+		render.world_m, render.view_m), render.screen_m);
+
+	// Create 2 quads
+	// Note: The center or ORIGIN of the object is {0,0,0}
+	t_mesh mesh;
+	mesh = init_mesh(2,	// faces
+		init_face(4,	// verts
+		vec3( 0.5, -0.5, -0.5),
+		vec3(-0.5, -0.5, -0.5),
+		vec3(-0.5,  0.5, -0.5),
+		vec3( 0.5,  0.5, -0.5)
+	), init_face(4,		// verts
+		vec3( 0.5, -0.5,  0.5),
+		vec3(-0.5, -0.5,  0.5),
+		vec3(-0.5,  0.5,  0.5),
+		vec3( 0.5,  0.5,  0.5)
+	));
+	t_mesh transformed = mesh_transform(&mesh, &render.full_m);
+	show_mat(render.world_m, "wrld");
+	show_mat(render.view_m, "view");
+	show_mat(render.screen_m, "scrn");
+	show_mat(render.full_m, "full");
+	show_vec(transformed.face[0].vert[0], "smpl");
+	mesh_draw(surface->pixels, &transformed);
+	free_faces(&mesh);
+	free_faces(&transformed);
 }
 
 void 		game_mouse_down(t_doom *doom)

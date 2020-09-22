@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ngontjar <ngontjar@student.hive.fi>        +#+  +:+       +#+         #
+#    By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/08 19:59:39 by msuarez-          #+#    #+#              #
-#    Updated: 2020/09/19 23:40:19 by ngontjar         ###   ########.fr        #
+#    Updated: 2020/09/22 02:44:52 by ngontjar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = doom-nukem
 
 SOURCES = doom_nukem.c input.c image.c texture.c alphabet.c menu.c editor.c \
-		line.c pixel.c vec2d.c vec3d.c matrix.c game.c
+		line.c pixel.c vec2d.c vec3d.c matrix.c ft_object.c game.c
 
 OBJECTS = $(subst .c,.o,$(SOURCES))
 
@@ -25,7 +25,7 @@ SDL2_IMAGE = libsdl/libSDL2_image.a
 
 SDL2_MIXER = libsdl/libSDL2_mixer.a
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra #-Werror
 
 LINUX_LINKS = -I libft -L libft -l ft \
 		-I ./mlx -L ./mlx -l mlx \
