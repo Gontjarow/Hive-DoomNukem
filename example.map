@@ -1,0 +1,54 @@
+Wall id: 0 | start: 149 195 | end: 267 198
+Wall id: 1 | start: 267 198 | end: 267 252
+Wall id: 2 | start: 267 252 | end: 329 343
+Wall id: 3 | start: 329 343 | end: 404 342
+Wall id: 4 | start: 404 342 | end: 378 428
+Wall id: 5 | start: 378 428 | end: 167 442
+Wall id: 6 | start: 167 442 | end: 126 314
+Wall id: 7 | start: 126 314 | end: 149 195
+Wall id: 8 | start: 267 252 | end: 318 230
+Wall id: 9 | start: 318 230 | end: 320 181
+Wall id: 10 | start: 320 181 | end: 360 80
+Wall id: 11 | start: 360 80 | end: 540 91
+Wall id: 12 | start: 540 91 | end: 557 167
+Wall id: 13 | start: 557 167 | end: 620 157
+Wall id: 14 | start: 620 157 | end: 641 225
+Wall id: 15 | start: 641 225 | end: 574 236
+Wall id: 16 | start: 574 236 | end: 563 327
+Wall id: 17 | start: 563 327 | end: 486 338
+Wall id: 18 | start: 486 338 | end: 416 279
+Wall id: 19 | start: 416 279 | end: 329 343
+Wall id: 20 | start: 641 225 | end: 686 338
+Wall id: 21 | start: 686 338 | end: 745 332
+Wall id: 22 | start: 745 332 | end: 744 363
+Wall id: 23 | start: 744 363 | end: 846 360
+Wall id: 24 | start: 846 360 | end: 843 331
+Wall id: 25 | start: 843 331 | end: 875 323
+Wall id: 26 | start: 875 323 | end: 825 95
+Wall id: 27 | start: 825 95 | end: 618 118
+Wall id: 28 | start: 618 118 | end: 620 157
+Wall id: 29 | start: 744 363 | end: 506 389
+Wall id: 30 | start: 506 389 | end: 499 482
+Wall id: 31 | start: 499 482 | end: 657 478
+Wall id: 32 | start: 657 478 | end: 961 475
+Wall id: 33 | start: 961 475 | end: 961 364
+Wall id: 34 | start: 961 364 | end: 846 360
+
+Portal id: 0 | start: 267 252 | end: 329 343
+Portal id: 1 | start: 620 157 | end: 641 225
+Portal id: 2 | start: 744 363 | end: 846 360
+
+Enemy id: 0 | start: 702 163 | rot: 282 | tail: 699 177 | hp: 100 | wep id: 0
+Enemy id: 1 | start: 829 221 | rot: 323 | tail: 817 230 | hp: 100 | wep id: 0
+Enemy id: 2 | start: 853 291 | rot: 306 | tail: 844 303 | hp: 100 | wep id: 0
+Enemy id: 3 | start: 698 294 | rot: 192 | tail: 712 297 | hp: 100 | wep id: 0
+Enemy id: 4 | start: 548 278 | rot: 26 | tail: 534 271 | hp: 100 | wep id: 0
+Enemy id: 5 | start: 536 144 | rot: 333 | tail: 522 151 | hp: 100 | wep id: 0
+Enemy id: 6 | start: 178 365 | rot: 126 | tail: 187 353 | hp: 100 | wep id: 0
+Enemy id: 7 | start: 252 401 | rot: 118 | tail: 259 388 | hp: 100 | wep id: 0
+Enemy id: 8 | start: 201 284 | rot: 180 | tail: 215 284 | hp: 100 | wep id: 0
+Enemy id: 9 | start: 257 333 | rot: 126 | tail: 266 321 | hp: 100 | wep id: 0
+Enemy id: 10 | start: 333 388 | rot: 50 | tail: 323 376 | hp: 100 | wep id: 0
+Enemy id: 11 | start: 365 179 | rot: 195 | tail: 379 183 | hp: 100 | wep id: 0
+
+Player spawn: 544 449 | rot: 167 | tail: 558 446

@@ -42,40 +42,29 @@ void 		destroy_game(t_doom *doom)
 	SDL_DestroyWindow(doom->game->win);
 	doom->game->win = NULL;
 	doom->game->buff = NULL;
+	doom->game->mdl = NULL;
+	doom->game->parent = NULL;
+	doom->game->map_path = NULL;
 	free(doom->game);
 	doom->game = NULL;
 }
 
 void 		game_mouse_motion(t_doom *doom)
 {
-	// Random placeholder demo
-	set_pixel(doom->game->buff,doom->event.motion.x, doom->event.motion.y, 0xffffffff);
+	if (doom->game_quit == 0)
+		doom->game_quit = 0;
 }
 
 void 		game_mouse_down(t_doom *doom)
 {
-	// Random placeholder demo
-	uint32_t  color;
-
-	color = 0xff00ff00;
-	set_pixel(doom->game->buff, doom->event.motion.x, doom->event.motion.y, color);
-	set_pixel(doom->game->buff,doom->event.motion.x+1, doom->event.motion.y+1, color);
-	set_pixel(doom->game->buff,doom->event.motion.x+1, doom->event.motion.y-1, color);
-	set_pixel(doom->game->buff,doom->event.motion.x-1, doom->event.motion.y+1, color);
-	set_pixel(doom->game->buff,doom->event.motion.x-1, doom->event.motion.y-1, color);
+	if (doom->game_quit == 0)
+		doom->game_quit = 0;
 }
 
 void 		game_loop(t_doom *doom)
 {
-	// Random placeholder demo
-	static int cooldown = 0;
-	if (!cooldown)
-	{
-		cooldown = 100;
-	} else
-		cooldown--;
-	set_pixel(doom->game->buff,cooldown+1, cooldown+1, 0xffffffff);
-	set_pixel(doom->game->buff,cooldown, cooldown, 0xff000000);
+	if (doom->game_quit == 0)
+		doom->game_quit = 0;
 }
 
 void		game_render(t_doom *doom)

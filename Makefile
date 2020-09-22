@@ -13,7 +13,7 @@
 NAME = doom-nukem
 
 SOURCES = doom_nukem.c input.c image.c texture.c alphabet.c menu.c editor.c \
-		line.c pixel.c vec2d.c game.c mapfile.c load_model.c
+		line.c pixel.c vec2d.c game.c mapfile.c load_model.c sounds.c
 
 OBJECTS = $(subst .c,.o,$(SOURCES))
 
@@ -25,7 +25,7 @@ SDL2_IMAGE = libsdl/libSDL2_image.a
 
 SDL2_MIXER = libsdl/libSDL2_mixer.a
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 
 LINUX_LINKS = -I libft -L libft -l ft \
 		-I ./mlx -L ./mlx -l mlx \

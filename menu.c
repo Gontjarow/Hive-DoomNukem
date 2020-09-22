@@ -145,6 +145,58 @@ void		load_animation(t_menu *menu)
 	}
 }
 
+void		window_and_menu_events(t_doom *doom)
+{
+	if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->edt_quit && doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
+	{
+		doom->edt_quit = 1;
+		destroy_edt(doom);
+		destroy_model(doom);
+		SDL_RestoreWindow(doom->win);
+		doom->buff = SDL_GetWindowSurface(doom->win);
+		doom->menu_out_of_focus = 0;
+		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+	}
+	else if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
+	{
+		doom->game_quit = 1;
+		destroy_game(doom);
+		destroy_model(doom);
+		SDL_RestoreWindow(doom->win);
+		doom->buff = SDL_GetWindowSurface(doom->win);
+		doom->menu_out_of_focus = 0;
+		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+	}
+	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && doom->edt_quit && doom->game_quit && !doom->menu->esc_lock))
+	{
+		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+		SDL_Delay(300);
+		doom->quit = 1;
+	}
+	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->edt_quit))
+	{
+		doom->edt_quit = 1;
+		destroy_edt(doom);
+		destroy_model(doom);
+		doom->menu->esc_lock = 40;
+		SDL_RestoreWindow(doom->win);
+		doom->buff = SDL_GetWindowSurface(doom->win);
+		doom->menu_out_of_focus = 0;
+		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+	}
+	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->game_quit))
+	{
+		doom->game_quit = 1;
+		destroy_game(doom);
+		destroy_model(doom);
+		doom->menu->esc_lock = 40;
+		SDL_RestoreWindow(doom->win);
+		doom->buff = SDL_GetWindowSurface(doom->win);
+		doom->menu_out_of_focus = 0;
+		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+	}
+}
+
 void		main_menu_loop(t_doom *doom, int argc, char **argv)
 {
 	static int key_repeat_lock = 0;
@@ -172,6 +224,7 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 	else if (doom->keystates[SDL_SCANCODE_RETURN] && doom->menu->selected == 0 && doom->game_quit && doom->edt_quit)
 	{
 		SDL_MinimizeWindow(doom->win);
+		doom->buff = SDL_GetWindowSurface(doom->win);
 		init_game(doom, argc, argv);
 		doom->game_quit = 0;
 		doom->menu_out_of_focus = 1;
@@ -182,12 +235,15 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 	else if (doom->keystates[SDL_SCANCODE_RETURN] && doom->menu->selected == 1 && doom->edt_quit && doom->game_quit)
 	{
 		SDL_MinimizeWindow(doom->win);
+		doom->buff = SDL_GetWindowSurface(doom->win);
 		init_edt(doom, argc, argv);
 		doom->edt_quit = 0;
 		doom->menu_out_of_focus = 1;
-		if (load_model(doom))
-			if (doom->map.was_filled)
+		if (load_model(doom)) {
+			if (doom->map->was_filled) {
 				transfer_model_to_editor(doom);
+			}
+		}
 		SDL_UpdateWindowSurface(doom->edt->win);
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}

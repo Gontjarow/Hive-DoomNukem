@@ -18,20 +18,6 @@ void		ft_die(const char *error_message)
 	exit(0);
 }
 
-static void load_sounds(t_doom *doom)
-{
-	if (!(doom->sounds = (t_sounds*)malloc(sizeof(t_sounds))))
-		ft_die("Fatal error: Failed mallocing doom->sounds at init_doom.");
-	if (!(doom->sounds->mcThunder = Mix_LoadWAV(WAV_THUNDER)))
-		ft_die("Fatal error: SDL_mixer failed to load WAV_THUNDER!");
-	if (!(doom->sounds->mcSteam = Mix_LoadWAV(WAV_STEAM0)))
-		ft_die("Fatal error: SDL_mixer failed to load WAV_STEAM0!");
-	if (!(doom->sounds->mcPlop = Mix_LoadWAV(WAV_PLOP)))
-		ft_die("Fatal error: SDL_mixer failed to load WAV_PLOP!");
-	if (!(doom->sounds->mcSword = Mix_LoadWAV(WAV_SWORD)))
-		ft_die("Fatal error: SDL_mixer failed to load WAV_SWORD!");
-}
-
 static void	init_doom(t_doom *doom)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -56,19 +42,7 @@ static void	init_doom(t_doom *doom)
 	doom->keystates = NULL;
 	doom->mdl = NULL;
 	doom->app_start = SDL_GetTicks();
-	doom->map.enemy_string = NULL;
-	doom->map.player_string = NULL;
-	doom->map.portal_string = NULL;
-	doom->map.wall_string = NULL;
-	doom->map.was_filled = 0;
-}
-
-static void	destroy_sounds(t_doom *doom)
-{
-	Mix_FreeChunk(doom->sounds->mcThunder);
-	Mix_FreeChunk(doom->sounds->mcSteam);
-	Mix_FreeChunk(doom->sounds->mcSword);
-	Mix_FreeChunk(doom->sounds->mcPlop);
+	doom->map_data_initialized = 0;
 }
 
 static int	destroy_and_quit(t_doom *doom)
@@ -88,54 +62,23 @@ static int	destroy_and_quit(t_doom *doom)
 	return (0);
 }
 
-static void handle_events(t_doom *doom)
+static void distribute_inputs(t_doom *doom)
 {
-	while (SDL_PollEvent(&doom->event) != 0)
-	{
-		if (doom->event.type == SDL_MOUSEMOTION && !doom->edt_quit && doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
+	while (SDL_PollEvent(&doom->event) != 0) {
+		if (doom->event.type == SDL_MOUSEMOTION && !doom->edt_quit &&
+			doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
 			edt_mouse_motion(doom);
-		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->edt_quit && doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
+		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->edt_quit &&
+				 doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
 			edt_mouse_down(doom);
-		else if (doom->event.type == SDL_MOUSEMOTION && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
+		else if (doom->event.type == SDL_MOUSEMOTION && !doom->game_quit &&
+				 doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
 			game_mouse_motion(doom);
-		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
+		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->game_quit &&
+				 doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
 			game_mouse_down(doom);
-		else if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->edt_quit && doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
-		{
-			doom->edt_quit = 1;
-			destroy_edt(doom);
-		}
-		else if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
-		{
-			doom->game_quit = 1;
-			destroy_game(doom);
-		}
-		else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && doom->edt_quit && !doom->menu->esc_lock))
-		{
-			Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
-			SDL_Delay(300);
-			doom->quit = 1;
-		}
-		else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->edt_quit))
-		{
-			doom->edt_quit = 1;
-			destroy_edt(doom);
-			doom->menu->esc_lock = 40;
-			SDL_RestoreWindow(doom->win);
-			doom->menu_out_of_focus = 0;
-			Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
-			doom->buff = SDL_GetWindowSurface(doom->win);
-		}
-		else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->game_quit))
-		{
-			doom->game_quit = 1;
-			destroy_game(doom);
-			doom->menu->esc_lock = 40;
-			SDL_RestoreWindow(doom->win);
-			doom->menu_out_of_focus = 0;
-			Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
-			doom->buff = SDL_GetWindowSurface(doom->win);
-		}
+		else
+			window_and_menu_events(doom);
 	}
 }
 
@@ -162,8 +105,8 @@ int			main(int argc, char **argv)
 	{
 		doom.keystates = SDL_GetKeyboardState(NULL);
 		doom.frame_start = SDL_GetTicks();
-		// Events, including MOUSE and KEYBOARD inputs, Window red crossing ETC! SDL Events!
-		handle_events(&doom);
+		// Distribute inputs via SDL_Events, also handle window management with window_and_menu_events()
+		distribute_inputs(&doom);
 		run_loops(&doom, argc, argv);
 		// Delay until next frame
 		frame_ticks = SDL_GetTicks() - doom.frame_start;

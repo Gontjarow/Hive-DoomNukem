@@ -168,13 +168,14 @@ typedef struct	s_doom
 	int 				edt_quit;
 	int 				game_quit;
 	int 				menu_out_of_focus;
+	int 				map_data_initialized;
 	const Uint8* 		keystates;
 	uint32_t 			app_start;
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	union SDL_Event		event;
-	struct s_mapfile	map;
+	struct s_mapfile	*map;
 	struct s_sounds		*sounds;
 	struct s_menu		*menu;
 	struct s_editor		*edt;
@@ -281,10 +282,14 @@ void 			load_alphabet(t_menu *menu);
 void	 		destroy_alphabet(t_menu *menu);
 void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
 
+void			load_sounds(t_doom *doom);
+void			destroy_sounds(t_doom *doom);
+
 void 			init_menu(t_doom *doom);
 void 			destroy_menu(t_doom *doom);
 void			render_animation(t_doom *doom);
 void			load_animation(t_menu *menu);
+void			window_and_menu_events(t_doom *doom);
 void			main_menu_loop(t_doom *doom, int argc, char **argv);
 
 void 			init_game(t_doom *doom, int argc, char **argv);
@@ -305,6 +310,7 @@ void			update_player_string(t_editor *edt);
 int				write_mapfile(t_editor *le);
 int				overwrite_mapfile(t_editor *edt);
 
+void	 		destroy_mapdata(t_doom *doom);
 int 			load_model(t_doom *doom);
 void	 		destroy_model(t_doom *doom);
 #endif

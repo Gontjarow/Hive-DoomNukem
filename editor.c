@@ -101,10 +101,13 @@ void 		destroy_edt(t_doom *doom)
 	{
 		free(doom->edt->walls);
 		doom->edt->walls = NULL;
+		doom->edt->wall_begin = NULL;
 		free(doom->edt->portals);
 		doom->edt->portals = NULL;
+		doom->edt->portal_begin = NULL;
 		free(doom->edt->enemies);
 		doom->edt->enemies = NULL;
+		doom->edt->enemy_first = NULL;
 	}
 	if (doom->edt->wall_string)
 		free(doom->edt->wall_string);
@@ -121,6 +124,11 @@ void 		destroy_edt(t_doom *doom)
 	doom->edt->enemy_string = NULL;
 	doom->edt->player_string = NULL;
 	doom->edt->join_string = NULL;
+	doom->edt->portalization_a = NULL;
+	doom->edt->portalization_b = NULL;
+	doom->edt->new_portal = NULL;
+	doom->edt->map_path = NULL;
+	doom->edt->parent = NULL;
 	free(doom->edt);
 	doom->edt = NULL;
 }
@@ -295,6 +303,17 @@ static void test_end_portalization(int x, int y, t_editor *edt)
 	//ft_putendl("Tested end_portalization");
 }
 
+static int 	degree_rot(int x, int y, t_point *tail)
+{
+	double result;
+
+	x = tail->x - x;
+	y = tail->y - y;
+	result = atan2(y, x) * 180.0 / M_PI;;
+	result += 180.0;
+	return ((int)result);
+}
+
 static void record_enemy(int x, int y, t_editor *edt)
 {
 	t_point		rot_point;
@@ -319,7 +338,7 @@ static void record_enemy(int x, int y, t_editor *edt)
 	edt->enemies->wep.type_id = 0;
 	edt->enemies->hp.max = 100;
 	// UNDER CONSTRUCTION!!!
-	edt->enemies->rot = 0;
+	edt->enemies->rot = degree_rot(edt->enemies->x, edt->enemies->y, &edt->enemies->tail);
 	expand_enemy_string(edt);
 	next_enemy = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!next_enemy)
@@ -341,10 +360,6 @@ static void record_player(int x, int y, t_editor *edt)
 		edt->player.x = x;
 		edt->player.y = y;
 		edt->player_set = -1;
-		//ft_putnbr(edt->player.x);
-		//ft_putstr(" x | y ");
-		//ft_putnbr(edt->player.y);
-		//ft_putendl(" | Set player position.");
 	}
 	else if (edt->player_set == -1)
 	{
@@ -353,8 +368,7 @@ static void record_player(int x, int y, t_editor *edt)
 		start.x = edt->player.x;
 		start.y = edt->player.y;
 		modify_line_length(15, &start, &edt->player.tail, &edt->player.tail);
-		// UNDER CONSTRUCTION!!!!
-		edt->player.rot = 0;
+		edt->player.rot = degree_rot(edt->player.x, edt->player.y, &edt->player.tail);
 		edt->player_set = 1;
 		update_player_string(edt);
 	}
@@ -618,14 +632,15 @@ void			transfer_model_to_editor(t_doom *doom)
 	doom->edt->portal_count = doom->mdl->portal_count;
 	doom->edt->player = doom->mdl->player;
 	doom->edt->player_set = 1;
-	if (doom->map.player_string)
-		doom->edt->player_string = doom->map.player_string;
-	if (doom->map.wall_string)
-		doom->edt->wall_string = doom->map.wall_string;
-	if (doom->map.portal_string)
-		doom->edt->portal_string = doom->map.portal_string;
-	if (doom->map.enemy_string)
-		doom->edt->enemy_string = doom->map.enemy_string;
+	circle_player(doom);
+	if (doom->map->player_string)
+		doom->edt->player_string = ft_strdup(doom->map->player_string);
+	if (doom->map->wall_string)
+		doom->edt->wall_string = ft_strdup(doom->map->wall_string);
+	if (doom->map->portal_string)
+		doom->edt->portal_string = ft_strdup(doom->map->portal_string);
+	if (doom->map->enemy_string)
+		doom->edt->enemy_string = ft_strdup(doom->map->enemy_string);
 	print_walls(doom->edt);
 	ec = doom->edt->enemy_count;
 	if (ec == 0)
@@ -641,5 +656,4 @@ void			transfer_model_to_editor(t_doom *doom)
 		doom->edt->last_enemy.y = doom->edt->enemies->y;
 	}
 	doom->edt->enemies = doom->mdl->enemies;
-	circle_player(doom);
 }
