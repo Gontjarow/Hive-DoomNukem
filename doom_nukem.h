@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/22 15:29:30 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:01:34 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@
 # define EDT_WIN_HEIGHT 512
 # define GAME_WIN_WIDTH 1024
 # define GAME_WIN_HEIGHT 512
-# define MINIMAP_WIN_WIDTH 400
-# define MINIMAP_WIN_HEIGHT 400
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS

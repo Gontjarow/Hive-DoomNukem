@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/23 17:11:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:26:41 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,50 +69,50 @@ void		game_key_down(t_doom *doom)
 {
 	// These will be the doom->game key handling, right now it only supports the minimap
 	// but once the game can be tested with 3D rendering, these will work for both
-	if (doom->keystates[GAME_KEY_ESC])
+	if (doom->keystates[SDL_SCANCODE_ESCAPE])
 	{
 		// Open menu, quit game...
 		printf("ESC key pressed!\n");
 	}
-	if (doom->keystates[GAME_KEY_W])
+	if (doom->keystates[SDL_SCANCODE_W])
 	{
 		// Walk forward
 		doom->mdl->player.y--;
 		doom->mdl->player.tail.y--;
 		printf("W key pressed!\n");
 	}
-	if (doom->keystates[GAME_KEY_S])
+	if (doom->keystates[SDL_SCANCODE_S])
 	{
 		// Walk backward
 		doom->mdl->player.y++;
 		doom->mdl->player.tail.y++;
 		printf("S key pressed!\n");
 	}
-	if (doom->keystates[GAME_KEY_A])
+	if (doom->keystates[SDL_SCANCODE_A])
 	{
 		// Rotate left or walk left (if free camera implemented)
 		doom->mdl->player.x--;
 		doom->mdl->player.tail.x--;
 		printf("A key pressed!\n");
 	}
-	if (doom->keystates[GAME_KEY_D])
+	if (doom->keystates[SDL_SCANCODE_D])
 	{
 		// Rotate right or walk right (if free camera implemented)
 		doom->mdl->player.x++;
 		doom->mdl->player.tail.x++;
 		printf("D key pressed!\n");
 	}
-	if (doom->keystates[GAME_KEY_E_ACTION])
+	if (doom->keystates[SDL_SCANCODE_E])
 	{
 		// Use button, open doors, talk to NPC's...
 		printf("E key pressed!\n");
 	}
-	if (doom->keystates[GAME_KEY_SPACEBAR])
+	if (doom->keystates[SDL_SCANCODE_SPACE])
 	{
 		// Jump
 		printf("Spacebar key pressed!\n");
 	}
-	if (doom->keystates[GAME_KEY_LSHIFT])
+	if (doom->keystates[SDL_SCANCODE_LSHIFT])
 	{
 		// Increase player's speed, sprint
 		printf("Left Shift key pressed!\n");

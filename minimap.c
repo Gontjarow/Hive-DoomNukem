@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/22 15:30:45 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/24 17:20:03 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,84 @@ void	print_minimap_walls(t_doom *doom)
 	}
 }
 
+static void minimap_circle_enemy(t_doom *doom, t_enemy *enemy)
+{
+	unsigned int *pixels;
+	int radius;
+	int x;
+	int y;
+	t_point scaled;
+
+	pixels = doom->minimap->buff->pixels;
+	radius = 6;
+	y = -radius;
+	x = -radius;
+	while (y <= radius)
+	{
+		while (x <= radius)
+		{
+			scaled.x = enemy->x * doom->minimap->scale;
+			scaled.y = enemy->y * doom->minimap->scale;
+			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
+				pixels[scaled.x + x + ((scaled.y + y) * MINIMAP_WIN_WIDTH)] = 0xff00ff00;
+			x++;
+		}
+		y++;
+		x = -radius;
+	}
+}
+
+void	print_minimap_enemies(t_doom *doom)
+{
+	t_enemy	*enemy;
+	t_line	line;
+	int 	ec;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		line.x1 = enemy->x * doom->minimap->scale;
+		line.y1 = enemy->y * doom->minimap->scale;
+		line.x2 = enemy->tail.x * doom->minimap->scale;
+		line.y2 = enemy->tail.y * doom->minimap->scale;
+		line.color = 0xff00ff00;
+		line.buff = doom->minimap->buff;
+		render_line(&line);
+		minimap_circle_enemy(doom, enemy);
+		enemy = enemy->next;
+	}
+}
+
+static void minimap_circle_player(t_doom *doom)
+{
+	unsigned int *pixels;
+	int radius;
+	int x;
+	int y;
+	t_point scaled;
+
+	pixels = doom->minimap->buff->pixels;
+	radius = 6;
+	y = -radius;
+	x = -radius;
+	while (y <= radius)
+	{
+		while (x <= radius)
+		{
+			scaled.x = doom->mdl->player.x * doom->minimap->scale;
+			scaled.y = doom->mdl->player.y * doom->minimap->scale;
+			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
+				pixels[scaled.x + x + ((scaled.y + y) * MINIMAP_WIN_WIDTH)] = 0xffffff00;
+			x++;
+		}
+		y++;
+		x = -radius;
+	}
+}
+
 void		print_minimap_player(t_doom *doom)
 {
 	t_line	line;
@@ -56,6 +134,7 @@ void		print_minimap_player(t_doom *doom)
 	line.color = 0xffffff00;
 	line.buff = doom->minimap->buff;
 	render_line(&line);
+	minimap_circle_player(doom);
 }
 
 void		destroy_minimap(t_doom *doom)
@@ -74,6 +153,7 @@ void		update_minimap(t_doom *doom)
 	SDL_FillRect(doom->minimap->buff, NULL, 0x000000);
 	print_minimap_walls(doom);
 	print_minimap_player(doom);
+	print_minimap_enemies(doom);
 	SDL_UpdateWindowSurface(doom->minimap->win);
 }
 
