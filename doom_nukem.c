@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/11 14:02:23 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/25 13:34:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,11 @@ static void	init_doom(t_doom *doom)
 	doom->quit = 0;
 	doom->edt_quit = 1;
 	doom->game_quit = 1;
+	doom->minimap_quit = 1;
 	doom->menu_out_of_focus = 0;
 	doom->edt = NULL;
 	doom->keystates = NULL;
+	doom->minimap = NULL;
 	doom->mdl = NULL;
 	doom->app_start = SDL_GetTicks();
 	doom->map_data_initialized = 0;
@@ -52,6 +54,8 @@ static int	destroy_and_quit(t_doom *doom)
 		destroy_edt(doom);
 	if (!doom->game_quit)
 		destroy_game(doom);
+	if (!doom->minimap_quit)
+		destroy_minimap(doom);
 	if (doom->mdl)
 		destroy_model(doom);
 	destroy_sounds(doom);
@@ -77,6 +81,9 @@ static void distribute_inputs(t_doom *doom)
 		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->game_quit &&
 				 doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
 			game_mouse_down(doom);
+		else if (doom->event.type == SDL_KEYDOWN && !doom->game_quit &&
+				doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
+			game_key_down(doom);
 		else
 			window_and_menu_events(doom);
 	}

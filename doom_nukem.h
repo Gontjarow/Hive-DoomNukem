@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/11 14:01:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/24 16:01:34 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "mlx/mlx.h"
 # include "objects.h"
 # include "editor.h"
+# include "minimap.h"
 
 # ifndef __linux__
 
@@ -54,11 +55,22 @@
 # define EVT_MOUSE_MV 6
 # define EVT_CLOSE_WIN 17
 
+# define GAME_KEY_W 26
+# define GAME_KEY_A 4
+# define GAME_KEY_S 22
+# define GAME_KEY_D 7
+# define GAME_KEY_LSHIFT 225
+# define GAME_KEY_SPACEBAR 44
+# define GAME_KEY_E_ACTION 8
+# define GAME_KEY_ESC 41
+
 # define WAV_PLOP "wav/plop.wav"
 # define WAV_STEAM0 "wav/steam/0.wav"
 # define WAV_SWORD "wav/sword.wav"
 # define WAV_THUNDER "wav/thunder.wav"
 # define IMG_THUNDER0 "img/thunder/0.png"
+
+# define DEBUG 1
 
 /*
 ** *
@@ -167,6 +179,7 @@ typedef struct	s_doom
 	int 				quit;
 	int 				edt_quit;
 	int 				game_quit;
+	int					minimap_quit;
 	int 				menu_out_of_focus;
 	int 				map_data_initialized;
 	const Uint8* 		keystates;
@@ -178,6 +191,7 @@ typedef struct	s_doom
 	struct s_mapfile	*map;
 	struct s_sounds		*sounds;
 	struct s_menu		*menu;
+	struct s_minimap    *minimap;
 	struct s_editor		*edt;
 	struct s_model		*mdl;
 	struct s_game		*game;
@@ -298,6 +312,7 @@ void			game_render(t_doom *doom);
 void	 		game_loop(t_doom *doom);
 void			game_mouse_motion(t_doom *doom);
 void 			game_mouse_down(t_doom *doom);
+void			game_key_down(t_doom *doom);
 
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
 void 			render_line(t_line *l);
