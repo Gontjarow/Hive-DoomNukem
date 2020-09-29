@@ -12,6 +12,20 @@
 
 #include "doom_nukem.h"
 
+void	flood_window(SDL_Surface *buff, uint32_t color)
+{
+	unsigned int	*pixels;
+	int all;
+
+	all = buff->w * buff->h;
+	pixels = buff->pixels;
+	while (~--all)
+	{
+		pixels[all] = color;
+	}
+	ft_putendl("CLEARED WINDOW");
+}
+
 void 	set_pixel(SDL_Surface *buff, int x, int y, uint32_t color)
 {
 	unsigned int	*pixels;

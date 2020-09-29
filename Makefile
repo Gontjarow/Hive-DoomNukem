@@ -26,7 +26,7 @@ SDL2_IMAGE = libsdl/libSDL2_image.a
 
 SDL2_MIXER = libsdl/libSDL2_mixer.a
 
-FLAGS = -Wall -Wextra
+FLAGS = -Wall -Wextra -Werror
 
 LINUX_LINKS = -I libft -L libft -l ft \
 		-I ./mlx -L ./mlx -l mlx \
@@ -51,19 +51,20 @@ END = \033[0m
 all: $(NAME)
 
 $(NAME): $(OBJECTS)
-	@gcc $(OBJECTS) $(FLAGS) -I libft -L libft -l ft -rpath $(LIBSDL2) $(MAC_FLAGS) $(MAC_INCLUDES) -o $(NAME)
+	@gcc $(OBJECTS) $(FLAGS) -w -I libft -L libft -l ft -rpath $(LIBSDL2) $(MAC_FLAGS) $(MAC_INCLUDES) -o $(NAME)
 	@echo "$(MSG)Done!$(END)"
 
 linux: $(OBJECTS)
 	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) $(SDL2) $(SDL2_IMAGE) $(SDL2_MIXER) $(LINUX_LINKS)
 	@echo "$(MSG)Done!$(END)"
 
+# -w flag necessary for -Werror
 # RPATH necessary for Mac OSX compiled binary to execute
 # TEST IF -WERROR CAN BE ENABLED BACK AFTER SEPARATING OBJECTS WHICH HAVE NO NEED FOR SDL STUFF TO BE WITHOUT $(MAC_FLAGS) && $(MAC_INCLUDES)
 
 $(OBJECTS): $(LIBFT) $(SOURCES)
 	@echo "$(MSG)Compiling...$(END)"
-	@gcc $(FLAGS) -I libft $(MAC_FLAGS) $(MAC_INCLUDES) -c $(SOURCES)
+	@gcc $(FLAGS) -w -I libft $(MAC_FLAGS) $(MAC_INCLUDES) -c $(SOURCES)
 
 $(LIBFT):
 	@make -C libft

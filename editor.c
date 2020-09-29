@@ -23,6 +23,7 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->win = SDL_CreateWindow("DoomNukem Level Editor", SDL_WINDOWPOS_CENTERED,
 									  SDL_WINDOWPOS_CENTERED, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 0);
 	doom->edt->buff = SDL_GetWindowSurface(doom->edt->win);
+	flood_window(doom->edt->buff, 0xff000000);
 	doom->edt->walls = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->edt->walls)
 		ft_die("Fatal error: Mallocing walls struct failed at init_edt.");
@@ -95,6 +96,7 @@ void 		destroy_edt(t_doom *doom)
 		overwrite_mapfile(doom->edt);
 	SDL_FreeSurface(doom->edt->buff);
 	SDL_DestroyWindow(doom->edt->win);
+	ft_putendl("Window SDL destructed");
 	doom->edt->win = NULL;
 	doom->edt->buff = NULL;
 	if (!doom->mdl)
