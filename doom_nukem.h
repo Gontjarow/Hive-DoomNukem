@@ -21,9 +21,9 @@
 
 # ifndef __linux__
 
-# include "SDL.h"
-# include "SDL_mixer.h"
-# include "SDL_image.h"
+# include "lib/SDL2/SDL2.framework/Headers/SDL.h"
+# include "lib/SDL2/SDL2_image.framework/Headers/SDL_image.h"
+# include "lib/SDL2/SDL2_mixer.framework/Headers/SDL_mixer.h"
 
 # else
 
