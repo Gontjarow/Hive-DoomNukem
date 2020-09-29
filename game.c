@@ -23,6 +23,7 @@ void 		init_game(t_doom *doom, int argc, char **argv)
 	if (!doom->game->win)
 		ft_die("Fatal error: SDL_CreateWindow failed at init_game.");
 	doom->game->buff = SDL_GetWindowSurface(doom->game->win);
+	flood_window(doom->game->buff, 0xff000000);
 	if (!doom->game->win)
 		ft_die("Fatal error: SDL_GetWindowSurface failed at init_game.");
 	doom->game->map_supplied = 0;
@@ -124,5 +125,56 @@ void 		game_loop(t_doom *doom)
 
 void		game_render(t_doom *doom)
 {
+		// These will be the doom->game key handling, right now it only supports the minimap
+	// but once the game can be tested with 3D rendering, these will work for both
+	if (doom->keystates[SDL_SCANCODE_ESCAPE])
+	{
+		// Open menu, quit game...
+		printf("ESC key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_W])
+	{
+		// Walk forward
+		doom->mdl->player.y--;
+		doom->mdl->player.tail.y--;
+		printf("W key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_S])
+	{
+		// Walk backward
+		doom->mdl->player.y++;
+		doom->mdl->player.tail.y++;
+		printf("S key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_A])
+	{
+		// Rotate left or walk left (if free camera implemented)
+		doom->mdl->player.x--;
+		doom->mdl->player.tail.x--;
+		printf("A key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_D])
+	{
+		// Rotate right or walk right (if free camera implemented)
+		doom->mdl->player.x++;
+		doom->mdl->player.tail.x++;
+		printf("D key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_E])
+	{
+		// Use button, open doors, talk to NPC's...
+		printf("E key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_SPACE])
+	{
+		// Jump
+		printf("Spacebar key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_LSHIFT])
+	{
+		// Increase player's speed, sprint
+		printf("Left Shift key pressed!\n");
+	}
+	update_minimap(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
 }
