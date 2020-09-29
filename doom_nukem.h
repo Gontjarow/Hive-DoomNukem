@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/24 16:01:34 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/09/29 18:23:11 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "objects.h"
 # include "editor.h"
 # include "minimap.h"
+# include "mesh_model.h"
 
 # ifndef __linux__
 
@@ -44,6 +45,8 @@
 # define EDT_WIN_HEIGHT 512
 # define GAME_WIN_WIDTH 1024
 # define GAME_WIN_HEIGHT 512
+# define GAME_MIDWIDTH (GAME_WIN_WIDTH / 2)
+# define GAME_MIDHEIGHT (GAME_WIN_HEIGHT / 2)
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
