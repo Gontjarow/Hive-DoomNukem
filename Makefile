@@ -14,11 +14,13 @@ NAME = doom-nukem
 
 SOURCES = doom_nukem.c input.c image.c texture.c alphabet.c menu.c editor.c \
 		line.c pixel.c vec2d.c game.c mapfile.c load_model.c sounds.c \
-		minimap.c
+		minimap.c 
 
 OBJECTS = $(subst .c,.o,$(SOURCES))
 
 LIBFT = libft/libft.a
+
+LIBSDL2 = ./SDL2
 
 SDL2 = libsdl/libSDL2.a
 
@@ -41,8 +43,15 @@ END = \033[0m
 all: $(NAME)
 
 $(NAME): $(OBJECTS)
-	@gcc $(FLAGS) -Imlx/mlx.h $(SOURCES) $(LIBFT) \
-	-lmlx -lSDL2 -lSDL2_mixer -lSDL2_image \
+	@gcc $(FLAGS) -Imlx/mlx.h $(SOURCES) $(LIBFT) $(MACSDL2) $(MACSDL2_IMAGE) $(MACSDL2_MIXER) \
+	-lmlx \
+	-I$(LIBSDL2)/SDL2.framework/Headers \
+	-I$(LIBSDL2)/SDL2_image.framework/Headers \
+	-I$(LIBSDL2)/SDL2_mixer.framework/Headers \
+	-rpath $(LIBSDL2) \
+	-framework SDL2 -F$(LIBSDL2)/ \
+	-framework SDL2_image -F$(LIBSDL2)/ \
+	-framework SDL2_mixer -F$(LIBSDL2)/ \
 	-framework OpenGL -framework AppKit -o $(NAME)
 	@echo "$(MSG)Done!$(END)"
 
