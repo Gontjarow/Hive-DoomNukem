@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/29 18:23:11 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/10/01 21:00:43 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include "objects.h"
 # include "editor.h"
 # include "minimap.h"
-# include "mesh_model.h"
+# include "renderer.h"
 
 # ifndef __linux__
 

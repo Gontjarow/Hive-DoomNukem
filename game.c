@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/29 18:52:23 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/10/01 19:11:01 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,114 +183,6 @@ void		game_render(t_doom *doom)
 }
 
 // !!! NEW CODE, TO BE CLEANED UP
-
-void draw(unsigned int *pixel, t_xy start, t_xy end, int color)
-{
-	t_xy	dir;
-	t_xy	abs;
-	float	step;
-	int		i;
-	int		index;
-
-	dir = vec2_sub(end, start);
-	abs = vec2(fabs(dir.x), fabs(dir.y));
-	step = (abs.x > abs.y) ? abs.x : abs.y;
-	dir = vec2_div(dir, step);
-	i = 0;
-	while (i <= step)
-	{
-		index = (int)start.x + (int)start.y * GAME_WIN_WIDTH;
-		if ((int)start.x >= 0 && (int)start.x < GAME_WIN_WIDTH
-		&& ((int)start.y >= 0 && (int)start.y < GAME_WIN_HEIGHT)
-		&& (index >= 0 && index < GAME_WIN_WIDTH * GAME_WIN_HEIGHT))
-		{
-			pixel[index] = color;
-		}
-		else
-		{
-			printf("bad pixel %d\n", index);
-		}
-
-		start.x += dir.x;
-		start.y += dir.y;
-		++i;
-	}
-}
-
-// Raster-space bounding box
-t_xy		bb_min(t_face face)
-{
-	int i;
-	t_vert lowest;
-	t_vert current;
-
-	lowest = face.vert[0];
-	i = 1;
-	while (i < face.verts)
-	{
-		current = face.vert[i];
-		if (current.y < lowest.y) lowest.y = current.y;
-		if (current.x < lowest.x) lowest.x = current.x;
-		++i;
-	}
-	return vec2_clamp(vec2(lowest.x, lowest.y), 0, GAME_WIN_WIDTH);
-}
-
-// Raster-space bounding box
-t_xy		bb_max(t_face face)
-{
-	int i;
-	t_vert highest;
-	t_vert current;
-
-	highest = face.vert[0];
-	i = 1;
-	while (i < face.verts)
-	{
-		current = face.vert[i];
-		if (current.y > highest.y) highest.y = current.y;
-		if (current.x > highest.x) highest.x = current.x;
-		++i;
-	}
-	return vec2_clamp(vec2(highest.x, highest.y), 0, GAME_WIN_HEIGHT);
-}
-
-// Note: left < 0,  edge == 0,  right > 0
-double edge(t_xy p, t_xy a, t_xy b)
-{
-	return ((p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x));
-}
-
-// Note: Triangles are assumed to be in CCW order as per Wavefront.
-// When this is the case, the INSIDE of the triangle
-// is on the left side of each edge. (negative space)
-int inside(t_xy p, t_face face)
-{
-	t_xy v0 = vec42(face.vert[0]);
-	t_xy v1 = vec42(face.vert[1]);
-	t_xy v2 = vec42(face.vert[2]);
-
-	return (edge(p, v0, v1) <= 0
-		&& (edge(p, v1, v2) <= 0)
-		&& (edge(p, v2, v0) <= 0));
-}
-
-// Fixed, exactly 3-vert triangle.
-// Note: wavefront.obj triangles have verts in counter-clockwise order.
-void		draw_tri(unsigned int *pixel, t_face face, int color)
-{
-	t_xy min = bb_min(face);
-	t_xy max = bb_max(face);
-
-	for (int y = min.y; y < max.y; ++y)
-	for (int x = min.x; x < max.x; ++x)
-	{
-		if (inside(vec2(x, y), face))
-		{
-			pixel[x + y * GAME_WIN_WIDTH] = color;
-		}
-	}
-}
 
 void render(t_doom *doom)
 {

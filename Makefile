@@ -1,77 +1,52 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/09/08 19:59:39 by msuarez-          #+#    #+#              #
-#    Updated: 2020/09/29 18:38:50 by ngontjar         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME		=	doom-nukem
 
-NAME = doom-nukem
+SOURCES		=	$(wildcard *.c) \
+				$(wildcard renderer/*.c)
 
-SOURCES = doom_nukem.c input.c texture.c alphabet.c menu.c editor.c \
-		line.c pixel.c vec2d.c game.c mapfile.c load_model.c sounds.c \
-		minimap.c vec2.c vec3.c vec4.c mesh_model.c
+OBJECTS		=	$(SOURCES:.c=.o)
 
-OBJECTS = $(subst .c,.o,$(SOURCES))
+DEPENDENCY	=	$(OBJECTS:.o=.d)
 
-LIBFT = libft/libft.a
+LIBFT		= libft/libft.a
 
-SDL2 = libsdl/libSDL2.a
+UNIX_SDL	= ./libsdl
+UNIX_SDL2	= $(UNIX_SDL)/libSDL2.a
+UNIX_SDLIMG	= $(UNIX_SDL)/libSDL2_image.a
+UNIX_SDLMIX	= $(UNIX_SDL)/libSDL2_mixer.a
 
-SDL2_IMAGE = libsdl/libSDL2_image.a
+OSX_SDL		= ./lib/SDL2
+OSX_SDL2	= $(OSX_SDL)/SDL2.framework/Headers -framework SDL2 -F $(OSX_SDL)/
+OSX_SDLIMG	= $(OSX_SDL)/SDL2_image.framework/Headers -framework SDL2_image -F$(OSX_SDL)/
+OSX_SDLMIX	= $(OSX_SDL)/SDL2_mixer.framework/Headers -framework SDL2_mixer -F$(OSX_SDL)/
 
-SDL2_MIXER = libsdl/libSDL2_mixer.a
+FLAGS		= -Wall -Wextra -g -MMD
+INCLUDES	= -I . -I ./renderer -rpath .
+LINKS		= -L libft -l ft
 
-FLAGS = -Wall -Wextra -Werror -g
-
-LINUX_LINKS = -I libft -L libft -l ft \
-		-I ./mlx -L ./mlx -l mlx \
-		-lm -lXext -lX11 -lpthread \
-        -I ./libsdl -L ./libsdl -ldl
-
-LIBSDL2 = ./lib/SDL2
-
-MAC_INCLUDES =	-I $(LIBSDL2)/SDL2.framework/Headers \
-				-I $(LIBSDL2)/SDL2_image.framework/Headers \
-				-I $(LIBSDL2)/SDL2_mixer.framework/Headers
-
-MAC_FLAGS =		-framework SDL2 -F$(LIBSDL2)/ \
-				-framework SDL2_image -F$(LIBSDL2)/ \
-				-framework SDL2_mixer -F$(LIBSDL2)/
+OSX_FLAGS	= $(FLAGS) $(INCLUDES) -I$(OSX_SDL2) -I$(OSX_SDLIMG) -I$(OSX_SDLMIX) $(LINKS)
 
 MSG = \033[38;5;214m
 END = \033[0m
 
-.PHONY: all clean fclean re linux
+.PHONY: all clean fclean re
 
 all: $(NAME)
 
-$(NAME): $(OBJECTS)
-	@gcc $(OBJECTS) $(FLAGS) -w -I libft -L libft -l ft -rpath $(LIBSDL2) $(MAC_FLAGS) $(MAC_INCLUDES) -o $(NAME)
-	@echo "$(MSG)Done!$(END)"
+-include $(DEPENDENCY)
 
-linux: $(OBJECTS)
-	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) $(SDL2) $(SDL2_IMAGE) $(SDL2_MIXER) $(LINUX_LINKS)
-	@echo "$(MSG)Done!$(END)"
-
-# -w flag necessary for -Werror
-# RPATH necessary for Mac OSX compiled binary to execute
-# TEST IF -WERROR CAN BE ENABLED BACK AFTER SEPARATING OBJECTS WHICH HAVE NO NEED FOR SDL STUFF TO BE WITHOUT $(MAC_FLAGS) && $(MAC_INCLUDES)
-
-$(OBJECTS): $(LIBFT) $(SOURCES)
-	@echo "$(MSG)Compiling...$(END)"
-	@gcc $(FLAGS) -w -I libft $(MAC_FLAGS) $(MAC_INCLUDES) -c $(SOURCES)
+$(NAME): $(OBJECTS) $(LIBFT)
+	@gcc $(OBJECTS) $(OSX_FLAGS) -o $(NAME)
 
 $(LIBFT):
 	@make -C libft
 
+%.o: %.c
+	@gcc $(FLAGS) -w $(OSX_FLAGS) -o $@ -c $<
+
 clean:
 	@make -C libft clean
 	@rm -f $(OBJECTS)
+	@rm -f $(DEPENDENCY)
 	@echo "$(MSG)Objects removed!$(END)"
 
 fclean: clean

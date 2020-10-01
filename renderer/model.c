@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "renderer.h"
 
 /*
 ** load_mesh_obj()
@@ -55,9 +55,9 @@ t_mesh	load_mesh_obj(const char *file)
 	int		fd = open(file, O_RDONLY);
 	int		vcount = 0;
 	int		fcount = 0;
-	t_vert	file_vertex[1024] = {0}; // Verts per file
-	t_vert	face_vertex[16] = {0}; // Verts per face
-	t_face	face_buffer[1024] = {0}; // Faces per mesh
+	t_vert	file_vertex[1024] = {{0}}; // Verts per file
+	t_vert	face_vertex[16] = {{0}}; // Verts per face
+	t_face	face_buffer[1024] = {{0}}; // Faces per mesh
 	t_mesh mesh;
 
 	// printf("file_vertex %zu face_vertex %zu face_buffer %zu\n",
@@ -75,7 +75,7 @@ t_mesh	load_mesh_obj(const char *file)
 				atof(split[1]),
 				atof(split[2]),
 				atof(split[3]),
-				1);
+				T_POS);
 			free_array(split);
 		}
 		// face
@@ -225,24 +225,24 @@ t_mesh		mesh_duplicate(t_mesh mesh)
 ** \brief Applies the given matrix to all verts in the mesh.
 ** \return Newly allocated data, containing the transformed verts.
 */
-// t_mesh		mesh_transform(t_matrix matrix, t_mesh mesh)
-// {
-// 	int i;
-// 	int v;
-// 	t_mesh out;
+t_mesh		mesh_transform(t_matrix matrix, t_mesh mesh)
+{
+	int i;
+	int v;
+	t_mesh out;
 
-// 	assert(mesh.faces >= 1);
-// 	out = mesh_duplicate(mesh);
-// 	i = 0;
-// 	while (i < out.faces)
-// 	{
-// 		v = 0;
-// 		while (v < out.face[i].verts)
-// 		{
-// 			out.face[i].vert[v] = apply_m(matrix, out.face[i].vert[v]);
-// 			++v;
-// 		}
-// 		++i;
-// 	}
-// 	return (out);
-// }
+	assert(mesh.faces >= 1);
+	out = mesh_duplicate(mesh);
+	i = 0;
+	while (i < out.faces)
+	{
+		v = 0;
+		while (v < out.face[i].verts)
+		{
+			out.face[i].vert[v] = apply_m(matrix, out.face[i].vert[v]);
+			++v;
+		}
+		++i;
+	}
+	return (out);
+}
