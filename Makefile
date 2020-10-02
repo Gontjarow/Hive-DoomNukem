@@ -43,6 +43,7 @@ END = \033[0m
 #	https://stackoverflow.com/a/20566812/12215093
 all: $(NAME)
 ifeq ($(SHELL_NAME), Darwin)
+	@mkdir -p ~/Library/Frameworks
 ifeq ("$(wildcard ~/Library/Frameworks/SDL2.framework)","")
 	@cp -R ./lib/SDL2/SDL2.framework ~/Library/Frameworks
 	@cp -R ./lib/SDL2/SDL2_image.framework ~/Library/Frameworks
