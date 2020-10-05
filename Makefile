@@ -9,7 +9,7 @@ OBJECTS		:=	$(SOURCES:.c=.o)
 DEPENDENCY	:=	$(OBJECTS:.o=.d)
 
 LIBFT_PATH	:= ./libft
-LIBFT		:= -I $(LIBFT_PATH) -L $(LIBFT_PATH) $(LIBFT_PATH)/libft.a
+LIBFT		:= -I $(LIBFT_PATH) -L $(LIBFT_PATH) -l ft
 
 #	http://nuclear.mutantstargoat.com/articles/make/#handling-cross-platform-differences
 #	https://www.gnu.org/software/make/manual/html_node/Shell-Function.html
@@ -22,9 +22,9 @@ SDL_IMAGE	:= -I $(SDL_PATH)/SDL2_image.framework/Headers -framework SDL2_image -
 SDL_MIXER	:= -I $(SDL_PATH)/SDL2_mixer.framework/Headers -framework SDL2_mixer -F $(SDL_PATH)
 else
 SDL_PATH	:= ./libsdl
-SDL_MAIN	:= -I $(SDL_PATH) -L $(SDL_PATH) $(SDL_PATH)/libSDL2.a
-SDL_IMAGE	:= -I $(SDL_PATH) -L $(SDL_PATH) $(SDL_PATH)/libSDL2_image.a
-SDL_MIXER	:= -I $(SDL_PATH) -L $(SDL_PATH) $(SDL_PATH)/libSDL2_mixer.a
+SDL_MAIN	:= -I $(SDL_PATH) -L $(SDL_PATH) -l SDL2
+SDL_IMAGE	:= -I $(SDL_PATH) -L $(SDL_PATH) -l SDL2_image
+SDL_MIXER	:= -I $(SDL_PATH) -L $(SDL_PATH) -l SDL2_mixer
 endif
 
 #	http://nuclear.mutantstargoat.com/articles/make/#improved-automatic-dependency-tracking
@@ -32,6 +32,10 @@ FLAGS		:= -Wall -Wextra -MMD -g
 INCLUDES	:= -I . -I ./renderer
 
 FLAGS		+= $(INCLUDES) $(LIBFT) $(SDL_MAIN) $(SDL_IMAGE) $(SDL_MIXER)
+
+ifeq ($(SHELL_NAME), Linux)
+FLAGS		+= -lm -ldl -pthread
+endif
 
 MSG = \033[38;5;214m
 END = \033[0m
@@ -50,15 +54,13 @@ ifeq ("$(wildcard ~/Library/Frameworks/SDL2.framework)","")
 	@cp -R ./lib/SDL2/SDL2_mixer.framework ~/Library/Frameworks
 	@echo "$(MSG)SDL installed!$(END)"
 endif
-else
-	@echo "$(MSG)This isn't MacOS. (debug message)$(END)"
 endif
 
 #	https://www.gnu.org/software/make/manual/html_node/Include.html
 -include $(DEPENDENCY)
 
 $(NAME): $(LIBFT_PATH)/libft.a $(OBJECTS)
-	@gcc $(FLAGS) $(OBJECTS) -o $(NAME)
+	@gcc $(OBJECTS) -o $(NAME) $(FLAGS)
 	@echo "$(MSG)Done! (Shell: $(SHELL_NAME))$(END)"
 
 $(LIBFT_PATH)/libft.a:
