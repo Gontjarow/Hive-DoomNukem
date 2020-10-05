@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/10/05 19:00:37 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/10/05 20:00:10 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,10 +139,16 @@ void render(t_doom *doom)
 	// SDL_memset(doom->game->buff->pixels, 0, GAME_WIN_WIDTH * doom->game->buff->pitch);
 	t_mesh test = load_mesh_obj("tiny-donut.obj");
 
+	double s = 2;
+	t_matrix shift = translate_m(s, s, 0);
+	t_matrix scale = scale_m(GAME_MIDWIDTH / s, GAME_MIDHEIGHT / s, 1);
+	t_matrix t = multiply_m(shift, scale);
+	mat4p(t);
+	t_mesh transformed = mesh_transform(t, test);
 	int i = 0;
-	while (i < test.faces)
+	while (i < transformed.faces)
 	{
-		t_vert *v = test.face[i++].vert;
+		t_vert *v = transformed.face[i++].vert;
 
 		// Face-normal (counter-clockwise vertex order)
 		t_xyz normal = vec3_norm(vec4_cross(
@@ -165,13 +171,7 @@ void render(t_doom *doom)
 				int color = 255 * light;
 				color = color | color << 8 | color << 16;
 
-				// Transformed face (moved and scaled to window size)
-				// return;
-				double s = 1.2;
-				t_face tf = init_face(3,
-					vec4((v[0].x + s) * GAME_MIDWIDTH / s, (v[0].y + s) * GAME_MIDHEIGHT / s, 0, 1),
-					vec4((v[1].x + s) * GAME_MIDWIDTH / s, (v[1].y + s) * GAME_MIDHEIGHT / s, 0, 1),
-					vec4((v[2].x + s) * GAME_MIDWIDTH / s, (v[2].y + s) * GAME_MIDHEIGHT / s, 0, 1));
+				t_face tf = init_face(3, v[0], v[1], v[2]);
 
 				draw_tri(doom->game->buff->pixels, tf, color);
 				free_verts(&tf);

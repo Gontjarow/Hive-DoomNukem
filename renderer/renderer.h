@@ -125,6 +125,7 @@ t_xyzw			vec4_norm(t_xyzw v);
 double			vec4_dot(t_xyzw a, t_xyzw b);
 t_xyz			vec4_cross(t_xyzw a, t_xyzw b);
 
+void			mat4p(t_matrix m);
 t_matrix		identity_m();
 t_matrix		scale_m(double x, double y, double z);
 t_matrix		translate_m(double x, double y, double z);

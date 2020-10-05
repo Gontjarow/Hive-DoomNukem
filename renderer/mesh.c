@@ -21,35 +21,54 @@ static void	free_array(char **array)
 	free(array);
 }
 
-static void	fill_faces(t_face *face, int n, t_vert *buffer)
+/*
+** Allocates memory for t_vert; Copies memory from buffer.
+** If allocation fails, faces is set to 0.
+*/
+t_face		build_face(int count, t_vert *buffer)
 {
-	int		i;
+	t_face	out;
+	size_t	bytes;
 
-	// printf("fill face with %d verts\n", n);
-	assert(face->verts == n);
-	i = 0;
-	while (i < n)
+	assert(count > 2);
+	out.verts = 0;
+	bytes = count * sizeof(t_vert);
+	if ((out.vert = malloc(bytes)))
 	{
-		face->vert[i] = buffer[i];
-		++i;
+		out.verts = count;
+		ft_memcpy(out.vert, buffer, bytes);
 	}
+	return (out);
 }
 
-static void	fill_mesh(t_mesh *mesh, int n, t_face *buffer)
+/*
+** Allocates memory for t_face; Assigns t_vert pointer & count.
+** If allocation fails, faces is set to 0.
+*/
+t_mesh		build_mesh(int count, t_face *buffer)
 {
+	t_mesh	out;
+	size_t	bytes;
 	int		i;
 
-	// printf("fill mesh with %d faces\n", n);
-	assert(mesh->faces == n);
-	i = 0;
-	while (i < n)
+	assert(count > 0);
+	out.faces = 0;
+	bytes = count * sizeof(t_face);
+	if ((out.face = malloc(bytes)))
 	{
-		mesh->face[i] = buffer[i];
-		++i;
+		out.faces = count;
+		i = 0;
+		while (i < count)
+		{
+			out.face[i].verts = buffer[i].verts;
+			out.face[i].vert = buffer[i].vert;
+			++i;
+		}
 	}
+	return (out);
 }
 
-t_mesh	load_mesh_obj(const char *file)
+t_mesh		load_mesh_obj(const char *file)
 {
 	char	*line;
 	int		fd = open(file, O_RDONLY);
@@ -57,27 +76,22 @@ t_mesh	load_mesh_obj(const char *file)
 	int		fcount = 0;
 	t_vert	file_vertex[1024] = {{0}}; // Verts per file
 	t_vert	face_vertex[16] = {{0}}; // Verts per face
-	t_face	face_buffer[1024] = {{0}}; // Faces per mesh
-	t_mesh mesh;
-
-	// printf("file_vertex %zu face_vertex %zu face_buffer %zu\n",
-	// 	sizeof(file_vertex), sizeof(face_vertex), sizeof(face_buffer));
+	t_face	mesh_face[1024] = {{0}}; // Faces per mesh
 
 	while (vcount < 1024 && get_next_line(fd, &line) > 0)
 	{
 		char **split;
+
 		// vertex
 		if (ft_strncmp(line, "v ", 2) == 0)
 		{
 			// printf("OBJ read: \"%s\"\n", line);
 			split = ft_strsplit(line, ' ');
 			file_vertex[vcount++] = vec4(
-				atof(split[1]),
-				atof(split[2]),
-				atof(split[3]),
-				T_POS);
+				atof(split[1]), atof(split[2]), atof(split[3]), T_POS);
 			free_array(split);
 		}
+
 		// face
 		else if (ft_strncmp(line, "f ", 2) == 0)
 		{
@@ -90,16 +104,33 @@ t_mesh	load_mesh_obj(const char *file)
 				face_vertex[i - 1] = file_vertex[vindex - 1];
 				++i;
 			}
-			face_buffer[fcount] = init_face(i - 1); //! Technically very bad.
-			fill_faces(face_buffer + fcount, i - 1, face_vertex);
+			mesh_face[fcount] = build_face(i - 1, face_vertex);
 			free_array(split);
 			++fcount;
 		}
 		free(line);
 	}
-	mesh = init_mesh(fcount); //! Technically very bad.
-	fill_mesh(&mesh, fcount, face_buffer);
-	return (mesh);
+	return (build_mesh(fcount, mesh_face));
+}
+
+void		free_verts(t_face *face)
+{
+	free(face->vert);
+	face->verts = 0;
+}
+
+void		free_faces(t_mesh *mesh)
+{
+	int i;
+
+	i = 0;
+	while (i < mesh->faces)
+	{
+		free(mesh->face[i].vert);
+		++i;
+	}
+	free(mesh->face);
+	mesh->faces = 0;
 }
 
 /*
@@ -156,26 +187,6 @@ t_mesh		init_mesh(int n, ...)
 	return (mesh);
 }
 
-void		free_verts(t_face *face)
-{
-	free(face->vert);
-	face->verts = 0;
-}
-
-void		free_faces(t_mesh *mesh)
-{
-	int i;
-
-	i = 0;
-	while (i < mesh->faces)
-	{
-		free(mesh->face[i].vert);
-		++i;
-	}
-	free(mesh->face);
-	mesh->faces = 0;
-}
-
 void		mesh_draw(unsigned int *surface, const t_mesh *mesh)
 {
 	int i;
@@ -203,20 +214,45 @@ void		mesh_draw(unsigned int *surface, const t_mesh *mesh)
 	}
 }
 
+/*
+** Same as build_face, but takes another face instead of a buffer.
+*/
+t_face		face_duplicate(t_face face)
+{
+	t_face	out;
+	size_t	bytes;
+
+	out.verts = 0;
+	bytes = face.verts * sizeof(t_vert);
+	if ((out.vert = malloc(bytes)))
+	{
+		out.verts = face.verts;
+		ft_memcpy(out.vert, face.vert, bytes);
+	}
+	return (out);
+}
+
+/*
+** Same as build_mesh, but takes another mesh instead of a buffer.
+*/
 t_mesh		mesh_duplicate(t_mesh mesh)
 {
-	t_mesh out;
-	int i;
+	t_mesh	out;
+	size_t	bytes;
+	int		i;
 
-	out = init_mesh(mesh.faces);
-	i = 0;
-	while (i < mesh.faces)
+	out.faces = 0;
+	bytes = mesh.faces * sizeof(t_face);
+	if ((out.face = malloc(bytes)))
 	{
-		out.face[i] = init_face(mesh.face[i].verts);
-		ft_memcpy(
-			out.face[i].vert,
-			mesh.face[i].vert,
-			sizeof(t_vert) * mesh.face[i].verts);
+		out.faces = mesh.faces;
+		i = 0;
+		while (i < mesh.faces)
+		{
+			out.face[i].verts = mesh.face[i].verts;
+			out.face[i].vert = mesh.face[i].vert;
+			++i;
+		}
 	}
 	return (out);
 }

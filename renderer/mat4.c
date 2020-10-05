@@ -5,6 +5,19 @@
 // Note: if w == 1, then xyzw is position
 // Note: https://youtu.be/o1n02xKP138?t=251
 
+void		mat4p(t_matrix m)
+{
+	printf("\n{%8.3f | %8.3f | %8.3f | %8.3f \n"
+			" %8.3f | %8.3f | %8.3f | %8.3f \n"
+			" %8.3f | %8.3f | %8.3f | %8.3f \n"
+			" %8.3f | %8.3f | %8.3f | %8.3f}\n",
+			m.Xx, m.Yx, m.Zx, m.Tx,
+			m.Xy, m.Yy, m.Zy, m.Ty,
+			m.Xz, m.Yz, m.Zz, m.Tz,
+			m.Xw, m.Yw, m.Zw, m.Tw);
+
+}
+
 t_matrix	identity_m()
 {
 	return (t_matrix){{

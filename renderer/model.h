@@ -26,6 +26,12 @@ t_mesh			load_mesh_obj(const char *file);
 
 t_face			init_face(int n, ...);
 t_mesh			init_mesh(int n, ...);
+t_face			build_face(int count, t_vert *buffer);
+t_mesh			build_mesh(int count, t_face *buffer);
+
+t_face			face_duplicate(t_face face);
+t_mesh			mesh_duplicate(t_mesh mesh);
+
 void			free_verts(t_face *face);
 void			free_faces(t_mesh *mesh);
 
