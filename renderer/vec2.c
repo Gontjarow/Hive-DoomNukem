@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "renderer.h"
 
 void	vec2p(t_xy v)
 {

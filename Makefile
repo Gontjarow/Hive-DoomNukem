@@ -1,77 +1,79 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/09/08 19:59:39 by msuarez-          #+#    #+#              #
-#    Updated: 2020/09/29 18:38:50 by ngontjar         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+#	https://www.gnu.org/software/make/manual/html_node/Flavors.html
+NAME		:=	doom-nukem
 
-NAME = doom-nukem
+#	http://nuclear.mutantstargoat.com/articles/make/#multiple-source-directories
+SOURCES		:=	$(wildcard *.c) $(wildcard renderer/*.c)
+OBJECTS		:=	$(SOURCES:.c=.o)
 
-SOURCES = doom_nukem.c input.c texture.c alphabet.c menu.c editor.c \
-		line.c pixel.c vec2d.c game.c mapfile.c load_model.c sounds.c \
-		minimap.c vec2.c vec3.c vec4.c mesh_model.c
+#	http://nuclear.mutantstargoat.com/articles/make/#automatic-include-dependency-tracking
+DEPENDENCY	:=	$(OBJECTS:.o=.d)
 
-OBJECTS = $(subst .c,.o,$(SOURCES))
+LIBFT_PATH	:= ./libft
+LIBFT		:= -I $(LIBFT_PATH) -L $(LIBFT_PATH) -l ft
 
-LIBFT = libft/libft.a
+#	http://nuclear.mutantstargoat.com/articles/make/#handling-cross-platform-differences
+#	https://www.gnu.org/software/make/manual/html_node/Shell-Function.html
+SHELL_NAME	:= $(shell uname -s)
 
-SDL2 = libsdl/libSDL2.a
+ifeq ($(SHELL_NAME), Darwin)
+SDL_PATH	:= ./lib/SDL2
+SDL_MAIN	:= -I $(SDL_PATH)/SDL2.framework/Headers -framework SDL2 -F $(SDL_PATH)
+SDL_IMAGE	:= -I $(SDL_PATH)/SDL2_image.framework/Headers -framework SDL2_image -F $(SDL_PATH)
+SDL_MIXER	:= -I $(SDL_PATH)/SDL2_mixer.framework/Headers -framework SDL2_mixer -F $(SDL_PATH)
+else
+SDL_PATH	:= ./libsdl
+SDL_MAIN	:= -I $(SDL_PATH) -L $(SDL_PATH) -l SDL2
+SDL_IMAGE	:= -I $(SDL_PATH) -L $(SDL_PATH) -l SDL2_image
+SDL_MIXER	:= -I $(SDL_PATH) -L $(SDL_PATH) -l SDL2_mixer
+endif
 
-SDL2_IMAGE = libsdl/libSDL2_image.a
+#	http://nuclear.mutantstargoat.com/articles/make/#improved-automatic-dependency-tracking
+FLAGS		:= -Wall -Wextra -MMD -g
+INCLUDES	:= -I . -I ./renderer
 
-SDL2_MIXER = libsdl/libSDL2_mixer.a
+FLAGS		+= $(INCLUDES) $(LIBFT) $(SDL_MAIN) $(SDL_IMAGE) $(SDL_MIXER)
 
-FLAGS = -Wall -Wextra -Werror -g
-
-LINUX_LINKS = -I libft -L libft -l ft \
-		-I ./mlx -L ./mlx -l mlx \
-		-lm -lXext -lX11 -lpthread \
-        -I ./libsdl -L ./libsdl -ldl
-
-LIBSDL2 = ./lib/SDL2
-
-MAC_INCLUDES =	-I $(LIBSDL2)/SDL2.framework/Headers \
-				-I $(LIBSDL2)/SDL2_image.framework/Headers \
-				-I $(LIBSDL2)/SDL2_mixer.framework/Headers
-
-MAC_FLAGS =		-framework SDL2 -F$(LIBSDL2)/ \
-				-framework SDL2_image -F$(LIBSDL2)/ \
-				-framework SDL2_mixer -F$(LIBSDL2)/
+ifeq ($(SHELL_NAME), Linux)
+FLAGS		+= -lm -ldl -pthread
+endif
 
 MSG = \033[38;5;214m
 END = \033[0m
 
-.PHONY: all clean fclean re linux
+.PHONY: all clean fclean re
 
+#	SDL framework requires that it exists in Library. (See SDL README)
+#	Only if frameworks are MISSING, copy them. Otherwise cp outputs errors.
+#	https://stackoverflow.com/a/20566812/12215093
 all: $(NAME)
+ifeq ($(SHELL_NAME), Darwin)
+	@mkdir -p ~/Library/Frameworks
+ifeq ("$(wildcard ~/Library/Frameworks/SDL2.framework)","")
+	@cp -R ./lib/SDL2/SDL2.framework ~/Library/Frameworks
+	@cp -R ./lib/SDL2/SDL2_image.framework ~/Library/Frameworks
+	@cp -R ./lib/SDL2/SDL2_mixer.framework ~/Library/Frameworks
+	@echo "$(MSG)SDL installed!$(END)"
+endif
+endif
 
-$(NAME): $(OBJECTS)
-	@gcc $(OBJECTS) $(FLAGS) -w -I libft -L libft -l ft -rpath $(LIBSDL2) $(MAC_FLAGS) $(MAC_INCLUDES) -o $(NAME)
-	@echo "$(MSG)Done!$(END)"
+#	https://www.gnu.org/software/make/manual/html_node/Include.html
+-include $(DEPENDENCY)
 
-linux: $(OBJECTS)
-	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) $(SDL2) $(SDL2_IMAGE) $(SDL2_MIXER) $(LINUX_LINKS)
-	@echo "$(MSG)Done!$(END)"
+$(NAME): $(LIBFT_PATH)/libft.a $(OBJECTS)
+	@gcc $(OBJECTS) -o $(NAME) $(FLAGS)
+	@echo "$(MSG)Done! (Shell: $(SHELL_NAME))$(END)"
 
-# -w flag necessary for -Werror
-# RPATH necessary for Mac OSX compiled binary to execute
-# TEST IF -WERROR CAN BE ENABLED BACK AFTER SEPARATING OBJECTS WHICH HAVE NO NEED FOR SDL STUFF TO BE WITHOUT $(MAC_FLAGS) && $(MAC_INCLUDES)
-
-$(OBJECTS): $(LIBFT) $(SOURCES)
-	@echo "$(MSG)Compiling...$(END)"
-	@gcc $(FLAGS) -w -I libft $(MAC_FLAGS) $(MAC_INCLUDES) -c $(SOURCES)
-
-$(LIBFT):
+$(LIBFT_PATH)/libft.a:
 	@make -C libft
+
+%.o: %.c
+	@printf "gcc %25s ==> %s\n" $< $@
+	@gcc $(FLAGS) -w -c $< -o $@
 
 clean:
 	@make -C libft clean
 	@rm -f $(OBJECTS)
+	@rm -f $(DEPENDENCY)
 	@echo "$(MSG)Objects removed!$(END)"
 
 fclean: clean

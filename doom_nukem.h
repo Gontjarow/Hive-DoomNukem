@@ -3,41 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   doom_nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/09/29 18:23:11 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/10/05 14:24:28 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DOOM_NUKEM_H
 # define DOOM_NUKEM_H
 
-# include "libft/libft.h"
-# include "mlx/mlx.h"
+# include "libft.h"
 # include "objects.h"
 # include "editor.h"
 # include "minimap.h"
-# include "mesh_model.h"
+# include "renderer.h"
 
-# ifndef __linux__
-
-# include "lib/SDL2/SDL2.framework/Headers/SDL.h"
-# include "lib/SDL2/SDL2_image.framework/Headers/SDL_image.h"
-# include "lib/SDL2/SDL2_mixer.framework/Headers/SDL_mixer.h"
-
-# else
-
-# include "libsdl/SDL.h"
-# include "libsdl/SDL_image.h"
-# include "libsdl/SDL_mixer.h"
-
-# endif
+# include "SDL.h"
+# include "SDL_image.h"
+# include "SDL_mixer.h"
 
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <time.h>
+# include <math.h>
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 512
