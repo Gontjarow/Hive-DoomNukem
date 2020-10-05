@@ -234,8 +234,6 @@ static void print_walls(t_editor *edt)
 	print_portals(edt);
 }
 
-
-
 static void set_portalization_xy(t_editor *edt)
 {
 	if (edt->portalization_binding)

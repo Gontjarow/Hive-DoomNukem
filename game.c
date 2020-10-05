@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/10/01 19:11:01 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/10/05 19:00:37 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,57 +64,7 @@ void 		game_mouse_down(t_doom *doom)
 
 void		game_key_down(t_doom *doom)
 {
-	// These will be the doom->game key handling, right now it only supports the minimap
-	// but once the game can be tested with 3D rendering, these will work for both
-	if (doom->keystates[SDL_SCANCODE_ESCAPE])
-	{
-		// Open menu, quit game...
-		printf("ESC key pressed!\n");
-	}
-	if (doom->keystates[SDL_SCANCODE_W])
-	{
-		// Walk forward
-		doom->mdl->player.y--;
-		doom->mdl->player.tail.y--;
-		printf("W key pressed!\n");
-	}
-	if (doom->keystates[SDL_SCANCODE_S])
-	{
-		// Walk backward
-		doom->mdl->player.y++;
-		doom->mdl->player.tail.y++;
-		printf("S key pressed!\n");
-	}
-	if (doom->keystates[SDL_SCANCODE_A])
-	{
-		// Rotate left or walk left (if free camera implemented)
-		doom->mdl->player.x--;
-		doom->mdl->player.tail.x--;
-		printf("A key pressed!\n");
-	}
-	if (doom->keystates[SDL_SCANCODE_D])
-	{
-		// Rotate right or walk right (if free camera implemented)
-		doom->mdl->player.x++;
-		doom->mdl->player.tail.x++;
-		printf("D key pressed!\n");
-	}
-	if (doom->keystates[SDL_SCANCODE_E])
-	{
-		// Use button, open doors, talk to NPC's...
-		printf("E key pressed!\n");
-	}
-	if (doom->keystates[SDL_SCANCODE_SPACE])
-	{
-		// Jump
-		printf("Spacebar key pressed!\n");
-	}
-	if (doom->keystates[SDL_SCANCODE_LSHIFT])
-	{
-		// Increase player's speed, sprint
-		printf("Left Shift key pressed!\n");
-	}
-	update_minimap(doom);
+	return ;
 }
 
 void 		game_loop(t_doom *doom)
@@ -139,28 +89,28 @@ void		game_render(t_doom *doom)
 		// Walk forward
 		doom->mdl->player.y--;
 		doom->mdl->player.tail.y--;
-		printf("W key pressed!\n");
+		//printf("W key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_S])
 	{
 		// Walk backward
 		doom->mdl->player.y++;
 		doom->mdl->player.tail.y++;
-		printf("S key pressed!\n");
+		//printf("S key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_A])
 	{
 		// Rotate left or walk left (if free camera implemented)
 		doom->mdl->player.x--;
 		doom->mdl->player.tail.x--;
-		printf("A key pressed!\n");
+		//printf("A key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_D])
 	{
 		// Rotate right or walk right (if free camera implemented)
 		doom->mdl->player.x++;
 		doom->mdl->player.tail.x++;
-		printf("D key pressed!\n");
+		//printf("D key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_E])
 	{
@@ -217,7 +167,7 @@ void render(t_doom *doom)
 
 				// Transformed face (moved and scaled to window size)
 				// return;
-				double s = 3;
+				double s = 1.2;
 				t_face tf = init_face(3,
 					vec4((v[0].x + s) * GAME_MIDWIDTH / s, (v[0].y + s) * GAME_MIDHEIGHT / s, 0, 1),
 					vec4((v[1].x + s) * GAME_MIDWIDTH / s, (v[1].y + s) * GAME_MIDHEIGHT / s, 0, 1),

@@ -149,8 +149,7 @@ void		destroy_minimap(t_doom *doom)
 
 void		update_minimap(t_doom *doom)
 {
-	// SDL_FillRect serving as a mere clear window to update the drawing
-	SDL_FillRect(doom->minimap->buff, NULL, 0x000000);
+	flood_window(doom->minimap->buff, 0xff000000);
 	print_minimap_walls(doom);
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);
