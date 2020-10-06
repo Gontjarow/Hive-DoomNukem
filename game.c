@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/10/05 20:00:10 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/10/06 05:16:26 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,17 @@ void		game_render(t_doom *doom)
 		doom->mdl->player.tail.x++;
 		//printf("D key pressed!\n");
 	}
+	if (doom->keystates[SDL_SCANCODE_Q])
+	{
+		doom->mdl->player.rot_horizontal += 5 * 0.01745329252;
+		printf("Q turn left (%.2f)\n", doom->mdl->player.rot_horizontal);
+	}
 	if (doom->keystates[SDL_SCANCODE_E])
 	{
+		doom->mdl->player.rot_horizontal += -5 * 0.01745329252;
+		printf("E turn right (%.2f)\n", doom->mdl->player.rot_horizontal);
 		// Use button, open doors, talk to NPC's...
-		printf("E key pressed!\n");
+		// printf("E key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_SPACE])
 	{
@@ -136,20 +143,36 @@ void		game_render(t_doom *doom)
 
 void render(t_doom *doom)
 {
-	// SDL_memset(doom->game->buff->pixels, 0, GAME_WIN_WIDTH * doom->game->buff->pitch);
+	SDL_memset(doom->game->buff->pixels, 0, GAME_WIN_WIDTH * doom->game->buff->pitch);
 	t_mesh test = load_mesh_obj("tiny-donut.obj");
 
-	double s = 2;
-	t_matrix shift = translate_m(s, s, 0);
-	t_matrix scale = scale_m(GAME_MIDWIDTH / s, GAME_MIDHEIGHT / s, 1);
-	t_matrix t = multiply_m(shift, scale);
-	mat4p(t);
-	t_mesh transformed = mesh_transform(t, test);
-	int i = 0;
-	while (i < transformed.faces)
-	{
-		t_vert *v = transformed.face[i++].vert;
+	double		s = 2;
+	t_matrix	scale = scale_m(s, s, 1);
+	t_matrix	move = translate_m(s, s, s);
 
+	double hrz = doom->mdl->player.rot_horizontal;
+	printf("rot %.2f\n", hrz);
+
+	t_matrix	model_m = multiply_m(scale, move);
+	t_mesh		world_space = mesh_transform(model_m, test);
+	t_matrix	view_m = multiply_m( translate_m(0, 0, 0), rotate_y(hrz) );
+	t_mesh		camera_space = mesh_transform(view_m, world_space);
+	t_matrix	projection = project_pure_m();
+	t_mesh		homogeneous = mesh_transform(projection, camera_space);
+	t_matrix	resize = scale_m(256, 256, 256);
+	t_mesh		screen_space = mesh_transform(resize, homogeneous);
+
+	printf("model  "); vec4p(        test.face[487].vert[0]);
+	printf("world  "); vec4p( world_space.face[487].vert[0]);
+	printf("camera "); vec4p(camera_space.face[487].vert[0]);
+	printf("homogen"); vec4p( homogeneous.face[487].vert[0]);
+	printf("screen "); vec4p(screen_space.face[487].vert[0]);
+
+	int i = 0;
+	while (i < screen_space.faces)
+	{
+		t_vert *v = screen_space.face[i++].vert;
+		// vec4p(v[0]);
 		// Face-normal (counter-clockwise vertex order)
 		t_xyz normal = vec3_norm(vec4_cross(
 			vec4_sub(v[1], v[0]),

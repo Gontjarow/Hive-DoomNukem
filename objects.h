@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   objects.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/20 18:18:44 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/10/06 04:30:06 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ typedef struct 			s_weapon
 
 typedef struct 			s_player
 {
+	double				rot_horizontal;
+	double				rot_vertical;
 	int 				x;
 	int 				y;
 	int 				rot;

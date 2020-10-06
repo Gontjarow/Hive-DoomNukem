@@ -249,8 +249,7 @@ t_mesh		mesh_duplicate(t_mesh mesh)
 		i = 0;
 		while (i < mesh.faces)
 		{
-			out.face[i].verts = mesh.face[i].verts;
-			out.face[i].vert = mesh.face[i].vert;
+			out.face[i] = face_duplicate(mesh.face[i]);
 			++i;
 		}
 	}

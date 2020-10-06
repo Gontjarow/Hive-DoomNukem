@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   load_model.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/18 17:34:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/10/06 05:16:30 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,8 @@ static void parse_mapfile(t_doom *doom, t_model *mdl)
 		   &mdl->player.x, &mdl->player.y, &mdl->player.rot, &mdl->player.tail.x, &mdl->player.tail.y);
 	if (tokens != 5)
 		ft_die("Fatal error: parse_mapfile player tokens from mapfile did not equal to 5.");
+	doom->mdl->player.rot_horizontal = 0;
+	doom->mdl->player.rot_vertical = 0;
 }
 
 static void init_mapdata(t_doom *doom)
