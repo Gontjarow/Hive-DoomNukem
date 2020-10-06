@@ -27,6 +27,9 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->walls = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->edt->walls)
 		ft_die("Fatal error: Mallocing walls struct failed at init_edt.");
+	doom->edt->rooms = (t_room*)malloc(sizeof(t_room));
+	if (!doom->edt->rooms)
+		ft_die("Fatal error: Mallocing rooms struct failed at init_edt.");
 	doom->edt->portals = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->edt->portals)
 		ft_die("Fatal error: Mallocing portals struct failed at init_edt.");
@@ -36,7 +39,9 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->wall_begin = NULL;
 	doom->edt->portal_begin = NULL;
 	doom->edt->enemy_first = NULL;
+	doom->edt->room_first = NULL;
 	doom->edt->wall_string = NULL;
+	doom->edt->room_string = NULL;
 	doom->edt->portal_string = NULL;
 	doom->edt->join_string = NULL;
 	doom->edt->player_string = NULL;
@@ -46,6 +51,7 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->portalization_b = NULL;
 	doom->edt->new_portal = NULL;
 	doom->edt->wall_count = 0;
+	doom->edt->room_count = 0;
 	doom->edt->portal_count = 0;
 	doom->edt->enemy_count = 0;
 	doom->edt->player_set = 0;
@@ -96,7 +102,7 @@ void 		destroy_edt(t_doom *doom)
 		overwrite_mapfile(doom->edt);
 	SDL_FreeSurface(doom->edt->buff);
 	SDL_DestroyWindow(doom->edt->win);
-	ft_putendl("Window SDL destructed");
+	//ft_putendl("Window SDL destructed");
 	doom->edt->win = NULL;
 	doom->edt->buff = NULL;
 	if (!doom->mdl)
@@ -104,6 +110,9 @@ void 		destroy_edt(t_doom *doom)
 		free(doom->edt->walls);
 		doom->edt->walls = NULL;
 		doom->edt->wall_begin = NULL;
+		free(doom->edt->rooms);
+		doom->edt->rooms = NULL;
+		doom->edt->room_first = NULL;
 		free(doom->edt->portals);
 		doom->edt->portals = NULL;
 		doom->edt->portal_begin = NULL;
@@ -113,6 +122,8 @@ void 		destroy_edt(t_doom *doom)
 	}
 	if (doom->edt->wall_string)
 		free(doom->edt->wall_string);
+	if (doom->edt->room_string)
+		free(doom->edt->room_string);
 	if (doom->edt->portal_string)
 		free(doom->edt->portal_string);
 	if (doom->edt->enemy_string)
@@ -122,6 +133,7 @@ void 		destroy_edt(t_doom *doom)
 	if (doom->edt->join_string)
 		free(doom->edt->join_string);
 	doom->edt->wall_string = NULL;
+	doom->edt->room_string = NULL;
 	doom->edt->portal_string = NULL;
 	doom->edt->enemy_string = NULL;
 	doom->edt->player_string = NULL;
@@ -314,6 +326,266 @@ static int 	degree_rot(int x, int y, t_point *tail)
 	return ((int)result);
 }
 
+static void circle_room(t_doom *doom, t_room *room)
+{
+	unsigned int *pixels;
+	int radius;
+	int x;
+	int y;
+
+	pixels = doom->edt->buff->pixels;
+	radius = 3;
+	y = -radius;
+	x = -radius;
+	while (y <= radius)
+	{
+		while (x <= radius)
+		{
+			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
+				pixels[room->visual.x + x + ((room->visual.y + y) * EDT_WIN_WIDTH)] = 0xffffffff;
+			x++;
+		}
+		y++;
+		x = -radius;
+	}
+}
+
+static int	wall_count_of_previous_rooms(t_editor *edt)
+{
+	int 	rc;
+	int		wallcountofpreviousrooms;
+	t_room	*rooms;
+
+	rc = edt->room_count;
+	rooms = edt->room_first;
+	wallcountofpreviousrooms = 0;
+	while (rc--)
+	{
+		wallcountofpreviousrooms += rooms->wall_count;
+		//printf("WCOPR added %d\n", rooms->wall_count);
+		rooms = rooms->next;
+	}
+	//printf("WCOPR: %d\n", wallcountofpreviousrooms);
+	return (wallcountofpreviousrooms);
+}
+
+static t_wall *wall_by_count(t_editor *edt, int count)
+{
+	t_wall *wall;
+
+	wall = edt->wall_begin;
+	while (count--)
+	{
+		wall = wall->next;
+	}
+	return (wall);
+}
+
+static t_tri_sides room_first_triangle(t_room *room)
+{
+	t_point		*s;
+	t_point		*e;
+	double 		distance_a;
+	double		distance_b;
+	double		distance_c;
+
+	s = &room->first_wall->start;
+	e = &room->first_wall->end;
+	//printf("Calculating between points X1Y1[%d, %d] and X2Y2[%d, %d]\n", s->x, s->y, e->x, e->y);
+	distance_a = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
+	distance_a = sqrt(distance_a);
+	s = &room->first_wall->end;
+	e = &room->first_wall->next->end;
+	//printf("Calculating between points X1Y1[%d, %d] and X2Y2[%d, %d]\n", s->x, s->y, e->x, e->y);
+	distance_b = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
+	distance_b = sqrt(distance_b);
+	s = &room->first_wall->next->end;
+	e = &room->first_wall->start;
+	//printf("Calculating between points X1Y1[%d, %d] and X2Y2[%d, %d]\n", s->x, s->y, e->x, e->y);
+	distance_c = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
+	distance_c = sqrt(distance_c);
+	return ((t_tri_sides){distance_a, distance_b, distance_c});
+}
+
+static t_tri_sides room_second_triangle(t_room *room)
+{
+	t_point		*s;
+	t_point		*e;
+	double 		distance_a;
+	double		distance_b;
+	double		distance_c;
+
+	s = &room->first_wall->start;
+	e = &room->first_wall->next->end;
+	//printf("Calculating between points X1Y1[%d, %d] and X2Y2[%d, %d]\n", s->x, s->y, e->x, e->y);
+	distance_a = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
+	distance_a = sqrt(distance_a);
+	s = &room->first_wall->next->end;
+	e = &room->first_wall->next->next->end;
+	//printf("Calculating between points X1Y1[%d, %d] and X2Y2[%d, %d]\n", s->x, s->y, e->x, e->y);
+	distance_b = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
+	distance_b = sqrt(distance_b);
+	s = &room->first_wall->next->next->end;
+	e = &room->first_wall->start;
+	//printf("Calculating between points X1Y1[%d, %d] and X2Y2[%d, %d]\n", s->x, s->y, e->x, e->y);
+	distance_c = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
+	distance_c = sqrt(distance_c);
+	return ((t_tri_sides){distance_a, distance_b, distance_c});
+}
+
+static double	triangle_area(t_tri_sides tri)
+{
+	double	s;
+
+	//printf("Triangle_area a: %f | b: %f | c: %f\n", tri.a, tri.b, tri.c);
+	if (tri.a < 0 || tri.b < 0 || tri.c < 0 ||
+		(tri.a + tri.b <= tri.c) || tri.a + tri.c <= tri.b || tri.b + tri.c <= tri.a)
+	{
+		ft_putendl("Warning: Invalid triangle at triangle_area");
+
+		return (0);
+	}
+	s = (tri.a + tri.b + tri.c) / 2;
+	return (sqrt(s * (s - tri.a) * (s - tri.b) * (s - tri.c)));
+
+}
+
+static t_point barycentric_xy(t_editor *edt, t_room *room)
+{
+	t_point		v1;
+	t_point 	v2;
+	t_point 	v3;
+	t_wall		*second_wall;
+
+	v1.x = room->first_wall->start.x;
+	v1.y = room->first_wall->start.y;
+	v2.x = room->first_wall->end.x;
+	v2.y = room->first_wall->end.y;
+	second_wall = room->first_wall->next;
+	v3.x = second_wall->end.x;
+	v3.y = second_wall->end.y;
+	return ((t_point){(v1.x + v2.x + v3.x) / 3, (v1.y + v2.y + v3.y) / 3});
+}
+
+static t_point second_barycentric_xy(t_editor *edt, t_room *room)
+{
+	t_point		v1;
+	t_point 	v2;
+	t_point 	v3;
+
+	v1.x = room->first_wall->start.x;
+	v1.y = room->first_wall->start.y;
+	v2.x = room->first_wall->next->end.x;
+	v2.y = room->first_wall->next->end.y;
+	v3.x = room->first_wall->next->next->end.x;
+	v3.y = room->first_wall->next->next->end.y;
+	return ((t_point){(v1.x + v2.x + v3.x) / 3, (v1.y + v2.y + v3.y) / 3});
+}
+
+static t_point split_barycentric_xy(t_editor *edt, t_room *room)
+{
+	double 		area1;
+	double 		area2;
+	t_point		visual1;
+	t_point		visual2;
+	t_point 	result;
+
+	area1 = 0;
+	area2 = 0;
+	area1 = triangle_area(room_first_triangle(room));
+	area2 = triangle_area(room_second_triangle(room));
+	visual1 = barycentric_xy(edt, room);
+	visual2 = second_barycentric_xy(edt, room);
+	result.x = ((visual1.x * (int)area1) + (visual2.x * (int)area2)) / (int)(area1 + area2);
+	result.y = ((visual1.y * (int)area1) + (visual2.y * (int)area2)) / (int)(area1 + area2);
+	//printf("Calculated triangle areas: [%f | %f]\n", area1, area2);
+	//printf("Calculated barycentric center points: [%d, %d] | [%d, %d]\n",
+	//	visual1.x, visual1.y, visual2.x, visual2.y);
+	return (result);
+}
+
+static void find_visual_xy(t_editor *edt, t_room *room)
+{
+	t_point	visual_xy;
+
+	//ft_putendl("Finding weighted centroid of convex polygon.");
+	if (room->wall_count == 3)
+	{
+		//ft_putendl("Barycentric visual can be found from the triangle.");
+		visual_xy = barycentric_xy(edt, room);
+		//printf("Visual located to: %d, %d\n", visual_xy.x, visual_xy.y);
+		room->visual = visual_xy;
+		circle_room(edt->parent, room);
+	}
+	else if (room->wall_count == 4)
+	{
+		visual_xy = split_barycentric_xy(edt, room);
+		//printf("Visual located to: %d, %d\n", visual_xy.x, visual_xy.y);
+		room->visual = visual_xy;
+		circle_room(edt->parent, room);
+	}
+	else if (room->wall_count > 4)
+	{
+		//ft_putendl("Polygon can be triangulated into ");
+		//ft_putnbr(room->wall_count - 2);
+		//ft_putendl(" triangles, which can be measured for area, and calculated for their barycentric center.");
+	}
+}
+
+static void circle_rooms(t_doom *doom)
+{
+	int		rc;
+	t_room	*room;
+
+	if (doom->edt->room_count == 0)
+		return;
+	rc = doom->edt->room_count;
+	room = doom->edt->room_first;
+	while (rc--)
+	{
+		room->visual.x = 0;
+		room->visual.y = 0;
+		find_visual_xy(doom->edt, room);
+		if (room->visual.x > 0 && room->visual.y > 0)
+			circle_room(doom, room);
+		room = room->next;
+	}
+}
+
+
+static void	record_room(t_editor *edt)
+{
+	t_room	*next_room;
+	int 	wallcountofpreviousrooms;
+
+	wallcountofpreviousrooms = wall_count_of_previous_rooms(edt);
+	edt->rooms->id = edt->room_count;
+	edt->rooms->floor_height = 1000;
+	edt->rooms->roof_height = 1300;
+	edt->room_count++;
+	next_room = (t_room*)malloc(sizeof(t_room));
+	if (!next_room)
+		ft_die("Fatal error: Could not malloc t_room at record_room.");
+	if (edt->room_count == 1)
+	{
+		edt->rooms->first_wall = edt->wall_begin;
+		edt->rooms->wall_count = edt->wall_count;
+		edt->room_first = edt->rooms;
+	}
+	else
+	{
+		edt->rooms->wall_count = edt->wall_count - wallcountofpreviousrooms;
+		edt->rooms->first_wall = wall_by_count(edt, wallcountofpreviousrooms);
+	}
+	edt->rooms->first_wall_id = edt->rooms->first_wall->id;
+	printf(edt->join_string, "Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
+			edt->rooms->id, edt->rooms->first_wall_id, edt->rooms->wall_count, edt->rooms->floor_height, edt->rooms->roof_height);
+	expand_room_string(edt);
+	find_visual_xy(edt, edt->rooms);
+	edt->rooms->next = next_room;
+	edt->rooms = next_room;
+}
+
 static void record_enemy(int x, int y, t_editor *edt)
 {
 	t_point		rot_point;
@@ -337,7 +609,6 @@ static void record_enemy(int x, int y, t_editor *edt)
 	edt->last_enemy.y = edt->enemies->y;
 	edt->enemies->wep.type_id = 0;
 	edt->enemies->hp.max = 100;
-	// UNDER CONSTRUCTION!!!
 	edt->enemies->rot = degree_rot(edt->enemies->x, edt->enemies->y, &edt->enemies->tail);
 	expand_enemy_string(edt);
 	next_enemy = (t_enemy*)malloc(sizeof(t_enemy));
@@ -434,6 +705,7 @@ static void record_polygon(int x, int y, t_editor *edt)
 		edt->walls->next = next_wall;
 		edt->walls = next_wall;
 		edt->is_wall_start = 1;
+		record_room(edt);
 		print_walls(edt);
 	}
 	else
@@ -453,6 +725,7 @@ static void record_polygon(int x, int y, t_editor *edt)
 				edt->portalization_a = NULL;
 				edt->portalization_b = NULL;
 				edt->is_wall_start = 1;
+				record_room(edt);
 				//ft_putendl("Portal created.");
 			}
 			else
@@ -476,7 +749,8 @@ static void record_polygon(int x, int y, t_editor *edt)
 	}
 }
 
-static void edt_left_click(t_doom *doom) {
+static void edt_left_click(t_doom *doom)
+{
 	unsigned int *pixels;
 	int j;
 	int i;
@@ -616,32 +890,70 @@ void		edt_render(t_doom *doom)
 	SDL_UpdateWindowSurface(doom->edt->win);
 }
 
+static t_wall	*wall_by_id(t_editor *edt, int id)
+{
+	t_wall *wall;
+	int 	wc;
+
+	wc = edt->wall_count;
+	wall = edt->wall_begin;
+	while (wc--)
+	{
+		if (wall->id == id)
+			return (wall);
+		wall = wall->next;
+	}
+	ft_die("Fatal error: Could not find a wall by its ID in wall_by_id.");
+	return (NULL);
+}
+
+static void		link_rooms(t_editor *edt)
+{
+	t_room *room;
+	int 	rc;
+
+	rc = edt->room_count;
+	room = edt->room_first;
+	while (rc--)
+	{
+		room->first_wall = wall_by_id(edt, room->first_wall_id);
+		room = room->next;
+	}
+}
+
 void			transfer_model_to_editor(t_doom *doom)
 {
 	int	ec;
 
 	ft_putendl("Transferring model to editor.");
 	doom->edt->walls = doom->mdl->walls;
+	doom->edt->rooms = doom->mdl->rooms;
 	doom->edt->enemies = doom->mdl->enemies;
 	doom->edt->portals = doom->mdl->portals;
 	doom->edt->enemy_first = doom->mdl->enemy_first;
 	doom->edt->portal_begin = doom->mdl->portal_first;
 	doom->edt->wall_begin = doom->mdl->wall_first;
+	doom->edt->room_first = doom->mdl->room_first;
 	doom->edt->wall_count = doom->mdl->wall_count;
+	doom->edt->room_count = doom->mdl->room_count;
 	doom->edt->enemy_count = doom->mdl->enemy_count;
 	doom->edt->portal_count = doom->mdl->portal_count;
 	doom->edt->player = doom->mdl->player;
 	doom->edt->player_set = 1;
 	circle_player(doom);
+	link_rooms(doom->edt);
 	if (doom->map->player_string)
 		doom->edt->player_string = ft_strdup(doom->map->player_string);
 	if (doom->map->wall_string)
 		doom->edt->wall_string = ft_strdup(doom->map->wall_string);
+	if (doom->map->room_string)
+		doom->edt->room_string = ft_strdup(doom->map->room_string);
 	if (doom->map->portal_string)
 		doom->edt->portal_string = ft_strdup(doom->map->portal_string);
 	if (doom->map->enemy_string)
 		doom->edt->enemy_string = ft_strdup(doom->map->enemy_string);
 	print_walls(doom->edt);
+	circle_rooms(doom);
 	ec = doom->edt->enemy_count;
 	if (ec == 0)
 		return ;

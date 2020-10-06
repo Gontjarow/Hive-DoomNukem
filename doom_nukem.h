@@ -105,11 +105,14 @@ typedef struct			s_model
 	int 				current_portal;
 	struct s_enemy		*enemies;
 	struct s_wall		*walls;
+	struct s_room		*rooms;
 	struct s_wall		*portals;
 	struct s_enemy		*enemy_first;
 	struct s_wall		*wall_first;
+	struct s_room		*room_first;
 	struct s_wall		*portal_first;
 	int 				wall_count;
+	int 				room_count;
 	int 				portal_count;
 	int 				enemy_count;
 } 						t_model;
@@ -314,6 +317,7 @@ void			flood_window(SDL_Surface *buff, uint32_t color);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 
 void			expand_wall_string(t_editor *edt);
+void 			expand_room_string(t_editor *edt);
 void			expand_portal_string(t_editor *edt);
 void			expand_enemy_string(t_editor *edt);
 void			update_player_string(t_editor *edt);

@@ -31,9 +31,12 @@ typedef struct 			s_editor
 	struct SDL_Surface	*buff;
 	struct s_wall		*walls;
 	struct s_wall		*wall_begin;
+	struct s_room		*rooms;
+	struct s_room		*room_first;
 	struct s_wall		*portals;
 	struct s_wall		*portal_begin;
 	int 				wall_count;
+	int 				room_count;
 	int 				portal_count;
 	int 				enemy_count;
 	struct s_player		player;
@@ -44,6 +47,7 @@ typedef struct 			s_editor
 	int 				is_wall_start;
 	char 				*wall_string;
 	char 				*portal_string;
+	char 				*room_string;
 	char 				*enemy_string;
 	char 				*player_string;
 	char 				*join_string;

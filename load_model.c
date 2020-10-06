@@ -21,6 +21,9 @@ static void init_model(t_doom *doom)
 	doom->mdl->walls = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->mdl->walls)
 		ft_die("Fatal error: Mallocing walls struct failed at init_model.");
+	doom->mdl->rooms = (t_room*)malloc(sizeof(t_room));
+	if (!doom->mdl->rooms)
+		ft_die("Fatal error: Mallocing rooms struct failed at init_model.");
 	doom->mdl->portals = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->mdl->portals)
 		ft_die("Fatal error: Mallocing portals struct failed at init_model.");
@@ -28,9 +31,11 @@ static void init_model(t_doom *doom)
 	if (!doom->mdl->enemies)
 		ft_die("Fatal error: Mallocing enemies struct failed at init_model.");
 	doom->mdl->wall_first = NULL;
+	doom->mdl->room_first = NULL;
 	doom->mdl->portal_first = NULL;
 	doom->mdl->enemy_first = NULL;
 	doom->mdl->wall_count = 0;
+	doom->mdl->room_count = 0;
 	doom->mdl->portal_count = 0;
 	doom->mdl->enemy_count = 0;
 }
@@ -43,12 +48,63 @@ void 		destroy_model(t_doom *doom)
 	free(doom->mdl->enemies);
 	free(doom->mdl->portals);
 	free(doom->mdl->walls);
+	free(doom->mdl->rooms);
 	doom->mdl->wall_first = NULL;
+	doom->mdl->room_first = NULL;
 	doom->mdl->portal_first = NULL;
 	doom->mdl->enemy_first = NULL;
 	doom->mdl->parent = NULL;
 	free(doom->mdl);
 	doom->mdl = NULL;
+}
+
+static void scan_rooms(t_doom *doom, t_model *mdl)
+{
+	int 	safety;
+	int		tokens;
+	int 	dist;
+	char 	*strchr;
+	char 	*next;
+	char	*sub;
+	t_room 	*next_room;
+
+	next = NULL;
+	safety = 100;
+	strchr = ft_strchr(doom->map->room_string, '\n');
+	dist = strchr - doom->map->room_string;
+	sub = ft_strsub(doom->map->room_string, 0, dist);
+	while (ft_strlen(strchr) > 0 || !safety--)
+	{
+		tokens = sscanf(sub, "Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
+						&mdl->rooms->id, &mdl->rooms->first_wall_id, &mdl->rooms->wall_count, &mdl->rooms->floor_height, &mdl->rooms->roof_height);
+		if (tokens != 5)
+		{
+			//ft_putendl("Warning: sscanf did not find 5 tokens from room_string.");
+			break ;
+		}
+		else
+		{
+			next_room = (t_room*)malloc(sizeof(t_room));
+			if (!next_room)
+				ft_die("Fatal error: Could not malloc t_room at scan_rooms.");
+			if (mdl->room_count++ == 0)
+				mdl->room_first = mdl->rooms;
+			mdl->rooms->next = next_room;
+			mdl->rooms = next_room;
+		}
+		if (next != NULL)
+			strchr = next;
+		if (ft_strlen(strchr) < 2)
+			break;
+		strchr++;
+		next = ft_strchr(strchr, '\n');
+		dist = next - strchr;
+		free(sub);
+		sub = ft_strsub(strchr, 0, dist);
+	}
+	if (!safety)
+		ft_die("Fatal error: scan_rooms terminated due to safety valve.");
+	free(sub);
 }
 
 static void scan_walls(t_doom *doom, t_model *mdl)
@@ -214,6 +270,9 @@ static void parse_mapfile(t_doom *doom, t_model *mdl)
 	if (doom->map->wall_string) {
 		scan_walls(doom, mdl);
 	}
+	if (doom->map->room_string) {
+		scan_rooms(doom, mdl);
+	}
 	if (doom->map->portal_string) {
 		scan_portals(doom, mdl);
 	}
@@ -248,6 +307,7 @@ static void init_mapdata(t_doom *doom)
 	doom->map->player_string = NULL;
 	doom->map->portal_string = NULL;
 	doom->map->wall_string = NULL;
+	doom->map->room_string = NULL;
 	doom->map->was_filled = 0;
 	doom->map_data_initialized = 1;
 }
@@ -260,6 +320,8 @@ void 		destroy_mapdata(t_doom *doom)
 		free(doom->map->player_string);
 	if (doom->map->wall_string != NULL)
 		free(doom->map->wall_string);
+	if (doom->map->room_string != NULL)
+		free(doom->map->room_string);
 	if (doom->map->portal_string != NULL)
 		free(doom->map->portal_string);
 	if (doom->map->enemy_string != NULL)
@@ -269,6 +331,7 @@ void 		destroy_mapdata(t_doom *doom)
 	doom->map->player_string = NULL;
 	doom->map->portal_string = NULL;
 	doom->map->wall_string = NULL;
+	doom->map->room_string = NULL;
 	free(doom->map);
 	doom->map = NULL;
 	doom->map_data_initialized = 0;
@@ -300,6 +363,16 @@ static int read_mapfile(t_doom *doom, char *map_path)
 				free(join);
 				join = doom->map->wall_string;
 				doom->map->wall_string = ft_strjoin(doom->map->wall_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "Roo", 3)) {
+				if (doom->map->room_string == NULL)
+					doom->map->room_string = ft_strnew(1);
+				join = doom->map->room_string;
+				doom->map->room_string = ft_strjoin(doom->map->room_string, line);
+				free(join);
+				join = doom->map->room_string;
+				doom->map->room_string = ft_strjoin(doom->map->room_string, "\n");
 				free(join);
 			}
 			else if (ft_strnstr(line, "Por", 3)) {

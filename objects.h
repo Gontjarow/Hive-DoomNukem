@@ -27,6 +27,13 @@ typedef struct 			s_point
 	int 				y;
 }						t_point;
 
+typedef struct 			s_tri_sides
+{
+	double				a;
+	double 				b;
+	double				c;
+}						t_tri_sides;
+
 typedef struct 			s_health
 {
 	int 				max;
@@ -75,9 +82,22 @@ typedef struct 			s_wall
 	struct s_wall		*next;
 }						t_wall;
 
+typedef struct 			s_room
+{
+	struct s_wall		*first_wall;
+	int 				first_wall_id;
+	int 				id;
+	int 				wall_count;
+	int 				floor_height;
+	int 				roof_height;
+	t_point 			visual;
+	struct s_room		*next;
+}						t_room;
+
 typedef struct 			s_mapfile
 {
 	char 				*wall_string;
+	char 				*room_string;
 	char 				*portal_string;
 	char 				*enemy_string;
 	char 				*player_string;

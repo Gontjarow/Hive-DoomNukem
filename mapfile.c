@@ -50,6 +50,18 @@ void	expand_wall_string(t_editor *edt)
 		edt->join_string = NULL;
 }
 
+void 	expand_room_string(t_editor *edt)
+{
+		edt->join_string = ft_strnew(255);
+		sprintf(edt->join_string, "Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
+				edt->rooms->id, edt->rooms->first_wall_id, edt->rooms->wall_count, edt->rooms->floor_height, edt->rooms->roof_height);
+		if (!edt->room_string)
+			edt->room_string = ft_strnew(1);
+		edt->room_string = ft_strjoin(edt->room_string, edt->join_string);
+		free(edt->join_string);
+		edt->join_string = NULL;
+}
+
 void	expand_portal_string(t_editor *edt)
 {
 		edt->join_string = ft_strnew(255);
@@ -78,6 +90,9 @@ int		write_mapfile(t_editor *edt)
 	{
 		if (edt->wall_count > 0)
 			write(opened, edt->wall_string, ft_strlen(edt->wall_string));
+		write(opened, new_line, 1);
+		if (edt->room_count > 0)
+			write(opened, edt->room_string, ft_strlen(edt->room_string));
 		write(opened, new_line, 1);
 		if (edt->portal_count > 0)
 			write(opened, edt->portal_string, ft_strlen(edt->portal_string));
