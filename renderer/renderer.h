@@ -136,5 +136,6 @@ t_matrix		multiply_m(t_matrix a, t_matrix b);
 t_xyzw			apply_m(t_matrix m, t_xyzw v);
 
 t_matrix		project_pure_m();
+t_matrix		lookat_m(t_xyz eye, t_xyz at, t_xyz up);
 
 #endif
