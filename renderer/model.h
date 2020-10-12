@@ -37,5 +37,6 @@ void			free_faces(t_mesh *mesh);
 
 void			mesh_draw(unsigned int *surface, const t_mesh *mesh);
 t_mesh			mesh_transform(t_matrix matrix, t_mesh mesh);
+t_mesh			mesh_normalize(t_mesh mesh);
 
 #endif

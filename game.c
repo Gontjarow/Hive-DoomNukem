@@ -6,7 +6,7 @@
 /*   By: ngontjar <ngontjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/10/06 05:16:26 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/10/07 09:02:59 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ void 		game_loop(t_doom *doom)
 		doom->game_quit = 0;
 }
 
-void		render(t_doom *doom);
-
 void		game_render(t_doom *doom)
 {
 		// These will be the doom->game key handling, right now it only supports the minimap
@@ -87,29 +85,29 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_W])
 	{
 		// Walk forward
-		doom->mdl->player.y--;
-		doom->mdl->player.tail.y--;
+		doom->mdl->player.y += -5;
+		doom->mdl->player.tail.y += -5;
 		//printf("W key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_S])
 	{
 		// Walk backward
-		doom->mdl->player.y++;
-		doom->mdl->player.tail.y++;
+		doom->mdl->player.y += 5;
+		doom->mdl->player.tail.y += 5;
 		//printf("S key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_A])
 	{
 		// Rotate left or walk left (if free camera implemented)
-		doom->mdl->player.x--;
-		doom->mdl->player.tail.x--;
+		doom->mdl->player.x += -5;
+		doom->mdl->player.tail.x += -5;
 		//printf("A key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_D])
 	{
 		// Rotate right or walk right (if free camera implemented)
-		doom->mdl->player.x++;
-		doom->mdl->player.tail.x++;
+		doom->mdl->player.x += 5;
+		doom->mdl->player.tail.x += 5;
 		//printf("D key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_Q])
@@ -135,72 +133,6 @@ void		game_render(t_doom *doom)
 		printf("Left Shift key pressed!\n");
 	}
 	update_minimap(doom);
-	render(doom);
+	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
-}
-
-// !!! NEW CODE, TO BE CLEANED UP
-
-void render(t_doom *doom)
-{
-	SDL_memset(doom->game->buff->pixels, 0, GAME_WIN_WIDTH * doom->game->buff->pitch);
-	t_mesh test = load_mesh_obj("tiny-donut.obj");
-
-	double		s = 2;
-	t_matrix	scale = scale_m(s, s, 1);
-	t_matrix	move = translate_m(s, s, s);
-
-	double hrz = doom->mdl->player.rot_horizontal;
-	printf("rot %.2f\n", hrz);
-
-	t_matrix	model_m = multiply_m(scale, move);
-	t_mesh		world_space = mesh_transform(model_m, test);
-	t_matrix	view_m = multiply_m( translate_m(0, 0, 0), rotate_y(hrz) );
-	t_mesh		camera_space = mesh_transform(view_m, world_space);
-	t_matrix	projection = project_pure_m();
-	t_mesh		homogeneous = mesh_transform(projection, camera_space);
-	t_matrix	resize = scale_m(256, 256, 256);
-	t_mesh		screen_space = mesh_transform(resize, homogeneous);
-
-	printf("model  "); vec4p(        test.face[487].vert[0]);
-	printf("world  "); vec4p( world_space.face[487].vert[0]);
-	printf("camera "); vec4p(camera_space.face[487].vert[0]);
-	printf("homogen"); vec4p( homogeneous.face[487].vert[0]);
-	printf("screen "); vec4p(screen_space.face[487].vert[0]);
-
-	int i = 0;
-	while (i < screen_space.faces)
-	{
-		t_vert *v = screen_space.face[i++].vert;
-		// vec4p(v[0]);
-		// Face-normal (counter-clockwise vertex order)
-		t_xyz normal = vec3_norm(vec4_cross(
-			vec4_sub(v[1], v[0]),
-			vec4_sub(v[2], v[0])));
-
-		// How much the face aligns with the camera (backface culling)
-		// Note: The face must have the opposite direction as the camera to be seen.
-		// 📷-->   <-|
-		double facing = -vec3_dot(vec3(0,0,-1), normal);
-		if (facing > 0)
-		{
-			// How much the face aligns with the light
-			// Note: Normal must face in the OPPOSITE direction as the light-source to be lit.
-			// 💡-->   <-|
-			double light = -vec3_dot(vec3(0,0,-1), normal);
-			if (light > 0)
-			{
-				// Greyscale brightness; Same value used for R, G, and B
-				int color = 255 * light;
-				color = color | color << 8 | color << 16;
-
-				t_face tf = init_face(3, v[0], v[1], v[2]);
-
-				draw_tri(doom->game->buff->pixels, tf, color);
-				free_verts(&tf);
-			}
-		}
-	}
-
-	free_faces(&test);
 }

@@ -80,6 +80,8 @@ void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			draw_tri(unsigned int *pixel, t_face face, int color);
 void			draw_tri_color(unsigned int *pixel, t_face face);
 
+void			render_frame(t_doom *doom);
+
 /*
 ** Math is fun, okay? ⤵️
 */
