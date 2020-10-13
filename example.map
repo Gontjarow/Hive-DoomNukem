@@ -1,49 +1,86 @@
-Wall id: 0 | start: 125 185 | end: 88 316
-Wall id: 1 | start: 88 316 | end: 298 322
-Wall id: 2 | start: 298 322 | end: 321 226
-Wall id: 3 | start: 321 226 | end: 125 185
-Wall id: 4 | start: 504 128 | end: 603 17
-Wall id: 5 | start: 603 17 | end: 727 134
-Wall id: 6 | start: 727 134 | end: 504 128
-Wall id: 7 | start: 476 254 | end: 382 351
-Wall id: 8 | start: 382 351 | end: 472 455
-Wall id: 9 | start: 472 455 | end: 585 461
-Wall id: 10 | start: 585 461 | end: 745 434
-Wall id: 11 | start: 745 434 | end: 819 330
-Wall id: 12 | start: 819 330 | end: 854 243
-Wall id: 13 | start: 854 243 | end: 801 210
-Wall id: 14 | start: 801 210 | end: 732 207
-Wall id: 15 | start: 732 207 | end: 652 291
-Wall id: 16 | start: 652 291 | end: 644 379
-Wall id: 17 | start: 644 379 | end: 568 377
-Wall id: 18 | start: 568 377 | end: 531 348
-Wall id: 19 | start: 531 348 | end: 540 273
-Wall id: 20 | start: 540 273 | end: 476 254
-Wall id: 21 | start: 652 291 | end: 434 215
-Wall id: 22 | start: 434 215 | end: 228 175
-Wall id: 23 | start: 228 175 | end: 142 109
-Wall id: 24 | start: 142 109 | end: 192 54
-Wall id: 25 | start: 192 54 | end: 453 28
-Wall id: 26 | start: 453 28 | end: 474 95
-Wall id: 27 | start: 474 95 | end: 455 146
-Wall id: 28 | start: 455 146 | end: 610 173
-Wall id: 29 | start: 610 173 | end: 732 207
+Wall id: 0 | start: 335 278 | end: 389 190
+Wall id: 1 | start: 389 190 | end: 588 168
+Wall id: 2 | start: 588 168 | end: 623 196
+Wall id: 3 | start: 623 196 | end: 525 308
+Wall id: 4 | start: 525 308 | end: 412 320
+Wall id: 5 | start: 412 320 | end: 335 278
+Wall id: 6 | start: 88 164 | end: 176 44
+Wall id: 7 | start: 176 44 | end: 260 39
+Wall id: 8 | start: 260 39 | end: 296 99
+Wall id: 9 | start: 296 99 | end: 88 164
+Wall id: 10 | start: 539 86 | end: 800 57
+Wall id: 11 | start: 800 57 | end: 917 169
+Wall id: 12 | start: 917 169 | end: 882 248
+Wall id: 13 | start: 882 248 | end: 701 215
+Wall id: 14 | start: 701 215 | end: 545 126
+Wall id: 15 | start: 545 126 | end: 539 86
+Wall id: 16 | start: 616 365 | end: 541 403
+Wall id: 17 | start: 541 403 | end: 532 454
+Wall id: 18 | start: 532 454 | end: 693 481
+Wall id: 19 | start: 693 481 | end: 833 462
+Wall id: 20 | start: 833 462 | end: 899 392
+Wall id: 21 | start: 899 392 | end: 863 335
+Wall id: 22 | start: 863 335 | end: 808 309
+Wall id: 23 | start: 808 309 | end: 762 313
+Wall id: 24 | start: 762 313 | end: 787 429
+Wall id: 25 | start: 787 429 | end: 708 430
+Wall id: 26 | start: 708 430 | end: 670 418
+Wall id: 27 | start: 670 418 | end: 651 360
+Wall id: 28 | start: 651 360 | end: 616 365
+Wall id: 29 | start: 61 412 | end: 109 253
+Wall id: 30 | start: 109 253 | end: 198 219
+Wall id: 31 | start: 198 219 | end: 263 259
+Wall id: 32 | start: 263 259 | end: 309 340
+Wall id: 33 | start: 309 340 | end: 324 394
+Wall id: 34 | start: 324 394 | end: 202 351
+Wall id: 35 | start: 202 351 | end: 207 298
+Wall id: 36 | start: 207 298 | end: 177 283
+Wall id: 37 | start: 177 283 | end: 132 314
+Wall id: 38 | start: 132 314 | end: 138 400
+Wall id: 39 | start: 138 400 | end: 125 428
+Wall id: 40 | start: 125 428 | end: 61 412
+Wall id: 41 | start: 260 39 | end: 324 36
+Wall id: 42 | start: 324 36 | end: 425 44
+Wall id: 43 | start: 425 44 | end: 468 80
+Wall id: 44 | start: 468 80 | end: 445 132
+Wall id: 45 | start: 445 132 | end: 381 146
+Wall id: 46 | start: 381 146 | end: 318 141
+Wall id: 47 | start: 318 141 | end: 296 99
+Wall id: 48 | start: 800 57 | end: 845 33
+Wall id: 49 | start: 845 33 | end: 950 35
+Wall id: 50 | start: 950 35 | end: 1016 50
+Wall id: 51 | start: 1016 50 | end: 1020 126
+Wall id: 52 | start: 1020 126 | end: 1006 169
+Wall id: 53 | start: 1006 169 | end: 993 179
+Wall id: 54 | start: 993 179 | end: 941 132
+Wall id: 55 | start: 941 132 | end: 929 109
+Wall id: 56 | start: 929 109 | end: 910 121
+Wall id: 57 | start: 910 121 | end: 917 169
+Wall id: 58 | start: 309 340 | end: 405 352
+Wall id: 59 | start: 405 352 | end: 483 368
+Wall id: 60 | start: 483 368 | end: 489 441
+Wall id: 61 | start: 489 441 | end: 416 486
+Wall id: 62 | start: 416 486 | end: 377 477
+Wall id: 63 | start: 377 477 | end: 369 416
+Wall id: 64 | start: 369 416 | end: 379 398
+Wall id: 65 | start: 379 398 | end: 346 387
+Wall id: 66 | start: 346 387 | end: 324 394
 
-Room id: 0 | first_wall_id: 0 | wall_count: 4 | floor_height: 1000 | roof_height: 1300
-Room id: 1 | first_wall_id: 4 | wall_count: 3 | floor_height: 1000 | roof_height: 1300
-Room id: 2 | first_wall_id: 7 | wall_count: 14 | floor_height: 1000 | roof_height: 1300
-Room id: 3 | first_wall_id: 21 | wall_count: 8 | floor_height: 1000 | roof_height: 1300
+Room id: 0 | first_wall_id: 0 | wall_count: 6 | floor_height: 1000 | roof_height: 1300
+Room id: 1 | first_wall_id: 6 | wall_count: 4 | floor_height: 1000 | roof_height: 1300
+Room id: 2 | first_wall_id: 10 | wall_count: 6 | floor_height: 1000 | roof_height: 1300
+Room id: 3 | first_wall_id: 16 | wall_count: 13 | floor_height: 1000 | roof_height: 1300
+Room id: 4 | first_wall_id: 29 | wall_count: 12 | floor_height: 1000 | roof_height: 1300
+Room id: 5 | first_wall_id: 41 | wall_count: 7 | floor_height: 1000 | roof_height: 1300
+Room id: 6 | first_wall_id: 48 | wall_count: 10 | floor_height: 1000 | roof_height: 1300
+Room id: 7 | first_wall_id: 58 | wall_count: 9 | floor_height: 1000 | roof_height: 1300
 
-Portal id: 0 | start: 732 207 | end: 652 291
+Portal id: 0 | start: 260 39 | end: 296 99
+Portal id: 1 | start: 800 57 | end: 917 169
+Portal id: 2 | start: 309 340 | end: 324 394
 
-Enemy id: 0 | start: 448 349 | rot: 195 | tail: 462 353 | hp: 100 | wep id: 0
-Enemy id: 1 | start: 589 439 | rot: 132 | tail: 599 428 | hp: 100 | wep id: 0
-Enemy id: 2 | start: 744 382 | rot: 45 | tail: 733 371 | hp: 100 | wep id: 0
-Enemy id: 3 | start: 788 260 | rot: 7 | tail: 773 258 | hp: 100 | wep id: 0
-Enemy id: 4 | start: 438 120 | rot: 7 | tail: 423 118 | hp: 100 | wep id: 0
-Enemy id: 5 | start: 569 239 | rot: 29 | tail: 555 231 | hp: 100 | wep id: 0
-Enemy id: 6 | start: 660 215 | rot: 360 | tail: 645 215 | hp: 100 | wep id: 0
-Enemy id: 7 | start: 267 139 | rot: 167 | tail: 281 136 | hp: 100 | wep id: 0
-Enemy id: 8 | start: 386 58 | rot: 333 | tail: 372 65 | hp: 100 | wep id: 0
+Enemy id: 0 | start: 571 198 | rot: 7 | tail: 556 196 | hp: 100 | wep id: 0
+Enemy id: 1 | start: 320 55 | rot: 248 | tail: 325 68 | hp: 100 | wep id: 0
+Enemy id: 2 | start: 839 170 | rot: 345 | tail: 824 174 | hp: 100 | wep id: 0
 
-Player spawn: 278 89 | rot: 188 | tail: 292 91
+Player spawn: 427 281 | rot: 82 | tail: 425 266
