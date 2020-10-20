@@ -79,4 +79,28 @@ void			edt_mouse_motion(t_doom *doom);
 void 			edt_mouse_down(t_doom *doom);
 void			edt_render(t_doom *doom);
 
+/* from walls.c */
+int				wall_count_of_previous_rooms(t_editor *edt);
+t_wall 			*wall_by_count(t_editor *edt, int count);
+t_wall			*wall_by_id(t_editor *edt, int id);
+
+/* from draw_editor.c */
+void			print_portals(t_editor *edt);
+void			print_characters(t_editor *edt);
+void			print_walls(t_editor *edt);
+void			circle_rooms(t_doom *doom);
+void 			circle_visual(t_doom *doom, t_point *visual);
+void			circle_room(t_doom *doom, t_room *room);
+void			circle_player(t_doom *doom);
+void			circle_enemy(t_doom *doom);
+
+/* from find_visual.c */
+void			find_visual_xy(t_editor *edt, t_room *room);
+
+/* from record.c */
+void			record_room(t_editor *edt);
+void			record_enemy(int x, int y, t_editor *edt);
+void			record_player(int x, int y, t_editor *edt);
+void 			record_portal(t_editor *edt);
+
 #endif

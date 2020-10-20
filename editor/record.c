@@ -1,0 +1,126 @@
+#include "doom_nukem.h"
+
+static int 	degree_rot(int x, int y, t_point *tail)
+{
+	double result;
+
+	x = tail->x - x;
+	y = tail->y - y;
+	result = atan2(y, x) * 180.0 / M_PI;;
+	result += 180.0;
+	return ((int)result);
+}
+
+void	record_room(t_editor *edt)
+{
+	t_room	*next_room;
+	int 	wallcountofpreviousrooms;
+
+	wallcountofpreviousrooms = wall_count_of_previous_rooms(edt);
+	edt->rooms->id = edt->room_count;
+	edt->rooms->floor_height = 1000;
+	edt->rooms->roof_height = 1300;
+	edt->room_count++;
+	next_room = (t_room*)malloc(sizeof(t_room));
+	if (!next_room)
+		ft_die("Fatal error: Could not malloc t_room at record_room.");
+	if (edt->room_count == 1)
+	{
+		edt->rooms->first_wall = edt->wall_begin;
+		edt->rooms->wall_count = edt->wall_count;
+		edt->room_first = edt->rooms;
+	}
+	else
+	{
+		edt->rooms->wall_count = edt->wall_count - wallcountofpreviousrooms;
+		edt->rooms->first_wall = wall_by_count(edt, wallcountofpreviousrooms);
+	}
+	edt->rooms->first_wall_id = edt->rooms->first_wall->id;
+	printf("Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
+		   edt->rooms->id, edt->rooms->first_wall_id, edt->rooms->wall_count, edt->rooms->floor_height, edt->rooms->roof_height);
+	expand_room_string(edt);
+	find_visual_xy(edt, edt->rooms);
+	edt->rooms->next = next_room;
+	edt->rooms = next_room;
+}
+
+void	record_enemy(int x, int y, t_editor *edt)
+{
+	t_point		rot_point;
+	t_point		enemy_point;
+	t_enemy		*next_enemy;
+
+	if (!edt->enemy_set)
+	{
+		edt->enemies->id = edt->enemy_count;
+		edt->enemies->x = x;
+		edt->enemies->y = y;
+		edt->enemy_set = 1;
+		return ;
+	}
+	rot_point.x = x;
+	rot_point.y = y;
+	enemy_point.x = edt->enemies->x;
+	enemy_point.y = edt->enemies->y;
+	modify_line_length(15, &enemy_point, &rot_point, &edt->enemies->tail);
+	edt->last_enemy.x = edt->enemies->x;
+	edt->last_enemy.y = edt->enemies->y;
+	edt->enemies->wep.type_id = 0;
+	edt->enemies->hp.max = 100;
+	edt->enemies->rot = degree_rot(edt->enemies->x, edt->enemies->y, &edt->enemies->tail);
+	expand_enemy_string(edt);
+	next_enemy = (t_enemy*)malloc(sizeof(t_enemy));
+	if (!next_enemy)
+		ft_die("Fatal error: Could not malloc t_enemy at record_enemy.");
+	if (edt->enemy_count == 0)
+		edt->enemy_first = edt->enemies;
+	edt->enemy_count++;
+	edt->enemies->next = next_enemy;
+	edt->enemies = next_enemy;
+	edt->enemy_set = 0;
+	print_walls(edt);
+}
+
+void	record_player(int x, int y, t_editor *edt)
+{
+	t_point	start;
+	if (!edt->player_set)
+	{
+		edt->player.x = x;
+		edt->player.y = y;
+		edt->player_set = -1;
+	}
+	else if (edt->player_set == -1)
+	{
+		edt->player.tail.x = x;
+		edt->player.tail.y = y;
+		start.x = edt->player.x;
+		start.y = edt->player.y;
+		modify_line_length(15, &start, &edt->player.tail, &edt->player.tail);
+		edt->player.rot = degree_rot(edt->player.x, edt->player.y, &edt->player.tail);
+		edt->player_set = 1;
+		update_player_string(edt);
+	}
+	print_walls(edt);
+}
+
+void 	record_portal(t_editor *edt)
+{
+	t_wall *next_portal;
+
+	edt->portals->id = edt->portal_count;
+	edt->portals->start.x = edt->new_portal->start.x;
+	edt->portals->start.y = edt->new_portal->start.y;
+	edt->portals->end.x = edt->new_portal->end.x;
+	edt->portals->end.y = edt->new_portal->end.y;
+	expand_portal_string(edt);
+	next_portal = (t_wall*)malloc(sizeof(t_wall));
+	if (!next_portal)
+		ft_die("Fatal error: Could not malloc t_wall at record_portal.");
+	if (edt->portal_count == 0)
+		edt->portal_begin = edt->portals;
+	edt->portal_count++;
+	edt->portals->next = next_portal;
+	edt->portals = next_portal;
+	print_walls(edt);
+}
