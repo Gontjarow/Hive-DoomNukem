@@ -14,6 +14,7 @@
 # define EDITOR_H
 
 #include "objects.h"
+#include <stdint.h>
 
 /*
 ** *
@@ -29,6 +30,8 @@ typedef struct 			s_editor
 {
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
+	struct SDL_Surface  *poly_map;
+	struct SDL_Surface  *back_buffer;
 	struct s_wall		*walls;
 	struct s_wall		*wall_begin;
 	struct s_room		*rooms;
@@ -70,6 +73,7 @@ typedef struct 			s_editor
 	int 				overwrite_map;
 	char 				*map_path;
 	struct s_doom		*parent;
+    uint32_t            conversion_colors[512];
 }						t_editor;
 
 void			transfer_model_to_editor(t_doom *doom);
@@ -102,5 +106,9 @@ void			record_room(t_editor *edt);
 void			record_enemy(int x, int y, t_editor *edt);
 void			record_player(int x, int y, t_editor *edt);
 void 			record_portal(t_editor *edt);
+
+/* from room_polygon_map.c */
+void            create_room_polygon_map(t_editor *edt);
+void            expand_room_polygon_map(t_room *room, t_doom *doom);
 
 #endif

@@ -39,6 +39,7 @@ void	record_room(t_editor *edt)
 	printf("Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
 		   edt->rooms->id, edt->rooms->first_wall_id, edt->rooms->wall_count, edt->rooms->floor_height, edt->rooms->roof_height);
 	expand_room_string(edt);
+	expand_room_polygon_map(edt->rooms, edt->parent);
 	find_visual_xy(edt, edt->rooms);
 	edt->rooms->next = next_room;
 	edt->rooms = next_room;

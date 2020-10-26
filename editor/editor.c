@@ -73,6 +73,7 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->load_map = 0;
 	doom->edt->write_maps = 0;
 	doom->edt->overwrite_map = 0;
+	create_room_polygon_map(doom->edt);
 	if (argc == 2)
 	{
 		opened = open(argv[1], O_RDONLY);
@@ -421,5 +422,28 @@ void 		edt_mouse_down(t_doom *doom)
 
 void		edt_render(t_doom *doom)
 {
-	SDL_UpdateWindowSurface(doom->edt->win);
+    static int was_blitted = 0;
+
+    if (doom->keystates[SDL_SCANCODE_SPACE] && !was_blitted)
+    {
+        // SAVE BUFFER OF THE WINDOW TO BACK BUFFER
+        SDL_BlitSurface(doom->edt->buff, NULL, doom->edt->back_buffer, NULL);
+        // COPY OVER THE WINDOWS BUFFER WITH POLY MAP BUFFER
+        SDL_BlitSurface(doom->edt->poly_map, NULL, doom->edt->buff, NULL);
+        SDL_UpdateWindowSurface(doom->edt->win);
+        // LOCK BLITTING WITH SPACE HELD
+        was_blitted = 1;
+        ft_putendl("Activating poly_map view.");
+    }
+    if (!doom->keystates[SDL_SCANCODE_SPACE] && was_blitted)
+    {
+        // WHEN SPACE NOT HELD ANYMORE, BLIT SAVED BACK BUFFER ONTO WINDOW BUFFER AGAIN
+        SDL_BlitSurface(doom->edt->back_buffer, NULL, doom->edt->buff, NULL);
+        SDL_UpdateWindowSurface(doom->edt->win);
+        // NORMALIZE STATE
+        was_blitted = 0;
+        ft_putendl("Returning screen to normal.");
+    }
+
+    SDL_UpdateWindowSurface(doom->edt->win);
 }
