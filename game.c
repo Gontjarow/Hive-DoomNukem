@@ -75,9 +75,17 @@ void 		game_loop(t_doom *doom)
 
 void		render(t_doom *doom);
 
+static double	deg_to_rad(int deg)
+{
+	return (deg * M_PI / 180);
+}
+
 void		game_render(t_doom *doom)
 {
-		// These will be the doom->game key handling, right now it only supports the minimap
+	int		x;
+	int		y;
+	double	rad;
+	// These will be the doom->game key handling, right now it only supports the minimap
 	// but once the game can be tested with 3D rendering, these will work for both
 	if (doom->keystates[SDL_SCANCODE_ESCAPE])
 	{
@@ -100,17 +108,35 @@ void		game_render(t_doom *doom)
 	}
 	if (doom->keystates[SDL_SCANCODE_A])
 	{
-		// Rotate left or walk left (if free camera implemented)
-		doom->mdl->player.x--;
-		doom->mdl->player.tail.x--;
-		//printf("A key pressed!\n");
+		// Rotate left
+		doom->mdl->player.rot--;
+		if (doom->mdl->player.rot < 0)
+		{
+			doom->mdl->player.rot = 359;
+		}
+		rad = deg_to_rad(doom->mdl->player.rot);
+		x = doom->mdl->player.x + 10 * cos(rad);
+		y = doom->mdl->player.y + 10 * sin(rad);
+		doom->mdl->player.tail.x = x;
+		doom->mdl->player.tail.y = y;
+		printf("Player rotation in degree: %d\n", doom->mdl->player.rot);
+		printf("A key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_D])
 	{
-		// Rotate right or walk right (if free camera implemented)
-		doom->mdl->player.x++;
-		doom->mdl->player.tail.x++;
-		//printf("D key pressed!\n");
+		// Rotate right
+		doom->mdl->player.rot++;
+		if (doom->mdl->player.rot >= 360)
+		{
+			doom->mdl->player.rot = 0;
+		}
+		rad = deg_to_rad(doom->mdl->player.rot);
+		x = doom->mdl->player.x + 10 * cos(rad);
+		y = doom->mdl->player.y + 10 * sin(rad);
+		doom->mdl->player.tail.x = x;
+		doom->mdl->player.tail.y = y;
+		printf("Player rotation in degree: %d\n", doom->mdl->player.rot);
+		printf("D key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_E])
 	{
