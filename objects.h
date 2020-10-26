@@ -54,6 +54,8 @@ typedef struct 			s_weapon
 
 typedef struct 			s_player
 {
+	double				rot_horizontal;
+	double				rot_vertical;
 	int 				x;
 	int 				y;
 	int 				rot;

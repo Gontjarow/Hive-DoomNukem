@@ -80,6 +80,8 @@ void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			draw_tri(unsigned int *pixel, t_face face, int color);
 void			draw_tri_color(unsigned int *pixel, t_face face);
 
+void			render_frame(t_doom *doom);
+
 /*
 ** Math is fun, okay? ⤵️
 */
@@ -125,6 +127,7 @@ t_xyzw			vec4_norm(t_xyzw v);
 double			vec4_dot(t_xyzw a, t_xyzw b);
 t_xyz			vec4_cross(t_xyzw a, t_xyzw b);
 
+void			mat4p(t_matrix m);
 t_matrix		identity_m();
 t_matrix		scale_m(double x, double y, double z);
 t_matrix		translate_m(double x, double y, double z);
@@ -135,5 +138,7 @@ t_matrix		multiply_m(t_matrix a, t_matrix b);
 t_xyzw			apply_m(t_matrix m, t_xyzw v);
 
 t_matrix		project_pure_m();
+t_matrix		project_m(t_deg fov, double aspect, double znear, double zfar);
+t_matrix		lookat_m(t_xyz eye, t_xyz at, t_xyz up);
 
 #endif

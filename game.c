@@ -73,8 +73,6 @@ void 		game_loop(t_doom *doom)
 		doom->game_quit = 0;
 }
 
-void		render(t_doom *doom);
-
 void		game_render(t_doom *doom)
 {
 		// These will be the doom->game key handling, right now it only supports the minimap
@@ -128,56 +126,6 @@ void		game_render(t_doom *doom)
 		printf("Left Shift key pressed!\n");
 	}
 	update_minimap(doom);
-	render(doom);
+	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
-}
-
-// !!! NEW CODE, TO BE CLEANED UP
-
-void render(t_doom *doom)
-{
-	// SDL_memset(doom->game->buff->pixels, 0, GAME_WIN_WIDTH * doom->game->buff->pitch);
-	t_mesh test = load_mesh_obj("tiny-donut.obj");
-
-	int i = 0;
-	while (i < test.faces)
-	{
-		t_vert *v = test.face[i++].vert;
-
-		// Face-normal (counter-clockwise vertex order)
-		t_xyz normal = vec3_norm(vec4_cross(
-			vec4_sub(v[1], v[0]),
-			vec4_sub(v[2], v[0])));
-
-		// How much the face aligns with the camera (backface culling)
-		// Note: The face must have the opposite direction as the camera to be seen.
-		// 📷-->   <-|
-		double facing = -vec3_dot(vec3(0,0,-1), normal);
-		if (facing > 0)
-		{
-			// How much the face aligns with the light
-			// Note: Normal must face in the OPPOSITE direction as the light-source to be lit.
-			// 💡-->   <-|
-			double light = -vec3_dot(vec3(0,0,-1), normal);
-			if (light > 0)
-			{
-				// Greyscale brightness; Same value used for R, G, and B
-				int color = 255 * light;
-				color = color | color << 8 | color << 16;
-
-				// Transformed face (moved and scaled to window size)
-				// return;
-				double s = 1.2;
-				t_face tf = init_face(3,
-					vec4((v[0].x + s) * GAME_MIDWIDTH / s, (v[0].y + s) * GAME_MIDHEIGHT / s, 0, 1),
-					vec4((v[1].x + s) * GAME_MIDWIDTH / s, (v[1].y + s) * GAME_MIDHEIGHT / s, 0, 1),
-					vec4((v[2].x + s) * GAME_MIDWIDTH / s, (v[2].y + s) * GAME_MIDHEIGHT / s, 0, 1));
-
-				draw_tri(doom->game->buff->pixels, tf, color);
-				free_verts(&tf);
-			}
-		}
-	}
-
-	free_faces(&test);
 }
