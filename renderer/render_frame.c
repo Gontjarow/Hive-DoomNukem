@@ -8,19 +8,24 @@ void render_frame(t_doom *doom)
 	printf("load_mesh_obj succeeded\n");
 
 	double		hrz = doom->mdl->player.rot_horizontal;
-	t_xyz		pos = vec3(0, 0, -3);
+	int px = doom->mdl->player.x;
+	int py = doom->mdl->player.y;
+	t_xyz		pos = vec3(px, 0, py);
 
-	t_matrix	world = translate_m(2, 2, 0);
+	t_matrix	world = translate_m(0, 0, 0);
 	t_matrix	dimensions = scale_m(GAME_MIDWIDTH/2, GAME_MIDHEIGHT/2, 1);
 	t_matrix	modelview = lookat_m(pos, vec3(0, 0, 0), vec3(0,1,0));
 	t_matrix	projection = project_pure_m();
+	t_matrix	window = window_m(0.1, 1000);
 	modelview = multiply_m(world, modelview);
 	modelview = multiply_m(projection, modelview);
-	modelview = multiply_m(dimensions, modelview);
+	// modelview = multiply_m(dimensions, modelview);
 
 
 	t_mesh		mv = mesh_transform(modelview, test);
-
+	t_mesh		ndc = mesh_normalize(mv);
+	// t_mesh		screen = mesh_transform(dimensions, ndc);
+	t_mesh		screen = mesh_transform(window, ndc);
 	// t_mesh	world_mesh   = mesh_transform(world, test);
 
 	// t_mesh	eye_mesh     = mesh_transform(modelview, world_mesh);
@@ -39,7 +44,7 @@ void render_frame(t_doom *doom)
 	while (i < test.faces)
 	{
 		t_vert *vo = test.face[i].vert;
-		t_vert *vt = mv.face[i].vert;
+		t_vert *vt = screen.face[i].vert;
 		++i;
 
 		// Face-normal (counter-clockwise vertex order)

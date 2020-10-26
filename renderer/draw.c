@@ -42,7 +42,7 @@ void		draw_tri(unsigned int *pixel, t_face face, int color)
 		}
 		else
 		{
-			pixel[x + y * GAME_WIN_WIDTH] = 0xFF0000;
+			// pixel[x + y * GAME_WIN_WIDTH] = 0xFF0000;
 		}
 	}
 }

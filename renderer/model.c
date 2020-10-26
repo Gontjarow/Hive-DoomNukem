@@ -281,3 +281,33 @@ t_mesh		mesh_transform(t_matrix matrix, t_mesh mesh)
 	}
 	return (out);
 }
+
+/*
+** \brief Performs division by W.
+** \return Newly allocated data, containing the projected verts.
+*/
+t_mesh		mesh_normalize(t_mesh mesh)
+{
+	int		i;
+	int		v;
+	t_mesh	out;
+
+	assert(mesh.faces >= 1);
+	out = mesh_duplicate(mesh);
+	i = 0;
+	while (i < out.faces)
+	{
+		v = 0;
+		while (v < out.face[i].verts)
+		{
+			out.face[i].vert[v] = vec4_div(
+				out.face[i].vert[v],
+				out.face[i].vert[v].w);
+			++v;
+		}
+		++i;
+	}
+	return (out);
+}
+
+

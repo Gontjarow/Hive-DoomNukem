@@ -197,3 +197,13 @@ t_matrix	lookat_m(t_xyz eye, t_xyz target, t_xyz up)
 		{    0,     0,     0,                                              1},
 	}});
 }
+
+t_matrix window_m(double znear, double zfar)
+{
+	return (t_matrix){{
+		{GAME_MIDWIDTH,              0,                  0,     GAME_MIDWIDTH },
+		{            0, GAME_MIDHEIGHT,                  0,     GAME_MIDHEIGHT},
+		{            0,              0, (zfar - znear) / 2, (zfar + znear) / 2},
+		{            0,              0,                  0,                  1},
+	}};
+}

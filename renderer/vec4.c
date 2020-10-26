@@ -52,7 +52,12 @@ t_xyzw	vec4_mul(t_xyzw v, double factor)
 
 t_xyzw	vec4_div(t_xyzw v, double divisor)
 {
-	return vec4_mul(v, 1 / divisor);
+	return vec4(
+		v.x / divisor,
+		v.y / divisor,
+		v.z / divisor,
+		v.w / divisor
+	);
 }
 
 double	vec4_mag(t_xyzw v)
