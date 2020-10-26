@@ -115,8 +115,8 @@ void		game_render(t_doom *doom)
 			doom->mdl->player.rot = 359;
 		}
 		rad = deg_to_rad(doom->mdl->player.rot);
-		x = doom->mdl->player.x + 10 * cos(rad);
-		y = doom->mdl->player.y + 10 * sin(rad);
+		x = doom->mdl->player.x + 10 * -cos(rad);
+		y = doom->mdl->player.y + 10 * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
 		printf("Player rotation in degree: %d\n", doom->mdl->player.rot);
@@ -131,8 +131,8 @@ void		game_render(t_doom *doom)
 			doom->mdl->player.rot = 0;
 		}
 		rad = deg_to_rad(doom->mdl->player.rot);
-		x = doom->mdl->player.x + 10 * cos(rad);
-		y = doom->mdl->player.y + 10 * sin(rad);
+		x = doom->mdl->player.x + 10 * -cos(rad);
+		y = doom->mdl->player.y + 10 * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
 		printf("Player rotation in degree: %d\n", doom->mdl->player.rot);
