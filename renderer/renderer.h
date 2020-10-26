@@ -136,9 +136,11 @@ t_matrix		rotate_y(t_rad angle);
 t_matrix		rotate_z(t_rad angle);
 t_matrix		multiply_m(t_matrix a, t_matrix b);
 t_xyzw			apply_m(t_matrix m, t_xyzw v);
+t_mesh			mesh_normalize(t_mesh mesh);
 
 t_matrix		project_pure_m();
 t_matrix		project_m(t_deg fov, double aspect, double znear, double zfar);
 t_matrix		lookat_m(t_xyz eye, t_xyz at, t_xyz up);
+t_matrix		window_m(double znear, double zfar);
 
 #endif
