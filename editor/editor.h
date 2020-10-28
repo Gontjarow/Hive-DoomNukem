@@ -25,6 +25,7 @@
 struct 					s_player;
 struct 					s_point;
 typedef struct 			s_doom t_doom;
+typedef struct 			SDL_Surface SDL_Surface;
 
 typedef struct 			s_editor
 {
@@ -32,6 +33,7 @@ typedef struct 			s_editor
 	struct SDL_Surface	*buff;
 	struct SDL_Surface  *poly_map;
 	struct SDL_Surface  *back_buffer;
+	struct SDL_Surface	*front_buffer;
 	struct s_wall		*walls;
 	struct s_wall		*wall_begin;
 	struct s_room		*rooms;
@@ -54,6 +56,10 @@ typedef struct 			s_editor
 	char 				*enemy_string;
 	char 				*player_string;
 	char 				*join_string;
+	int 				hover_status;
+	int 				hover_id;
+	int 				selection_status;
+	int 				selection_room_id;
 	int 				polygon_start_x;
 	int 				polygon_start_y;
 	int 				polygon_binding;
@@ -108,6 +114,7 @@ void			record_player(int x, int y, t_editor *edt);
 void 			record_portal(t_editor *edt);
 
 /* from room_polygon_map.c */
+int				room_id_from_pixel(SDL_Surface *buff, int x, int y);
 void            create_room_polygon_map(t_editor *edt);
 void            expand_room_polygon_map(t_room *room, t_doom *doom);
 

@@ -24,6 +24,7 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 									  SDL_WINDOWPOS_CENTERED, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 0);
 	doom->edt->buff = SDL_GetWindowSurface(doom->edt->win);
 	flood_window(doom->edt->buff, 0xff000000);
+
 	doom->edt->walls = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->edt->walls)
 		ft_die("Fatal error: Mallocing walls struct failed at init_edt.");
@@ -50,6 +51,10 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->portalization_a = NULL;
 	doom->edt->portalization_b = NULL;
 	doom->edt->new_portal = NULL;
+	doom->edt->hover_status = 0;
+	doom->edt->hover_id = -1;
+	doom->edt->selection_status = 0;
+	doom->edt->selection_room_id = -1;
 	doom->edt->wall_count = 0;
 	doom->edt->room_count = 0;
 	doom->edt->portal_count = 0;
@@ -102,10 +107,14 @@ void 		destroy_edt(t_doom *doom)
 	if (doom->edt->overwrite_map)
 		overwrite_mapfile(doom->edt);
 	SDL_FreeSurface(doom->edt->buff);
+	SDL_FreeSurface(doom->edt->front_buffer);
+	SDL_FreeSurface(doom->edt->back_buffer);
 	SDL_DestroyWindow(doom->edt->win);
 	//ft_putendl("Window SDL destructed");
 	doom->edt->win = NULL;
 	doom->edt->buff = NULL;
+	doom->edt->front_buffer = NULL;
+	doom->edt->back_buffer = NULL;
 	if (!doom->mdl)
 	{
 		free(doom->edt->walls);
@@ -148,6 +157,80 @@ void 		destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
+static void hover_highlight_room_to_buffer(int room_id, t_editor *edt)
+{
+	int count;
+	t_line highlight;
+	t_wall *wall;
+	t_room *room;
+
+	count = edt->room_count;
+	room = edt->room_first;
+	while (count-- && room->id != room_id)
+		room = room->next;
+	count = room->wall_count;
+	wall = room->first_wall;
+	// Create separate front_buffer?
+	flood_window(edt->front_buffer, 0x00000000);
+	flood_window(edt->back_buffer, 0xff000000);
+	highlight.doom = edt->parent;
+	highlight.buff = edt->front_buffer;
+	while (count--)
+	{
+		highlight.x1 = wall->start.x;
+		highlight.y1 = wall->start.y;
+		highlight.x2 = wall->end.x;
+		highlight.y2 = wall->end.y;
+		highlight.color = 0xff00ff00;
+		render_line(&highlight);
+		wall = wall->next;
+	}
+	SDL_BlitSurface(edt->buff, NULL, edt->back_buffer, NULL);
+	SDL_BlitSurface(edt->front_buffer, NULL, edt->buff, NULL);
+	SDL_UpdateWindowSurface(edt->win);
+	//ft_putendl("Hover blitted.");
+}
+
+static void dehover(t_editor *edt)
+{
+	SDL_BlitSurface(edt->back_buffer, NULL, edt->buff, NULL);
+	flood_window(edt->back_buffer, 0xff000000);
+	flood_window(edt->front_buffer, 0x00000000);
+	SDL_UpdateWindowSurface(edt->win);
+	//ft_putendl("Dehover blitted.");
+}
+
+static void check_hovering_over_room(SDL_Event *event, t_editor *edt)
+{
+	static int	last_hovered_room = -1;
+	int 		queried_room;
+
+	queried_room = room_id_from_pixel(edt->poly_map, event->motion.x, event->motion.y);
+	if (queried_room != last_hovered_room)
+	{
+		if (queried_room != -1)
+		{
+			printf("Hovering over room_id %d with the mouse\n", queried_room);
+			if (edt->selection_room_id != queried_room)
+			{
+				edt->hover_status = 1;
+				hover_highlight_room_to_buffer(queried_room, edt);
+			}
+		}
+		else
+		{
+			if (edt->hover_status == 1)
+			{
+				edt->hover_status = 0;
+
+				dehover(edt);
+			}
+		}
+		last_hovered_room = queried_room;
+		edt->hover_id = queried_room;
+	}
+}
+
 void 		edt_mouse_motion(t_doom *doom)
 {
 	doom->edt->polygon_binding = 0;
@@ -159,6 +242,7 @@ void 		edt_mouse_motion(t_doom *doom)
 				doom->edt->polygon_binding = 1;
 		}
 	}
+	check_hovering_over_room(&doom->event, doom->edt);
 }
 
 static void set_portalization_xy(t_editor *edt)
@@ -332,6 +416,71 @@ static void expand_polygon(int x, int y, t_editor *edt)
 	}
 }
 
+static void dehighlight_room_selection(t_editor *edt)
+{
+	int count;
+	t_line line;
+	t_wall *wall;
+	t_room *room;
+
+	line.doom = edt->parent;
+	line.buff = edt->buff;
+	line.color = 0xffffffff;
+	count = edt->room_count;
+	room = edt->room_first;
+	while (count-- && room->id != edt->selection_room_id)
+		room = room->next;
+	count = room->wall_count;
+	wall = room->first_wall;
+	while (count--)
+	{
+		line.x1 = wall->start.x;
+		line.y1 = wall->start.y;
+		line.x2 = wall->end.x;
+		line.y2 = wall->end.y;
+		render_line(&line);
+		wall = wall->next;
+	}
+	edt->selection_status = 0;
+	edt->selection_room_id = -1;
+	ft_putendl("Deselected and dehighlighted a room from blue back to white.");
+}
+
+static void highlight_room_selection(t_editor *edt)
+{
+	int count;
+	t_line line;
+	t_wall *wall;
+	t_room *room;
+
+	line.doom = edt->parent;
+	line.buff = edt->buff;
+	line.color = 0xff0000ff;
+	count = edt->room_count;
+	room = edt->room_first;
+	while (count-- && room->id != edt->hover_id)
+		room = room->next;
+	dehover(edt);
+	edt->hover_status = 0;
+	// Here, we dehighlight the old selection if there was one
+	if (edt->selection_status == 1)
+		dehighlight_room_selection(edt);
+	edt->selection_status = 1;
+	edt->selection_room_id = edt->hover_id;
+	count = room->wall_count;
+	wall = room->first_wall;
+	while (count--)
+	{
+		line.x1 = wall->start.x;
+		line.y1 = wall->start.y;
+		line.x2 = wall->end.x;
+		line.y2 = wall->end.y;
+		render_line(&line);
+		wall = wall->next;
+	}
+	ft_putendl("Selected and highlighted a room in blue.");
+}
+
 static void edt_left_click(t_doom *doom)
 {
 	unsigned int *pixels;
@@ -339,6 +488,12 @@ static void edt_left_click(t_doom *doom)
 	int i;
 	uint32_t color;
 
+	if (doom->edt->hover_status == 1)
+	{
+		if (doom->edt->selection_room_id != doom->edt->hover_id)
+			highlight_room_selection(doom->edt);
+		return;
+	}
 	color = 0xffffffff;
 	i = doom->event.motion.x;
 	j = doom->event.motion.y * EDT_WIN_WIDTH;
@@ -422,8 +577,21 @@ void 		edt_mouse_down(t_doom *doom)
 
 void		edt_render(t_doom *doom)
 {
-    static int was_blitted = 0;
+    static int	was_blitted = 0;
+    /* Manual debugging for room_id_query
+    static int	mouse_x = 0;
+    static int	mouse_y = 0;
+    static int 	queried_room_id = -1;
 
+    if (doom->keystates[SDL_SCANCODE_I])
+    {
+		SDL_GetMouseState(&mouse_x, &mouse_y);
+		queried_room_id = room_id_from_pixel(doom->edt->poly_map, mouse_x, mouse_y);
+		if (queried_room_id == -1)
+			printf("At location %d, %d there was empty space and no room_id found\n", mouse_x, mouse_y);
+		else
+			printf("Room_id at location %d, %d was %d\n", mouse_x, mouse_y, queried_room_id);
+	}*/
     if (doom->keystates[SDL_SCANCODE_SPACE] && !was_blitted)
     {
         // SAVE BUFFER OF THE WINDOW TO BACK BUFFER

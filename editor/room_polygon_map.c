@@ -1,5 +1,24 @@
 #include "doom_nukem.h"
 
+int				room_id_from_pixel(SDL_Surface *buff, int x, int y)
+{
+	unsigned int	*pixels;
+	int 			location;
+	int 			limit;
+
+	location = x + buff->w * y;
+	limit = buff->w * buff->h;
+	pixels = buff->pixels;
+	if (location >= limit || location < 0)
+	{
+		printf("Warning: room_id_from_pixel tried to get pixel at %d, %d which is outside buffer memory area. Operation was blocked.\n", x, y);
+		return (-1);
+	}
+	if (pixels[location] == 0xffffffff)
+		return (-1);
+	return ((int)pixels[location]);
+}
+
 static uint32_t  convert_to_color(int room_id, t_editor *edt)
 {
     return (edt->conversion_colors[room_id]);
@@ -9,29 +28,37 @@ void        init_conversion_colors(uint32_t conversion_colors[512])
 {
     int i;
 
+    /* Visual aid for debugging
     conversion_colors[0] = 0xffff0000;
     conversion_colors[1] = 0xff00ff00;
     conversion_colors[2] = 0xff0000ff;
     conversion_colors[3] = 0xffffff00;
     conversion_colors[4] = 0xff00ffff;
     conversion_colors[5] = 0xffff00ff;
-    i = 6;
+    */
+	//ft_putendl("Conversion colors initialized. Fixed 6 primary and primary blended colors then computational direct conversion.");
+    i = 0;
     while (i < 512)
     {
         conversion_colors[i] = (uint32_t) i;
         i++;
     }
-    ft_putendl("Conversion colors initialized. Fixed 6 primary and primary blended colors then computational direct conversion.");
 }
 
 void        create_room_polygon_map(t_editor *edt)
 {
     edt->poly_map = SDL_CreateRGBSurfaceWithFormat(0, 5000, 5000, 32, SDL_GetWindowPixelFormat(edt->win));
     edt->back_buffer = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
+	edt->front_buffer = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
+	printf("Pixel format for edt->win is %s\n", SDL_GetPixelFormatName(SDL_GetWindowPixelFormat(edt->win)));
     flood_window(edt->buff, 0xff000000);
-    if (edt->poly_map == NULL || edt->back_buffer == NULL)
-        ft_die("Fatal error: SDL_CreateRGBSurface() failed at create_room_polygon_map for poly_map or back_buffer.");
-    ft_putendl("Created room polygon map and back buffer!");
+    flood_window(edt->poly_map, 0xffffffff);
+    flood_window(edt->back_buffer, 0xff000000);
+    flood_window(edt->front_buffer, 0x00000000);
+	SDL_SetColorKey(edt->front_buffer, SDL_TRUE, 0x00000000);
+    if (edt->poly_map == NULL || edt->back_buffer == NULL || edt->front_buffer == NULL)
+        ft_die("Fatal error: SDL_CreateRGBSurface() failed at create_room_polygon_map for poly_map or front_buffer or back_buffer.");
+    ft_putendl("Created room polygon map and front and back buffer!");
     init_conversion_colors(edt->conversion_colors);
 }
 
