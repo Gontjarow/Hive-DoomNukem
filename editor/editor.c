@@ -575,9 +575,94 @@ void 		edt_mouse_down(t_doom *doom)
 	}
 }
 
+static void print_room(t_doom *doom, SDL_Surface *buff, t_room *room, uint32_t color)
+{
+	int 	wc;
+	t_wall	*wall;
+	t_line	line;
+
+	wc = room->wall_count;
+	wall = room->first_wall;
+	line.doom = doom;
+	line.buff = buff;
+	line.color = color;
+	while (wc--)
+	{
+		line.x1 = wall->start.x;
+		line.y1 = wall->start.y;
+		line.x2 = wall->end.x;
+		line.y2 = wall->end.y;
+		render_line(&line);
+		wall = wall->next;
+	}
+}
+
+static void print_corners(SDL_Surface *buff, t_room *room, uint32_t color)
+{
+	int 	wc;
+	t_wall	*wall;
+
+	wc = room->wall_count;
+	wall = room->first_wall;
+	set_pixel(buff, wall->start.x, wall->start.y, color);
+	set_pixel(buff, wall->start.x + 1, wall->start.y, color);
+	set_pixel(buff, wall->start.x - 1, wall->start.y, color);
+	set_pixel(buff, wall->start.x, wall->start.y + 1, color);
+	set_pixel(buff, wall->start.x, wall->start.y - 1, color);
+	while (wc--)
+	{
+		set_pixel(buff, wall->end.x, wall->end.y, color);
+		set_pixel(buff, wall->end.x + 1, wall->end.y, color);
+		set_pixel(buff, wall->end.x - 1, wall->end.y, color);
+		set_pixel(buff, wall->end.x, wall->end.y + 1, color);
+		set_pixel(buff, wall->end.x, wall->end.y - 1, color);
+		wall = wall->next;
+	}
+}
+
+static void move_selection(t_editor *edt, int delta_x, int delta_y) {
+	int count;
+	t_room *room;
+	t_wall *wall;
+
+	room = edt->room_first;
+	count = edt->room_count;
+	while (count-- && edt->selection_room_id != room->id)
+		room = room->next;
+	// Hold of room pointer gained. Must now delete room from polymap.
+	wipe_room_polygon_map(room, edt->parent);
+	// Must delete pixels from buffer with black overwrite.
+	print_room(edt->parent, edt->buff, room, 0xff000000);
+	print_corners(edt->buff, room, 0xff000000);
+	circle_visual(edt->buff, &room->visual, 0xff000000);
+	// Must delete roomstring also. Must delete wall strings.
+	// UNDONE
+	count = room->wall_count;
+	wall = room->first_wall;
+	while (count--)
+	{
+		wall->start.x += delta_x;
+		wall->end.x += delta_x;
+		wall->start.y += delta_y;
+		wall->end.y += delta_y;
+		wall = wall->next;
+	}
+	room->visual.x += delta_x;
+	room->visual.y += delta_y;
+	circle_visual(edt->buff, &room->visual, 0xffffffff);
+	// Must recreate polygon to polymap.
+	expand_room_polygon_map(room, edt->parent);
+	// Must recreate pixels to buffer with default blue color, marking the persisting selection
+	print_corners(edt->buff, room, 0xffffffff);
+	print_room(edt->parent, edt->buff, room, 0xff0000ff);
+	SDL_UpdateWindowSurface(edt->win);
+	// Must recreate roomstring. Must recreate wall strings.
+	// UNDONE
+	//ft_putendl("Moved selection at Editor.");
+}
+
 void		edt_render(t_doom *doom)
 {
-    static int	was_blitted = 0;
     /* Manual debugging for room_id_query
     static int	mouse_x = 0;
     static int	mouse_y = 0;
@@ -592,6 +677,8 @@ void		edt_render(t_doom *doom)
 		else
 			printf("Room_id at location %d, %d was %d\n", mouse_x, mouse_y, queried_room_id);
 	}*/
+	/* Manual debugging for polymap
+	static int	was_blitted = 0;
     if (doom->keystates[SDL_SCANCODE_SPACE] && !was_blitted)
     {
         // SAVE BUFFER OF THE WINDOW TO BACK BUFFER
@@ -612,6 +699,17 @@ void		edt_render(t_doom *doom)
         was_blitted = 0;
         ft_putendl("Returning screen to normal.");
     }
-
+	*/
+	if (doom->edt->selection_status)
+	{
+		if (doom->keystates[SDL_SCANCODE_UP])
+			move_selection(doom->edt, 0, -10);
+		if (doom->keystates[SDL_SCANCODE_DOWN])
+			move_selection(doom->edt, 0, 10);
+		if (doom->keystates[SDL_SCANCODE_LEFT])
+			move_selection(doom->edt, -10, 0);
+		if (doom->keystates[SDL_SCANCODE_RIGHT])
+			move_selection(doom->edt, 10, 0);
+	}
     SDL_UpdateWindowSurface(doom->edt->win);
 }

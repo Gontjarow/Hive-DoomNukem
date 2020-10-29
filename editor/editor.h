@@ -99,7 +99,7 @@ void			print_portals(t_editor *edt);
 void			print_characters(t_editor *edt);
 void			print_walls(t_editor *edt);
 void			circle_rooms(t_doom *doom);
-void 			circle_visual(t_doom *doom, t_point *visual);
+void			circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color);
 void			circle_room(t_doom *doom, t_room *room);
 void			circle_player(t_doom *doom);
 void			circle_enemy(t_doom *doom);
@@ -116,6 +116,7 @@ void 			record_portal(t_editor *edt);
 /* from room_polygon_map.c */
 int				room_id_from_pixel(SDL_Surface *buff, int x, int y);
 void            create_room_polygon_map(t_editor *edt);
+void	 		wipe_room_polygon_map(t_room *room, t_doom *doom);
 void            expand_room_polygon_map(t_room *room, t_doom *doom);
 
 #endif

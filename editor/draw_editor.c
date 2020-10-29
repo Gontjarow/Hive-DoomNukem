@@ -105,14 +105,14 @@ void	circle_rooms(t_doom *doom)
 	}
 }
 
-void 	circle_visual(t_doom *doom, t_point *visual)
+void 	circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color)
 {
 	unsigned int *pixels;
 	int radius;
 	int x;
 	int y;
 
-	pixels = doom->edt->buff->pixels;
+	pixels = buff->pixels;
 	radius = 3;
 	y = -radius;
 	x = -radius;
@@ -121,7 +121,7 @@ void 	circle_visual(t_doom *doom, t_point *visual)
 		while (x <= radius)
 		{
 			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
-				pixels[visual->x + x + ((visual->y + y) * EDT_WIN_WIDTH)] = 0xffff00ff;
+				pixels[visual->x + x + ((visual->y + y) * EDT_WIN_WIDTH)] = color;
 			x++;
 		}
 		y++;

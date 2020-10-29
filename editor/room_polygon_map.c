@@ -173,6 +173,34 @@ static int  inside_room(int x, int y, t_room *room)
     return (cn&1);
 }
 
+void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
+{
+	int bounding_x_upper_limit;
+	int bounding_y_upper_limit;
+	int x_start;
+	int x;
+	int y;
+
+	bounding_x_upper_limit = find_farthest_x(room);
+	bounding_y_upper_limit = find_farthest_y(room);
+	x_start = find_nearest_x(bounding_x_upper_limit, room);
+	y = find_nearest_y(bounding_y_upper_limit, room);
+	x = x_start;
+	while (y < bounding_y_upper_limit)
+	{
+		while (x < bounding_x_upper_limit)
+		{
+			if (inside_room(x, y, room))
+			{
+				set_pixel(doom->edt->poly_map, x, y, 0xffffffff);
+			}
+			x++;
+		}
+		x = x_start;
+		y++;
+	}
+}
+
 void        expand_room_polygon_map(t_room *room, t_doom *doom)
 {
     int bounding_x_upper_limit;
