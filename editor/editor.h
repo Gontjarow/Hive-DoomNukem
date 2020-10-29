@@ -40,6 +40,7 @@ typedef struct 			s_editor
 	struct s_room		*room_first;
 	struct s_wall		*portals;
 	struct s_wall		*portal_begin;
+	struct s_wall		*subselection_wall;
 	int 				wall_count;
 	int 				room_count;
 	int 				portal_count;
@@ -60,6 +61,7 @@ typedef struct 			s_editor
 	int 				hover_id;
 	int 				selection_status;
 	int 				selection_room_id;
+	int					subselection_id;
 	int 				polygon_start_x;
 	int 				polygon_start_y;
 	int 				polygon_binding;

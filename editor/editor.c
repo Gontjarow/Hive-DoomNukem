@@ -51,10 +51,12 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->portalization_a = NULL;
 	doom->edt->portalization_b = NULL;
 	doom->edt->new_portal = NULL;
+	doom->edt->subselection_wall = NULL;
 	doom->edt->hover_status = 0;
 	doom->edt->hover_id = -1;
 	doom->edt->selection_status = 0;
 	doom->edt->selection_room_id = -1;
+	doom->edt->subselection_id = -1;
 	doom->edt->wall_count = 0;
 	doom->edt->room_count = 0;
 	doom->edt->portal_count = 0;
@@ -120,6 +122,7 @@ void 		destroy_edt(t_doom *doom)
 		free(doom->edt->walls);
 		doom->edt->walls = NULL;
 		doom->edt->wall_begin = NULL;
+		doom->edt->subselection_wall = NULL;
 		free(doom->edt->rooms);
 		doom->edt->rooms = NULL;
 		doom->edt->room_first = NULL;
@@ -620,6 +623,38 @@ static void print_corners(SDL_Surface *buff, t_room *room, uint32_t color)
 	}
 }
 
+static void highlight_subselection(t_editor *edt, uint32_t color)
+{
+	if (edt->subselection_wall != NULL)
+	{
+		ft_putendl("Highlighted subselection");
+		set_pixel(edt->buff, edt->subselection_wall->start.x, edt->subselection_wall->start.y, color);
+		set_pixel(edt->buff, edt->subselection_wall->start.x - 1, edt->subselection_wall->start.y, color);
+		set_pixel(edt->buff, edt->subselection_wall->start.x + 1, edt->subselection_wall->start.y, color);
+		set_pixel(edt->buff, edt->subselection_wall->start.x, edt->subselection_wall->start.y - 1, color);
+		set_pixel(edt->buff, edt->subselection_wall->start.x, edt->subselection_wall->start.y + 1, color);
+	}
+}
+
+static void wipe_print_selection_room(t_editor *edt)
+{
+	int count;
+	t_room *room;
+
+	room = edt->room_first;
+	count = edt->room_count;
+	while (count-- && edt->selection_room_id != room->id)
+		room = room->next;
+	if (room->id != edt->selection_room_id)
+	{
+		ft_putendl("Warning: Tried to wipe_print_selection_room without matching room found.");
+		return ;
+	}
+	print_room(edt->parent, edt->buff, room, 0xff000000);
+	print_corners(edt->buff, room, 0xff000000);
+	circle_visual(edt->buff, &room->visual, 0xff000000);
+}
+
 static void move_selection(t_editor *edt, int delta_x, int delta_y) {
 	int count;
 	t_room *room;
@@ -655,10 +690,72 @@ static void move_selection(t_editor *edt, int delta_x, int delta_y) {
 	// Must recreate pixels to buffer with default blue color, marking the persisting selection
 	print_corners(edt->buff, room, 0xffffffff);
 	print_room(edt->parent, edt->buff, room, 0xff0000ff);
+	highlight_subselection(edt, 0xffff00ff);
 	SDL_UpdateWindowSurface(edt->win);
 	// Must recreate roomstring. Must recreate wall strings.
 	// UNDONE
 	//ft_putendl("Moved selection at Editor.");
+}
+
+static void move_subselection(t_editor *edt, int delta_x, int delta_y)
+{
+	int count;
+	t_wall *wall;
+
+	// THIS MESSES UP PORTALS AT THE MOMENT, BUT MUST BE ADAPTED TO LOOK AND UPDATE PORTALS AS WELL
+	// THIS NEEDS TO UPDATE POLYMAP AS WELL
+	if (edt->subselection_wall != NULL)
+	{
+		wipe_print_selection_room(edt);
+		wall = edt->wall_begin;
+		count = edt->wall_count;
+		while (count--)
+		{
+			if (wall->end.x == edt->subselection_wall->start.x && wall->end.y == edt->subselection_wall->start.y)
+			{
+				wall->end.x += delta_x;
+				wall->end.y += delta_y;
+			}
+			wall = wall->next;
+		}
+		edt->subselection_wall->start.x += delta_x;
+		edt->subselection_wall->start.y += delta_y;
+		ft_putendl("Moved subselection");
+		move_selection(edt, 0, 0);
+	}
+}
+
+static void cycle_subselection(t_editor *edt)
+{
+	t_room 	*room;
+	t_wall	*wall;
+	int 	count;
+
+	room = edt->room_first;
+	count = edt->room_count;
+	while (count-- && room->id != edt->selection_room_id)
+		room = room->next;
+	if (edt->subselection_id == -1)
+	{
+		edt->subselection_id = room->first_wall->id;
+		edt->subselection_wall = room->first_wall;
+		return ;
+	}
+	count = room->wall_count;
+	wall = room->first_wall;
+	while (count-- && wall->id != edt->subselection_id)
+		wall = wall->next;
+	if (wall->id == edt->subselection_id && count != 0)
+	{
+		edt->subselection_id = wall->next->id;
+		edt->subselection_wall = wall->next;
+	}
+	else
+	{
+		edt->subselection_id = room->first_wall->id;
+		edt->subselection_wall = room->first_wall;
+	}
+	ft_putendl("Cycling subselection at Editor, SPACE key was pressed.");
 }
 
 void		edt_render(t_doom *doom)
@@ -700,16 +797,40 @@ void		edt_render(t_doom *doom)
         ft_putendl("Returning screen to normal.");
     }
 	*/
-	if (doom->edt->selection_status)
+	static int delta = 5;
+	static int cycling_lock = 0;
+
+	if (doom->edt->selection_status && (doom->keystates[SDL_SCANCODE_LSHIFT] || doom->keystates[SDL_SCANCODE_RSHIFT]))
 	{
 		if (doom->keystates[SDL_SCANCODE_UP])
-			move_selection(doom->edt, 0, -10);
+			move_subselection(doom->edt, 0, -delta);
 		if (doom->keystates[SDL_SCANCODE_DOWN])
-			move_selection(doom->edt, 0, 10);
+			move_subselection(doom->edt, 0, delta);
 		if (doom->keystates[SDL_SCANCODE_LEFT])
-			move_selection(doom->edt, -10, 0);
+			move_subselection(doom->edt, -delta, 0);
 		if (doom->keystates[SDL_SCANCODE_RIGHT])
-			move_selection(doom->edt, 10, 0);
+			move_subselection(doom->edt, delta, 0);
 	}
+	else if (doom->edt->selection_status && doom->keystates[SDL_SCANCODE_SPACE] && !cycling_lock)
+	{
+		ft_putendl("Space detected.");
+		cycling_lock = 1;
+		highlight_subselection(doom->edt, 0xffffffff);
+		cycle_subselection(doom->edt);
+		highlight_subselection(doom->edt, 0xffff00ff);
+	}
+	else if (doom->edt->selection_status)
+	{
+		if (doom->keystates[SDL_SCANCODE_UP])
+			move_selection(doom->edt, 0, -(delta*2));
+		if (doom->keystates[SDL_SCANCODE_DOWN])
+			move_selection(doom->edt, 0, (delta*2));
+		if (doom->keystates[SDL_SCANCODE_LEFT])
+			move_selection(doom->edt, -(delta*2), 0);
+		if (doom->keystates[SDL_SCANCODE_RIGHT])
+			move_selection(doom->edt, (delta*2), 0);
+	}
+	if (cycling_lock && doom->keystates[SDL_SCANCODE_SPACE] == 0)
+		cycling_lock = 0;
     SDL_UpdateWindowSurface(doom->edt->win);
 }
