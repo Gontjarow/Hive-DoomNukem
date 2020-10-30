@@ -32,6 +32,8 @@ typedef struct 			s_editor
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	struct SDL_Surface  *poly_map;
+	struct SDL_Surface	*grid_buffer;
+	struct SDL_Surface	*grid_temp;
 	struct SDL_Surface  *back_buffer;
 	struct SDL_Surface	*front_buffer;
 	struct s_wall		*walls;
@@ -90,6 +92,7 @@ void	 		destroy_edt(t_doom *doom);
 void			edt_mouse_motion(t_doom *doom);
 void 			edt_mouse_down(t_doom *doom);
 void			edt_render(t_doom *doom);
+void            create_grid_buffer(t_editor *edt);
 
 /* from walls.c */
 int				wall_count_of_previous_rooms(t_editor *edt);

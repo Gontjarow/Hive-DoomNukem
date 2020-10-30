@@ -81,6 +81,7 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->write_maps = 0;
 	doom->edt->overwrite_map = 0;
 	create_room_polygon_map(doom->edt);
+	create_grid_buffer(doom->edt);
 	if (argc == 2)
 	{
 		opened = open(argv[1], O_RDONLY);
@@ -160,6 +161,34 @@ void 		destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
+void        create_grid_buffer(t_editor *edt)
+{
+	int x;
+	int y;
+
+	edt->grid_buffer = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
+	flood_window(edt->grid_buffer, 0x00000000);
+	edt->grid_temp = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
+	flood_window(edt->grid_temp, 0xff000000);
+	SDL_SetColorKey(edt->grid_temp, SDL_TRUE, 0xff000000);
+	if (edt->grid_buffer == NULL || edt->grid_temp == NULL)
+		ft_die("Fatal error: SDL_CreateRGBSurface() failed at create_grid_buffer for grid_buffer or grid_temp.");
+	x = 0;
+	y = 0;
+	while (y < EDT_WIN_HEIGHT)
+	{
+		while (x < EDT_WIN_WIDTH)
+		{
+			if (x % 50 == 0 || y % 50 == 0)
+				set_pixel(edt->grid_buffer, x, y, 0xff222222);
+			x++;
+		}
+		x = 0;
+		y++;
+	}
+	ft_putendl("Created grid buffer!");
+}
+
 static void hover_highlight_room_to_buffer(int room_id, t_editor *edt)
 {
 	int count;
@@ -190,7 +219,7 @@ static void hover_highlight_room_to_buffer(int room_id, t_editor *edt)
 	}
 	SDL_BlitSurface(edt->buff, NULL, edt->back_buffer, NULL);
 	SDL_BlitSurface(edt->front_buffer, NULL, edt->buff, NULL);
-	SDL_UpdateWindowSurface(edt->win);
+	//SDL_UpdateWindowSurface(edt->win);
 	//ft_putendl("Hover blitted.");
 }
 
@@ -199,7 +228,7 @@ static void dehover(t_editor *edt)
 	SDL_BlitSurface(edt->back_buffer, NULL, edt->buff, NULL);
 	flood_window(edt->back_buffer, 0xff000000);
 	flood_window(edt->front_buffer, 0x00000000);
-	SDL_UpdateWindowSurface(edt->win);
+	//SDL_UpdateWindowSurface(edt->win);
 	//ft_putendl("Dehover blitted.");
 }
 
@@ -691,10 +720,11 @@ static void move_selection(t_editor *edt, int delta_x, int delta_y) {
 	print_corners(edt->buff, room, 0xffffffff);
 	print_room(edt->parent, edt->buff, room, 0xff0000ff);
 	highlight_subselection(edt, 0xffff00ff);
-	SDL_UpdateWindowSurface(edt->win);
+	//SDL_UpdateWindowSurface(edt->win);
 	// Must recreate roomstring. Must recreate wall strings.
 	// UNDONE
 	//ft_putendl("Moved selection at Editor.");
+	//MUST ALSO MOVE CONNECTED ROOMS AND PORTALS AND RESPECT THE GRAPHICAL REPRESENTATIONS
 }
 
 static void move_subselection(t_editor *edt, int delta_x, int delta_y)
@@ -832,5 +862,17 @@ void		edt_render(t_doom *doom)
 	}
 	if (cycling_lock && doom->keystates[SDL_SCANCODE_SPACE] == 0)
 		cycling_lock = 0;
+	// SAVE BUFFER AS IT WAS TO GRID TEMP
+	flood_window(doom->edt->grid_temp, 0xff000000);
+	SDL_BlitSurface(doom->edt->buff, NULL, doom->edt->grid_temp, NULL);
+	// NOW, CLEAR THE ACTUAL WINDOW BUFFER FOR COMPOSING IT FROM TWO BLITS, GRID AND THE ACTUAL BUFFER (FROM THE TEMP)
+	flood_window(doom->edt->buff, 0xff000000);
+	SDL_BlitSurface(doom->edt->grid_buffer, NULL, doom->edt->buff, NULL);
+	SDL_BlitSurface(doom->edt->grid_temp, NULL, doom->edt->buff, NULL);
+	// UPDATE THIS COMPOSITED IMAGE TO SCREEN
     SDL_UpdateWindowSurface(doom->edt->win);
+    // NOW, CLEAR AND SWAP BACK THE ACTUAL BUFFER TO WHERE IT BELONGS TO
+	flood_window(doom->edt->buff, 0xff000000);
+	SDL_BlitSurface(doom->edt->grid_temp, NULL, doom->edt->buff, NULL);
+	// IN THE FUTURE, IF GRID IS TO STAY, REDUCE BLITS AND AUTO COMPOSE OF LAYERS BY DEFAULT ALWAYS!
 }
