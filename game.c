@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/10/05 19:00:37 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/11/01 17:05:24 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,26 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_W])
 	{
 		// Walk forward
-		doom->mdl->player.y--;
-		doom->mdl->player.tail.y--;
-		//printf("W key pressed!\n");
+		doom->mdl->player.x = doom->mdl->player.tail.x;
+		doom->mdl->player.y = doom->mdl->player.tail.y;
+		rad = deg_to_rad(doom->mdl->player.rot);
+		x = doom->mdl->player.x + 10 * -cos(rad);
+		y = doom->mdl->player.y + 10 * -sin(rad);
+		doom->mdl->player.tail.x = x;
+		doom->mdl->player.tail.y = y;
+		printf("W key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_S])
 	{
 		// Walk backward
-		doom->mdl->player.y++;
-		doom->mdl->player.tail.y++;
-		//printf("S key pressed!\n");
+		rad = deg_to_rad(doom->mdl->player.rot);
+		x = doom->mdl->player.x - 10 * -cos(rad);
+		y = doom->mdl->player.y - 10 * -sin(rad);
+		doom->mdl->player.tail.x = x;
+		doom->mdl->player.tail.y = y;
+		doom->mdl->player.x = doom->mdl->player.tail.x;
+		doom->mdl->player.y = doom->mdl->player.tail.y;
+		printf("S key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_A])
 	{
