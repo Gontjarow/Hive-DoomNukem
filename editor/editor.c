@@ -245,7 +245,7 @@ static void check_hovering_over_room(SDL_Event *event, t_editor *edt)
 	{
 		if (queried_room != -1)
 		{
-			printf("Hovering over room_id %d with the mouse\n", queried_room);
+			//printf("Hovering over room_id %d with the mouse\n", queried_room);
 			if (edt->selection_room_id != queried_room)
 			{
 				edt->hover_status = 1;
@@ -690,7 +690,135 @@ static void wipe_print_selection_room(t_editor *edt)
 	circle_visual(edt->buff, &room->visual, 0xff000000);
 }
 
-static void move_selection(t_editor *edt, int delta_x, int delta_y) {
+static int report_connected_rooms(t_editor *edt, t_wall *portal, t_room *origin_room, int *flags)
+{
+	int rc;
+	int wc;
+	int extras;
+	t_room *room;
+	t_wall *wall;
+
+	rc = edt->room_count;
+	room = edt->room_first;
+	extras = 0;
+	while (rc--)
+	{
+		if (origin_room->id == room->id)
+		{
+			room = room->next;
+			continue;
+		}
+		wc = room->wall_count;
+		wall = room->first_wall;
+		flags[room->id] = 0;
+		while (wc--)
+		{
+			if (((portal->start.x == wall->start.x && portal->end.x == wall->end.x)
+				&& (portal->end.y == wall->end.y && portal->start.y == wall->start.y))
+				|| (portal->start.x == wall->end.x && portal->start.y == wall->end.y)
+				&& (portal->end.x == wall->start.x && portal->end.y == wall->start.y))
+			{
+				flags[room->id] = 1;
+			}
+			wall = wall->next;
+		}
+		if (flags[room->id])
+		{
+			//printf("Room_id %d connected to origin room\n", room->id);
+			extras++;
+		}
+		room = room->next;
+	}
+	return (extras);
+}
+
+static void raw_move_by_id(t_editor *edt, int room_id, int delta_x, int delta_y)
+{
+	int count;
+	t_room *room;
+	t_wall *wall;
+
+	room = edt->room_first;
+	count = edt->room_count;
+	while (count-- && room_id != room->id)
+		room = room->next;
+	wipe_room_polygon_map(room, edt->parent);
+	print_room(edt->parent, edt->buff, room, 0xff000000);
+	print_corners(edt->buff, room, 0xff000000);
+	circle_visual(edt->buff, &room->visual, 0xff000000);
+	count = room->wall_count;
+	wall = room->first_wall;
+	while (count--)
+	{
+		wall->start.x += delta_x;
+		wall->end.x += delta_x;
+		wall->start.y += delta_y;
+		wall->end.y += delta_y;
+		wall = wall->next;
+	}
+	room->visual.x += delta_x;
+	room->visual.y += delta_y;
+	circle_visual(edt->buff, &room->visual, 0xffffffff);
+	expand_room_polygon_map(room, edt->parent);
+	print_corners(edt->buff, room, 0xffffffff);
+	print_room(edt->parent, edt->buff, room, 0xff0000ff);
+	highlight_subselection(edt, 0xffff00ff);
+}
+
+static void move_portals_of_room(t_editor *edt, t_room *room, int delta_x, int delta_y)
+{
+	int 	flags[512];
+	int 	extras;
+	int 	wc;
+	int		pc;
+	t_wall	*wall;
+	t_wall	*portal;
+
+	pc = edt->portal_count;
+	portal = edt->portal_begin;
+	while (pc--)
+	{
+		wc = room->wall_count;
+		wall = room->first_wall;
+		while (wc--)
+		{
+			if (portal->start.x == wall->start.x && portal->start.y == wall->start.y)
+			{
+				if (portal->end.x == wall->end.x && portal->end.x == wall->end.x)
+				{
+					extras = 0;
+					while (extras < 512)
+						flags[extras++] = 0;
+					extras = report_connected_rooms(edt, portal, room, &flags);
+					ft_putnbr(extras);
+					ft_putendl(" extra rooms reported in total.");
+					extras = 0;
+					while (extras < 512)
+					{
+						if (flags[extras])
+						{
+							raw_move_by_id(edt, extras, delta_x, delta_y);
+							ft_putendl("Raw moved an extra connected room.");
+						}
+						extras++;
+					}
+					portal->start.x += delta_x;
+					portal->start.y += delta_y;
+					portal->end.x += delta_x;
+					portal->end.y += delta_y;
+					//ft_putendl("Moved a portal of a room with delta values.");
+				}
+			}
+			wall = wall->next;
+		}
+		portal = portal->next;
+	}
+	// This is all fine and dandy, but now, a chain reaction must occur. A connected room must also move!
+	//ft_putendl("Ended checking for movable portals when moving a room.");
+}
+
+static void move_selection(t_editor *edt, int originator, int delta_x, int delta_y)
+{
 	int count;
 	t_room *room;
 	t_wall *wall;
@@ -705,8 +833,10 @@ static void move_selection(t_editor *edt, int delta_x, int delta_y) {
 	print_room(edt->parent, edt->buff, room, 0xff000000);
 	print_corners(edt->buff, room, 0xff000000);
 	circle_visual(edt->buff, &room->visual, 0xff000000);
-	// Must delete roomstring also. Must delete wall strings.
-	// UNDONE
+	// Here, below, the actual data manipulation takes place. Portals are not updated, but must be!
+	// Therefore, below, is a new function, for that, move_portals_of_room()
+	if (originator)
+		move_portals_of_room(edt, room, delta_x, delta_y);
 	count = room->wall_count;
 	wall = room->first_wall;
 	while (count--)
@@ -757,7 +887,7 @@ static void move_subselection(t_editor *edt, int delta_x, int delta_y)
 		edt->subselection_wall->start.x += delta_x;
 		edt->subselection_wall->start.y += delta_y;
 		ft_putendl("Moved subselection");
-		move_selection(edt, 0, 0);
+		move_selection(edt, 0, 0, 0);
 	}
 }
 
@@ -858,13 +988,13 @@ void		edt_render(t_doom *doom)
 	else if (doom->edt->selection_status)
 	{
 		if (doom->keystates[SDL_SCANCODE_UP])
-			move_selection(doom->edt, 0, -(delta*2));
+			move_selection(doom->edt, 1, 0, -(delta*2));
 		if (doom->keystates[SDL_SCANCODE_DOWN])
-			move_selection(doom->edt, 0, (delta*2));
+			move_selection(doom->edt, 1, 0, (delta*2));
 		if (doom->keystates[SDL_SCANCODE_LEFT])
-			move_selection(doom->edt, -(delta*2), 0);
+			move_selection(doom->edt, 1, -(delta*2), 0);
 		if (doom->keystates[SDL_SCANCODE_RIGHT])
-			move_selection(doom->edt, (delta*2), 0);
+			move_selection(doom->edt, 1, (delta*2), 0);
 	}
 	if (cycling_lock && doom->keystates[SDL_SCANCODE_SPACE] == 0)
 		cycling_lock = 0;
