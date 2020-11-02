@@ -316,8 +316,11 @@ void 			render_line(t_line *l);
 void			flood_window(SDL_Surface *buff, uint32_t color);
 void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 
+void			add_wall_to_string(t_editor *edt, t_wall *wall);
 void			expand_wall_string(t_editor *edt);
+void			add_room_to_string(t_editor *edt, t_room *room);
 void 			expand_room_string(t_editor *edt);
+void			add_portal_to_string(t_editor *edt, t_wall *portal);
 void			expand_portal_string(t_editor *edt);
 void			expand_enemy_string(t_editor *edt);
 void			update_player_string(t_editor *edt);

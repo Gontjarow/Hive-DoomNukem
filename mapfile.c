@@ -38,6 +38,18 @@ void	expand_enemy_string(t_editor *edt)
 		edt->join_string = NULL;
 }
 
+void	add_wall_to_string(t_editor *edt, t_wall *wall)
+{
+	edt->join_string = ft_strnew(255);
+	sprintf(edt->join_string, "Wall id: %d | start: %d %d | end: %d %d\n",
+			wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
+	if (!edt->wall_string)
+		edt->wall_string = ft_strnew(1);
+	edt->wall_string = ft_strjoin(edt->wall_string, edt->join_string);
+	free(edt->join_string);
+	edt->join_string = NULL;
+}
+
 void	expand_wall_string(t_editor *edt)
 {
 		edt->join_string = ft_strnew(255);
@@ -46,6 +58,18 @@ void	expand_wall_string(t_editor *edt)
 		if (!edt->wall_string)
 			edt->wall_string = ft_strnew(1);
 		edt->wall_string = ft_strjoin(edt->wall_string, edt->join_string);
+		free(edt->join_string);
+		edt->join_string = NULL;
+}
+
+void	add_room_to_string(t_editor *edt, t_room *room)
+{
+		edt->join_string = ft_strnew(255);
+		sprintf(edt->join_string, "Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
+				room->id, room->first_wall_id, room->wall_count, room->floor_height, room->roof_height);
+		if (!edt->room_string)
+			edt->room_string = ft_strnew(1);
+		edt->room_string = ft_strjoin(edt->room_string, edt->join_string);
 		free(edt->join_string);
 		edt->join_string = NULL;
 }
@@ -60,6 +84,18 @@ void 	expand_room_string(t_editor *edt)
 		edt->room_string = ft_strjoin(edt->room_string, edt->join_string);
 		free(edt->join_string);
 		edt->join_string = NULL;
+}
+
+void 	add_portal_to_string(t_editor *edt, t_wall *portal)
+{
+	edt->join_string = ft_strnew(255);
+	sprintf(edt->join_string, "Portal id: %d | start: %d %d | end: %d %d\n",
+			portal->id, portal->start.x, portal->start.y, portal->end.x, portal->end.y);
+	if (!edt->portal_string)
+		edt->portal_string = ft_strnew(1);
+	edt->portal_string = ft_strjoin(edt->portal_string, edt->join_string);
+	free(edt->join_string);
+	edt->join_string = NULL;
 }
 
 void	expand_portal_string(t_editor *edt)

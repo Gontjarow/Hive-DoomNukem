@@ -113,6 +113,7 @@ void			circle_enemy(t_doom *doom);
 void			find_visual_xy(t_editor *edt, t_room *room);
 
 /* from record.c */
+void			create_strings_from_state(t_editor *edt);
 void			record_room(t_editor *edt);
 void			record_enemy(int x, int y, t_editor *edt);
 void			record_player(int x, int y, t_editor *edt);

@@ -106,7 +106,10 @@ void 		destroy_edt(t_doom *doom)
 	// INCOMPLETE!!! MUST DESTRYOY LINKED LIST STRUCTURES FROM BEGINNING TO END
 	// - krusthol
 	if (doom->edt->write_maps && doom->edt->wall_count > 0)
+	{
+		create_strings_from_state(doom->edt);
 		write_mapfile(doom->edt);
+	}
 	if (doom->edt->overwrite_map)
 		overwrite_mapfile(doom->edt);
 	SDL_FreeSurface(doom->edt->buff);
@@ -378,7 +381,8 @@ static void expand_polygon(int x, int y, t_editor *edt)
 		//ft_putendl("Polygon binding.");
 		edt->walls->end.x = edt->polygon_start_x;
 		edt->walls->end.y = edt->polygon_start_y;
-		expand_wall_string(edt);
+		// DEPRECEATED. REPLACED WITH CENTRAL CREATE_STRINGS_FROM_STATE
+		// expand_wall_string(edt);
 		edt->wall_count++;
 		next_wall = (t_wall*)malloc(sizeof(t_wall));
 		if (!next_wall)
@@ -415,7 +419,8 @@ static void expand_polygon(int x, int y, t_editor *edt)
 				//ft_putendl("Negative.");
 			}
 		}
-		expand_wall_string(edt);
+		// DEPRECEATED. REPLACED WITH CENTRAL CREATE_STRINGS_FROM_STATE
+		// expand_wall_string(edt);
 		edt->wall_count++;
 		next_wall = (t_wall*)malloc(sizeof(t_wall));
 		if (!next_wall)
@@ -434,7 +439,8 @@ static void expand_polygon(int x, int y, t_editor *edt)
 			edt->walls->start.y = edt->new_portal->start.y;
 			edt->walls->end.x = edt->new_portal->end.x;
 			edt->walls->end.y = edt->new_portal->end.y;
-			expand_wall_string(edt);
+			// DEPRECEATED. REPLACED WITH CENTRAL CREATE_STRINGS_FROM_STATE
+			//expand_wall_string(edt);
 			edt->wall_count++;
 			next_wall = (t_wall*)malloc(sizeof(t_wall));
 			if (!next_wall)

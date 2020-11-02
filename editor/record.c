@@ -11,6 +11,35 @@ static int 	degree_rot(int x, int y, t_point *tail)
 	return ((int)result);
 }
 
+void		create_strings_from_state(t_editor *edt)
+{
+	int		count;
+	t_room	*room;
+	t_wall	*wall;
+
+	count = edt->room_count;
+	room = edt->room_first;
+	while (count--)
+	{
+		add_room_to_string(edt, room);
+		room = room->next;
+	}
+	count = edt->wall_count;
+	wall = edt->wall_begin;
+	while (count--)
+	{
+		add_wall_to_string(edt, wall);
+		wall = wall->next;
+	}
+	count = edt->portal_count;
+	wall = edt->portal_begin;
+	while (count--)
+	{
+		add_portal_to_string(edt, wall);
+		wall = wall->next;
+	}
+}
+
 void	record_room(t_editor *edt)
 {
 	t_room	*next_room;
@@ -38,7 +67,8 @@ void	record_room(t_editor *edt)
 	edt->rooms->first_wall_id = edt->rooms->first_wall->id;
 	printf("Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
 		   edt->rooms->id, edt->rooms->first_wall_id, edt->rooms->wall_count, edt->rooms->floor_height, edt->rooms->roof_height);
-	expand_room_string(edt);
+	// DEPRECEATED, NOW HANDLED CENTRALLY AT CREATE_STRINGS_FROM_STATE
+	// expand_room_string(edt);
 	expand_room_polygon_map(edt->rooms, edt->parent);
 	find_visual_xy(edt, edt->rooms);
 	edt->rooms->next = next_room;
@@ -114,7 +144,8 @@ void 	record_portal(t_editor *edt)
 	edt->portals->start.y = edt->new_portal->start.y;
 	edt->portals->end.x = edt->new_portal->end.x;
 	edt->portals->end.y = edt->new_portal->end.y;
-	expand_portal_string(edt);
+	// DEPRECEATED. REPLACED WITH CENTRAL CREATE_STRINGS_FROM_STATE
+	//expand_portal_string(edt);
 	next_portal = (t_wall*)malloc(sizeof(t_wall));
 	if (!next_portal)
 		ft_die("Fatal error: Could not malloc t_wall at record_portal.");
