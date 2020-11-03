@@ -11,6 +11,7 @@ void render_frame(t_doom *doom)
 	int px = doom->mdl->player.x;
 	int py = doom->mdl->player.y;
 	t_xyz		pos = vec3(px, 0, py);
+	t_xyz		cam_dir = vec3_norm(vec3_sub(pos, vec3(0, 0, 0)));
 
 	t_matrix	world = translate_m(0, 0, 0);
 	t_matrix	dimensions = scale_m(GAME_MIDWIDTH/2, GAME_MIDHEIGHT/2, 1);
@@ -23,7 +24,16 @@ void render_frame(t_doom *doom)
 
 
 	t_mesh		mv = mesh_transform(modelview, test);
-	t_mesh		ndc = mesh_normalize(mv);
+
+	t_mesh		culled = mesh_clip(mv);
+
+	if (culled.faces == 0)
+	{
+		// printf("NOTHING TO DRAW\n");
+		return;
+	}
+
+	t_mesh		ndc = mesh_normalize(culled);
 	// t_mesh		screen = mesh_transform(dimensions, ndc);
 	t_mesh		screen = mesh_transform(window, ndc);
 	// t_mesh	world_mesh   = mesh_transform(world, test);
@@ -41,8 +51,10 @@ void render_frame(t_doom *doom)
 	// free_faces(&ndc_mesh);
 
 	int i = 0;
-	while (i < test.faces)
+	while (i < screen.faces)
 	{
+		//! test.face index won't always match with screen.face
+		//! because of discarded faces or new faces created by clipping
 		t_vert *vo = test.face[i].vert;
 		t_vert *vt = screen.face[i].vert;
 		++i;
@@ -55,12 +67,12 @@ void render_frame(t_doom *doom)
 		// How much the face aligns with the camera (backface culling)
 		// Note: The face must have the opposite direction as the camera to be seen.
 		// 📷-->   <-|
-		if (-vec3_dot(vec3(0,0,-1), normal) > 0)
+		if (-vec3_dot(cam_dir, normal) > 0)
 		{
 			// How much the face aligns with the light
 			// Note: Normal must face in the OPPOSITE direction as the light-source to be lit.
 			// 💡-->   <-|
-			double light = -vec3_dot(vec3(0,0,-1), normal);
+			double light = -vec3_dot(cam_dir, normal);
 			// if (light > 0)
 			{
 				// Greyscale brightness; Same value used for R, G, and B

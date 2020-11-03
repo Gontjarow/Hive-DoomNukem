@@ -310,4 +310,54 @@ t_mesh		mesh_normalize(t_mesh mesh)
 	return (out);
 }
 
+// Check if a homogeneous coordinate (in clip-space) is visible.
+int			vert_visible(t_vert test)
+{
+	return ((-test.w <= test.x && test.x <= test.w)
+	&& (-test.w <= test.y && test.y <= test.w)
+	&& (-test.w <= test.z && test.z <= test.w));
+}
+
+// Assign the next face to the current one,
+// until the whole remaining array has been shifted.
+void		remove_face(t_face *face, int *faces, int i)
+{
+	while ((i + 1) < *faces)
+	{
+		face[i] = face[i + 1];
+		++i;
+	}
+	*faces -= 1;
+}
+
+t_mesh		mesh_clip(t_mesh clip_space)
+{
+	int		i;
+	int		v;
+	t_mesh	out;
+
+	assert(clip_space.faces >= 1);
+	out = mesh_duplicate(clip_space);
+	i = 0;
+
+	while (i < out.faces)
+	{
+		v = 0;
+		while (v < out.face[i].verts)
+		{
+			if (!vert_visible(out.face[i].vert[v]))
+			{
+				remove_face(out.face, &out.faces, i);
+				//? Negate the next iteration to check the same index again,
+				//? because it now has the next face in it.
+				--i;
+				break;
+			}
+			++v;
+		}
+		++i;
+	}
+	return (out);
+}
+
 
