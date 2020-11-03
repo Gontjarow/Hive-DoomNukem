@@ -26,6 +26,36 @@ void draw(unsigned int *pixel, t_xy start, t_xy end, int color)
 	}
 }
 
+double		*get_zbuffer()
+{
+	static double *zbuffer = NULL;
+
+	if (zbuffer == NULL)
+		zbuffer = malloc(GAME_WIN_WIDTH * GAME_WIN_HEIGHT * sizeof(*zbuffer));
+	return (zbuffer);
+}
+
+int			zbuffer_ok(int index, double depth)
+{
+	double *zbuffer;
+
+	zbuffer = get_zbuffer();
+	if (zbuffer[index] > depth)
+	{
+		zbuffer[index] = depth;
+		return (1);
+	}
+	// printf("%f  %f\n", zbuffer[index], depth);
+	return (0);
+}
+
+double		face_depth(t_xyz weight, t_face face)
+{
+	return (weight.x * face.vert[0].z
+		+ weight.y * face.vert[1].z
+		+ weight.z * face.vert[2].z);
+}
+
 // Fixed, exactly 3-vert triangle.
 // Note: wavefront.obj triangles have verts in counter-clockwise order.
 void		draw_tri(unsigned int *pixel, t_face face, int color)
@@ -38,7 +68,9 @@ void		draw_tri(unsigned int *pixel, t_face face, int color)
 	{
 		if (inside(vec2(x, y), face))
 		{
-			pixel[x + y * GAME_WIN_WIDTH] = color;
+			double depth = face_depth(bary(vec2(x, y), face), face);
+			if (zbuffer_ok(x + y * GAME_WIN_WIDTH, depth))
+				pixel[x + y * GAME_WIN_WIDTH] = color;
 		}
 		else
 		{

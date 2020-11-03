@@ -68,6 +68,8 @@ typedef struct	s_cam
 
 # include "model.h"
 
+double			*get_zbuffer();
+
 void			sort_tri(t_face *face);
 void			swap_xyzw(t_xyzw *a, t_xyzw *b);
 t_xy			bb_min(t_face face);

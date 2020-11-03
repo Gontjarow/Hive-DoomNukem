@@ -1,8 +1,46 @@
 #include "doom_nukem.h"
 
+void	*memset_f(void *b, double c, size_t len)
+{
+	double *p;
+
+	p = (double*)b;
+	while (len > 0)
+	{
+		*(p++) = (double)c;
+		len--;
+	}
+	return (b);
+}
+
+void zbuffer_to_window(t_doom *doom)
+{
+	static unsigned int *pixels = NULL;
+	double *zbuffer;
+
+	if (pixels == NULL)
+		pixels = malloc(GAME_WIN_WIDTH * GAME_WIN_HEIGHT * sizeof(*pixels));
+	zbuffer = get_zbuffer();
+
+	int i = 0;
+	int grey;
+	while (i < GAME_WIN_WIDTH * GAME_WIN_HEIGHT)
+	{
+		grey = abs(zbuffer[i] / 10000) & 0xFF;
+		pixels[i] = grey << 16 | grey << 8 | grey;
+		++i;
+	}
+
+	ft_memcpy(doom->game->buff->pixels, pixels,
+		GAME_WIN_WIDTH * GAME_WIN_HEIGHT * sizeof(*pixels));
+}
+
 void render_frame(t_doom *doom)
 {
 	flood_window(doom->game->buff, 0x112233);
+	double *zbuffer = get_zbuffer();
+	memset_f(zbuffer, INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
+
 	t_mesh test = load_mesh_obj("tiny-donut.obj");
 
 	printf("load_mesh_obj succeeded\n");
@@ -90,6 +128,7 @@ void render_frame(t_doom *doom)
 		}
 	}
 
+	// zbuffer_to_window(doom);
 	// free_faces(&screen_mesh);
 	free_faces(&test);
 }
