@@ -123,6 +123,6 @@ void 			record_portal(t_editor *edt);
 int				room_id_from_pixel(SDL_Surface *buff, int x, int y);
 void            create_room_polygon_map(t_editor *edt);
 void	 		wipe_room_polygon_map(t_room *room, t_doom *doom);
-void            expand_room_polygon_map(t_room *room, t_doom *doom);
+void            expand_room_polygon_map(t_room *room, t_doom *doom, struct SDL_Surface *poly_map, uint32_t *conversion_colors);
 
 #endif

@@ -26,6 +26,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdint.h>
 # include <time.h>
 # include <math.h>
 
@@ -101,6 +102,7 @@ typedef struct	s_image
 typedef struct			s_model
 {
 	struct s_doom		*parent;
+	struct SDL_Surface  *poly_map;
 	struct s_player		player;
 	int 				current_portal;
 	struct s_enemy		*enemies;
@@ -115,6 +117,7 @@ typedef struct			s_model
 	int 				room_count;
 	int 				portal_count;
 	int 				enemy_count;
+    uint32_t            conversion_colors[512];
 } 						t_model;
 
 /*

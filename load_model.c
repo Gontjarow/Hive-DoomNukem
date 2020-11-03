@@ -30,6 +30,11 @@ static void init_model(t_doom *doom)
 	doom->mdl->enemies = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!doom->mdl->enemies)
 		ft_die("Fatal error: Mallocing enemies struct failed at init_model.");
+    doom->mdl->poly_map = SDL_CreateRGBSurfaceWithFormat(0, 5000, 5000, 32, SDL_GetWindowPixelFormat(doom->win));
+    if (!doom->mdl->poly_map)
+        ft_die("Fatal error: SDL_CreateRGBSurfaceWithFormat failed to create poly_map for doom->mdl struct at init_model.");
+    flood_window(doom->mdl->poly_map, 0xffffffff);
+    init_conversion_colors(doom->mdl->conversion_colors);
 	doom->mdl->wall_first = NULL;
 	doom->mdl->room_first = NULL;
 	doom->mdl->portal_first = NULL;
@@ -58,6 +63,29 @@ void 		destroy_model(t_doom *doom)
 	doom->mdl->parent = NULL;
 	free(doom->mdl);
 	doom->mdl = NULL;
+}
+
+static void expand_mdl_polygon_maps(t_model *mdl)
+{
+    static int times = 0;
+    int rc;
+    t_room *room;
+
+    printf("Welcome to expand_mdl_polygon_maps\n");
+    rc = mdl->room_count;
+    room = mdl->room_first;
+    printf("RC is %d, first_room id  is %d\n", rc, room->id);
+    while (rc--)
+    {
+        printf("Welcome to expand_mdl_polygon_maps - now running rc-- times %d\n", times);
+        if (mdl->poly_map == NULL || room == NULL || mdl->parent == NULL)
+            ft_die("Fatal error: No poly_map, room or mdl_parent set at expand_mdl_polygon_maps");
+        expand_room_polygon_map(room, mdl->parent, mdl->poly_map, &mdl->conversion_colors);
+        //printf("Seg faults above?\n");
+        room = room->next;
+        ft_putendl("Expanded polygon map at mdl->poly_map");
+    }
+    printf("Goodbye from expand_mdl_polygon_maps\n");
 }
 
 static void scan_rooms(t_doom *doom, t_model *mdl)
@@ -417,6 +445,37 @@ static int read_mapfile(t_doom *doom, char *map_path)
 	return (0);
 }
 
+static t_wall   *mdl_wall_by_id(t_model *mdl, int id)
+{
+    t_wall *wall;
+    int 	wc;
+
+    wc = mdl->wall_count;
+    wall = mdl->wall_first;
+    while (wc--)
+    {
+        if (wall->id == id)
+            return (wall);
+        wall = wall->next;
+    }
+    ft_die("Fatal error: Could not find a wall by its ID in mdl_wall_by_id.");
+    return (NULL);
+}
+
+static void		link_mdl_rooms(t_model *mdl)
+{
+    t_room *room;
+    int 	rc;
+
+    rc = mdl->room_count;
+    room = mdl->room_first;
+    while (rc--)
+    {
+        room->first_wall = mdl_wall_by_id(mdl, room->first_wall_id);
+        room = room->next;
+    }
+}
+
 int			load_model(t_doom *doom)
 {
 	init_model(doom);
@@ -438,6 +497,11 @@ int			load_model(t_doom *doom)
 		ft_putstr("Loaded mapfile data from file: ");
 		ft_putendl(doom->game->map_path);
 		parse_mapfile(doom, doom->mdl);
+		// Linking the loaded rooms data to objects to enable iteration code
+		link_mdl_rooms(doom->mdl);
+		// Create polymap buffer for rooms for instant tracking of room_id where player is
+		ft_putendl("Launching game, calling expand_mdl_polygon_maps");
+		expand_mdl_polygon_maps(doom->mdl);
 	}
 	return (1);
 }
