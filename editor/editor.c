@@ -286,7 +286,6 @@ static void check_hovering_over_room(SDL_Event *event, t_editor *edt)
 			if (edt->hover_status == 1)
 			{
 				edt->hover_status = 0;
-
 				dehover(edt);
 			}
 		}
@@ -411,7 +410,7 @@ static void expand_polygon(int x, int y, t_editor *edt)
 		edt->walls->end.x = edt->polygon_start_x;
 		edt->walls->end.y = edt->polygon_start_y;
 		// DEPRECEATED. REPLACED WITH CENTRAL CREATE_STRINGS_FROM_STATE
-		// expand_wall_string(edt);
+		//expand_wall_string(edt);
 		edt->wall_count++;
 		next_wall = (t_wall*)malloc(sizeof(t_wall));
 		if (!next_wall)
@@ -814,7 +813,7 @@ static void move_portals_of_room(t_editor *edt, t_room *room, int delta_x, int d
 		{
 			if (portal->start.x == wall->start.x && portal->start.y == wall->start.y)
 			{
-				if (portal->end.x == wall->end.x && portal->end.x == wall->end.x)
+				if (portal->end.x == wall->end.x && portal->end.y == wall->end.y)
 				{
 					extras = 0;
 					while (extras < 512)
@@ -958,8 +957,9 @@ static void cycle_subselection(t_editor *edt)
 	ft_putendl("Cycling subselection at Editor, SPACE key was pressed.");
 }
 
-static void remove_selected_rooms_walls(t_editor *edt, t_room *room)
+static int remove_selected_rooms_walls(t_editor *edt, t_room *room)
 {
+    int ret;
     int wc;
     int redistribute_from_id;
     t_wall *wall;
@@ -968,36 +968,45 @@ static void remove_selected_rooms_walls(t_editor *edt, t_room *room)
     redistribute_from_id = room->first_wall->id - 1;
     wc = room->wall_count;
     edt->wall_count -= wc;
+    printf("Deleting %d wall ids\n", wc);
+    ret = wc;
     wall = room->first_wall;
     next = wall->next;
+    printf("Destroying wall id(%d)\n", wall->id);
     free(wall);
+    wc--;
     while (wc--)
     {
         wall = next;
         next = wall->next;
+        printf("Destroying wall id(%d)\n", wall->id);
         free(wall);
     }
     // Took care of freeing memory used by deleted walls above
-
+    printf("Wall id(%d) is the next wall to be linked!\n", next->id);
     // Taking care of redistributing ids for the wall ids below
     wc = edt->wall_count;
     wall = edt->wall_begin;
     while (wc-- && wall->id != redistribute_from_id)
         wall = wall->next;
     // Arriving at the correct wall to start redistributions from. We link it to the next surviving wall.
+    printf("Wall id(%d) is the origin wall, to which we link the one wall that was to be linked!\n", wall->id);
     wall->next = next;
     wall = wall->next;
     // Now iterate through the surviving walls, redistributing the ids.
     while (wc--)
     {
+        printf("Wall id(%d) previously\n", wall->id);
         wall->id = ++redistribute_from_id;
+        printf("Wall id(%d) after change\n", wall->id);
         wall = wall->next;
     }
-    // Assert things?
+    return (ret);
 }
 
 static void remove_selected_room_data(t_editor *edt)
 {
+    int     reduction;
     int     rc;
     int     redistribute_from_id;
     t_room  *room;
@@ -1007,7 +1016,24 @@ static void remove_selected_room_data(t_editor *edt)
     room = edt->room_first;
     while (rc-- && room->id != edt->selection_room_id)
         room = room->next;
-    remove_selected_rooms_walls(edt, room);
+
+    // SOURCE OF WONKY BUSINESS ??? BELOW IS MESSING UP WALL DATA ??
+    //output_walls(edt->wall_count, edt->wall_begin);
+    //output_rooms(edt->room_count, edt->room_first);
+    reduction = remove_selected_rooms_walls(edt, room);
+    // Use next as temp to retain deletion room pointer
+    next = room;
+    while (rc--)
+    {
+        //ft_putendl("Minusing RC for reduction to fire...");
+        room = room->next;
+        room->first_wall_id -= reduction;
+    }
+    //output_walls(edt->wall_count, edt->wall_begin);
+    output_rooms(edt->room_count, edt->room_first);
+    // Gain back the deletion room pointer
+    room = next;
+    // DO THIS LATER, WALLS AND ROOMS NEED TO WORK PERFECTLY FIRST!!
     //remove_selected_rooms_portals(edt, room);
 
     // Saving the next valid room after soon-to-be-deleted room into "next"
@@ -1035,23 +1061,24 @@ static void remove_selected_room_data(t_editor *edt)
     rc = edt->room_count;
     room = edt->room_first;
     while (rc-- && room->id != redistribute_from_id)
+    {
+        printf("CHECK ME rc = %d | Room id %d | redistribute_from_id %d \n", rc, room->id, redistribute_from_id);
         room = room->next;
+    }
     // Here, arrived at the valid room. Swap its next pointer to the previously saved next room.
     printf("rc is %d | Room arrived at, id is %d | redistribute_from_id is %d\n", rc, room->id, redistribute_from_id);
     room->next = next;
     room = room->next;
     // Continue iterating, redistributing ids in a while loop
-    printf("Holy infinite loop god start!\n");
     while (rc--)
     {
-        printf("Holy infinite loop ongoing!\n");
         room->id = ++redistribute_from_id;
-        printf("rc is %d | new room_id was %d\n", rc, room->id);
+        //printf("rc is %d | new room_id was %d\n", rc, room->id);
         expand_room_polygon_map(room, edt->parent, edt->poly_map, &edt->conversion_colors);
         ft_putendl("Redrew to polymap with new color based off new ID.");
         room = room->next;
     }
-    printf("Holy infinite loop jesus end!\n");
+    output_rooms(edt->room_count, edt->room_first);
 }
 
 static void remove_selected_room(t_editor *edt)
@@ -1067,13 +1094,17 @@ static void remove_selected_room(t_editor *edt)
     wipe_print_selection_room(edt);
     wipe_room_polygon_map(room, edt->parent);
     remove_selected_room_data(edt);
+    edt->hover_status = 0;
+    edt->hover_id = -1;
+    edt->selection_room_id = -1;
+    edt->selection_status = 0;
     ft_putendl("Wiped selected room from buffer and data.");
     printf("Room count after wipes: %d\n", edt->room_count);
 }
 
 void		edt_render(t_doom *doom)
 {
-    /* Manual debugging for room_id_query
+    /* Manual debugging for room_id_query */
     static int	mouse_x = 0;
     static int	mouse_y = 0;
     static int 	queried_room_id = -1;
@@ -1086,7 +1117,7 @@ void		edt_render(t_doom *doom)
 			printf("At location %d, %d there was empty space and no room_id found\n", mouse_x, mouse_y);
 		else
 			printf("Room_id at location %d, %d was %d\n", mouse_x, mouse_y, queried_room_id);
-	}*/
+	}
 	/* Manual debugging for polymap
 	static int	was_blitted = 0;
     if (doom->keystates[SDL_SCANCODE_SPACE] && !was_blitted)

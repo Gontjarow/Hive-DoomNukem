@@ -219,7 +219,7 @@ void        expand_room_polygon_map(t_room *room, t_doom *doom, SDL_Surface *pol
     x_start = find_nearest_x(bounding_x_upper_limit, room);
     y = find_nearest_y(bounding_y_upper_limit, room);
     x = x_start;
-    //printf("erpm x = %d, y = %d\n", x, y);
+    printf("erpm x = %d, y = %d | bound_x = %d, bound_y = %d\n", x, y, bounding_x_upper_limit, bounding_y_upper_limit);
     while (y < bounding_y_upper_limit)
     {
         while (x < bounding_x_upper_limit)

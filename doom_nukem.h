@@ -333,4 +333,10 @@ int				overwrite_mapfile(t_editor *edt);
 void	 		destroy_mapdata(t_doom *doom);
 int 			load_model(t_doom *doom);
 void	 		destroy_model(t_doom *doom);
+
+/*
+ * from debug_console.c
+ * */
+
+void            output_walls(int wall_count, t_wall *walls);
 #endif
