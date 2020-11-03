@@ -98,8 +98,8 @@ void		game_render(t_doom *doom)
 		doom->mdl->player.x = doom->mdl->player.tail.x;
 		doom->mdl->player.y = doom->mdl->player.tail.y;
 		rad = deg_to_rad(doom->mdl->player.rot);
-		x = doom->mdl->player.x + 10 * -cos(rad);
-		y = doom->mdl->player.y + 10 * -sin(rad);
+		x = doom->mdl->player.x + doom->mdl->player.mov_speed * -cos(rad);
+		y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
 		printf("W key pressed!\n");
@@ -108,8 +108,8 @@ void		game_render(t_doom *doom)
 	{
 		// Walk backward
 		rad = deg_to_rad(doom->mdl->player.rot);
-		x = doom->mdl->player.x - 10 * -cos(rad);
-		y = doom->mdl->player.y - 10 * -sin(rad);
+		x = doom->mdl->player.x - doom->mdl->player.mov_speed * -cos(rad);
+		y = doom->mdl->player.y - doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
 		doom->mdl->player.x = doom->mdl->player.tail.x;
@@ -119,33 +119,27 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_A])
 	{
 		// Rotate left
-		doom->mdl->player.rot--;
+		doom->mdl->player.rot -= doom->mdl->player.rot_speed;
 		if (doom->mdl->player.rot < 0)
-		{
 			doom->mdl->player.rot = 359;
-		}
 		rad = deg_to_rad(doom->mdl->player.rot);
-		x = doom->mdl->player.x + 10 * -cos(rad);
-		y = doom->mdl->player.y + 10 * -sin(rad);
+		x = doom->mdl->player.x + doom->mdl->player.mov_speed * -cos(rad);
+		y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
-		printf("Player rotation in degree: %d\n", doom->mdl->player.rot);
 		printf("A key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_D])
 	{
 		// Rotate right
-		doom->mdl->player.rot++;
+		doom->mdl->player.rot += doom->mdl->player.rot_speed;
 		if (doom->mdl->player.rot >= 360)
-		{
 			doom->mdl->player.rot = 0;
-		}
 		rad = deg_to_rad(doom->mdl->player.rot);
-		x = doom->mdl->player.x + 10 * -cos(rad);
-		y = doom->mdl->player.y + 10 * -sin(rad);
+		x = doom->mdl->player.x + doom->mdl->player.mov_speed * -cos(rad);
+		y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
-		printf("Player rotation in degree: %d\n", doom->mdl->player.rot);
 		printf("D key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_E])
@@ -156,12 +150,71 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_SPACE])
 	{
 		// Jump
+		if (doom->mdl->player.is_jumping == 0 && doom->mdl->player.is_crouching == 0)
+		{
+			while (doom->mdl->player.is_jumping == 0)
+			{
+				doom->mdl->player.height += 10;
+				if (doom->mdl->player.height == 200)
+					doom->mdl->player.is_jumping = 1;
+			}
+			while (doom->mdl->player.is_jumping == 1)
+			{
+				doom->mdl->player.height -= 10;
+				if (doom->mdl->player.height == 100)
+					doom->mdl->player.is_jumping = 0;
+			}
+		}
 		printf("Spacebar key pressed!\n");
 	}
-	if (doom->keystates[SDL_SCANCODE_LSHIFT])
+
+	/*
+	**	Player Run Feature Handling
+	*/
+
+	if (doom->keystates[SDL_SCANCODE_LSHIFT] && !doom->mdl->player.run_lock)
 	{
-		// Increase player's speed, sprint
-		printf("Left Shift key pressed!\n");
+		// Running button = LSHIFT ?
+		doom->mdl->player.run_lock = 1;
+		doom->mdl->player.is_running = 1;
+		printf("LSHIFT key pressed!\n");
+	}
+	if (!doom->keystates[SDL_SCANCODE_LSHIFT] && doom->mdl->player.run_lock)
+	{
+		doom->mdl->player.is_running = 0;
+		doom->mdl->player.run_lock = 0;
+		printf("LSHIFT key released!\n");
+	}
+	if (doom->mdl->player.is_running && doom->mdl->player.mov_speed != doom->mdl->player.max_speed)
+		doom->mdl->player.mov_speed++;
+	else if (!doom->mdl->player.is_running && doom->mdl->player.mov_speed != 10 && !doom->mdl->player.crouch_lock)
+		doom->mdl->player.mov_speed--;
+
+	/*
+	**	Player Crouch Handling
+	*/
+
+	if (doom->keystates[SDL_SCANCODE_LCTRL] && !doom->mdl->player.crouch_lock)
+	{
+		doom->mdl->player.crouch_lock = 1;
+		doom->mdl->player.is_crouching = 1;
+		doom->mdl->player.mov_speed = 5;
+		printf("LCTRL key pressed!\n");
+	}
+	if (!doom->keystates[SDL_SCANCODE_LCTRL] && doom->mdl->player.crouch_lock)
+	{
+		doom->mdl->player.crouch_lock = 0;
+		doom->mdl->player.is_crouching = 0;
+		doom->mdl->player.mov_speed = 10;
+		printf("LCTRL key released!\n");
+	}
+	if (doom->mdl->player.is_crouching && doom->mdl->player.height != 50)
+	{
+		doom->mdl->player.height -= 10;
+	}
+	else if (!doom->mdl->player.is_crouching && doom->mdl->player.height != 100)
+	{
+		doom->mdl->player.height += 10;
 	}
 	update_minimap(doom);
 	render(doom);

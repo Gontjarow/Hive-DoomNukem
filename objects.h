@@ -57,6 +57,16 @@ typedef struct 			s_player
 	int 				x;
 	int 				y;
 	int 				rot;
+	int					height;
+	int					is_jumping;
+	int					is_crouching;
+	int					is_running;
+	int					mov_speed;
+	int					max_speed;
+	int					min_speed;
+	int					run_lock;
+	int					crouch_lock;
+	int					rot_speed;
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;
