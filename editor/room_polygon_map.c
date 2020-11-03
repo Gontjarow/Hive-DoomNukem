@@ -19,9 +19,9 @@ int				room_id_from_pixel(SDL_Surface *buff, int x, int y)
 	return ((int)pixels[location]);
 }
 
-static uint32_t  convert_to_color(int room_id, t_editor *edt)
+static uint32_t  convert_to_color(int room_id, uint32_t *conversion_colors)
 {
-    return (edt->conversion_colors[room_id]);
+    return (conversion_colors[room_id]);
 }
 
 void        init_conversion_colors(uint32_t conversion_colors[512])
@@ -36,7 +36,7 @@ void        init_conversion_colors(uint32_t conversion_colors[512])
     conversion_colors[4] = 0xff00ffff;
     conversion_colors[5] = 0xffff00ff;
     */
-	//ft_putendl("Conversion colors initialized. Fixed 6 primary and primary blended colors then computational direct conversion.");
+	ft_putendl("Conversion colors initialized.");
     i = 0;
     while (i < 512)
     {
@@ -68,6 +68,7 @@ static int  find_nearest_x(int farthest, t_room *room)
     int     smallest;
     t_wall  *wall;
 
+    //ft_putendl("finding nearest x");
     smallest = farthest;
     wc = room->wall_count;
     wall = room->first_wall;
@@ -88,6 +89,7 @@ static int  find_nearest_y(int farthest, t_room *room)
     int     smallest;
     t_wall  *wall;
 
+    //ft_putendl("finding nearest y");
     smallest = farthest;
     wc = room->wall_count;
     wall = room->first_wall;
@@ -108,6 +110,7 @@ static int  find_farthest_x(t_room *room)
     int     biggest;
     t_wall  *wall;
 
+    //ft_putendl("finding farthest x");
     biggest = 0;
     wc = room->wall_count;
     wall = room->first_wall;
@@ -128,6 +131,7 @@ static int find_farthest_y(t_room *room)
     int     biggest;
     t_wall  *wall;
 
+    //ft_putendl("finding farthest y");
     biggest = 0;
     wc = room->wall_count;
     wall = room->first_wall;
@@ -201,26 +205,31 @@ void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
 	}
 }
 
-void        expand_room_polygon_map(t_room *room, t_doom *doom)
+void        expand_room_polygon_map(t_room *room, t_doom *doom, SDL_Surface *poly_map, uint32_t *conversion_colors)
 {
     int bounding_x_upper_limit;
     int bounding_y_upper_limit;
     int x_start;
     int x;
     int y;
+    //static int times = 0;
 
     bounding_x_upper_limit = find_farthest_x(room);
     bounding_y_upper_limit = find_farthest_y(room);
     x_start = find_nearest_x(bounding_x_upper_limit, room);
     y = find_nearest_y(bounding_y_upper_limit, room);
     x = x_start;
+    //printf("erpm x = %d, y = %d\n", x, y);
     while (y < bounding_y_upper_limit)
     {
         while (x < bounding_x_upper_limit)
         {
+            //if (times < 10)
+            //    printf("Testing inside_room at expand_room_polygon_map %d\n", times++);
             if (inside_room(x, y, room))
             {
-                set_pixel(doom->edt->poly_map, x, y, convert_to_color(room->id, doom->edt));
+                set_pixel(poly_map, x, y, conversion_colors[room->id]);
+                //printf("set_pixel(poly_map, x, y, conversion_colors[room->id])\n");
             }
             x++;
         }

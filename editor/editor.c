@@ -164,6 +164,35 @@ void 		destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
+static void draw_portal_in_red_to_buffer(t_editor *edt, SDL_Surface *buff, t_wall *portal)
+{
+    t_line  line;
+
+    line.buff = buff;
+    line.color = 0xffff0000;
+    line.doom = edt->parent;
+    line.x1 = portal->start.x;
+    line.y1 = portal->start.y;
+    line.x2 = portal->end.x;
+    line.y2 = portal->end.y;
+    render_line(&line);
+}
+
+static void redraw_portals_in_red(t_editor *edt)
+{
+    int pc;
+    t_wall *portal;
+
+    pc = edt->portal_count;
+    portal = edt->portal_begin;
+    while (pc--)
+    {
+        draw_portal_in_red_to_buffer(edt, edt->buff, portal);
+        portal = portal->next;
+    }
+    //ft_putendl("Redrew all portals in red.");
+}
+
 void        create_grid_buffer(t_editor *edt)
 {
 	int x;
@@ -482,6 +511,7 @@ static void dehighlight_room_selection(t_editor *edt)
 	edt->selection_status = 0;
 	edt->selection_room_id = -1;
 	ft_putendl("Deselected and dehighlighted a room from blue back to white.");
+    redraw_portals_in_red(edt);
 }
 
 static void highlight_room_selection(t_editor *edt)
@@ -517,6 +547,7 @@ static void highlight_room_selection(t_editor *edt)
 		wall = wall->next;
 	}
 	ft_putendl("Selected and highlighted a room in blue.");
+    redraw_portals_in_red(edt);
 }
 
 static void edt_left_click(t_doom *doom)
@@ -759,10 +790,9 @@ static void raw_move_by_id(t_editor *edt, int room_id, int delta_x, int delta_y)
 	room->visual.x += delta_x;
 	room->visual.y += delta_y;
 	circle_visual(edt->buff, &room->visual, 0xffffffff);
-	expand_room_polygon_map(room, edt->parent);
+	expand_room_polygon_map(room, edt->parent, edt->poly_map, edt->conversion_colors);
 	print_corners(edt->buff, room, 0xffffffff);
 	print_room(edt->parent, edt->buff, room, 0xff0000ff);
-	highlight_subselection(edt, 0xffff00ff);
 }
 
 static void move_portals_of_room(t_editor *edt, t_room *room, int delta_x, int delta_y)
@@ -835,6 +865,7 @@ static void move_selection(t_editor *edt, int originator, int delta_x, int delta
 	circle_visual(edt->buff, &room->visual, 0xff000000);
 	// Here, below, the actual data manipulation takes place. Portals are not updated, but must be!
 	// Therefore, below, is a new function, for that, move_portals_of_room()
+	highlight_subselection(edt, 0xff000000);
 	if (originator)
 		move_portals_of_room(edt, room, delta_x, delta_y);
 	count = room->wall_count;
@@ -851,7 +882,7 @@ static void move_selection(t_editor *edt, int originator, int delta_x, int delta
 	room->visual.y += delta_y;
 	circle_visual(edt->buff, &room->visual, 0xffffffff);
 	// Must recreate polygon to polymap.
-	expand_room_polygon_map(room, edt->parent);
+	expand_room_polygon_map(room, edt->parent, edt->poly_map, edt->conversion_colors);
 	// Must recreate pixels to buffer with default blue color, marking the persisting selection
 	print_corners(edt->buff, room, 0xffffffff);
 	print_room(edt->parent, edt->buff, room, 0xff0000ff);
@@ -861,6 +892,8 @@ static void move_selection(t_editor *edt, int originator, int delta_x, int delta
 	// UNDONE
 	//ft_putendl("Moved selection at Editor.");
 	//MUST ALSO MOVE CONNECTED ROOMS AND PORTALS AND RESPECT THE GRAPHICAL REPRESENTATIONS
+	//MUST REDRAW PORTALS IN RED
+	redraw_portals_in_red(edt);
 }
 
 static void move_subselection(t_editor *edt, int delta_x, int delta_y)
@@ -872,6 +905,7 @@ static void move_subselection(t_editor *edt, int delta_x, int delta_y)
 	// THIS NEEDS TO UPDATE POLYMAP AS WELL
 	if (edt->subselection_wall != NULL)
 	{
+	    //highlight_subselection(edt, 0xff000000);
 		wipe_print_selection_room(edt);
 		wall = edt->wall_begin;
 		count = edt->wall_count;
@@ -924,6 +958,119 @@ static void cycle_subselection(t_editor *edt)
 	ft_putendl("Cycling subselection at Editor, SPACE key was pressed.");
 }
 
+static void remove_selected_rooms_walls(t_editor *edt, t_room *room)
+{
+    int wc;
+    int redistribute_from_id;
+    t_wall *wall;
+    t_wall *next;
+
+    redistribute_from_id = room->first_wall->id - 1;
+    wc = room->wall_count;
+    edt->wall_count -= wc;
+    wall = room->first_wall;
+    next = wall->next;
+    free(wall);
+    while (wc--)
+    {
+        wall = next;
+        next = wall->next;
+        free(wall);
+    }
+    // Took care of freeing memory used by deleted walls above
+
+    // Taking care of redistributing ids for the wall ids below
+    wc = edt->wall_count;
+    wall = edt->wall_begin;
+    while (wc-- && wall->id != redistribute_from_id)
+        wall = wall->next;
+    // Arriving at the correct wall to start redistributions from. We link it to the next surviving wall.
+    wall->next = next;
+    wall = wall->next;
+    // Now iterate through the surviving walls, redistributing the ids.
+    while (wc--)
+    {
+        wall->id = ++redistribute_from_id;
+        wall = wall->next;
+    }
+    // Assert things?
+}
+
+static void remove_selected_room_data(t_editor *edt)
+{
+    int     rc;
+    int     redistribute_from_id;
+    t_room  *room;
+    t_room  *next;
+
+    rc = edt->room_count;
+    room = edt->room_first;
+    while (rc-- && room->id != edt->selection_room_id)
+        room = room->next;
+    remove_selected_rooms_walls(edt, room);
+    //remove_selected_rooms_portals(edt, room);
+
+    // Saving the next valid room after soon-to-be-deleted room into "next"
+    next = room->next;
+    // Calculating the last valid ID after which the redistribution of room IDs will begin
+    redistribute_from_id = room->id - 1;
+    // Deallocating memory and deletion of the data.
+    free(room);
+    edt->room_count--;
+    // Special case, deleting the first room
+    if (redistribute_from_id == -1)
+    {
+        ft_putendl("Special case, reassigning room_first and exiting deletion function.");
+        edt->room_first = next;
+        rc = edt->room_count;
+        room = edt->room_first;
+        while (rc--)
+        {
+            room->id = ++redistribute_from_id;
+            room = room->next;
+        }
+        return ;
+    }
+    // Iterating to the room that comes just before the room that will be deleted
+    rc = edt->room_count;
+    room = edt->room_first;
+    while (rc-- && room->id != redistribute_from_id)
+        room = room->next;
+    // Here, arrived at the valid room. Swap its next pointer to the previously saved next room.
+    printf("rc is %d | Room arrived at, id is %d | redistribute_from_id is %d\n", rc, room->id, redistribute_from_id);
+    room->next = next;
+    room = room->next;
+    // Continue iterating, redistributing ids in a while loop
+    printf("Holy infinite loop god start!\n");
+    while (rc--)
+    {
+        printf("Holy infinite loop ongoing!\n");
+        room->id = ++redistribute_from_id;
+        printf("rc is %d | new room_id was %d\n", rc, room->id);
+        expand_room_polygon_map(room, edt->parent, edt->poly_map, &edt->conversion_colors);
+        ft_putendl("Redrew to polymap with new color based off new ID.");
+        room = room->next;
+    }
+    printf("Holy infinite loop jesus end!\n");
+}
+
+static void remove_selected_room(t_editor *edt)
+{
+    int     rc;
+    t_room  *room;
+
+    printf("Room count before wipes: %d\n", edt->room_count);
+    rc = edt->room_count;
+    room = edt->room_first;
+    while (rc-- && room->id != edt->selection_room_id)
+        room = room->next;
+    wipe_print_selection_room(edt);
+    wipe_room_polygon_map(room, edt->parent);
+    remove_selected_room_data(edt);
+    ft_putendl("Wiped selected room from buffer and data.");
+    printf("Room count after wipes: %d\n", edt->room_count);
+}
+
 void		edt_render(t_doom *doom)
 {
     /* Manual debugging for room_id_query
@@ -965,6 +1112,7 @@ void		edt_render(t_doom *doom)
 	*/
 	static int delta = 5;
 	static int cycling_lock = 0;
+    static int delete_lock = 0;
 
 	if (doom->edt->selection_status && (doom->keystates[SDL_SCANCODE_LSHIFT] || doom->keystates[SDL_SCANCODE_RSHIFT]))
 	{
@@ -977,9 +1125,15 @@ void		edt_render(t_doom *doom)
 		if (doom->keystates[SDL_SCANCODE_RIGHT])
 			move_subselection(doom->edt, delta, 0);
 	}
+	else if (doom->edt->selection_status && doom->keystates[SDL_SCANCODE_DELETE] && !delete_lock)
+    {
+	    //ft_putendl("Delete detected.");
+	    delete_lock = 1;
+	    remove_selected_room(doom->edt);
+    }
 	else if (doom->edt->selection_status && doom->keystates[SDL_SCANCODE_SPACE] && !cycling_lock)
 	{
-		ft_putendl("Space detected.");
+		//ft_putendl("Space detected.");
 		cycling_lock = 1;
 		highlight_subselection(doom->edt, 0xffffffff);
 		cycle_subselection(doom->edt);
@@ -996,6 +1150,8 @@ void		edt_render(t_doom *doom)
 		if (doom->keystates[SDL_SCANCODE_RIGHT])
 			move_selection(doom->edt, 1, (delta*2), 0);
 	}
+	if (delete_lock && doom->keystates[SDL_SCANCODE_DELETE] == 0)
+	    delete_lock = 0;
 	if (cycling_lock && doom->keystates[SDL_SCANCODE_SPACE] == 0)
 		cycling_lock = 0;
 	// SAVE BUFFER AS IT WAS TO GRID TEMP
