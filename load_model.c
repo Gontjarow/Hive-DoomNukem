@@ -45,6 +45,16 @@ static void init_model(t_doom *doom)
 	doom->mdl->enemy_count = 0;
 	doom->mdl->player.rot_horizontal = 0;
 	doom->mdl->player.rot_vertical = 0;
+	doom->mdl->player.is_jumping = 0;
+	doom->mdl->player.is_crouching = 0;
+	doom->mdl->player.is_running = 0;
+	doom->mdl->player.height = 100;
+	doom->mdl->player.min_speed = 5;	// crouched
+	doom->mdl->player.mov_speed = 10;	// walking
+	doom->mdl->player.max_speed = 20;	// running
+	doom->mdl->player.rot_speed = 5;
+	doom->mdl->player.run_lock = 0;
+	doom->mdl->player.crouch_lock = 0;
 }
 
 void 		destroy_model(t_doom *doom)
