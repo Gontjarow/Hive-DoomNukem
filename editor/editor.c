@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 void 		init_edt(t_doom *doom, int argc, char **argv)
 {
@@ -23,7 +23,7 @@ void 		init_edt(t_doom *doom, int argc, char **argv)
 	doom->edt->win = SDL_CreateWindow("DoomNukem Level Editor", SDL_WINDOWPOS_CENTERED,
 									  SDL_WINDOWPOS_CENTERED, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 0);
 	doom->edt->buff = SDL_GetWindowSurface(doom->edt->win);
-	flood_window(doom->edt->buff, 0xff000000);
+	flood_buffer(doom->edt->buff, 0xff000000);
 
 	doom->edt->walls = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->edt->walls)
@@ -199,9 +199,9 @@ void        create_grid_buffer(t_editor *edt)
 	int y;
 
 	edt->grid_buffer = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
-	flood_window(edt->grid_buffer, 0x00000000);
+	flood_buffer(edt->grid_buffer, 0x00000000);
 	edt->grid_temp = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
-	flood_window(edt->grid_temp, 0xff000000);
+	flood_buffer(edt->grid_temp, 0xff000000);
 	SDL_SetColorKey(edt->grid_temp, SDL_TRUE, 0xff000000);
 	if (edt->grid_buffer == NULL || edt->grid_temp == NULL)
 		ft_die("Fatal error: SDL_CreateRGBSurface() failed at create_grid_buffer for grid_buffer or grid_temp.");
@@ -235,8 +235,8 @@ static void hover_highlight_room_to_buffer(int room_id, t_editor *edt)
 	count = room->wall_count;
 	wall = room->first_wall;
 	// Create separate front_buffer?
-	flood_window(edt->front_buffer, 0x00000000);
-	flood_window(edt->back_buffer, 0xff000000);
+	flood_buffer(edt->front_buffer, 0x00000000);
+	flood_buffer(edt->back_buffer, 0xff000000);
 	highlight.doom = edt->parent;
 	highlight.buff = edt->front_buffer;
 	while (count--)
@@ -258,8 +258,8 @@ static void hover_highlight_room_to_buffer(int room_id, t_editor *edt)
 static void dehover(t_editor *edt)
 {
 	SDL_BlitSurface(edt->back_buffer, NULL, edt->buff, NULL);
-	flood_window(edt->back_buffer, 0xff000000);
-	flood_window(edt->front_buffer, 0x00000000);
+	flood_buffer(edt->back_buffer, 0xff000000);
+	flood_buffer(edt->front_buffer, 0x00000000);
 	//SDL_UpdateWindowSurface(edt->win);
 	//ft_putendl("Dehover blitted.");
 }
@@ -1188,16 +1188,16 @@ if (!doom->keystates[SDL_SCANCODE_SPACE] && was_blitted)
 	if (cycling_lock && doom->keystates[SDL_SCANCODE_SPACE] == 0)
 		cycling_lock = 0;
 	// SAVE BUFFER AS IT WAS TO GRID TEMP
-	flood_window(doom->edt->grid_temp, 0xff000000);
+	flood_buffer(doom->edt->grid_temp, 0xff000000);
 	SDL_BlitSurface(doom->edt->buff, NULL, doom->edt->grid_temp, NULL);
 	// NOW, CLEAR THE ACTUAL WINDOW BUFFER FOR COMPOSING IT FROM TWO BLITS, GRID AND THE ACTUAL BUFFER (FROM THE TEMP)
-	flood_window(doom->edt->buff, 0xff000000);
+	flood_buffer(doom->edt->buff, 0xff000000);
 	SDL_BlitSurface(doom->edt->grid_buffer, NULL, doom->edt->buff, NULL);
 	SDL_BlitSurface(doom->edt->grid_temp, NULL, doom->edt->buff, NULL);
 	// UPDATE THIS COMPOSITED IMAGE TO SCREEN
 	SDL_UpdateWindowSurface(doom->edt->win);
 	// NOW, CLEAR AND SWAP BACK THE ACTUAL BUFFER TO WHERE IT BELONGS TO
-	flood_window(doom->edt->buff, 0xff000000);
+	flood_buffer(doom->edt->buff, 0xff000000);
 	SDL_BlitSurface(doom->edt->grid_temp, NULL, doom->edt->buff, NULL);
 	// IN THE FUTURE, IF GRID IS TO STAY, REDUCE BLITS AND AUTO COMPOSE OF LAYERS BY DEFAULT ALWAYS!
 }

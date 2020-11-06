@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 void	*memset_f(void *b, double c, size_t len)
 {
@@ -37,7 +37,7 @@ void zbuffer_to_window(t_doom *doom)
 
 void render_frame(t_doom *doom)
 {
-	flood_window(doom->game->buff, 0x112233);
+	flood_buffer(doom->game->buff, 0x112233);
 	double *zbuffer = get_zbuffer();
 	memset_f(zbuffer, INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
 

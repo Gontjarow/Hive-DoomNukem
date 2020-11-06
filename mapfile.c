@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 void	update_player_string(t_editor *edt)
 {

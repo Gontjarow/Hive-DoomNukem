@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 void	load_sounds(t_doom *doom)
 {

@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 void	print_characters(t_editor *edt)
 {

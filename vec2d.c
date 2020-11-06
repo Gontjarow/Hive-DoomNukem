@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 void	modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end)
 {

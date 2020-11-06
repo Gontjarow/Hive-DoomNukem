@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 void		ft_die(const char *error_message)
 {

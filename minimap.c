@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 #include "minimap.h"
 
 void	print_minimap_walls(t_doom *doom)
@@ -149,7 +149,7 @@ void		destroy_minimap(t_doom *doom)
 
 void		update_minimap(t_doom *doom)
 {
-	flood_window(doom->minimap->buff, 0xff000000);
+	flood_buffer(doom->minimap->buff, 0xff000000);
 	print_minimap_walls(doom);
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);

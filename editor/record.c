@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 static int 	degree_rot(int x, int y, t_point *tail)
 {

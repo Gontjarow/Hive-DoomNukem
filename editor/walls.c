@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 int	wall_count_of_previous_rooms(t_editor *edt)
 {

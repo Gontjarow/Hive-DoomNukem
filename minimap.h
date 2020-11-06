@@ -13,7 +13,7 @@
 #ifndef MINIMAP_H
 # define MINIMAP_H
 
-# include "doom_nukem.h"
+# include "doom-nukem.h"
 # define MINIMAP_WIN_WIDTH 400
 # define MINIMAP_WIN_HEIGHT 400
 

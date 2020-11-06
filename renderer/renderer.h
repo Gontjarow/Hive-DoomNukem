@@ -1,7 +1,7 @@
 #ifndef RENDERER_H
 # define RENDERER_H
 
-# include "doom_nukem.h"
+# include "doom-nukem.h"
 # include <assert.h>
 
 # define T_DIR 0.0

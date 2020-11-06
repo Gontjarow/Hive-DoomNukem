@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 static void init_model(t_doom *doom)
 {
@@ -33,7 +33,7 @@ static void init_model(t_doom *doom)
     doom->mdl->poly_map = SDL_CreateRGBSurfaceWithFormat(0, 5000, 5000, 32, SDL_GetWindowPixelFormat(doom->win));
     if (!doom->mdl->poly_map)
         ft_die("Fatal error: SDL_CreateRGBSurfaceWithFormat failed to create poly_map for doom->mdl struct at init_model.");
-    flood_window(doom->mdl->poly_map, 0xffffffff);
+    flood_buffer(doom->mdl->poly_map, 0xffffffff);
     init_conversion_colors(doom->mdl->conversion_colors);
 	doom->mdl->wall_first = NULL;
 	doom->mdl->room_first = NULL;

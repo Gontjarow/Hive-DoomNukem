@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 #include <stdio.h>
 
 void    output_walls(int wall_count, t_wall *walls)

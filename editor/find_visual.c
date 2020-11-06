@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 static t_tri_sides room_first_triangle(t_room *room)
 {

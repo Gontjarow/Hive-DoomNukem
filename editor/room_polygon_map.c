@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 int				room_id_from_pixel(SDL_Surface *buff, int x, int y)
 {
@@ -51,10 +51,10 @@ void        create_room_polygon_map(t_editor *edt)
     edt->back_buffer = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
 	edt->front_buffer = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
 	printf("Pixel format for edt->win is %s\n", SDL_GetPixelFormatName(SDL_GetWindowPixelFormat(edt->win)));
-    flood_window(edt->buff, 0xff000000);
-    flood_window(edt->poly_map, 0xffffffff);
-    flood_window(edt->back_buffer, 0xff000000);
-    flood_window(edt->front_buffer, 0x00000000);
+    flood_buffer(edt->buff, 0xff000000);
+    flood_buffer(edt->poly_map, 0xffffffff);
+    flood_buffer(edt->back_buffer, 0xff000000);
+    flood_buffer(edt->front_buffer, 0x00000000);
 	SDL_SetColorKey(edt->front_buffer, SDL_TRUE, 0x00000000);
     if (edt->poly_map == NULL || edt->back_buffer == NULL || edt->front_buffer == NULL)
         ft_die("Fatal error: SDL_CreateRGBSurface() failed at create_room_polygon_map for poly_map or front_buffer or back_buffer.");

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 void 		init_game(t_doom *doom, int argc, char **argv)
 {
@@ -23,7 +23,7 @@ void 		init_game(t_doom *doom, int argc, char **argv)
 	if (!doom->game->win)
 		ft_die("Fatal error: SDL_CreateWindow failed at init_game.");
 	doom->game->buff = SDL_GetWindowSurface(doom->game->win);
-	flood_window(doom->game->buff, 0xff000000);
+	flood_buffer(doom->game->buff, 0xff000000);
 	if (!doom->game->win)
 		ft_die("Fatal error: SDL_GetWindowSurface failed at init_game.");
 	doom->game->map_supplied = 0;

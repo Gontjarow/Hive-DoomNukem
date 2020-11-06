@@ -1,4 +1,4 @@
-#include "doom_nukem.h"
+#include "doom-nukem.h"
 
 static void		link_rooms(t_editor *edt)
 {
