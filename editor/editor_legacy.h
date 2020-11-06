@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   editor.h                                           :+:      :+:    :+:   */
+/*   editor_legacy.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/06 14:57:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/11/06 14:59:44 by krusthol         ###   ########.fr       */
+/*   Created: 2020/09/20 18:07:53 by krusthol          #+#    #+#             */
+/*   Updated: 2020/09/20 18:09:44 by krusthol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EDITOR_H
-# define EDITOR_H
-
-#include "objects.h"
-#include <stdint.h>
+#ifndef EDITOR_LEGACY_H
+# define EDITOR_LEGACY_H
 
 /*
+#include "objects.h"
+#include <stdint.h>
 ** *
 ** Level Editor struct
 ** *
 */
-
+/*
 struct 					s_player;
 struct 					s_point;
 typedef struct 			s_doom t_doom;
@@ -83,7 +82,7 @@ typedef struct 			s_editor
 	int 				overwrite_map;
 	char 				*map_path;
 	struct s_doom		*parent;
-	uint32_t            conversion_colors[512];
+    uint32_t            conversion_colors[512];
 }						t_editor;
 
 void			transfer_model_to_editor(t_doom *doom);
@@ -93,13 +92,15 @@ void			edt_mouse_motion(t_doom *doom);
 void 			edt_mouse_down(t_doom *doom);
 void			edt_render(t_doom *doom);
 void            create_grid_buffer(t_editor *edt);
-
+*/
 /* from walls.c */
+/*
 int				wall_count_of_previous_rooms(t_editor *edt);
 t_wall 			*wall_by_count(t_editor *edt, int count);
 t_wall			*wall_by_id(t_editor *edt, int id);
-
+*/
 /* from draw_editor.c */
+/*
 void			print_portals(t_editor *edt);
 void			print_characters(t_editor *edt);
 void			print_walls(t_editor *edt);
@@ -108,21 +109,24 @@ void			circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color);
 void			circle_room(t_doom *doom, t_room *room);
 void			circle_player(t_doom *doom);
 void			circle_enemy(t_doom *doom);
-
+*/
 /* from find_visual.c */
+/*
 void			find_visual_xy(t_editor *edt, t_room *room);
-
+*/
 /* from record.c */
+/*
 void			create_strings_from_state(t_editor *edt);
 void			record_room(t_editor *edt);
 void			record_enemy(int x, int y, t_editor *edt);
 void			record_player(int x, int y, t_editor *edt);
 void 			record_portal(t_editor *edt);
-
+/*
 /* from room_polygon_map.c */
+/*
 int				room_id_from_pixel(SDL_Surface *buff, int x, int y);
 void            create_room_polygon_map(t_editor *edt);
 void	 		wipe_room_polygon_map(t_room *room, t_doom *doom);
 void            expand_room_polygon_map(t_room *room, t_doom *doom, struct SDL_Surface *poly_map, uint32_t *conversion_colors);
-
+*/
 #endif

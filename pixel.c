@@ -27,18 +27,15 @@ void	flood_window(SDL_Surface *buff, uint32_t color)
 
 void 	set_pixel(SDL_Surface *buff, int x, int y, uint32_t color)
 {
-	unsigned int	*pixels;
-	int 			location;
-	int 			limit;
+	uint32_t	*pixels;
+	int 		location;
+	int 		limit;
 
 	location = x + buff->w * y;
 	limit = buff->w * buff->h;
 	pixels = buff->pixels;
 	if (location >= limit || location < 0)
-	{
-		//printf("Warning: Set pixel tried to set pixel at %d, %d which is outside buffer memory area. Operation was blocked.\n", x, y);
-		return ;
-	}
+		return (ft_putendl("Warning: set_pixel called to set a pixel outside buffer memory area. Operation was blocked."));
 	pixels[location] = color;
 }
 

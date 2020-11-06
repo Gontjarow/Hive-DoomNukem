@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   editor.c		                                    :+:      :+:    :+:   */
+/*   editor_legacy.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/06/11 15:11:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/06/11 15:12:23 by krusthol         ###   ########.fr       */
+/*   Created: 2020/09/14 17:41:00 by krusthol          #+#    #+#             */
+/*   Updated: 2020/09/14 18:02:23 by krusthol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/*
 #include "doom_nukem.h"
 
 void 		init_edt(t_doom *doom, int argc, char **argv)
@@ -1119,33 +1119,33 @@ void		edt_render(t_doom *doom)
 		else
 			printf("Room_id at location %d, %d was %d\n", mouse_x, mouse_y, queried_room_id);
 	}*/
-/* Manual debugging for polymap
-static int	was_blitted = 0;
-if (doom->keystates[SDL_SCANCODE_SPACE] && !was_blitted)
-{
-	// SAVE BUFFER OF THE WINDOW TO BACK BUFFER
-	SDL_BlitSurface(doom->edt->buff, NULL, doom->edt->back_buffer, NULL);
-	// COPY OVER THE WINDOWS BUFFER WITH POLY MAP BUFFER
-	SDL_BlitSurface(doom->edt->poly_map, NULL, doom->edt->buff, NULL);
-	SDL_UpdateWindowSurface(doom->edt->win);
-	// LOCK BLITTING WITH SPACE HELD
-	was_blitted = 1;
-	ft_putendl("Activating poly_map view.");
-}
-if (!doom->keystates[SDL_SCANCODE_SPACE] && was_blitted)
-{
-	// WHEN SPACE NOT HELD ANYMORE, BLIT SAVED BACK BUFFER ONTO WINDOW BUFFER AGAIN
-	SDL_BlitSurface(doom->edt->back_buffer, NULL, doom->edt->buff, NULL);
-	SDL_UpdateWindowSurface(doom->edt->win);
-	// NORMALIZE STATE
-	was_blitted = 0;
-	ft_putendl("Returning screen to normal.");
-}
-*/
-
+	/* Manual debugging for polymap
+	static int	was_blitted = 0;
+    if (doom->keystates[SDL_SCANCODE_SPACE] && !was_blitted)
+    {
+        // SAVE BUFFER OF THE WINDOW TO BACK BUFFER
+        SDL_BlitSurface(doom->edt->buff, NULL, doom->edt->back_buffer, NULL);
+        // COPY OVER THE WINDOWS BUFFER WITH POLY MAP BUFFER
+        SDL_BlitSurface(doom->edt->poly_map, NULL, doom->edt->buff, NULL);
+        SDL_UpdateWindowSurface(doom->edt->win);
+        // LOCK BLITTING WITH SPACE HELD
+        was_blitted = 1;
+        ft_putendl("Activating poly_map view.");
+    }
+    if (!doom->keystates[SDL_SCANCODE_SPACE] && was_blitted)
+    {
+        // WHEN SPACE NOT HELD ANYMORE, BLIT SAVED BACK BUFFER ONTO WINDOW BUFFER AGAIN
+        SDL_BlitSurface(doom->edt->back_buffer, NULL, doom->edt->buff, NULL);
+        SDL_UpdateWindowSurface(doom->edt->win);
+        // NORMALIZE STATE
+        was_blitted = 0;
+        ft_putendl("Returning screen to normal.");
+    }
+	*/
+	/*
 	static int delta = 5;
 	static int cycling_lock = 0;
-	static int delete_lock = 0;
+    static int delete_lock = 0;
 
 	if (doom->edt->selection_status && (doom->keystates[SDL_SCANCODE_LSHIFT] || doom->keystates[SDL_SCANCODE_RSHIFT]))
 	{
@@ -1159,11 +1159,11 @@ if (!doom->keystates[SDL_SCANCODE_SPACE] && was_blitted)
 			move_subselection(doom->edt, delta, 0);
 	}
 	else if (doom->edt->selection_status && doom->keystates[SDL_SCANCODE_DELETE] && !delete_lock)
-	{
-		//ft_putendl("Delete detected.");
-		delete_lock = 1;
-		remove_selected_room(doom->edt);
-	}
+    {
+	    //ft_putendl("Delete detected.");
+	    delete_lock = 1;
+	    remove_selected_room(doom->edt);
+    }
 	else if (doom->edt->selection_status && doom->keystates[SDL_SCANCODE_SPACE] && !cycling_lock)
 	{
 		//ft_putendl("Space detected.");
@@ -1184,7 +1184,7 @@ if (!doom->keystates[SDL_SCANCODE_SPACE] && was_blitted)
 			move_selection(doom->edt, 1, (delta*2), 0);
 	}
 	if (delete_lock && doom->keystates[SDL_SCANCODE_DELETE] == 0)
-		delete_lock = 0;
+	    delete_lock = 0;
 	if (cycling_lock && doom->keystates[SDL_SCANCODE_SPACE] == 0)
 		cycling_lock = 0;
 	// SAVE BUFFER AS IT WAS TO GRID TEMP
@@ -1195,9 +1195,10 @@ if (!doom->keystates[SDL_SCANCODE_SPACE] && was_blitted)
 	SDL_BlitSurface(doom->edt->grid_buffer, NULL, doom->edt->buff, NULL);
 	SDL_BlitSurface(doom->edt->grid_temp, NULL, doom->edt->buff, NULL);
 	// UPDATE THIS COMPOSITED IMAGE TO SCREEN
-	SDL_UpdateWindowSurface(doom->edt->win);
-	// NOW, CLEAR AND SWAP BACK THE ACTUAL BUFFER TO WHERE IT BELONGS TO
+    SDL_UpdateWindowSurface(doom->edt->win);
+    // NOW, CLEAR AND SWAP BACK THE ACTUAL BUFFER TO WHERE IT BELONGS TO
 	flood_window(doom->edt->buff, 0xff000000);
 	SDL_BlitSurface(doom->edt->grid_temp, NULL, doom->edt->buff, NULL);
 	// IN THE FUTURE, IF GRID IS TO STAY, REDUCE BLITS AND AUTO COMPOSE OF LAYERS BY DEFAULT ALWAYS!
 }
+*/
