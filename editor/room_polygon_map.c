@@ -44,7 +44,7 @@ void        init_conversion_colors(uint32_t conversion_colors[512])
         i++;
     }
 }
-
+/*
 void        create_room_polygon_map(t_editor *edt)
 {
     edt->poly_map = SDL_CreateRGBSurfaceWithFormat(0, 5000, 5000, 32, SDL_GetWindowPixelFormat(edt->win));
@@ -60,7 +60,7 @@ void        create_room_polygon_map(t_editor *edt)
         ft_die("Fatal error: SDL_CreateRGBSurface() failed at create_room_polygon_map for poly_map or front_buffer or back_buffer.");
     ft_putendl("Created room polygon map and front and back buffer!");
     init_conversion_colors(edt->conversion_colors);
-}
+}*/
 
 static int  find_nearest_x(int farthest, t_room *room)
 {
@@ -176,7 +176,7 @@ static int  inside_room(int x, int y, t_room *room)
     // Odd or even bitwise magic.
     return (cn&1);
 }
-
+/*
 void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
 {
 	int bounding_x_upper_limit;
@@ -203,7 +203,7 @@ void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
 		x = x_start;
 		y++;
 	}
-}
+}*/
 
 void        expand_room_polygon_map(t_room *room, t_doom *doom, SDL_Surface *poly_map, uint32_t *conversion_colors)
 {

@@ -1,5 +1,5 @@
 #include "doom-nukem.h"
-
+/*
 void	print_characters(t_editor *edt)
 {
 	t_enemy *enemy;
@@ -104,7 +104,7 @@ void	circle_rooms(t_doom *doom)
 		room = room->next;
 	}
 }
-
+*/
 void 	circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color)
 {
 	unsigned int *pixels;
@@ -152,7 +152,7 @@ void	circle_room(t_doom *doom, t_room *room)
 		x = -radius;
 	}
 }
-
+/*
 void	circle_player(t_doom *doom)
 {
 	unsigned int *pixels;
@@ -200,4 +200,4 @@ void	circle_enemy(t_doom *doom)
 		x = -radius;
 	}
 }
-
+*/

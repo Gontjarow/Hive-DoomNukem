@@ -1,5 +1,5 @@
 #include "doom-nukem.h"
-
+/*
 int	wall_count_of_previous_rooms(t_editor *edt)
 {
 	int 	rc;
@@ -46,3 +46,4 @@ t_wall	*wall_by_id(t_editor *edt, int id)
 	ft_die("Fatal error: Could not find a wall by its ID in wall_by_id.");
 	return (NULL);
 }
+*/

@@ -12,6 +12,46 @@
 
 #include "doom-nukem.h"
 
+void 		init_edt(t_doom *doom)
+{
+	doom->edt->win = SDL_CreateWindow("DoomNukem Level Editor", SDL_WINDOWPOS_CENTERED,
+									  SDL_WINDOWPOS_CENTERED, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 0);
+	if (!doom->edt->win)
+		ft_die("Fatal error: Could not create DoomNukem Level Editor window.");
+	doom->edt->buff = SDL_GetWindowSurface(doom->edt->win);
+	if (!doom->edt->buff)
+		ft_die("Fatal error: Could not retrieve buffer of Level Editor window.");
+	flood_buffer(doom->edt->buff, 0xff000000);
+	doom->edt->parent = doom;
+}
+
+void 		destroy_edt(t_doom *doom)
+{
+	SDL_FreeSurface(doom->edt->buff);
+	SDL_DestroyWindow(doom->edt->win);
+	doom->edt->win = NULL;
+	doom->edt->buff = NULL;
+	doom->edt->parent = NULL;
+	free(doom->edt);
+	doom->edt = NULL;
+}
+
+void 		edt_mouse_motion(t_doom *doom)
+{
+
+}
+
+void 		edt_mouse_down(t_doom *doom)
+{
+
+}
+
+void		edt_render(t_doom *doom)
+{
+
+}
+
+#if 0
 void 		init_edt(t_doom *doom, int argc, char **argv)
 {
 	int opened;
@@ -1201,3 +1241,4 @@ if (!doom->keystates[SDL_SCANCODE_SPACE] && was_blitted)
 	SDL_BlitSurface(doom->edt->grid_temp, NULL, doom->edt->buff, NULL);
 	// IN THE FUTURE, IF GRID IS TO STAY, REDUCE BLITS AND AUTO COMPOSE OF LAYERS BY DEFAULT ALWAYS!
 }
+#endif

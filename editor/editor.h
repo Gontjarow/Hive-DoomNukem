@@ -16,6 +16,22 @@
 #include "objects.h"
 #include <stdint.h>
 
+typedef struct 			s_doom t_doom;
+
+typedef struct 			s_editor
+{
+	struct SDL_Window	*win;
+	struct SDL_Surface	*buff;
+	struct s_doom		*parent;
+}						t_editor;
+
+void 			init_edt(t_doom *doom);
+void	 		destroy_edt(t_doom *doom);
+void 			edt_mouse_motion(t_doom *doom);
+void 			edt_mouse_down(t_doom *doom);
+void			edt_render(t_doom *doom);
+
+#if 0
 /*
 ** *
 ** Level Editor struct
@@ -24,7 +40,6 @@
 
 struct 					s_player;
 struct 					s_point;
-typedef struct 			s_doom t_doom;
 typedef struct 			SDL_Surface SDL_Surface;
 
 typedef struct 			s_editor
@@ -87,8 +102,6 @@ typedef struct 			s_editor
 }						t_editor;
 
 void			transfer_model_to_editor(t_doom *doom);
-void 			init_edt(t_doom *doom, int argc, char **argv);
-void	 		destroy_edt(t_doom *doom);
 void			edt_mouse_motion(t_doom *doom);
 void 			edt_mouse_down(t_doom *doom);
 void			edt_render(t_doom *doom);
@@ -124,5 +137,7 @@ int				room_id_from_pixel(SDL_Surface *buff, int x, int y);
 void            create_room_polygon_map(t_editor *edt);
 void	 		wipe_room_polygon_map(t_room *room, t_doom *doom);
 void            expand_room_polygon_map(t_room *room, t_doom *doom, struct SDL_Surface *poly_map, uint32_t *conversion_colors);
+
+#endif
 
 #endif

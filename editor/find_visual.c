@@ -1,5 +1,5 @@
 #include "doom-nukem.h"
-
+/*
 static t_tri_sides room_first_triangle(t_room *room)
 {
 	t_point		*s;
@@ -296,3 +296,4 @@ void	find_visual_xy(t_editor *edt, t_room *room)
 	}
 }
 
+*/

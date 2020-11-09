@@ -10,7 +10,7 @@ static int 	degree_rot(int x, int y, t_point *tail)
 	result += 180.0;
 	return ((int)result);
 }
-
+/*
 void		create_strings_from_state(t_editor *edt)
 {
 	int		count;
@@ -155,4 +155,4 @@ void 	record_portal(t_editor *edt)
 	edt->portals->next = next_portal;
 	edt->portals = next_portal;
 	print_walls(edt);
-}
+}*/

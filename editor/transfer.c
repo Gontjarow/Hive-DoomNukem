@@ -1,5 +1,5 @@
 #include "doom-nukem.h"
-
+/*
 static void		link_rooms(t_editor *edt)
 {
 	t_room *room;
@@ -61,5 +61,5 @@ void			transfer_model_to_editor(t_doom *doom)
 		doom->edt->last_enemy.y = doom->edt->enemies->y;
 	}
 	doom->edt->enemies = doom->mdl->enemies;
-}
+}*/
 

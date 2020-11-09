@@ -173,7 +173,7 @@ typedef struct			s_game
 ** *
 */
 
-typedef struct	s_doom
+typedef struct			s_doom
 {
 	int 				quit;
 	int 				edt_quit;

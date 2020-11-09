@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
-
+/*
 void	update_player_string(t_editor *edt)
 {
 		edt->join_string = ft_strnew(255);
@@ -159,4 +159,4 @@ int 	overwrite_mapfile(t_editor *edt)
 	edt->write_maps = 0;
 	return (1);
 }
-
+*/

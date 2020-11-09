@@ -491,13 +491,13 @@ int			load_model(t_doom *doom)
 	init_model(doom);
 	if (!doom->edt_quit)
 	{
-		if (!doom->edt->load_map)
-			return (0);
-		if (!read_mapfile(doom, doom->edt->map_path))
-			return (0);
-		ft_putstr("Loaded mapfile data from file: ");
-		ft_putendl(doom->edt->map_path);
-		parse_mapfile(doom, doom->mdl);
+		//if (!doom->edt->load_map)
+		//	return (0);
+		//if (!read_mapfile(doom, doom->edt->map_path))
+		//	return (0);
+		//ft_putstr("Loaded mapfile data from file: ");
+		//ft_putendl(doom->edt->map_path);
+		//parse_mapfile(doom, doom->mdl);
 	}
 	else if (!doom->game_quit) {
 		if (!doom->game->map_supplied)
