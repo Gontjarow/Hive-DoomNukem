@@ -18,6 +18,23 @@
 
 typedef struct 			s_doom t_doom;
 
+typedef void 			(*gui_click)(int x, int y);
+typedef void 			(*gui_motion)(int x, int y);
+
+typedef struct 			s_gui
+{
+	gui_click  			left_click;
+	gui_click			middle_click;
+	gui_click			right_click;
+	int 				has_motion;
+	gui_motion			motion;
+}						t_gui;
+
+typedef struct 			s_state
+{
+	struct s_gui		*gui;
+}						t_state;
+
 typedef struct 			s_editor
 {
 	struct SDL_Window	*win;

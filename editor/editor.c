@@ -12,8 +12,62 @@
 
 #include "doom-nukem.h"
 
+void 		polydraw_motion(int x, int y)
+{
+	printf("%d, %d polydraw motion\n", x, y);
+}
+
+void 		polydraw_left_click(int x, int y)
+{
+	ft_putendl("Polydraw left_clicked");
+}
+
+void 		polydraw_right_click(int x, int y)
+{
+	ft_putendl("Polydraw right_clicked");
+}
+
+void 		polydraw_middle_click(int x, int y)
+{
+	ft_putendl("Polydraw middle_clicked");
+}
+
+t_gui		*mode_polydraw()
+{
+	static t_gui *polydraw = NULL;
+	if (!polydraw)
+	{
+		polydraw = (t_gui*)malloc(sizeof(t_gui));
+		if (!polydraw)
+			ft_die("Fatal error: Could not malloc polydraw struct at mode_polydraw.");
+		polydraw->left_click = polydraw_left_click;
+		polydraw->right_click = polydraw_right_click;
+		polydraw->middle_click = polydraw_middle_click;
+		polydraw->has_motion = 1;
+		polydraw->motion = polydraw_motion;
+	}
+	return (polydraw);
+}
+
+t_state		*get_state(void)
+{
+	static t_state *state = NULL;
+	if (!state)
+	{
+		state = (t_state*)malloc(sizeof(t_state));
+		if (!state)
+			ft_die("Fatal error: Could not malloc state struct at get_state");
+		state->gui = mode_polydraw();
+	}
+	return (state);
+}
+
 void 		init_edt(t_doom *doom)
 {
+	doom->edt = (t_editor*)malloc(sizeof(t_editor));
+	if (!doom->edt)
+		ft_die("Fatal error: Mallocing level editor struct failed at init_edt.");
+	doom->edt->parent = doom;
 	doom->edt->win = SDL_CreateWindow("DoomNukem Level Editor", SDL_WINDOWPOS_CENTERED,
 									  SDL_WINDOWPOS_CENTERED, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 0);
 	if (!doom->edt->win)
@@ -22,7 +76,6 @@ void 		init_edt(t_doom *doom)
 	if (!doom->edt->buff)
 		ft_die("Fatal error: Could not retrieve buffer of Level Editor window.");
 	flood_buffer(doom->edt->buff, 0xff000000);
-	doom->edt->parent = doom;
 }
 
 void 		destroy_edt(t_doom *doom)
@@ -38,17 +91,29 @@ void 		destroy_edt(t_doom *doom)
 
 void 		edt_mouse_motion(t_doom *doom)
 {
+	t_state	*state;
 
+	state = get_state();
+	if (state->gui->has_motion)
+		state->gui->motion(doom->event.motion.x, doom->event.motion.y);
 }
 
 void 		edt_mouse_down(t_doom *doom)
 {
+	t_state	*state;
 
+	state = get_state();
+	if (doom->event.button.button == SDL_BUTTON_LEFT)
+		state->gui->left_click(doom->event.button.x, doom->event.button.y);
+	if (doom->event.button.button == SDL_BUTTON_MIDDLE)
+		state->gui->middle_click(doom->event.button.x, doom->event.button.y);
+	if (doom->event.button.button == SDL_BUTTON_RIGHT)
+		state->gui->right_click(doom->event.button.x, doom->event.button.y);
 }
 
 void		edt_render(t_doom *doom)
 {
-
+	SDL_UpdateWindowSurface(doom->edt->win);
 }
 
 #if 0
