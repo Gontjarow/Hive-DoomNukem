@@ -12,24 +12,83 @@
 
 #include "doom-nukem.h"
 
+void 		polydraw_start(t_status *status)
+{
+	assert(status->phase == 0);
+	status->phase = 1;
+	ft_putendl("Polydraw start");
+}
+
+void 		polydraw_continue(t_status *status)
+{
+	assert(status->phase == 1);
+	status->phase = 2;
+	ft_putendl("Polydraw continue");
+}
+
+void 		polydraw_end(t_status *status)
+{
+	assert(status->phase == 2);
+	status->phase = 0;
+	ft_putendl("Polydraw end");
+}
+
+void 		polydraw_reset(t_status *status)
+{
+	status->phase = 0;
+	ft_putendl("Polydraw reset");
+}
+
+t_status	*polydraw_status()
+{
+	static t_status *status = NULL;
+	if (!status)
+	{
+		status = (t_status*)malloc(sizeof(t_status));
+		if (!status)
+			ft_die("Fatal error: Could not malloc status for polydraw at polydraw_status");
+		status->phase = 0;
+		status->phase_count = 3;
+		status->phases = (gui_action*)malloc(sizeof(gui_action) * status->phase_count);
+		status->phases[0] = polydraw_start;
+		status->phases[1] = polydraw_continue;
+		status->phases[2] = polydraw_end;
+		status->reset = polydraw_reset;
+	}
+	return (status);
+}
+
 void 		polydraw_motion(int x, int y)
 {
-	printf("%d, %d polydraw motion\n", x, y);
+	if (x % 10 == 0 && y % 10 == 0)
+		printf("%d, %d polydraw motion\n", x, y);
 }
 
 void 		polydraw_left_click(int x, int y)
 {
-	ft_putendl("Polydraw left_clicked");
+	//ft_putendl("Polydraw left_clicked");
+	t_status		*status;
+
+	status = polydraw_status();
+	status->click_x = x;
+	status->click_y = y;
+	status->phases[status->phase](status);
 }
 
 void 		polydraw_right_click(int x, int y)
 {
-	ft_putendl("Polydraw right_clicked");
+	//ft_putendl("Polydraw right_clicked");
+	t_status		*status;
+
+	status = polydraw_status();
+	status->click_x = x;
+	status->click_y = y;
+	status->reset(status);
 }
 
 void 		polydraw_middle_click(int x, int y)
 {
-	ft_putendl("Polydraw middle_clicked");
+	//ft_putendl("Polydraw middle_clicked");
 }
 
 t_gui		*mode_polydraw()

@@ -17,9 +17,22 @@
 #include <stdint.h>
 
 typedef struct 			s_doom t_doom;
+typedef struct			s_status t_status;
 
 typedef void 			(*gui_click)(int x, int y);
 typedef void 			(*gui_motion)(int x, int y);
+typedef void 			(*gui_action)(t_status *status);
+
+typedef struct 			s_status
+{
+	struct s_gui		*gui;
+	int					phase;
+	int					phase_count;
+	gui_action			*phases;
+	gui_action			reset;
+	int 				click_x;
+	int 				click_y;
+}						t_status;
 
 typedef struct 			s_gui
 {
