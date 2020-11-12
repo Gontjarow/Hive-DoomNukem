@@ -23,6 +23,21 @@ typedef void 			(*gui_click)(int x, int y);
 typedef void 			(*gui_motion)(int x, int y);
 typedef void 			(*gui_action)(t_status *status);
 
+typedef struct 			s_2d_layer
+{
+    struct SDL_Surface	*buff;
+    int                 rendering_on;
+}						t_2d_layer;
+
+typedef struct 			s_linedraw
+{
+    int                 drawing_underway;
+    int                 draw_from_x;
+    int                 draw_from_y;
+    int                 draw_to_x;
+    int                 draw_to_y;
+}						t_linedraw;
+
 typedef struct 			s_status
 {
 	struct s_gui		*gui;
@@ -32,6 +47,7 @@ typedef struct 			s_status
 	gui_action			reset;
 	int 				click_x;
 	int 				click_y;
+	void                *data;
 }						t_status;
 
 typedef struct 			s_gui

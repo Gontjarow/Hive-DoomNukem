@@ -9,7 +9,6 @@
 /*   Updated: 2020/09/14 18:02:23 by krusthol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/*
 #include "doom_nukem.h"
 
 void 		init_edt(t_doom *doom, int argc, char **argv)
@@ -1104,8 +1103,7 @@ static void remove_selected_room(t_editor *edt)
 
 void		edt_render(t_doom *doom)
 {
-    /* Manual debugging for room_id_query */
-/*
+     Manual debugging for room_id_query 
     static int	mouse_x = 0;
     static int	mouse_y = 0;
     static int 	queried_room_id = -1;
@@ -1118,8 +1116,8 @@ void		edt_render(t_doom *doom)
 			printf("At location %d, %d there was empty space and no room_id found\n", mouse_x, mouse_y);
 		else
 			printf("Room_id at location %d, %d was %d\n", mouse_x, mouse_y, queried_room_id);
-	}*/
-	/* Manual debugging for polymap
+	}
+	Manual debugging for polymap
 	static int	was_blitted = 0;
     if (doom->keystates[SDL_SCANCODE_SPACE] && !was_blitted)
     {
@@ -1141,8 +1139,6 @@ void		edt_render(t_doom *doom)
         was_blitted = 0;
         ft_putendl("Returning screen to normal.");
     }
-	*/
-	/*
 	static int delta = 5;
 	static int cycling_lock = 0;
     static int delete_lock = 0;
@@ -1201,4 +1197,3 @@ void		edt_render(t_doom *doom)
 	SDL_BlitSurface(doom->edt->grid_temp, NULL, doom->edt->buff, NULL);
 	// IN THE FUTURE, IF GRID IS TO STAY, REDUCE BLITS AND AUTO COMPOSE OF LAYERS BY DEFAULT ALWAYS!
 }
-*/

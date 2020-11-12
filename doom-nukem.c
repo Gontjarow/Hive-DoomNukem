@@ -107,6 +107,7 @@ int			main(int argc, char **argv)
 	uint32_t		frame_ticks;
 
 	init_doom(&doom);
+	singleton_doom_pointer((void*)&doom);
 	init_menu(&doom);
 	while (!doom.quit)
 	{

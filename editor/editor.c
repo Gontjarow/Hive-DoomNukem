@@ -12,24 +12,119 @@
 
 #include "doom-nukem.h"
 
+t_2d_layer     *editor_back_buffer(void)
+{
+    static t_2d_layer *layer = NULL;
+    if (!layer)
+    {
+        layer = (t_2d_layer*)malloc(sizeof(t_2d_layer));
+        if (!layer)
+            ft_die("Fatal error: Could not malloc layer at editor_front_buffer.");
+        layer->buff = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT,
+            32,SDL_GetWindowPixelFormat
+            (singleton_doom_pointer(NULL)->edt->win));
+        if (!layer->buff)
+            ft_die("Fatal error: Could not malloc SDL_Surface at editor_front_buffer.");
+        layer->rendering_on = 1;
+        flood_buffer(layer->buff, 0xff000000);
+    }
+    return (layer);
+}
+
+t_2d_layer     *editor_front_buffer(void)
+{
+    static t_2d_layer *layer = NULL;
+    if (!layer)
+    {
+        layer = (t_2d_layer*)malloc(sizeof(t_2d_layer));
+        if (!layer)
+            ft_die("Fatal error: Could not malloc layer at editor_front_buffer.");
+        layer->buff = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT,
+            32,SDL_GetWindowPixelFormat
+            (singleton_doom_pointer(NULL)->edt->win));
+        if (!layer->buff)
+            ft_die("Fatal error: Could not malloc SDL_Surface at editor_front_buffer.");
+        SDL_SetColorKey(layer->buff, SDL_TRUE, 0xff000000);
+        layer->rendering_on = 0;
+        flood_buffer(layer->buff, 0xff000000);
+    }
+    return (layer);
+}
+
+static void linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color)
+{
+    t_line          line;
+
+    line.doom = singleton_doom_pointer(NULL);
+    line.buff = buff;
+    line.color = color;
+    line.x1 = data->draw_from_x;
+    line.y1 = data->draw_from_y;
+    line.x2 = data->draw_to_x;
+    line.y2 = data->draw_to_y;
+    render_line(&line);
+}
+
+static void linedraw_to_wall(t_linedraw *data)
+{
+    t_wall *wall;
+
+    wall = get_model()->walls;
+    wall->id = get_model()->wall_count;
+    wall->start.x = data->draw_from_x;
+    wall->start.y = data->draw_from_y;
+    wall->end.x = data->draw_to_x;
+    wall->end.y = data->draw_to_y;
+    get_model()->wall_count++;
+    wall = (t_wall*)malloc(sizeof(t_wall));
+    if (!wall)
+        ft_die("Fatal error: Could not malloc t_wall at linedraw_to_wall.");
+    if (get_model()->wall_count == 1)
+        get_model()->wall_first = get_model()->walls;
+    get_model()->walls->next = wall;
+    get_model()->walls = wall;
+    ft_putendl("Linedraw_to_wall: Added a wall to model->walls");
+}
+
 void 		polydraw_start(t_status *status)
 {
-	assert(status->phase == 0);
+    t_linedraw      *data;
+
+    data = (t_linedraw*)status->data;
+    assert(status->phase == 0);
+    data->drawing_underway = 1;
+    data->draw_from_x = status->click_x;
+    data->draw_from_y = status->click_y;
 	status->phase = 1;
 	ft_putendl("Polydraw start");
 }
 
 void 		polydraw_continue(t_status *status)
 {
+    t_linedraw      *data;
+
+    data = (t_linedraw*)status->data;
 	assert(status->phase == 1);
-	status->phase = 2;
+	assert(data->drawing_underway == 1);
+	data->draw_to_x = status->click_x;
+	data->draw_to_y = status->click_y;
+    linedraw_to_wall(data);
+    linedraw_to_buffer(data, editor_back_buffer()->buff, 0xffffffff);
+    editor_back_buffer()->rendering_on = 1;
+    *data = (t_linedraw){1, status->click_x, status->click_y, 0};
+	//status->phase = 2;
 	ft_putendl("Polydraw continue");
 }
 
 void 		polydraw_end(t_status *status)
 {
+    t_linedraw      *data;
+
+    data = (t_linedraw*)status->data;
 	assert(status->phase == 2);
 	status->phase = 0;
+	*data = (t_linedraw){0};
+	// Requires expansion so that line is drawn to original location.
 	ft_putendl("Polydraw end");
 }
 
@@ -47,6 +142,9 @@ t_status	*polydraw_status()
 		status = (t_status*)malloc(sizeof(t_status));
 		if (!status)
 			ft_die("Fatal error: Could not malloc status for polydraw at polydraw_status");
+		status->data = (t_linedraw*)malloc(sizeof(t_linedraw));
+		if (!status->data)
+            ft_die("Fatal error: Could not malloc data for polydraw at polydraw_status");
 		status->phase = 0;
 		status->phase_count = 3;
 		status->phases = (gui_action*)malloc(sizeof(gui_action) * status->phase_count);
@@ -54,14 +152,38 @@ t_status	*polydraw_status()
 		status->phases[1] = polydraw_continue;
 		status->phases[2] = polydraw_end;
 		status->reset = polydraw_reset;
-	}
+		// TODO QUICK ITEMS:
+		//  MAP POLYDRAW_RESET to POLYDRAW_MIDDLE_CLICK
+		//  DISABLE WIPING OF DATA, INSTEAD SELECTIVELY OVERWRITE FIELDS
+		//  TRACK HOW MANY WALLS TO DESTROY ON RESET
+		//  TRACK WHICH WALL IS THE ORIGINAL WALL OF THE POLYDRAW SEQUENCE
+		//  POLYDRAW_RESET WILL DESTROY CREATED WALLS
+
+		// TODO LARGE ITEMS:
+		//  WHEN WITHIN THRESHOLD PROXIMITY OF ORIGIN WALL, DO:
+		//      MAGNETIZATION AND SEQUENCE ENDING LINKED TO THE PROXIMITY
+		//      GUI HOVERING CIRCLE HIGHLIGHTING DRAWING TO FRONT BUFFER
+    }
 	return (status);
 }
 
-void 		polydraw_motion(int x, int y)
+void 		polydraw_mouse_motion(int x, int y)
 {
-	if (x % 10 == 0 && y % 10 == 0)
-		printf("%d, %d polydraw motion\n", x, y);
+    t_linedraw      *data;
+
+    // Check if polydraw_status->phase is not polydraw_continue() to early exit!
+	if (polydraw_status()->phase != 1)
+	    return ;
+	// When the phase is polydraw_continue(), draw a line at the front buffer
+	data = polydraw_status()->data;
+	assert(data->drawing_underway);
+	assert(data->draw_from_x >= 0 && data->draw_from_x < EDT_WIN_WIDTH &&
+	        data->draw_from_y >= 0 && data->draw_from_y < EDT_WIN_HEIGHT);
+	data->draw_to_x = x;
+	data->draw_to_y = y;
+	flood_buffer(editor_front_buffer()->buff, 0xff000000);
+    linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
+	editor_front_buffer()->rendering_on = 1;
 }
 
 void 		polydraw_left_click(int x, int y)
@@ -81,14 +203,31 @@ void 		polydraw_right_click(int x, int y)
 	t_status		*status;
 
 	status = polydraw_status();
+    // Check if polydraw_status->phase is not polydraw_continue() to early exit!
+    if (status->phase != 1)
+        return ;
+    // When the phase is polydraw_continue(), proceed a cycle of polydraw_continue() followed
+    // by the polydraw_end(). Invoke them in order with the "reflection", to maintain
+    // coherence and code style and logic unity with polydraw_left_click function.
 	status->click_x = x;
 	status->click_y = y;
-	status->reset(status);
+	// This invokes polydraw_continue()
+    status->phases[status->phase](status);
+    status->phase++;
+    assert(status->phase == 2);
+    // This invokes polydraw_end()
+    status->phases[status->phase](status);
 }
 
 void 		polydraw_middle_click(int x, int y)
 {
 	//ft_putendl("Polydraw middle_clicked");
+    t_status		*status;
+
+    status = polydraw_status();
+    status->click_x = x;
+    status->click_y = y;
+    status->reset(status);
 }
 
 t_gui		*mode_polydraw()
@@ -103,10 +242,17 @@ t_gui		*mode_polydraw()
 		polydraw->right_click = polydraw_right_click;
 		polydraw->middle_click = polydraw_middle_click;
 		polydraw->has_motion = 1;
-		polydraw->motion = polydraw_motion;
+		polydraw->motion = polydraw_mouse_motion;
 	}
 	return (polydraw);
 }
+
+/* get_state returns the overall "State" of the editor. In the field state->gui,
+ * you can assign a GUI mode, that are retrieved from their Singleton functions.
+ * For example, for the get_state() initial state, state->gui = mode_polydraw();
+ * assigns the GUI's action state to polydraw mode, which is a mode that draws
+ * polygons using mouse clicks. By following the mode_polydraw() trail, you can
+ * explore and find out how the polydraw_* functions are organized and coded. */
 
 t_state		*get_state(void)
 {
@@ -170,8 +316,39 @@ void 		edt_mouse_down(t_doom *doom)
 		state->gui->right_click(doom->event.button.x, doom->event.button.y);
 }
 
+static SDL_Surface *mixing_surface()
+{
+    static SDL_Surface *buff = NULL;
+    if (!buff)
+    {
+        buff = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT,
+                                       32,SDL_GetWindowPixelFormat
+                                               (singleton_doom_pointer(NULL)->edt->win));
+        if (!buff)
+            ft_die("Fatal error: Could not malloc SDL_Surface at mixing_surface.");
+        flood_buffer(buff, 0xff000000);
+    }
+    return (buff);
+}
+
 void		edt_render(t_doom *doom)
 {
+    if (editor_front_buffer()->rendering_on)
+    {
+        flood_buffer(mixing_surface(), 0xff000000);
+        SDL_BlitSurface(editor_back_buffer()->buff, NULL, mixing_surface(), NULL);
+        SDL_BlitSurface(editor_front_buffer()->buff, NULL, mixing_surface(), NULL);
+        flood_buffer(doom->edt->buff, 0xff000000);
+        SDL_BlitSurface(mixing_surface(), NULL, doom->edt->buff, NULL);
+        editor_front_buffer()->rendering_on = 0;
+        editor_back_buffer()->rendering_on = 0;
+    }
+    else if (editor_back_buffer()->rendering_on)
+    {
+        flood_buffer(doom->edt->buff, 0xff000000);
+        SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+        editor_back_buffer()->rendering_on = 0;
+    }
 	SDL_UpdateWindowSurface(doom->edt->win);
 }
 

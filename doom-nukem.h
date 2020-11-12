@@ -339,4 +339,12 @@ void	 		destroy_model(t_doom *doom);
  * */
 
 void            output_walls(int wall_count, t_wall *walls);
+void            output_rooms(int room_count, t_room *rooms);
+
+/*
+ * from singleton_links.c
+ * */
+
+t_doom          *singleton_doom_pointer(void *doom);
+t_model         *get_model(void);
 #endif
