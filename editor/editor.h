@@ -31,6 +31,7 @@ typedef struct 			s_2d_layer
 
 typedef struct 			s_linedraw
 {
+    int                 origin_id;
     int                 drawing_underway;
     int                 draw_from_x;
     int                 draw_from_y;

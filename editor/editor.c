@@ -92,6 +92,7 @@ void 		polydraw_start(t_status *status)
 
     data = (t_linedraw*)status->data;
     assert(status->phase == 0);
+    data->origin_id = get_model()->wall_count;
     data->drawing_underway = 1;
     data->draw_from_x = status->click_x;
     data->draw_from_y = status->click_y;
@@ -111,7 +112,7 @@ void 		polydraw_continue(t_status *status)
     linedraw_to_wall(data);
     linedraw_to_buffer(data, editor_back_buffer()->buff, 0xffffffff);
     editor_back_buffer()->rendering_on = 1;
-    *data = (t_linedraw){1, status->click_x, status->click_y, 0};
+    *data = (t_linedraw){data->origin_id, 1, status->click_x, status->click_y, 0};
 	//status->phase = 2;
 	ft_putendl("Polydraw continue");
 }
@@ -128,9 +129,34 @@ void 		polydraw_end(t_status *status)
 	ft_putendl("Polydraw end");
 }
 
-void 		polydraw_reset(t_status *status)
-{
+void 		polydraw_reset(t_status *status) {
+    t_linedraw *data;
+    t_wall *wall;
+    int wc;
+
+    // TODO
+    //  SHOULD DESTROY THUS FAR CREATED WALLS IN THE ABORTED SEQUENCE
+    //  ITERATE MDL->WALLS TO DATA->ORIGIN_ID
+    //  ITERATE FROM THIS POINT UNTIL END OF MDL->WALLS
+    //  REDRAW EACH WALL IN BLACK TO EDITOR BACK BUFFER
+    data = (t_linedraw *) status->data;
+    wc = data->origin_id;
+    wall = get_model()->wall_first;
+    while (wc--)
+        wall = wall->next;
+    wc = get_model()->wall_count - data->origin_id;
+    while (wc--)
+    {
+        //wall_to_buffer(wall, editor_back_buffer()->buff, 0xff000000);
+        // TODO: GENERATE ABOVE FUNCTION!
+        printf("wall_id %d wiped\n", wall->id);
+        wall = wall->next;
+    }
 	status->phase = 0;
+    *data = (t_linedraw){0};
+    flood_buffer(editor_front_buffer()->buff, 0xff000000);
+    editor_front_buffer()->rendering_on = 0;
+    editor_back_buffer()->rendering_on = 1;
 	ft_putendl("Polydraw reset");
 }
 
@@ -153,7 +179,6 @@ t_status	*polydraw_status()
 		status->phases[2] = polydraw_end;
 		status->reset = polydraw_reset;
 		// TODO QUICK ITEMS:
-		//  MAP POLYDRAW_RESET to POLYDRAW_MIDDLE_CLICK
 		//  DISABLE WIPING OF DATA, INSTEAD SELECTIVELY OVERWRITE FIELDS
 		//  TRACK HOW MANY WALLS TO DESTROY ON RESET
 		//  TRACK WHICH WALL IS THE ORIGINAL WALL OF THE POLYDRAW SEQUENCE
@@ -221,13 +246,9 @@ void 		polydraw_right_click(int x, int y)
 
 void 		polydraw_middle_click(int x, int y)
 {
-	//ft_putendl("Polydraw middle_clicked");
-    t_status		*status;
-
-    status = polydraw_status();
-    status->click_x = x;
-    status->click_y = y;
-    status->reset(status);
+    //ft_putendl("Polydraw middle_clicked");
+    // Have mapped polydraw_status->reset (polydraw_reset) to polydraw_middle_click here.
+    polydraw_status()->reset(polydraw_status());
 }
 
 t_gui		*mode_polydraw()
