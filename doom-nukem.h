@@ -314,10 +314,6 @@ void 			game_mouse_down(t_doom *doom);
 void			game_key_down(t_doom *doom);
 
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
-void 			render_line(t_line *l);
-
-void			flood_buffer(SDL_Surface *buff, uint32_t color);
-void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 
 void			add_wall_to_string(t_editor *edt, t_wall *wall);
 void			expand_wall_string(t_editor *edt);
@@ -335,9 +331,24 @@ int 			load_model(t_doom *doom);
 void	 		destroy_model(t_doom *doom);
 
 /*
+ * from line.c and line_safe.c
+ * */
+void			render_line_safe(t_line *l);
+void 			render_line(t_line *l);
+
+/*
+ * from pixel.c
+ * */
+void			flood_buffer(SDL_Surface *buff, uint32_t color);
+void			set_protected_color(uint32_t color);
+int 			set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
+void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
+
+/*
  * from debug_console.c
  * */
 
+void 			debug_model_walls(void);
 void            output_walls(int wall_count, t_wall *walls);
 void            output_rooms(int room_count, t_room *rooms);
 

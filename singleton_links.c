@@ -13,7 +13,7 @@ t_model     *get_model(void)
 {
     static t_model *mdl_ptr = NULL;
     if (!mdl_ptr)
-        mdl_ptr = singleton_doom_pointer(NULL);
+        mdl_ptr = singleton_doom_pointer(NULL)->mdl;
     return (mdl_ptr);
 }
 

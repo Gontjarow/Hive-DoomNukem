@@ -18,6 +18,7 @@
 
 typedef struct 			s_doom t_doom;
 typedef struct			s_status t_status;
+typedef struct 			SDL_Surface SDL_Surface;
 
 typedef void 			(*gui_click)(int x, int y);
 typedef void 			(*gui_motion)(int x, int y);
@@ -72,11 +73,58 @@ typedef struct 			s_editor
 	struct s_doom		*parent;
 }						t_editor;
 
+void 			trigger_protection(int clear);
 void 			init_edt(t_doom *doom);
 void	 		destroy_edt(t_doom *doom);
 void 			edt_mouse_motion(t_doom *doom);
 void 			edt_mouse_down(t_doom *doom);
 void			edt_render(t_doom *doom);
+
+/*
+ * from walls.c
+ * */
+
+void			wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
+void			x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
+void			relink_model_walls(t_wall *relinking_wall);
+
+/*
+ * from editor_buffers.c
+ * */
+
+void 				wipe_editor_back_buffer(uint32_t color);
+void 				wipe_editor_front_buffer(uint32_t color);
+t_2d_layer			*editor_back_buffer(void);
+t_2d_layer			*editor_front_buffer(void);
+SDL_Surface			*mixing_surface();
+
+/*
+ * from linedraw.c
+ * */
+
+void			init_linedraw_data(void *data_ptr);
+void			linedraw_to_buffer_safe(t_linedraw *data, SDL_Surface *buff, uint32_t color);
+void			linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color);
+void			linedraw_to_wall(t_linedraw *data);
+
+/*
+ * from polydraw.c
+ * */
+
+void 			polydraw_start(t_status *status);
+void 			polydraw_continue(t_status *status);
+void 			polydraw_end(t_status *status);
+void			polydraw_reset(t_status *status);
+t_status		*polydraw_status();
+
+/*
+ * from polydraw_input.c
+ * */
+
+void 			polydraw_mouse_motion(int x, int y);
+void 			polydraw_left_click(int x, int y);
+void 			polydraw_right_click(int x, int y);
+void 			polydraw_middle_click(int x, int y);
 
 #if 0
 /*
@@ -87,7 +135,6 @@ void			edt_render(t_doom *doom);
 
 struct 					s_player;
 struct 					s_point;
-typedef struct 			SDL_Surface SDL_Surface;
 
 typedef struct 			s_editor
 {
