@@ -207,6 +207,7 @@ void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
 
 void        expand_room_polygon_map(t_room *room, t_doom *doom, SDL_Surface *poly_map, uint32_t *conversion_colors)
 {
+    // WORK IN PROGRESS
     int bounding_x_upper_limit;
     int bounding_y_upper_limit;
     int x_start;
@@ -229,6 +230,7 @@ void        expand_room_polygon_map(t_room *room, t_doom *doom, SDL_Surface *pol
             if (inside_room(x, y, room))
             {
                 set_pixel(poly_map, x, y, conversion_colors[room->id]);
+                printf("set_pixel(poly_map, %d, %d, %d)\n", x, y, conversion_colors[room->id]);
                 //printf("set_pixel(poly_map, x, y, conversion_colors[room->id])\n");
             }
             x++;

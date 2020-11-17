@@ -125,8 +125,8 @@ void	record_player(int x, int y, t_editor *edt)
 	{
 		edt->player.tail.x = x;
 		edt->player.tail.y = y;
-		start.x = edt->player.x;
-		start.y = edt->player.y;
+		start.x = (int)edt->player.x;
+		start.y = (int)edt->player.y;
 		modify_line_length(15, &start, &edt->player.tail, &edt->player.tail);
 		edt->player.rot = degree_rot(edt->player.x, edt->player.y, &edt->player.tail);
 		edt->player_set = 1;

@@ -328,8 +328,12 @@ static void parse_mapfile(t_doom *doom, t_model *mdl)
 	}
 	if (!doom->map->player_string)
 		ft_die("Fatal error: parse_mapfile player data missing from mapfile.");
+	int uncorrupt_x;
+	int uncorrupt_y;
 	tokens = sscanf(doom->map->player_string, "Player spawn: %d %d | rot: %d | tail: %d %d\n",
-		   &mdl->player.x, &mdl->player.y, &mdl->player.rot, &mdl->player.tail.x, &mdl->player.tail.y);
+		   &uncorrupt_x, &uncorrupt_y, &mdl->player.rot, &mdl->player.tail.x, &mdl->player.tail.y);
+	mdl->player.x = (double)uncorrupt_x;
+	mdl->player.y = (double)uncorrupt_y;
 	if (tokens != 5)
 		ft_die("Fatal error: parse_mapfile player tokens from mapfile did not equal to 5.");
 }
