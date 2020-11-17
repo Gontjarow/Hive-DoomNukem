@@ -49,6 +49,15 @@ typedef struct 			s_status
 	gui_action			reset;
 	int 				click_x;
 	int 				click_y;
+	int                 motion_x;
+	int                 motion_y;
+	int                 thread_permission;
+	int                 thread_x;
+	int                 thread_y;
+	int                 thread_hit;
+	int                 thread_target_id;
+	uint32_t            thread_color;
+	int                 job_running;
 	void                *data;
 }						t_status;
 
@@ -95,6 +104,8 @@ void			relink_model_walls(t_wall *relinking_wall);
 void 				wipe_editor_back_buffer(uint32_t color);
 void 				wipe_editor_front_buffer(uint32_t color);
 t_2d_layer			*editor_back_buffer(void);
+void                circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void                editor_front_buffer_hover_circle(int x, int y, int radius, uint32_t color);
 t_2d_layer			*editor_front_buffer(void);
 SDL_Surface			*mixing_surface();
 

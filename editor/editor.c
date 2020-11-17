@@ -12,10 +12,10 @@
 
 #include "doom-nukem.h"
 
-// TODO LARGE ITEMS:
-//		WHEN WITHIN THRESHOLD PROXIMITY OF ORIGIN WALL, DO:
-//      	MAGNETIZATION AND SEQUENCE ENDING LINKED TO THE PROXIMITY
-//      	GUI HOVERING CIRCLE HIGHLIGHTING DRAWING TO FRONT BUFFER
+// TODO NEXT FEATURE:
+//  MODE TO ADD ENEMY AND PLAYER OBJECTS
+//  ENABLE SAVING TO MAPFILE AGAIN
+//  MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
 
 void 				trigger_protection(int clear)
 {
@@ -121,7 +121,7 @@ void				edt_mouse_down(t_doom *doom)
 		state->gui->right_click(doom->event.button.x, doom->event.button.y);
 }
 
-void				editor_keydown_input(t_doom *doom) {
+void				editor_keystate_input(t_doom *doom) {
 	static int lock_w = 0;
 	static int lock_p = 0;
 
@@ -144,7 +144,7 @@ void				editor_keydown_input(t_doom *doom) {
 
 void				edt_render(t_doom *doom)
 {
-	editor_keydown_input(doom);
+	editor_keystate_input(doom);
     if (editor_front_buffer()->rendering_on)
     {
         flood_buffer(mixing_surface(), 0xff000000);

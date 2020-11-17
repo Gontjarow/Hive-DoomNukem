@@ -32,6 +32,49 @@ t_2d_layer     *editor_back_buffer(void)
 	return (layer);
 }
 
+void             circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color)
+{
+	unsigned int *pixels;
+	int address;
+	int x;
+	int y;
+
+	pixels = buff->pixels;
+	x = -radius;
+	y = -radius;
+	while (y <= radius)
+	{
+		while (x <= radius)
+		{
+			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
+			{
+				address = xy.x + x + (xy.y + y) * buff->w;
+				if (address >= 0 && address < buff->h * buff->w)
+					pixels[address] = color;
+				else
+					ft_putendl("circle_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
+			}
+			x++;
+		}
+		y++;
+		x = -radius;
+	}
+}
+
+void			editor_front_buffer_hover_circle(int x, int y, int radius, uint32_t color)
+{
+	static int          last_x = -1;
+	static int          last_y = -1;
+
+	if (last_x == x && last_y == y)
+		return ;
+	last_x = x;
+	last_y = y;
+	wipe_editor_front_buffer(0xff000000);
+	circle_to_buffer(editor_front_buffer()->buff, (t_point){x, y}, radius, color);
+	editor_front_buffer()->rendering_on = 1;
+}
+
 t_2d_layer     *editor_front_buffer(void)
 {
 	static t_2d_layer *layer = NULL;
