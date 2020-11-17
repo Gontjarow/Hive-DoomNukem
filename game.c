@@ -82,8 +82,8 @@ void		game_render(t_doom *doom)
 {
 	// These will be the doom->game key handling, right now it only supports the minimap
 	// but once the game can be tested with 3D rendering, these will work for both
-	int		x;
-	int		y;
+	double	x;
+	double	y;
 	double	rad;
 	if (doom->keystates[SDL_SCANCODE_ESCAPE])
 	{
@@ -93,9 +93,9 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_W])
 	{
 		// Walk forward
-		doom->mdl->player.x = doom->mdl->player.tail.x;
-		doom->mdl->player.y = doom->mdl->player.tail.y;
 		rad = deg_to_rad(doom->mdl->player.rot);
+		doom->mdl->player.x += ((double)doom->mdl->player.mov_speed) * -cos(rad);
+ 		doom->mdl->player.y += ((double)doom->mdl->player.mov_speed) * -sin(rad);
 		x = doom->mdl->player.x + doom->mdl->player.mov_speed * -cos(rad);
 		y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
@@ -106,12 +106,12 @@ void		game_render(t_doom *doom)
 	{
 		// Walk backward
 		rad = deg_to_rad(doom->mdl->player.rot);
+		doom->mdl->player.x -= ((double)doom->mdl->player.mov_speed) * -cos(rad);
+ 		doom->mdl->player.y -= ((double)doom->mdl->player.mov_speed) * -sin(rad);
 		x = doom->mdl->player.x - doom->mdl->player.mov_speed * -cos(rad);
 		y = doom->mdl->player.y - doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
-		doom->mdl->player.x = doom->mdl->player.tail.x;
-		doom->mdl->player.y = doom->mdl->player.tail.y;
 		printf("S key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_A])
