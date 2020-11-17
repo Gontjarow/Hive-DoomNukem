@@ -109,8 +109,8 @@ unsigned int		check_location(t_doom *doom)
 
 	pixels = (unsigned int*)doom->mdl->poly_map->pixels;
 	location = (int)doom->mdl->player.x + (int)doom->mdl->player.y * 5000;
-	if (location < 0 || ((5000 * 5000) -1))
-		return ;
+	if (location < 0 || location > ((5000 * 5000) -1))
+		return (9999999999);
 	int ret;
 	ret = (int)(pixels[location]);
 	return (ret);
