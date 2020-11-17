@@ -29,6 +29,8 @@ t_mesh			init_mesh(int n, ...);
 void			free_verts(t_face *face);
 void			free_faces(t_mesh *mesh);
 
+t_mesh			mesh_duplicate(t_mesh mesh);
+
 void			mesh_draw(unsigned int *surface, const t_mesh *mesh);
 t_mesh			mesh_transform(t_matrix matrix, t_mesh mesh);
 

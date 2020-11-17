@@ -56,13 +56,22 @@ void render_frame(t_doom *doom)
 	t_matrix	modelview = lookat_m(pos, vec3(0, 0, 0), vec3(0,1,0));
 	t_matrix	projection = project_pure_m();
 	t_matrix	window = window_m(0.1, 1000);
-	modelview = multiply_m(world, modelview);
+	// modelview = multiply_m(world, modelview);
 	modelview = multiply_m(projection, modelview);
 	// modelview = multiply_m(dimensions, modelview);
 
 
 	t_mesh		mv = mesh_transform(modelview, test);
-
+	printf("debug start\n");
+	for (int f = 0; f < mv.faces; ++f)
+	{
+		printf("%p = %f %f %f\n",
+			mv.face[f].vert,
+			mv.face[f].vert[0].w,
+			mv.face[f].vert[1].w,
+			mv.face[f].vert[2].w);
+	}
+	printf("debug end\n");
 	t_mesh		culled = mesh_clip(mv);
 
 	if (culled.faces == 0)
@@ -87,6 +96,11 @@ void render_frame(t_doom *doom)
 	// free_faces(&eye_mesh);
 	// free_faces(&clip_mesh);
 	// free_faces(&ndc_mesh);
+
+	// printf("%f\n", test.face[0].vert[0].w);
+	// printf("%f\n", mv.face[0].vert[0].w);
+	// printf("%f\n", ndc.face[0].vert[0].w);
+	// printf("%f\n", screen.face[0].vert[0].w);
 
 	int i = 0;
 	while (i < screen.faces)
