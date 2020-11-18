@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
+#include <stdint.h>
 
 void 		init_game(t_doom *doom, int argc, char **argv)
 {
@@ -78,13 +79,36 @@ static double deg_to_rad(int deg)
 	return (deg * M_PI / 180);
 }
 
+unsigned int		check_location(t_doom *doom)
+{
+	int				location;
+	unsigned int	*pixels;
+
+	pixels = (unsigned int*)doom->mdl->poly_map->pixels;
+	location = (int)doom->mdl->player.x + (int)doom->mdl->player.y * GAME_POLYMAP_WIDTH;
+	if (location < 0 || location > ((GAME_POLYMAP_WIDTH * GAME_POLYMAP_HEIGHT) -1))
+		return (UINT_ERROR_CONSTANT);
+	return ((int)(pixels[location]));
+	// printf("pro debug: %d\n", doom->mdl->poly_map[location]);
+}
+
 void		game_render(t_doom *doom)
 {
 	// These will be the doom->game key handling, right now it only supports the minimap
 	// but once the game can be tested with 3D rendering, these will work for both
 	int		x;
 	int		y;
+	int		location_id;
+	double	cur_x;
+	double	cur_y;
+	double	old_x;
+	double	old_y;
 	double	rad;
+
+	cur_x = doom->mdl->player.x;
+	cur_y = doom->mdl->player.y;
+	old_x = cur_x;
+	old_y = cur_y;
 	if (doom->keystates[SDL_SCANCODE_ESCAPE])
 	{
 		// Open menu, quit game...
@@ -93,9 +117,9 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_W])
 	{
 		// Walk forward
-		doom->mdl->player.x = doom->mdl->player.tail.x;
-		doom->mdl->player.y = doom->mdl->player.tail.y;
 		rad = deg_to_rad(doom->mdl->player.rot);
+		doom->mdl->player.x += ((double)doom->mdl->player.mov_speed) * -cos(rad);
+ 		doom->mdl->player.y += ((double)doom->mdl->player.mov_speed) * -sin(rad);
 		x = doom->mdl->player.x + doom->mdl->player.mov_speed * -cos(rad);
 		y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
@@ -106,12 +130,12 @@ void		game_render(t_doom *doom)
 	{
 		// Walk backward
 		rad = deg_to_rad(doom->mdl->player.rot);
+		doom->mdl->player.x -= ((double)doom->mdl->player.mov_speed) * -cos(rad);
+ 		doom->mdl->player.y -= ((double)doom->mdl->player.mov_speed) * -sin(rad);
 		x = doom->mdl->player.x - doom->mdl->player.mov_speed * -cos(rad);
 		y = doom->mdl->player.y - doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
-		doom->mdl->player.x = doom->mdl->player.tail.x;
-		doom->mdl->player.y = doom->mdl->player.tail.y;
 		printf("S key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_A])
@@ -172,7 +196,6 @@ void		game_render(t_doom *doom)
 
 	if (doom->keystates[SDL_SCANCODE_LSHIFT] && !doom->mdl->player.run_lock)
 	{
-		// Running button = LSHIFT ?
 		doom->mdl->player.run_lock = 1;
 		doom->mdl->player.is_running = 1;
 		printf("LSHIFT key pressed!\n");
@@ -187,10 +210,6 @@ void		game_render(t_doom *doom)
 		doom->mdl->player.mov_speed++;
 	else if (!doom->mdl->player.is_running && doom->mdl->player.mov_speed != 10 && !doom->mdl->player.crouch_lock)
 		doom->mdl->player.mov_speed--;
-
-	/*
-	**	Player Crouch Handling
-	*/
 
 	if (doom->keystates[SDL_SCANCODE_LCTRL] && !doom->mdl->player.crouch_lock)
 	{
@@ -214,7 +233,23 @@ void		game_render(t_doom *doom)
 	{
 		doom->mdl->player.height += 10;
 	}
+	/*
+	**	Player Collision Detection, checking if it's position is valid according to where he is currently located
+	*/
+	location_id = check_location(doom);
+	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT)
+	{
+		doom->mdl->player.x = old_x;
+		doom->mdl->player.y = old_y;
+	}
+	// ft_putnbr(check_location(doom));
+	// ft_putstr("= [");
+	// ft_putnbr(doom->mdl->player.x);
+	// ft_putstr(",");
+	// ft_putnbr(doom->mdl->player.y);
+	// ft_putendl("] <- poly_map value.");
 	update_minimap(doom);
 	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
+	
 }

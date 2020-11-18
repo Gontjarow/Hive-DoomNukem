@@ -16,7 +16,7 @@ void	update_player_string(t_editor *edt)
 {
 		edt->join_string = ft_strnew(255);
 		sprintf(edt->join_string, "Player spawn: %d %d | rot: %d | tail: %d %d\n",
-				edt->player.x, edt->player.y, edt->player.rot, edt->player.tail.x, edt->player.tail.y);
+				(int)edt->player.x, (int)edt->player.y, edt->player.rot, edt->player.tail.x, edt->player.tail.y);
 		if (edt->player_string)
 			free(edt->player_string);
 		edt->player_string = ft_strnew(1);

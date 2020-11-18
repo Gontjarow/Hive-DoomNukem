@@ -30,7 +30,7 @@ static void init_model(t_doom *doom)
 	doom->mdl->enemies = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!doom->mdl->enemies)
 		ft_die("Fatal error: Mallocing enemies struct failed at init_model.");
-    doom->mdl->poly_map = SDL_CreateRGBSurfaceWithFormat(0, 5000, 5000, 32, SDL_GetWindowPixelFormat(doom->win));
+    doom->mdl->poly_map = SDL_CreateRGBSurfaceWithFormat(0, GAME_POLYMAP_WIDTH, GAME_POLYMAP_HEIGHT, 32, SDL_GetWindowPixelFormat(doom->win));
     if (!doom->mdl->poly_map)
         ft_die("Fatal error: SDL_CreateRGBSurfaceWithFormat failed to create poly_map for doom->mdl struct at init_model.");
     flood_buffer(doom->mdl->poly_map, 0xffffffff);
@@ -328,8 +328,12 @@ static void parse_mapfile(t_doom *doom, t_model *mdl)
 	}
 	if (!doom->map->player_string)
 		ft_die("Fatal error: parse_mapfile player data missing from mapfile.");
+	int uncorrupt_x;
+	int uncorrupt_y;
 	tokens = sscanf(doom->map->player_string, "Player spawn: %d %d | rot: %d | tail: %d %d\n",
-		   &mdl->player.x, &mdl->player.y, &mdl->player.rot, &mdl->player.tail.x, &mdl->player.tail.y);
+		   &uncorrupt_x, &uncorrupt_y, &mdl->player.rot, &mdl->player.tail.x, &mdl->player.tail.y);
+	mdl->player.x = (double)uncorrupt_x;
+	mdl->player.y = (double)uncorrupt_y;
 	if (tokens != 5)
 		ft_die("Fatal error: parse_mapfile player tokens from mapfile did not equal to 5.");
 }

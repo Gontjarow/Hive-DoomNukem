@@ -121,7 +121,7 @@ void 	circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color)
 		while (x <= radius)
 		{
 			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
-				pixels[visual->x + x + ((visual->y + y) * EDT_WIN_WIDTH)] = color;
+				pixels[(int)visual->x + x + (((int)visual->y + y) * EDT_WIN_WIDTH)] = color;
 			x++;
 		}
 		y++;
@@ -145,7 +145,7 @@ void	circle_room(t_doom *doom, t_room *room)
 		while (x <= radius)
 		{
 			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
-				pixels[room->visual.x + x + ((room->visual.y + y) * EDT_WIN_WIDTH)] = 0xffffffff;
+				pixels[(int)room->visual.x + x + (((int)room->visual.y + y) * EDT_WIN_WIDTH)] = 0xffffffff;
 			x++;
 		}
 		y++;
@@ -169,7 +169,7 @@ void	circle_player(t_doom *doom)
 		while (x <= radius)
 		{
 			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
-				pixels[doom->edt->player.x + x + ((doom->edt->player.y + y) * EDT_WIN_WIDTH)] = 0xffffff00;
+				pixels[(int)doom->edt->player.x + x + (((int)doom->edt->player.y + y) * EDT_WIN_WIDTH)] = 0xffffff00;
 			x++;
 		}
 		y++;
@@ -193,7 +193,7 @@ void	circle_enemy(t_doom *doom)
 		while (x <= radius)
 		{
 			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
-				pixels[doom->edt->last_enemy.x + x + ((doom->edt->last_enemy.y + y) * EDT_WIN_WIDTH)] = 0xff00ff00;
+				pixels[(int)doom->edt->last_enemy.x + x + (((int)doom->edt->last_enemy.y + y) * EDT_WIN_WIDTH)] = 0xff00ff00;
 			x++;
 		}
 		y++;

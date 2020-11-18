@@ -24,8 +24,8 @@ void	print_minimap_walls(t_doom *doom)
 	//printf("Walls | wall_count %d\n------------------\n\n", wc);
 	while (wc--)
 	{
-		//printf("Wall id: %d | start: %d, %d | end: %d, %d\n",
-		//		wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
+		// printf("Wall id: %d | start: %d, %d | end: %d, %d\n",
+		// 		wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
 		while (wall->start.x * doom->minimap->scale > 400)
 			doom->minimap->scale -= 0.1;
 		while (wall->start.y * doom->minimap->scale > 400)
@@ -112,8 +112,8 @@ static void minimap_circle_player(t_doom *doom)
 	{
 		while (x <= radius)
 		{
-			scaled.x = doom->mdl->player.x * doom->minimap->scale;
-			scaled.y = doom->mdl->player.y * doom->minimap->scale;
+			scaled.x = (int)doom->mdl->player.x * doom->minimap->scale;
+			scaled.y = (int)doom->mdl->player.y * doom->minimap->scale;
 			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
 				pixels[scaled.x + x + ((scaled.y + y) * MINIMAP_WIN_WIDTH)] = 0xffffff00;
 			x++;
