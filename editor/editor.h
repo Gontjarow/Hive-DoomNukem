@@ -18,8 +18,11 @@
 
 typedef struct 			s_doom t_doom;
 typedef struct			s_status t_status;
+typedef struct          s_model t_model;
+typedef struct          s_state t_state;
 typedef struct 			SDL_Surface SDL_Surface;
 
+typedef void            (*gui_activation)(t_state *state);
 typedef void 			(*gui_click)(int x, int y);
 typedef void 			(*gui_motion)(int x, int y);
 typedef void 			(*gui_action)(t_status *status);
@@ -51,28 +54,30 @@ typedef struct 			s_status
 	int 				click_y;
 	int                 motion_x;
 	int                 motion_y;
-	int                 thread_permission;
-	int                 thread_x;
-	int                 thread_y;
-	int                 thread_hit;
-	int                 thread_target_id;
-	uint32_t            thread_color;
-	int                 job_running;
 	void                *data;
 }						t_status;
 
 typedef struct 			s_gui
 {
+    gui_activation      activate;
 	gui_click  			left_click;
 	gui_click			middle_click;
 	gui_click			right_click;
-	int 				has_motion;
 	gui_motion			motion;
+    int 				has_motion;
 }						t_gui;
 
 typedef struct 			s_state
 {
 	struct s_gui		*gui;
+    int                 thread_permission;
+    int                 thread_x;
+    int                 thread_y;
+    int                 thread_hit;
+    int                 thread_target_id;
+    uint32_t            thread_color;
+    int                 job_running;
+    int                 job_abort;
 }						t_state;
 
 typedef struct 			s_editor
@@ -82,6 +87,7 @@ typedef struct 			s_editor
 	struct s_doom		*parent;
 }						t_editor;
 
+t_state         *get_state(void);
 void 			trigger_protection(int clear);
 void 			init_edt(t_doom *doom);
 void	 		destroy_edt(t_doom *doom);
@@ -101,13 +107,12 @@ void			relink_model_walls(t_wall *relinking_wall);
  * from editor_buffers.c
  * */
 
-void 				wipe_editor_back_buffer(uint32_t color);
-void 				wipe_editor_front_buffer(uint32_t color);
-t_2d_layer			*editor_back_buffer(void);
-void                circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
-void                editor_front_buffer_hover_circle(int x, int y, int radius, uint32_t color);
-t_2d_layer			*editor_front_buffer(void);
-SDL_Surface			*mixing_surface();
+void            wipe_editor_back_buffer(uint32_t color);
+void            wipe_editor_front_buffer(uint32_t color);
+t_2d_layer      *editor_back_buffer(void);
+void            circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+t_2d_layer      *editor_front_buffer(void);
+SDL_Surface     *mixing_surface();
 
 /*
  * from linedraw.c
@@ -119,6 +124,13 @@ void			linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color);
 void			linedraw_to_wall(t_linedraw *data);
 
 /*
+ * from magnets.c
+ * */
+
+void            check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state);
+void            magnet_test(void* argv);
+
+/*
  * from polydraw.c
  * */
 
@@ -126,12 +138,13 @@ void 			polydraw_start(t_status *status);
 void 			polydraw_continue(t_status *status);
 void 			polydraw_end(t_status *status);
 void			polydraw_reset(t_status *status);
-t_status		*polydraw_status();
+void			polydraw_activate(t_state *state);
 
 /*
  * from polydraw_input.c
  * */
 
+t_status		*polydraw_status();
 void 			polydraw_mouse_motion(int x, int y);
 void 			polydraw_left_click(int x, int y);
 void 			polydraw_right_click(int x, int y);

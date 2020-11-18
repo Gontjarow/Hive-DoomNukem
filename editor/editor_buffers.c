@@ -22,8 +22,7 @@ t_2d_layer     *editor_back_buffer(void)
 		if (!layer)
 			ft_die("Fatal error: Could not malloc layer at editor_front_buffer.");
 		layer->buff = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT,
-													 32,SDL_GetWindowPixelFormat
-															 (singleton_doom_pointer(NULL)->edt->win));
+                    32,SDL_GetWindowPixelFormat(doom_ptr()->edt->win));
 		if (!layer->buff)
 			ft_die("Fatal error: Could not malloc SDL_Surface at editor_front_buffer.");
 		layer->rendering_on = 1;
@@ -61,20 +60,6 @@ void             circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uin
 	}
 }
 
-void			editor_front_buffer_hover_circle(int x, int y, int radius, uint32_t color)
-{
-	static int          last_x = -1;
-	static int          last_y = -1;
-
-	if (last_x == x && last_y == y)
-		return ;
-	last_x = x;
-	last_y = y;
-	wipe_editor_front_buffer(0xff000000);
-	circle_to_buffer(editor_front_buffer()->buff, (t_point){x, y}, radius, color);
-	editor_front_buffer()->rendering_on = 1;
-}
-
 t_2d_layer     *editor_front_buffer(void)
 {
 	static t_2d_layer *layer = NULL;
@@ -85,7 +70,7 @@ t_2d_layer     *editor_front_buffer(void)
 			ft_die("Fatal error: Could not malloc layer at editor_front_buffer.");
 		layer->buff = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT,
 													 32,SDL_GetWindowPixelFormat
-															 (singleton_doom_pointer(NULL)->edt->win));
+															 (doom_ptr()->edt->win));
 		if (!layer->buff)
 			ft_die("Fatal error: Could not malloc SDL_Surface at editor_front_buffer.");
 		SDL_SetColorKey(layer->buff, SDL_TRUE, 0xff000000);
@@ -102,7 +87,7 @@ SDL_Surface *mixing_surface()
 	{
 		buff = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT,
 											  32,SDL_GetWindowPixelFormat
-													  (singleton_doom_pointer(NULL)->edt->win));
+													  (doom_ptr()->edt->win));
 		if (!buff)
 			ft_die("Fatal error: Could not malloc SDL_Surface at mixing_surface.");
 		flood_buffer(buff, 0xff000000);

@@ -36,7 +36,7 @@ void        init_conversion_colors(uint32_t conversion_colors[512])
     conversion_colors[4] = 0xff00ffff;
     conversion_colors[5] = 0xffff00ff;
     */
-	ft_putendl("Conversion colors initialized.");
+	    //ft_putendl("Conversion colors initialized.");
     i = 0;
     while (i < 512)
     {

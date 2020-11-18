@@ -12,7 +12,7 @@ void	linedraw_to_buffer_safe(t_linedraw *data, SDL_Surface *buff, uint32_t color
 {
 	t_line	line;
 
-	line.doom = singleton_doom_pointer(NULL);
+	line.doom = doom_ptr();
 	line.buff = buff;
 	line.color = color;
 	line.x1 = data->draw_from_x;
@@ -26,7 +26,7 @@ void	linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color)
 {
 	t_line	line;
 
-	line.doom = singleton_doom_pointer(NULL);
+	line.doom = doom_ptr();
 	line.buff = buff;
 	line.color = color;
 	line.x1 = data->draw_from_x;

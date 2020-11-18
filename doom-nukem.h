@@ -29,6 +29,7 @@
 # include <stdint.h>
 # include <time.h>
 # include <math.h>
+# include <pthread.h>
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 512
@@ -192,6 +193,7 @@ typedef struct			s_doom
 	struct s_menu		*menu;
 	struct s_minimap    *minimap;
 	struct s_editor		*edt;
+	struct s_state      *edt_state;
 	struct s_model		*mdl;
 	struct s_game		*game;
 }						t_doom;
@@ -356,6 +358,7 @@ void            output_rooms(int room_count, t_room *rooms);
  * from singleton_links.c
  * */
 
-t_doom          *singleton_doom_pointer(void *doom);
+t_doom          *set_singleton_doom_pointer(void *doom);
+t_doom          *doom_ptr(void);
 t_model         *get_model(void);
 #endif

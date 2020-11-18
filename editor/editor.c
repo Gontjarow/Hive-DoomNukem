@@ -17,6 +17,18 @@
 //  ENABLE SAVING TO MAPFILE AGAIN
 //  MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
 
+/* trigger_protection() is a notifier function called by set_pixel_safe() when
+ * overwriting to a buffer over a set_protected_color() has occured. Triggers
+ * are accumulated by the calls 'trigger_protection(0)'. Decoupled from this,
+ * elsewhere in the code a has_protection = 1 enabled eg. mode_polydraw()
+ * can implement a periodic or event based check wheter overwriting happened
+ * by invoking 'trigger_protection(1)'. If yes, this protection ATM (stc)
+ * calls a clean slate for editor back buffer by a wipe and a walls redraw  */
+
+// TODO: Utilize trigger_protection to detect illegal wall draws or room draws
+//  (creation of intersection (overlapping) walls should not be possible
+
+// MOVE THIS SOMEWHERE COMMONPLACE
 void 				trigger_protection(int clear)
 {
 	static int triggers = 0;
@@ -34,14 +46,26 @@ void 				trigger_protection(int clear)
 	triggers++;
 }
 
-t_gui				*mode_polydraw()
+/* mode_polydraw() returns as a a singleton the properties for the polydrawing mode.
+ * It has a mouse motion function enabled, and the clicks. It protects overwriting
+ * to white color and redraws when necessary (if overwriting has occured).
+ * It is a t_gui struct that lives in get_state()->gui. The polydraw_* functions
+ * are elsewhere and live in polydraw_status(), that handles the Status of the mode
+ * during its activation. When polydrawing ends (is replaced by another t_gui mode
+ * or the editor exits) it should know how to reset and clean itself up by
+ * polydraw_status()->reset(polydraw_status());*/
+
+// MOVE THIS SOMEWHERE MODE_* PLACE
+static t_gui        *mode_polydraw()
 {
 	static t_gui	*polydraw = NULL;
+
 	if (!polydraw)
 	{
 		polydraw = (t_gui*)malloc(sizeof(t_gui));
 		if (!polydraw)
 			ft_die("Fatal error: Could not malloc polydraw struct at mode_polydraw.");
+        polydraw->activate = polydraw_activate;
 		polydraw->left_click = polydraw_left_click;
 		polydraw->right_click = polydraw_right_click;
 		polydraw->middle_click = polydraw_middle_click;
@@ -59,16 +83,20 @@ t_gui				*mode_polydraw()
  * polygons using mouse clicks. By following the mode_polydraw() trail, you can
  * explore and find out how the polydraw_* functions are organized and coded. */
 
+// MOVE THIS SOMEWHERE GET_STATE RELATED PLACE
 t_state				*get_state(void)
 {
 	static t_state	*state = NULL;
+
 	if (!state)
 	{
 		state = (t_state*)malloc(sizeof(t_state));
 		if (!state)
 			ft_die("Fatal error: Could not malloc state struct at get_state");
 		state->gui = mode_polydraw();
+		state->gui->activate(state);
 	}
+	    //printf("States address returned: %p\n", (void*)state);
 	return (state);
 }
 
@@ -86,6 +114,7 @@ void				init_edt(t_doom *doom)
 	if (!doom->edt->buff)
 		ft_die("Fatal error: Could not retrieve buffer of Level Editor window.");
 	flood_buffer(doom->edt->buff, 0xff000000);
+	doom->edt_state = get_state();
 }
 
 void				destroy_edt(t_doom *doom)
@@ -99,11 +128,12 @@ void				destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
+// MOVE THESE THREE TO EDT_INPUT
 void				edt_mouse_motion(t_doom *doom)
 {
 	t_state			*state;
 
-	state = get_state();
+	state = doom_ptr()->edt_state;
 	if (state->gui->has_motion)
 		state->gui->motion(doom->event.motion.x, doom->event.motion.y);
 }
@@ -112,7 +142,7 @@ void				edt_mouse_down(t_doom *doom)
 {
 	t_state			*state;
 
-	state = get_state();
+	state = doom_ptr()->edt_state;
 	if (doom->event.button.button == SDL_BUTTON_LEFT)
 		state->gui->left_click(doom->event.button.x, doom->event.button.y);
 	if (doom->event.button.button == SDL_BUTTON_MIDDLE)
@@ -121,7 +151,7 @@ void				edt_mouse_down(t_doom *doom)
 		state->gui->right_click(doom->event.button.x, doom->event.button.y);
 }
 
-void				editor_keystate_input(t_doom *doom) {
+static void         edt_keystate_input(t_doom *doom) {
 	static int lock_w = 0;
 	static int lock_p = 0;
 
@@ -144,7 +174,7 @@ void				editor_keystate_input(t_doom *doom) {
 
 void				edt_render(t_doom *doom)
 {
-	editor_keystate_input(doom);
+	edt_keystate_input(doom);
     if (editor_front_buffer()->rendering_on)
     {
         flood_buffer(mixing_surface(), 0xff000000);
