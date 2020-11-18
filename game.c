@@ -79,52 +79,36 @@ static double deg_to_rad(int deg)
 	return (deg * M_PI / 180);
 }
 
-// void		check_collision(t_doom *doom)
-// {
-// 	// var circle1 = {radius: 20, x: 5, y: 5};
-// 	// var circle2 = {radius: 12, x: 10, y: 5};
-
-// 	// var dx = circle1.x - circle2.x;
-// 	// var dy = circle1.y - circle2.y;
-// 	// var distance = Math.sqrt(dx * dx + dy * dy);
-
-// 	// if (distance < circle1.radius + circle2.radius) {
-//     // // collision detected!
-// 	// }
-
-// 	if (doom->mdl->rooms->id )
-
-// 	//If collides
-// 	// if (distance < 6 + 100)
-// 	// 	printf("Collides!\n")
-// 	// else
-// 	// 	printf("Does not collide!\n");
-// }
-
-
 unsigned int		check_location(t_doom *doom)
 {
 	int				location;
 	unsigned int	*pixels;
 
 	pixels = (unsigned int*)doom->mdl->poly_map->pixels;
-	location = (int)doom->mdl->player.x + (int)doom->mdl->player.y * 5000;
-	if (location < 0 || location > ((5000 * 5000) -1))
-		return (9999999999);
-	int ret;
-	ret = (int)(pixels[location]);
-	return (ret);
+	location = (int)doom->mdl->player.x + (int)doom->mdl->player.y * GAME_POLYMAP_WIDTH;
+	if (location < 0 || location > ((GAME_POLYMAP_WIDTH * GAME_POLYMAP_HEIGHT) -1))
+		return (UINT_ERROR_CONSTANT);
+	return ((int)(pixels[location]));
 	// printf("pro debug: %d\n", doom->mdl->poly_map[location]);
 }
-
 
 void		game_render(t_doom *doom)
 {
 	// These will be the doom->game key handling, right now it only supports the minimap
 	// but once the game can be tested with 3D rendering, these will work for both
-	int	x;
-	int	y;
+	int		x;
+	int		y;
+	int		location_id;
+	double	cur_x;
+	double	cur_y;
+	double	old_x;
+	double	old_y;
 	double	rad;
+
+	cur_x = doom->mdl->player.x;
+	cur_y = doom->mdl->player.y;
+	old_x = cur_x;
+	old_y = cur_y;
 	if (doom->keystates[SDL_SCANCODE_ESCAPE])
 	{
 		// Open menu, quit game...
@@ -212,7 +196,6 @@ void		game_render(t_doom *doom)
 
 	if (doom->keystates[SDL_SCANCODE_LSHIFT] && !doom->mdl->player.run_lock)
 	{
-		// Running button = LSHIFT ?
 		doom->mdl->player.run_lock = 1;
 		doom->mdl->player.is_running = 1;
 		printf("LSHIFT key pressed!\n");
@@ -250,15 +233,21 @@ void		game_render(t_doom *doom)
 	{
 		doom->mdl->player.height += 10;
 	}
-	// MAKE FUNCTION BELOW
-	ft_putnbr(check_location(doom));
-	ft_putstr("= [");
-	ft_putnbr(doom->mdl->player.x);
-	ft_putstr(",");
-	ft_putnbr(doom->mdl->player.y);
-	ft_putendl("] <- poly_map value.");
-	if (doom->keystates[SDL_SCANCODE_M])
-		SDL_BlitSurface(doom->mdl->poly_map, NULL, doom->game->buff, NULL);
+	/*
+	**	Player Collision Detection, checking if it's position is valid according to where he is currently located
+	*/
+	location_id = check_location(doom);
+	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT)
+	{
+		doom->mdl->player.x = old_x;
+		doom->mdl->player.y = old_y;
+	}
+	// ft_putnbr(check_location(doom));
+	// ft_putstr("= [");
+	// ft_putnbr(doom->mdl->player.x);
+	// ft_putstr(",");
+	// ft_putnbr(doom->mdl->player.y);
+	// ft_putendl("] <- poly_map value.");
 	update_minimap(doom);
 	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
