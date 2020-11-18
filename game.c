@@ -79,6 +79,30 @@ static double deg_to_rad(int deg)
 	return (deg * M_PI / 180);
 }
 
+int		player_collision_with_enemies(t_doom *doom)
+{
+	t_enemy	*enemy;
+	int	dx;
+	int	dy;
+	int	ec;
+	int	distance;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		dx = (int)doom->mdl->player.x - enemy->x;
+		dy = (int)doom->mdl->player.y - enemy->y;
+		distance = sqrt(dx * dx + dy * dy);
+		if (distance < 10 + 10)
+			return (-1);
+		enemy = enemy->next;
+	}
+	return (0);
+}
+
 unsigned int		check_location(t_doom *doom)
 {
 	int				location;
@@ -237,7 +261,7 @@ void		game_render(t_doom *doom)
 	**	Player Collision Detection, checking if it's position is valid according to where he is currently located
 	*/
 	location_id = check_location(doom);
-	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT)
+	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT || player_collision_with_enemies(doom) == -1)
 	{
 		doom->mdl->player.x = old_x;
 		doom->mdl->player.y = old_y;
