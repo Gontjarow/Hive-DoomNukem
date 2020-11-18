@@ -47,7 +47,7 @@ void        init_conversion_colors(uint32_t conversion_colors[512])
 
 void        create_room_polygon_map(t_editor *edt)
 {
-    edt->poly_map = SDL_CreateRGBSurfaceWithFormat(0, 5000, 5000, 32, SDL_GetWindowPixelFormat(edt->win));
+    edt->poly_map = SDL_CreateRGBSurfaceWithFormat(0, GAME_POLYMAP_WIDTH, GAME_POLYMAP_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
     edt->back_buffer = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
 	edt->front_buffer = SDL_CreateRGBSurfaceWithFormat(0, EDT_WIN_WIDTH, EDT_WIN_HEIGHT, 32, SDL_GetWindowPixelFormat(edt->win));
 	printf("Pixel format for edt->win is %s\n", SDL_GetPixelFormatName(SDL_GetWindowPixelFormat(edt->win)));
@@ -207,6 +207,7 @@ void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
 
 void        expand_room_polygon_map(t_room *room, t_doom *doom, SDL_Surface *poly_map, uint32_t *conversion_colors)
 {
+    // WORK IN PROGRESS
     int bounding_x_upper_limit;
     int bounding_y_upper_limit;
     int x_start;
@@ -229,6 +230,7 @@ void        expand_room_polygon_map(t_room *room, t_doom *doom, SDL_Surface *pol
             if (inside_room(x, y, room))
             {
                 set_pixel(poly_map, x, y, conversion_colors[room->id]);
+                // printf("set_pixel(poly_map, %d, %d, %d)\n", x, y, conversion_colors[room->id]);
                 //printf("set_pixel(poly_map, x, y, conversion_colors[room->id])\n");
             }
             x++;

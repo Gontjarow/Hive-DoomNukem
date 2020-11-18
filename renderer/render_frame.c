@@ -43,7 +43,7 @@ void render_frame(t_doom *doom)
 
 	t_mesh test = load_mesh_obj("tiny-donut.obj");
 
-	printf("load_mesh_obj succeeded\n");
+	//printf("load_mesh_obj succeeded\n");
 
 	double		hrz = doom->mdl->player.rot_horizontal;
 	int px = doom->mdl->player.x;
