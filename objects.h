@@ -58,6 +58,8 @@ typedef struct 			s_player
 	double				rot_vertical;
 	double 				x;
 	double 				y;
+	double				bullet_pos_x;
+	double				bullet_pos_y;
 	int 				rot;
 	int					height;
 	int					is_jumping;

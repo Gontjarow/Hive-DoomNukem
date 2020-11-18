@@ -103,17 +103,97 @@ int		player_collision_with_enemies(t_doom *doom)
 	return (0);
 }
 
-unsigned int		check_location(t_doom *doom)
+unsigned int		check_location(t_doom *doom, int x, int y)
 {
 	int				location;
 	unsigned int	*pixels;
 
 	pixels = (unsigned int*)doom->mdl->poly_map->pixels;
-	location = (int)doom->mdl->player.x + (int)doom->mdl->player.y * GAME_POLYMAP_WIDTH;
+	location = (int)x + (int)y * GAME_POLYMAP_WIDTH;
 	if (location < 0 || location > ((GAME_POLYMAP_WIDTH * GAME_POLYMAP_HEIGHT) -1))
 		return (UINT_ERROR_CONSTANT);
 	return ((int)(pixels[location]));
 	// printf("pro debug: %d\n", doom->mdl->poly_map[location]);
+}
+
+static double sq(double x) 
+{
+    return (x * x);
+}
+
+int			check_hit(t_doom *doom, double bullet_pos_x, double bullet_pos_y, double r)
+{
+	t_enemy	*enemy;
+	int	ec;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return (-1);
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		double x0 = enemy->x, y0 = enemy->y;
+		double x1 = doom->mdl->player.x, y1 = doom->mdl->player.y;
+    	double x2 = bullet_pos_x, y2 = bullet_pos_y;
+    	double A = y2 - y1;
+    	double B = x1 - x2;
+   		double C = x2 * y1 - x1 * y2;
+    	double a = sq(A) + sq(B);
+    	double b, c, d;
+ 
+    	if (fabs(B) >= EPS)
+		{
+        	// if B isn't zero or close to it
+        	b = 2 * (A * C + A * B * y0 - sq(B) * x0);
+        	c = sq(C) + 2 * B * C * y0 - sq(B) * (sq(r) - sq(x0) - sq(y0));
+    	} 
+		else
+		{
+       		b = 2 * (B * C + A * B * x0 - sq(A) * y0);
+        	c = sq(C) + 2 * A * C * x0 - sq(A) * (sq(r) - sq(x0) - sq(y0));
+    	}
+    	d = sq(b) - 4 * a * c; // discriminant
+		if (d == 0)	// line is tangent to circle, so just one intersect at most
+			return (ec);
+		else if (d > 0)		// two intersects at most
+			return (ec);
+		enemy = enemy->next;
+	}
+	return (-1);			// no intersection
+}
+
+void		deal_damage(int enemy_id)
+{
+	printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
+
+}
+
+int			player_shoots(t_doom *doom)
+{
+	int		bullet_speed;
+	int		enemy_who_was_hit;
+	double	rad;
+
+	rad = deg_to_rad(doom->mdl->player.rot);
+	bullet_speed = 1;
+	doom->mdl->player.bullet_pos_x = doom->mdl->player.x;
+	doom->mdl->player.bullet_pos_y = doom->mdl->player.y;
+	doom->minimap->debug_ray_color = 0xffff0000;
+	doom->minimap->debug_ray_timeout = 15;
+	while (check_location(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y) != -1)
+	{
+		doom->mdl->player.bullet_pos_x += bullet_speed * -cos(rad);
+		doom->mdl->player.bullet_pos_y += bullet_speed * -sin(rad);
+		enemy_who_was_hit = check_hit(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y, 10);
+		//ft_putnbr(discriminant);
+		//ft_putendl(" ");
+		if (enemy_who_was_hit >= 0)
+		{
+			doom->minimap->debug_ray_color = 0xff00ff00;
+			deal_damage(enemy_who_was_hit);
+		}
+	}
+	return(0);
 }
 
 void		game_render(t_doom *doom)
@@ -191,6 +271,7 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_E])
 	{
 		// Use button, open doors, talk to NPC's...
+		player_shoots(doom);
 		printf("E key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_SPACE])
@@ -260,7 +341,7 @@ void		game_render(t_doom *doom)
 	/*
 	**	Player Collision Detection, checking if it's position is valid according to where he is currently located
 	*/
-	location_id = check_location(doom);
+	location_id = check_location(doom, doom->mdl->player.x, doom->mdl->player.y);
 	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT || player_collision_with_enemies(doom) == -1)
 	{
 		doom->mdl->player.x = old_x;

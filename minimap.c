@@ -137,6 +137,20 @@ void		print_minimap_player(t_doom *doom)
 	minimap_circle_player(doom);
 }
 
+void		print_debug_ray(t_doom *doom)
+{
+	t_line	line;
+
+	line.x1 = doom->mdl->player.x * doom->minimap->scale;
+	line.y1 = doom->mdl->player.y * doom->minimap->scale;
+	line.x2 = doom->mdl->player.bullet_pos_x * doom->minimap->scale;
+	line.y2 = doom->mdl->player.bullet_pos_y * doom->minimap->scale;
+	line.color = doom->minimap->debug_ray_color;
+	line.buff = doom->minimap->buff;
+	render_line(&line);
+	doom->minimap->debug_ray_timeout--;
+}
+
 void		destroy_minimap(t_doom *doom)
 {
 	SDL_FreeSurface(doom->minimap->buff);
@@ -150,6 +164,8 @@ void		destroy_minimap(t_doom *doom)
 void		update_minimap(t_doom *doom)
 {
 	flood_buffer(doom->minimap->buff, 0xff000000);
+	if (doom->minimap->debug_ray_timeout > 0)
+		print_debug_ray(doom);
 	print_minimap_walls(doom);
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);

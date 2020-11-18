@@ -22,6 +22,8 @@ typedef struct		s_minimap
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	double				scale;
+	int					debug_ray_timeout;
+	uint32_t			debug_ray_color;
 }					t_minimap;
 
 void			init_minimap(t_doom *doom);
