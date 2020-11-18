@@ -67,6 +67,7 @@ typedef struct	s_cam
 }				t_cam;
 
 # include "model.h"
+# include "model_ll.h"
 
 double			*get_zbuffer();
 
