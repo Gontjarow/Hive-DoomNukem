@@ -1,137 +1,16 @@
 #include "renderer.h"
 
-static double g_frustrum[6][4] = {
-	{0, 0,  1, 1}, // Near
-	{0, 0, -1, 1}, // Far
-	{0, -1, 0, 1}, // Top
-	{0,  1, 0, 1}, // Bottom
-	{ 1, 0, 0, 1}, // Left
-	{-1, 0, 0, 1}, // Right
-};
+#define CLIP_TRIVIAL_ACCEPT 1
+#define CLIP_TRIVIAL_REJECT -1
+#define CLIP_REQUIRED 0
 
-int inside_plane(double coef[4], t_xyzw vert)
-{
-return (0
-	+ coef[0] * vert.x
-	+ coef[1] * vert.y
-	+ coef[2] * vert.z
-	+ coef[3] * vert.w >= 0);
-}
-
-// https://stackoverflow.com/questions/7604322/clip-matrix-for-3d-perspective-projection
-t_vert clip(t_vert start, t_vert end, double side)
-{
-	double s;
-
-	s = (start.w - side) / (start.w - end.w);
-	return ((t_vert){
-		(s * start.x) + ((1 - s) * end.x),
-		(s * start.y) + ((1 - s) * end.y),
-		(s * start.z) + ((1 - s) * end.z),
-		side
-	});
-}
-
-// If (w > 0), it's in front of the camera.
-void clip_triangle(t_face tri)
-{
-	// if (!inside_plane(g_frustrum[0], tri.vert[v]))
-		// tri.vert[v] = clip(tri.vert[v])
-}
-
-// -----------------
-
-// https://gamedevelopment.tutsplus.com/tutorials/how-to-dynamically-slice-a-convex-shape--gamedev-14479
-t_face	slice_triangle(t_vert a, t_vert b, t_vert c, double distance[3]);
-
-t_mesh	slice_all_triangles(t_mesh mesh, t_xyz normal)
-{
-	t_mesh out;
-	out.faces = mesh.faces * 2;
-
-	for (int i = 0, of = 0; i < mesh.faces; ++i, ++of)
-	{
-		t_face f = mesh.face[i];
-		double d[3];
-		d[0] = vec3_dot(vec43(f.vert[0]), normal);
-		d[1] = vec3_dot(vec43(f.vert[1]), normal);
-		d[2] = vec3_dot(vec43(f.vert[2]), normal);
-
-		if (d[0] * d[1] < 0)
-			out.face[of++] = slice_triangle(f.vert[0], f.vert[1], f.vert[2], d);
-		else if (d[1] * d[2] < 0)
-			out.face[of++] = slice_triangle(f.vert[2], f.vert[0], f.vert[1], d);
-		else if (d[1] * d[2] < 0)
-			out.face[of++] = slice_triangle(f.vert[1], f.vert[2], f.vert[0], d);
-		else // no clipping
-			out.face[of++] = f;
-	}
-	return (out);
-}
-
-t_face	slice_triangle(t_vert a, t_vert b, t_vert c, double distance[3])
-{
-	// lord help me
-}
-
-// ----------------
-
-// https://www.cubic.org/docs/3dclip.htm#ma2
-
-clip_line_plane(t_vert a, t_vert b, t_xyz normal)
-{
-	double dist_a;
-	double dist_b;
-	float s;
-	t_xyz intersection;
-
-	dist_a = vec3_dot(vec43(a), normal);
-	dist_b = vec3_dot(vec43(b), normal);
-	if ((dist_a < 0) && (dist_b < 0))
-	{
-		// remove line
-	}
-	else if ((dist_a >= 0) && (dist_b >= 0))
-	{
-		// no clipping
-	}
-	else
-	{
-		s = dist_a / (dist_a - dist_b);
-		intersection.x = a.x + (b.x - a.x) * s;
-		intersection.y = a.y + (b.y - a.y) * s;
-		intersection.z = a.z + (b.z - a.z) * s;
-	}
-}
-
-clip_polygon_plane(t_face f)
-{
-	// clip triangle, must handle possible quads
-	// -> call clip_line_plane for each edge
-}
-
-clip_polygon_viewport(t_face f)
-{
-	// -> call clip_polygon_plane for each side
-	// note: may create lots of new faces
-}
-
-clip_mesh_viewport(t_mesh mesh)
-{
-	// -> call clip_polygon_viewport for each face
-	// note: may create lots of new faces
-}
-
-// -------
-
-// my own brainstorming
-
-t_mesh	clip(t_mesh mesh);
+// https://www.cs.helsinki.fi/group/goa/viewing/leikkaus/lineClip.html
+// https://www.youtube.com/watch?v=VMD7fsCYO9o
 
 render_frame_mocup()
 {
 	t_mesh clip_space;
-	t_mesh clipped = clip(clip_space);
+	t_mesh clipped = clip_whole_object(clip_space);
 }
 
 t_mesh	clip_whole_object(t_mesh mesh)
@@ -151,26 +30,71 @@ t_mesh	clip_whole_object(t_mesh mesh)
 	// data is separated into a list of individual (unsorted) vertices
 	// and a list of individual (unsorted) faces (with CCW sorted vertices)
 
-	t_mesh out = mesh_duplicate(mesh);
+	int clip_type;
+	t_mesh out = mesh_duplicate(mesh); // probably can't use soon
 	for (int f = 0; f < mesh.faces; ++f)
 	{
-		if (needs_clipping(mesh.face[f]))
+		clip_type = get_clip_type(mesh.face[f]);
+		if (clip_type == CLIP_TRIVIAL_ACCEPT)
+			; // accept as-is
+		else if (clip_type == CLIP_TRIVIAL_REJECT)
+			; // delete entire face (how?)
+		else
 			modify_faces(&out, mesh.face[f]);
 	}
 
 }
 
-int		needs_clipping(t_face face)
+int		get_clip_type(t_face face)
 {
-	// if all point are within view, return TRUE
-	// else return FALSE
+	int a;
+	int b;
+	int c;
+
+	a = get_outcode(face.vert[0]);
+	b = get_outcode(face.vert[1]);
+	c = get_outcode(face.vert[2]);
+
+	// all outcodes are within view (region 0)
+	if ((a | b | c) == 0)
+		return (CLIP_TRIVIAL_ACCEPT);
+	// all outcodes (A&B, B&C, C&A) share a region
+	if (!!(a & b) + !!(b & c) + !!(c & a) == 3)
+		return (CLIP_TRIVIAL_REJECT);
+	else
+		return (CLIP_REQUIRED);
+}
+
+int get_outcode(t_vert v)
+{
+	int outcode;
+
+	outcode = 0;
+	outcode |= 0b000001 * (v.x <= -v.w);
+	outcode |= 0b000010 * (v.x >= v.w);
+	outcode |= 0b000100 * (v.y <= -v.w);
+	outcode |= 0b001000 * (v.y >= v.w);
+	outcode |= 0b010000 * (v.z <= -v.w);
+	outcode |= 0b100000 * (v.z >= v.w);
 }
 
 void	modify_faces(t_mesh *out, t_face target)
 {
-	// if no part of the polygon crosses the viewport,
-	// delete the entire face and return.
-
 	// start looping against near, left, right, top, bottom planes
-	// ...
+	// ... profit?
+	// Now the big question, do we allocate new data for vertices
+	// or add new verts to the old ones (how to clean those up between frames?)
+	// or do something else?
+}
+
+// Probably not needed anymore, keep for now:
+int		vert_within_view(t_vert vert)
+{
+	// -w \       / w
+	//     \     /
+	//      \   /
+	//     w0 .
+	return ((-vert.w <= vert.x && vert.x <= vert.w)
+		&&  (-vert.w <= vert.y && vert.y <= vert.w)
+		&&  (-vert.w <= vert.z && vert.z <= vert.w));
 }
