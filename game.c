@@ -116,57 +116,6 @@ unsigned int		check_location(t_doom *doom, int x, int y)
 	// printf("pro debug: %d\n", doom->mdl->poly_map[location]);
 }
 
-static double sq(double x) 
-{
-    return (x * x);
-}
-
-// int			check_hit(t_doom *doom, double bullet_pos_x, double bullet_pos_y, double r)
-// {
-// 	t_enemy	*enemy;
-// 	int	ec;
-
-// 	ec = doom->mdl->enemy_count;
-// 	if (ec == 0)
-// 		return (-1);
-// 	enemy = doom->mdl->enemy_first;
-// 	while (ec--)
-// 	{
-// 		double x0 = enemy->x, y0 = enemy->y;
-// 		double x1 = doom->mdl->player.x, y1 = doom->mdl->player.y;
-//     	double x2 = bullet_pos_x, y2 = bullet_pos_y;
-//     	double A = y2 - y1;
-//     	double B = x1 - x2;
-//    		double C = x2 * y1 - x1 * y2;
-//     	double a = sq(A) + sq(B);
-//     	double b, c, d;
- 
-//     	if (fabs(B) >= EPS)
-// 		{
-//         	// if B isn't zero or close to it
-//         	b = 2 * (A * C + A * B * y0 - sq(B) * x0);
-//         	c = sq(C) + 2 * B * C * y0 - sq(B) * (sq(r) - sq(x0) - sq(y0));
-//     	} 
-// 		else
-// 		{
-//        		b = 2 * (B * C + A * B * x0 - sq(A) * y0);
-//         	c = sq(C) + 2 * A * C * x0 - sq(A) * (sq(r) - sq(x0) - sq(y0));
-//     	}
-//     	d = sq(b) - 4 * a * c; // discriminant
-// 		if (d == 0)	// line is tangent to circle, so just one intersect at most
-// 			return (ec);
-// 		else if (d > 0)		// two intersects at most
-// 			return (ec);
-// 		enemy = enemy->next;
-// 	}
-// 	return (-1);			// no intersection
-// }
-
-void		deal_damage(int enemy_id)
-{
-	printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
-}
-
 static int	point_circle(double px, double py, double cx, double cy)
 {
 	// get distance between the point and circle's center
@@ -271,6 +220,35 @@ int		check_hit(t_doom *doom)
 	return (-1);
 }
 
+void		deal_damage(t_doom *doom, int enemy_id)
+{
+	t_enemy	*enemy;
+	int	dx;
+	int	dy;
+	int	ec;
+	int	distance;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		// printf("enemy %d hp: %d\n", enemy->id, enemy->hp.cur);
+		if (enemy->id == enemy_id && enemy->hp.cur > 0)
+		{
+			enemy->hp.cur -= 10;
+			if (enemy->hp.cur <= 0)
+			{
+				printf("HE IS DEAD ;-;\n");
+				enemy->hp.cur = 0;
+			}
+		}
+		enemy = enemy->next;
+	}
+	printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
+}
+
 int			player_shoots(t_doom *doom)
 {
 	int		bullet_speed;
@@ -289,13 +267,12 @@ int			player_shoots(t_doom *doom)
 		doom->mdl->player.bullet_pos_x += bullet_speed * -cos(rad);
 		doom->mdl->player.bullet_pos_y += bullet_speed * -sin(rad);
 		enemy_who_was_hit = check_hit(doom);
-		// enemy_who_was_hit = check_hit(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y, 12);
 		//ft_putnbr(discriminant);
 		//ft_putendl(" ");
 		if (enemy_who_was_hit >= 0)
 		{
 			doom->minimap->debug_ray_color = 0xff00ff00;
-			deal_damage(enemy_who_was_hit);
+			deal_damage(doom, enemy_who_was_hit);
 		}
 	}
 	return (0);
