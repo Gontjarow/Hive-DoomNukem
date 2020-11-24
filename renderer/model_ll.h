@@ -20,19 +20,19 @@ typedef struct	s_global_vert
 	struct s_global_vert	*next;
 }				t_global_vert;
 
-typedef struct	s_face_verts
+typedef struct	s_face_vert
 {
 	t_global_vert		*p;
-	struct s_face_verts	*prev;
-	struct s_face_verts	*next;
-}				t_face_verts;
+	struct s_face_vert	*prev;
+	struct s_face_vert	*next;
+}				t_face_vert;
 
 typedef struct	s_obj
 {
 	int				v_count;
 	int				f_count;
 	t_global_vert	*v_list;
-	t_face_verts	*f_list;
+	t_face_vert		*f_list;
 }				t_obj;
 
 # include "renderer.h"
