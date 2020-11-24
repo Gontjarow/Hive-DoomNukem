@@ -121,51 +121,154 @@ static double sq(double x)
     return (x * x);
 }
 
-int			check_hit(t_doom *doom, double bullet_pos_x, double bullet_pos_y, double r)
-{
-	t_enemy	*enemy;
-	int	ec;
+// int			check_hit(t_doom *doom, double bullet_pos_x, double bullet_pos_y, double r)
+// {
+// 	t_enemy	*enemy;
+// 	int	ec;
 
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return (-1);
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
-	{
-		double x0 = enemy->x, y0 = enemy->y;
-		double x1 = doom->mdl->player.x, y1 = doom->mdl->player.y;
-    	double x2 = bullet_pos_x, y2 = bullet_pos_y;
-    	double A = y2 - y1;
-    	double B = x1 - x2;
-   		double C = x2 * y1 - x1 * y2;
-    	double a = sq(A) + sq(B);
-    	double b, c, d;
+// 	ec = doom->mdl->enemy_count;
+// 	if (ec == 0)
+// 		return (-1);
+// 	enemy = doom->mdl->enemy_first;
+// 	while (ec--)
+// 	{
+// 		double x0 = enemy->x, y0 = enemy->y;
+// 		double x1 = doom->mdl->player.x, y1 = doom->mdl->player.y;
+//     	double x2 = bullet_pos_x, y2 = bullet_pos_y;
+//     	double A = y2 - y1;
+//     	double B = x1 - x2;
+//    		double C = x2 * y1 - x1 * y2;
+//     	double a = sq(A) + sq(B);
+//     	double b, c, d;
  
-    	if (fabs(B) >= EPS)
-		{
-        	// if B isn't zero or close to it
-        	b = 2 * (A * C + A * B * y0 - sq(B) * x0);
-        	c = sq(C) + 2 * B * C * y0 - sq(B) * (sq(r) - sq(x0) - sq(y0));
-    	} 
-		else
-		{
-       		b = 2 * (B * C + A * B * x0 - sq(A) * y0);
-        	c = sq(C) + 2 * A * C * x0 - sq(A) * (sq(r) - sq(x0) - sq(y0));
-    	}
-    	d = sq(b) - 4 * a * c; // discriminant
-		if (d == 0)	// line is tangent to circle, so just one intersect at most
-			return (ec);
-		else if (d > 0)		// two intersects at most
-			return (ec);
-		enemy = enemy->next;
-	}
-	return (-1);			// no intersection
-}
+//     	if (fabs(B) >= EPS)
+// 		{
+//         	// if B isn't zero or close to it
+//         	b = 2 * (A * C + A * B * y0 - sq(B) * x0);
+//         	c = sq(C) + 2 * B * C * y0 - sq(B) * (sq(r) - sq(x0) - sq(y0));
+//     	} 
+// 		else
+// 		{
+//        		b = 2 * (B * C + A * B * x0 - sq(A) * y0);
+//         	c = sq(C) + 2 * A * C * x0 - sq(A) * (sq(r) - sq(x0) - sq(y0));
+//     	}
+//     	d = sq(b) - 4 * a * c; // discriminant
+// 		if (d == 0)	// line is tangent to circle, so just one intersect at most
+// 			return (ec);
+// 		else if (d > 0)		// two intersects at most
+// 			return (ec);
+// 		enemy = enemy->next;
+// 	}
+// 	return (-1);			// no intersection
+// }
 
 void		deal_damage(int enemy_id)
 {
 	printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
+}
 
+static int	point_circle(double px, double py, double cx, double cy)
+{
+	// get distance between the point and circle's center
+	// using the Pythagorean Theorem
+	double	dist_x;
+	double	dist_y;
+	double	dist;
+
+	dist_x = px - cx;
+	dist_y = py - cy;
+	dist = sqrt((dist_x * dist_x) + (dist_y * dist_y));
+	// if the distance is less than the circle's
+	// radius the point is inside!
+	if (dist <= 15) 
+    	return (1);
+  return (0);
+}
+
+static double	dist(double px, double py, double x1, double y1)
+{
+	double	distance;
+
+	distance = sqrt(((px - x1) * (px - x1)) + ((py - y1) * (py - y1)));
+	return (distance);
+}
+
+static int	line_point(double x1, double y1, double x2, double y2, double px, double py)
+{
+	double	d1;
+	double	d2;
+	double	len;
+	double	buffer;
+	// get distance from the point to the two ends of the line
+	d1 = dist(px, py, x1, y1);
+	d2 = dist(px, py, x2, y2);
+
+	// get the length of the line
+	len = dist(x1, y1, x2, y2);
+
+	// since floats are so minutely accurate, add
+	// a little buffer zone that will give collision
+	buffer = 0.001;    // higher # = less accurate
+
+	// if the two distances are equal to the line's
+	// length, the point is on the line!
+	// note we use the buffer here to give a range,
+	// rather than one #
+	if (d1 + d2 >= len - buffer && d1 + d2 <= len + buffer)
+		return (1);
+	return (0);
+}
+
+int		check_hit(t_doom *doom)
+{
+	int		ec;
+	int		inside1;
+	int		inside2;
+	int		on_segment;
+	double	dist_x;
+	double	dist_y;
+	double	len;
+	double	dot;
+	double	closest_x;
+	double	closest_y;
+	double	distance;
+	t_enemy	*enemy;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return (0);
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		inside1 = point_circle(doom->mdl->player.x, doom->mdl->player.y, enemy->x, enemy->y);
+		inside2 = point_circle(doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y, enemy->x, enemy->y);
+		if (inside1 || inside2) 
+			return (ec);
+		// get length of the line
+		dist_x = doom->mdl->player.x - doom->mdl->player.bullet_pos_x;
+		dist_y = doom->mdl->player.y - doom->mdl->player.bullet_pos_y;
+		len = sqrt((dist_x * dist_x) + (dist_y * dist_y));
+		// get dot product of the line and circle
+		dot = ( ((enemy->x - doom->mdl->player.x) * (doom->mdl->player.bullet_pos_x - doom->mdl->player.x)) +
+			((enemy->y - doom->mdl->player.y) * (doom->mdl->player.bullet_pos_y - doom->mdl->player.y)) ) / pow(len,2);
+		// find the closest point on the line
+		closest_x = doom->mdl->player.x + (dot * (doom->mdl->player.bullet_pos_x - doom->mdl->player.x));
+		closest_y = doom->mdl->player.y + (dot * (doom->mdl->player.bullet_pos_y - doom->mdl->player.y));
+		// is this point actually on the line segment?
+		// if so keep going, but if not, return false
+		on_segment = line_point(doom->mdl->player.x, doom->mdl->player.y, doom->mdl->player.bullet_pos_x,
+								doom->mdl->player.bullet_pos_y, closest_x, closest_y);
+		if (!on_segment)
+			return (-1);
+		// get distance to closest point
+		dist_x = closest_x - enemy->x;
+		dist_y = closest_y - enemy->y;
+		distance = sqrt((dist_x * dist_x) + (dist_y * dist_y));
+		if (distance <= 15)
+    		return (ec);
+		enemy = enemy->next;
+	}
+	return (-1);
 }
 
 int			player_shoots(t_doom *doom)
@@ -176,15 +279,17 @@ int			player_shoots(t_doom *doom)
 
 	rad = deg_to_rad(doom->mdl->player.rot);
 	bullet_speed = 1;
+	enemy_who_was_hit = -1;
 	doom->mdl->player.bullet_pos_x = doom->mdl->player.x;
 	doom->mdl->player.bullet_pos_y = doom->mdl->player.y;
 	doom->minimap->debug_ray_color = 0xffff0000;
 	doom->minimap->debug_ray_timeout = 15;
-	while (check_location(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y) != -1)
+	while (check_location(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y) != -1 && enemy_who_was_hit < 0)
 	{
 		doom->mdl->player.bullet_pos_x += bullet_speed * -cos(rad);
 		doom->mdl->player.bullet_pos_y += bullet_speed * -sin(rad);
-		enemy_who_was_hit = check_hit(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y, 10);
+		enemy_who_was_hit = check_hit(doom);
+		// enemy_who_was_hit = check_hit(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y, 12);
 		//ft_putnbr(discriminant);
 		//ft_putendl(" ");
 		if (enemy_who_was_hit >= 0)
@@ -193,7 +298,7 @@ int			player_shoots(t_doom *doom)
 			deal_damage(enemy_who_was_hit);
 		}
 	}
-	return(0);
+	return (0);
 }
 
 void		game_render(t_doom *doom)
