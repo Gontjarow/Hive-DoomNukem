@@ -5,16 +5,58 @@
 // player radius: 10px
 // player default move speed: 10px
 
-t_faces	list2face(t_faces list, int index)
+// positive index: go forward
+// negative index: go to the end then reverse
+// index == -1   : return last element
+t_global_vert	*list2vert(t_global_vert *list, int index)
 {
-	// loop list
-	// return destination
+	if (index > 0) //
+	{
+		while (index-- > 0)
+		{
+			if (list->next != NULL)
+				list = list->next;
+			else return (list);
+		}
+	}
+	else if (index < 0)
+	{
+		while (list->next != NULL)
+			list = list->next;
+		while (++index < 0)
+		{
+			if (list->prev != NULL)
+				list = list->prev;
+			else return (list);
+		}
+	}
+	return (list);
 }
 
-t_verts	list2vert(t_verts list, int index)
+t_face_verts	*list2face(t_face_verts *list, int index)
 {
-	// loop list
-	// return destination
+	if (index > 0)
+	{
+		while (index-- > 0)
+		{
+			if (list->next != NULL)
+				list = list->next;
+			else return (list);
+		}
+	}
+	else if (index < 0)
+	{
+		while (list->next != NULL)
+			list = list->next;
+		while (++index < 0)
+		{
+			if (list->prev != NULL)
+				list = list->prev;
+			else return (list);
+		}
+	}
+	return (list);
+}
 }
 
 t_obj	mdl_to_usable_data()
