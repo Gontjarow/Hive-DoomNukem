@@ -292,10 +292,6 @@ void			ft_die(const char *error_message);
 t_image			ft_new_image(int *mlx, int width, int height);
 t_image			ft_new_xpm_image(int *mlx, char *filename);
 
-Uint32			get_exact_pixel(SDL_Surface *surface, int x, int y);
-SDL_Surface		*load_png(char *path);
-SDL_Surface		*load_texture(t_doom *doom, char *path);
-
 void 			load_alphabet(t_menu *menu);
 void	 		destroy_alphabet(t_menu *menu);
 void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
@@ -334,6 +330,14 @@ int				overwrite_mapfile(t_editor *edt);
 void	 		destroy_mapdata(t_doom *doom);
 int 			load_model(t_doom *doom);
 void	 		destroy_model(t_doom *doom);
+
+/*
+ * from texture.c
+ * */
+Uint32			get_exact_pixel(SDL_Surface *surface, int x, int y);
+SDL_Surface		*xpm2surface(char *path);
+SDL_Surface		*load_png(char *path);
+SDL_Surface		*load_texture(t_doom *doom, char *path);
 
 /*
  * from line.c and line_safe.c

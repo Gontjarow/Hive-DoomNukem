@@ -22,7 +22,7 @@ typedef struct          s_model t_model;
 typedef struct          s_state t_state;
 typedef struct 			SDL_Surface SDL_Surface;
 
-typedef void            (*gui_activation)(t_state *state);
+typedef void            (*gui_event)(t_state *state);
 typedef void 			(*gui_click)(int x, int y);
 typedef void 			(*gui_motion)(int x, int y);
 typedef void 			(*gui_action)(t_status *status);
@@ -59,7 +59,8 @@ typedef struct 			s_status
 
 typedef struct 			s_gui
 {
-    gui_activation      activate;
+    gui_event			activate;
+    gui_event			change_zoom;
 	gui_click  			left_click;
 	gui_click			middle_click;
 	gui_click			right_click;
@@ -78,6 +79,7 @@ typedef struct 			s_state
     uint32_t            thread_color;
     int                 job_running;
     int                 job_abort;
+    int 				zoom_factor;
 }						t_state;
 
 typedef struct 			s_editor
@@ -119,9 +121,8 @@ SDL_Surface     *mixing_surface();
  * */
 
 void			init_linedraw_data(void *data_ptr);
-void			linedraw_to_buffer_safe(t_linedraw *data, SDL_Surface *buff, uint32_t color);
 void			linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color);
-void			linedraw_to_wall(t_linedraw *data);
+t_wall			*linedraw_to_wall(t_linedraw *data);
 
 /*
  * from magnets.c
@@ -139,6 +140,7 @@ void 			polydraw_continue(t_status *status);
 void 			polydraw_end(t_status *status);
 void			polydraw_reset(t_status *status);
 void			polydraw_activate(t_state *state);
+void 			polydraw_change_zoom(t_state *state);
 
 /*
  * from polydraw_input.c

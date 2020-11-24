@@ -1,8 +1,93 @@
 #include "doom-nukem.h"
 
-void 				wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color)
+static unsigned int code_from_point(t_point *point, SDL_Surface *buff)
 {
-	t_line			line;
+	unsigned int 	code;
+
+	code = 0;
+	if (point->x < 0)
+		code |= (1 << 0);
+	else if (point->x >= buff->w)
+		code |= (1 << 1);
+	if (point->y < 0)
+		code |= (1 << 2);
+	else if (point->y >= buff->h)
+		code |= (1 << 3);
+	return (code);
+}
+
+static int			clip_wall_to_buff(t_wall *clip, t_wall *wall, SDL_Surface *buff)
+{
+	unsigned int	start_code;
+	unsigned int	end_code;
+	unsigned int 	code;
+	double 			new_x;
+	double 			new_y;
+
+	start_code = code_from_point(&wall->start, buff);
+	end_code = code_from_point(&wall->end, buff);
+	if ((start_code & end_code) != 0)
+	{
+			//ft_putendl("Debug: Trivial REJECT!");
+		return (0);
+	}
+	while (!(start_code == 0 && end_code == 0))
+	{
+		code = start_code != 0 ? start_code : end_code;
+		if ((code & (1 << 0)) != 0)
+		{
+			new_x = 0;
+			new_y = (((double)wall->end.y - (double)wall->start.y) / ((double)wall->end.x - (double)wall->start.x))
+					* (new_x - (double)wall->start.x) +	(double)wall->start.y;
+		}
+		else if ((code & (1 << 1)) != 0)
+		{
+			new_x = (buff->w - 1);
+			new_y = (((double)wall->end.y - (double)wall->start.y) / ((double)wall->end.x - (double)wall->start.x))
+					* (new_x - (double)wall->start.x) +	(double)wall->start.y;
+		}
+		else if ((code & (1 << 3)) != 0)
+		{
+			new_y = (buff->h - 1);
+			new_x = (((double)wall->end.x - (double)wall->start.x) / ((double)wall->end.y - (double)wall->start.y))
+					* (new_y - (double)wall->start.y) +	(double)wall->start.x;
+		}
+		else if ((code & (1 << 2)) != 0)
+		{
+			new_y = 0;
+			new_x = (((double)wall->end.x - (double)wall->start.x) / ((double)wall->end.y - (double)wall->start.y))
+					* (new_y - (double)wall->start.y) +	(double)wall->start.x;
+		}
+		if (code == start_code)
+		{
+			clip->start.x = (int)new_x;
+			clip->start.y = (int)new_y;
+			clip->end.x = wall->end.x;
+			clip->end.y = wall->end.y;
+				//ft_putendl("Updated startpoint with clip_wall_to_buff!");
+		}
+		else
+		{
+			clip->start.x = wall->start.x;
+			clip->start.y = wall->start.y;
+			clip->end.x = (int)new_x;
+			clip->end.y = (int)new_y;
+				//ft_putendl("Updated endpoint with clip_wall_to_buff!");
+		}
+				//printf("OLD || From (%d, %d) to (%d, %d) || NEW || From (%d, %d) to (%d, %d)\n",
+				// wall->start.x, wall->start.y, wall->end.x, wall->end.y,
+				// clip->start.x, clip->start.y, clip->end.x, clip->end.y);
+		wall = clip;
+		start_code = code_from_point(&wall->start, buff);
+		end_code = code_from_point(&wall->end, buff);
+	}
+		//ft_putendl("clip_wall_to_buff COMPLETED!");
+	return (1);
+}
+
+static void			wall_to_buffer_debugged(t_wall *wall, SDL_Surface *buff, uint32_t color)
+{
+	t_line line;
 
 	line.doom = doom_ptr();
 	line.buff = buff;
@@ -12,6 +97,40 @@ void 				wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color)
 	line.x2 = wall->end.x;
 	line.y2 = wall->end.y;
 	render_line(&line);
+}
+
+static void			wall_to_buffer_fixed(t_wall *wall, SDL_Surface *buff, uint32_t color)
+{
+	t_line			line;
+	t_wall 			clipped_wall;
+
+	line.doom = doom_ptr();
+	line.buff = buff;
+	line.color = color;
+	line.x1 = wall->start.x;
+	line.y1 = wall->start.y;
+	line.x2 = wall->end.x;
+	line.y2 = wall->end.y;
+	if ((line.x1 > 0 && line.x1 < buff->w) && (line.y1 > 0 && line.y1 < buff->h)
+		&& (line.x2 > 0 && line.x2 < buff->w) && (line.y2 > 0 && line.y2 < buff->h))
+		render_line(&line);
+	else if (clip_wall_to_buff(&clipped_wall, wall, buff))
+		wall_to_buffer_debugged(&clipped_wall, buff, 0xffffffff);
+}
+
+void 				wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color)
+{
+	t_wall			zoomed_wall;
+	int 			zoom_factor;
+
+	zoom_factor = get_state()->zoom_factor;
+	if (zoom_factor == 1)
+		return (wall_to_buffer_fixed(wall, buff, color));
+	zoomed_wall.start.x = wall->start.x / zoom_factor;
+	zoomed_wall.start.y = wall->start.y / zoom_factor;
+	zoomed_wall.end.x = wall->end.x / zoom_factor;
+	zoomed_wall.end.y = wall->end.y / zoom_factor;
+	return (wall_to_buffer_fixed(&zoomed_wall, buff, color));
 }
 
 void				x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color)

@@ -9,8 +9,8 @@ void 			polydraw_start(t_status *status)
 	data->origin_id = get_model()->wall_count;
 		//printf("Data->origin_id SET = %d\n", data->origin_id);
 	data->drawing_underway = 1;
-	data->draw_from_x = status->click_x;
-	data->draw_from_y = status->click_y;
+	data->draw_from_x = status->click_x * get_state()->zoom_factor;
+	data->draw_from_y = status->click_y * get_state()->zoom_factor;
 	status->phase = 1;
 	get_state()->thread_target_id = data->origin_id;
 		//ft_putendl("Polydraw start");
@@ -28,20 +28,24 @@ void 			polydraw_continue(t_status *status)
     {
         if (!get_state()->thread_permission)
             return ;
-	    data->draw_to_x = get_state()->thread_x;
-	    data->draw_to_y = get_state()->thread_y;
+	    data->draw_to_x = get_state()->thread_x * get_state()->zoom_factor;
+	    data->draw_to_y = get_state()->thread_y * get_state()->zoom_factor;
 	    status->phase++;
 	    assert(status->phase == 2);
     }
 	else
     {
-        data->draw_to_x = status->click_x;
-        data->draw_to_y = status->click_y;
+        data->draw_to_x = status->click_x * get_state()->zoom_factor;
+        data->draw_to_y = status->click_y * get_state()->zoom_factor;
     }
-	linedraw_to_wall(data);
-	linedraw_to_buffer_safe(data, editor_back_buffer()->buff, 0xffffffff);
+	wall_to_buffer(linedraw_to_wall(data), editor_back_buffer()->buff, 0xffffffff);
+	printf("With zoom of %d: linedraw (%d, %d) to (%d, %d)\n", get_state()->zoom_factor,
+		data->draw_from_x, data->draw_from_y, data->draw_to_x, data->draw_to_y);
+	debug_model_walls();
+	//linedraw_to_buffer_safe(data, editor_back_buffer()->buff, 0xffffffff);
 	editor_back_buffer()->rendering_on = 1;
-	*data = (t_linedraw){data->origin_id, 1, status->click_x, status->click_y, 0};
+	*data = (t_linedraw){data->origin_id, 1, status->click_x * get_state()->zoom_factor,
+					  status->click_y * get_state()->zoom_factor, 0};
 	// Invokation of the ending phase, polydraw_end, if status->thread_hit was TRUE, do polydraw_end (phase 2)
 	if (status->phase == 2)
 		status->phases[status->phase](status);
@@ -102,4 +106,13 @@ void			polydraw_activate(t_state *state)
     state->thread_color = 0xffff0000;
     state->thread_permission = 0;
     state->thread_target_id = -1;
+}
+
+void 			polydraw_change_zoom(t_state *state)
+{
+	if (polydraw_status()->phase != 0)
+		polydraw_status()->reset;
+	wipe_editor_back_buffer(0xff000000);
+	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
+	print_mode_info(get_state()->gui);
 }

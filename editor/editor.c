@@ -14,6 +14,11 @@
 
 // TODO BIG NOTE TO SELF
 //  EDITOR MUST GUARANTEE CLOCKWISE ARRANGEMENT OF WALL NODES IN ROOMS
+//  https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order/
+
+// TODO:
+//  LET USER KNOW WHICH MODE IS ACTIVE
+//  LET USER ZOOM AND SCROLL FREELY IN THE EDITOR
 
 // TODO NEXT FEATURE:
 //  MODE TO ADD ENEMY AND PLAYER OBJECTS
@@ -69,6 +74,7 @@ static t_gui        *mode_polydraw()
 		if (!polydraw)
 			ft_die("Fatal error: Could not malloc polydraw struct at mode_polydraw.");
         polydraw->activate = polydraw_activate;
+        polydraw->change_zoom = polydraw_change_zoom;
 		polydraw->left_click = polydraw_left_click;
 		polydraw->right_click = polydraw_right_click;
 		polydraw->middle_click = polydraw_middle_click;
@@ -79,6 +85,57 @@ static t_gui        *mode_polydraw()
 	return (polydraw);
 }
 
+SDL_Surface			*zoom_xpm(int factor)
+{
+	static SDL_Surface *normal_zoom = NULL;
+	static SDL_Surface *double_zoom = NULL;
+	static SDL_Surface *triple_zoom = NULL;
+	static SDL_Surface *quad_zoom = NULL;
+	if (factor == 1)
+		return (normal_zoom == NULL ? normal_zoom = xpm2surface("img/edt/normal_zoom.xpm") : normal_zoom);
+	if (factor == 2)
+		return (double_zoom == NULL ? double_zoom = xpm2surface("img/edt/double_zoom.xpm") : double_zoom);
+	if (factor == 3)
+		return (triple_zoom == NULL ? triple_zoom = xpm2surface("img/edt/triple_zoom.xpm") : triple_zoom);
+	if (factor == 4)
+		return (quad_zoom == NULL ? quad_zoom = xpm2surface("img/edt/quad_zoom.xpm") : quad_zoom);
+	ft_die("Fatal error: Could not return zoom_xpm.");
+	return (NULL);
+}
+
+SDL_Surface			*mode_xpm(t_gui *mode)
+{
+	static SDL_Surface *polydraw_xpm = NULL;
+
+	if (mode == mode_polydraw())
+		return (polydraw_xpm == NULL ? polydraw_xpm = xpm2surface("img/edt/wall_drawing.xpm") : polydraw_xpm);
+	ft_die("Fatal error: Could not return mode_xpm.");
+	return (NULL);
+}
+
+void                print_mode_info(t_gui *mode)
+{
+	SDL_Surface *mode_surface;
+    SDL_Surface *zoom_surface;
+    SDL_Rect 	place;
+
+	if (mode == mode_polydraw())
+        mode_surface = mode_xpm(mode);
+    zoom_surface = zoom_xpm(get_state()->zoom_factor);
+    if (!mode_surface || !zoom_surface)
+    	ft_die("Fatal error: print_mode_info failed to retrieve mode/zoom surfaces.");
+    place.w = mode_surface->w;
+    place.h = mode_surface->h;
+	place.x = zoom_surface->w + 10;
+	place.y = EDT_WIN_HEIGHT - (place.h + 2);
+	SDL_BlitSurface(mode_surface, NULL, editor_back_buffer()->buff, &place);
+	place.w = zoom_surface->w;
+	place.h = zoom_surface->h;
+	place.x -= zoom_surface->w + 5;
+	SDL_BlitSurface(zoom_surface, NULL, editor_back_buffer()->buff, &place);
+    editor_back_buffer()->rendering_on = 1;
+}
+
 /* get_state returns the overall "State" of the editor. In the field state->gui,
  * you can assign a GUI mode, that are retrieved from their Singleton functions.
  * For example, for the get_state() initial state, state->gui = mode_polydraw();
@@ -86,7 +143,7 @@ static t_gui        *mode_polydraw()
  * polygons using mouse clicks. By following the mode_polydraw() trail, you can
  * explore and find out how the polydraw_* functions are organized and coded. */
 
-// MOVE THIS SOMEWHERE GET_STATE RELATED PLACE
+// TODO MOVE THIS SOMEWHERE GET_STATE RELATED PLACE
 t_state				*get_state(void)
 {
 	static t_state	*state = NULL;
@@ -98,6 +155,8 @@ t_state				*get_state(void)
 			ft_die("Fatal error: Could not malloc state struct at get_state");
 		state->gui = mode_polydraw();
 		state->gui->activate(state);
+		state->zoom_factor = 1;
+		print_mode_info(state->gui);
 	}
 	    //printf("States address returned: %p\n", (void*)state);
 	return (state);
@@ -131,7 +190,7 @@ void				destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
-// MOVE THESE THREE TO EDT_INPUT
+// TODO MOVE THESE THREE TO EDT_INPUT
 void				edt_mouse_motion(t_doom *doom)
 {
 	t_state			*state;
@@ -154,9 +213,29 @@ void				edt_mouse_down(t_doom *doom)
 		state->gui->right_click(doom->event.button.x, doom->event.button.y);
 }
 
+static void			edt_outward_zoom(void)
+{
+		//printf("Zoomed editor outward\n");
+	if (get_state()->zoom_factor < 4)
+		get_state()->zoom_factor *= 2;
+	get_state()->gui->change_zoom(get_state());
+	print_mode_info(get_state()->gui);
+}
+
+static void			edt_inward_zoom(void)
+{
+		//printf("Zoomed editor inward\n");
+	if (get_state()->zoom_factor > 1)
+		get_state()->zoom_factor /= 2;
+	get_state()->gui->change_zoom(get_state());
+	print_mode_info(get_state()->gui);
+}
+
 static void         edt_keystate_input(t_doom *doom) {
 	static int lock_w = 0;
 	static int lock_p = 0;
+	static int lock_z = 0;
+	static int lock_x = 0;
 
 	if (lock_p && !doom->keystates[SDL_SCANCODE_P])
 		lock_p = 0;
@@ -164,8 +243,10 @@ static void         edt_keystate_input(t_doom *doom) {
 	{
 		wipe_editor_back_buffer(0xff000000);
 		x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
+		print_mode_info(get_state()->gui);
 		lock_p = 1;
 	}
+
 	if (lock_w && !doom->keystates[SDL_SCANCODE_W])
 		lock_w = 0;
 	else if (doom->keystates[SDL_SCANCODE_W] && !lock_w)
@@ -173,6 +254,22 @@ static void         edt_keystate_input(t_doom *doom) {
 		debug_model_walls();
 		lock_w = 1;
 	}
+
+    if (lock_z && !doom->keystates[SDL_SCANCODE_Z])
+        lock_z = 0;
+    else if (doom->keystates[SDL_SCANCODE_Z] && !lock_z)
+    {
+        edt_inward_zoom();
+        lock_z = 1;
+    }
+
+    if (lock_x && !doom->keystates[SDL_SCANCODE_X])
+        lock_x = 0;
+    else if (doom->keystates[SDL_SCANCODE_X] && !lock_x)
+    {
+        edt_outward_zoom();
+        lock_x = 1;
+    }
 }
 
 void				edt_render(t_doom *doom)

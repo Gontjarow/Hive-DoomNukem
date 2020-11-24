@@ -8,6 +8,9 @@ void	init_linedraw_data(void *data_ptr)
 	*data = (t_linedraw){0};
 }
 
+/* Depreceated.
+ *
+ *
 void	linedraw_to_buffer_safe(t_linedraw *data, SDL_Surface *buff, uint32_t color)
 {
 	t_line	line;
@@ -21,8 +24,9 @@ void	linedraw_to_buffer_safe(t_linedraw *data, SDL_Surface *buff, uint32_t color
 	line.y2 = data->draw_to_y;
 	render_line_safe(&line);
 }
-
-void	linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color)
+ *
+ */
+void	linedraw_to_buffer_fixed(t_linedraw *data, SDL_Surface *buff, uint32_t color)
 {
 	t_line	line;
 
@@ -36,11 +40,28 @@ void	linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color)
 	render_line(&line);
 }
 
-void	linedraw_to_wall(t_linedraw *data)
+void	linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color)
+{
+	t_linedraw		zoomed_line;
+	int 			zoom_factor;
+
+	zoom_factor = get_state()->zoom_factor;
+	if (zoom_factor == 1)
+		return (linedraw_to_buffer_fixed(data, buff, color));
+	zoomed_line.draw_from_x = data->draw_from_x / zoom_factor;
+	zoomed_line.draw_from_y = data->draw_from_y / zoom_factor;
+	zoomed_line.draw_to_y = data->draw_to_y;
+	zoomed_line.draw_to_x = data->draw_to_x;
+	linedraw_to_buffer_fixed(&zoomed_line, buff, color);
+}
+
+t_wall	*linedraw_to_wall(t_linedraw *data)
 {
 	t_wall	*wall;
+	t_wall	*ret_wall;
 
 	wall = get_model()->walls;
+	ret_wall = wall;
 	wall->id = get_model()->wall_count;
 	wall->start.x = data->draw_from_x;
 	wall->start.y = data->draw_from_y;
@@ -55,5 +76,6 @@ void	linedraw_to_wall(t_linedraw *data)
 	get_model()->walls->next = wall;
 	get_model()->walls = wall;
 		//ft_putendl("Linedraw_to_wall: Added a wall to model->walls");
+	return (ret_wall);
 }
 

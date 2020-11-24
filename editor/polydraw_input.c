@@ -30,14 +30,15 @@ void 		polydraw_mouse_motion(int x, int y)
 	static pthread_t    magnet_thread;
 	static int          updated_magnet_hover = 0;
 
+	// TODO UPDATE BELOW CODE TO WORK ALSO FOR OTHER ZOOM FACTORS THAN 1
 	// Check if polydraw_status->phase is not polydraw_continue() to early exit!
 	if (polydraw_status()->phase != 1)
 		return ;
 	// When the phase is polydraw_continue(), draw a line at the front buffer
 	data = polydraw_status()->data;
 	assert(data->drawing_underway);
-	assert(data->draw_from_x >= 0 && data->draw_from_x < EDT_WIN_WIDTH &&
-		   data->draw_from_y >= 0 && data->draw_from_y < EDT_WIN_HEIGHT);
+	assert(data->draw_from_x >= 0 && data->draw_from_x < EDT_WIN_WIDTH * get_state()->zoom_factor &&
+		   data->draw_from_y >= 0 && data->draw_from_y < EDT_WIN_HEIGHT * get_state()->zoom_factor);
 	// When the phase is polydraw_continue(), check for magnetization
     polydraw_status()->motion_x = x;
     polydraw_status()->motion_y = y;
@@ -48,8 +49,8 @@ void 		polydraw_mouse_motion(int x, int y)
     }
     if (get_state()->thread_hit && !updated_magnet_hover)
     {
-        data->draw_to_x = get_state()->thread_x;
-        data->draw_to_y = get_state()->thread_y;
+        data->draw_to_x = get_state()->thread_x * get_state()->zoom_factor;
+        data->draw_to_y = get_state()->thread_y * get_state()->zoom_factor;
         wipe_editor_front_buffer(0xff000000);
         linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
         circle_to_buffer(editor_front_buffer()->buff, (t_point){data->draw_to_x, data->draw_to_y}, 15, get_state()->thread_color);
@@ -59,14 +60,16 @@ void 		polydraw_mouse_motion(int x, int y)
     }
     else if (!get_state()->thread_hit)
     {
+    	// Regular case. Draw a preview line on the screens front buffer.
         data->draw_to_x = x;
         data->draw_to_y = y;
         wipe_editor_front_buffer(0xff000000);
         linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
-        updated_magnet_hover = 0;
         editor_front_buffer()->rendering_on = 1;
+		updated_magnet_hover = 0;
     }
 }
+// TODO ADJUST ABOVE TO FUNCTION WITH ZOOM
 
 void 		polydraw_left_click(int x, int y)
 {

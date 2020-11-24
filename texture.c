@@ -33,6 +33,16 @@ Uint32			get_exact_pixel(SDL_Surface *surface, int x, int y)
 	return (((Uint32 *)surface->pixels)[y * surface->w + x]);
 }
 
+SDL_Surface		*xpm2surface(char *path)
+{
+	SDL_Surface *surface;
+
+	surface = IMG_Load(path);
+	if(!surface)
+		ft_die("Fatal error: xpm2surface failure.");
+	return (surface);
+}
+
 /*
 ** A loading texture we could use with any SDL2 supported image format
 */
