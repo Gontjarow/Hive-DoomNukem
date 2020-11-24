@@ -57,19 +57,45 @@ t_face_verts	*list2face(t_face_verts *list, int index)
 	}
 	return (list);
 }
+
+t_face_verts	*new_face(t_vert a, t_vert b, t_vert c)
+{
+	t_global_vert *v[3];
+	t_face_verts *out;
+
+	assert(v[0] = malloc(sizeof(*v[0])));
+	assert(v[1] = malloc(sizeof(*v[1])));
+	assert(v[2] = malloc(sizeof(*v[2])));
+	assert(out = malloc(sizeof(*out)));
+	v[0]->v = a;
+	v[0]->prev = NULL;
+	v[0]->next = v[1];
+	v[1]->v = b;
+	v[1]->prev = v[0];
+	v[1]->next = v[2];
+	v[2]->v = c;
+	v[2]->prev = v[1];
+	v[2]->next = NULL;
+	out->p = v[0];
+	out->prev = NULL;
+	out->next = NULL;
+	return (out);
 }
 
 t_obj	mdl_to_usable_data()
 {
-	t_obj obj;
-	t_doom *doom;
+	t_obj			obj;
+	t_doom			*doom;
 
-	int	wall_count;
-	int room_count;
-	int floor_height;
-	int roof_height;
-	t_wall *wall;
-	t_room *room;
+	int				wall_count;
+	int				room_count;
+	int				floor_height;
+	int				roof_height;
+	t_wall			*wall;
+	t_room			*room;
+
+	t_face_verts	*wall_tris;
+	t_face_verts	*single_wall;
 
 	room_count = doom->mdl->room_count;
 	room = doom->mdl->room_first;
@@ -86,16 +112,38 @@ t_obj	mdl_to_usable_data()
 			// line from A <----- B
 			// A roof, A floor, B floor
 			// vertical up/down?
-			t_vert a = vec4(wall->start.x, wall->start.y, roof_height, T_POS);
-			t_vert b = vec4(wall->start.x, wall->start.y, floor_height, T_POS);
-			t_vert c = vec4(wall->next->start.x, wall->next->start.y, roof_height, T_POS);
+			// solution: clockwise-sorted room corners, CCW triangles
+			// note: CCW corners should work too
 
-			t_vert a = vec4(wall->start.x, wall->start.y, floor_height, T_POS);
-			t_vert b = vec4(wall->next->start.x, wall->next->start.y, floor_height, T_POS);
-			t_vert c = vec4(wall->next->start.x, wall->next->start.y, roof_height, T_POS);
+			// build linked list with 2 triangles
+			single_wall = make_wall(wall, wall->next, floor_height, roof_height);
+			// join those triangles to some bigger list
+			join_face_list(wall_tris, single_wall);
 			wall = wall->next;
 		}
 		room = room->next;
 	}
 	// list2face(obj.f_list, 1);
+}
+
+t_face_verts	*make_wall(t_wall *a, t_wall *b, int floor, int roof)
+{
+	t_vert			v[3];
+	t_face_verts	*f[2];
+
+	v[0] = vec4(a->start.x, a->start.y, roof, T_POS);
+	v[1] = vec4(a->start.x, a->start.y, floor, T_POS);
+	v[2] = vec4(b->start.x, b->start.y, roof, T_POS);
+	f[0] = new_face(v[0], v[1], v[2]);
+	v[0] = vec4(a->start.x, a->start.y, floor, T_POS);
+	v[1] = vec4(b->start.x, b->start.y, floor, T_POS);
+	v[2] = vec4(b->start.x, b->start.y, roof, T_POS);
+	f[0] = new_face(v[0], v[1], v[2]);
+	join_face_list(f[0], f[1]);
+	return (f[0]);
+}
+
+void			join_face_list(t_face_verts *a, t_face_verts *b)
+{
+	list2face(a, -1)->next = b; // lol
 }
