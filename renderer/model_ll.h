@@ -13,26 +13,26 @@
 **	each node simply contains t_vert
 */
 
-typedef struct	s_verts
+typedef struct	s_global_vert
 {
-	t_vert			v;
-	struct s_verts	*prev;
-	struct s_verts	*next;
-}				t_verts;
+	t_vert					v;
+	struct s_global_vert	*prev;
+	struct s_global_vert	*next;
+}				t_global_vert;
 
-typedef struct	s_faces
+typedef struct	s_face_verts
 {
-	t_verts			list;
-	struct s_faces	*prev;
-	struct s_faces	*next;
-}				t_faces;
+	t_global_vert		*p;
+	struct s_face_verts	*prev;
+	struct s_face_verts	*next;
+}				t_face_verts;
 
 typedef struct	s_obj
 {
-	int		v_count;
-	int		f_count;
-	t_verts	v_list;
-	t_faces	f_list;
+	int				v_count;
+	int				f_count;
+	t_global_vert	*v_list;
+	t_face_verts	*f_list;
 }				t_obj;
 
 # include "renderer.h"
