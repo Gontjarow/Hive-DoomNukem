@@ -49,8 +49,8 @@ void 		polydraw_mouse_motion(int x, int y)
     }
     if (get_state()->thread_hit && !updated_magnet_hover)
     {
-        data->draw_to_x = get_state()->thread_x * get_state()->zoom_factor;
-        data->draw_to_y = get_state()->thread_y * get_state()->zoom_factor;
+        data->draw_to_x = get_state()->thread_x; //* get_state()->zoom_factor;
+        data->draw_to_y = get_state()->thread_y; //* get_state()->zoom_factor;
         wipe_editor_front_buffer(0xff000000);
         linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
         circle_to_buffer(editor_front_buffer()->buff, (t_point){data->draw_to_x, data->draw_to_y}, 15, get_state()->thread_color);
