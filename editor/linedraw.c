@@ -26,6 +26,37 @@ void	linedraw_to_buffer_safe(t_linedraw *data, SDL_Surface *buff, uint32_t color
 }
  *
  */
+
+static void	careful_linedraw_to_buffer_fixed(t_linedraw *data, SDL_Surface *buff, uint32_t color, uint32_t avoid)
+{
+	t_line	line;
+
+	line.doom = doom_ptr();
+	line.buff = buff;
+	line.color = color;
+	line.avoid = avoid;
+	line.x1 = data->draw_from_x;
+	line.y1 = data->draw_from_y;
+	line.x2 = data->draw_to_x;
+	line.y2 = data->draw_to_y;
+	careful_render_line(&line);
+}
+
+void		careful_linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color, uint32_t avoid)
+{
+	t_linedraw		zoomed_line;
+	int 			zoom_factor;
+
+	zoom_factor = get_state()->zoom_factor;
+	if (zoom_factor == 1)
+		return (careful_linedraw_to_buffer_fixed(data, buff, color, avoid));
+	zoomed_line.draw_from_x = data->draw_from_x / zoom_factor;
+	zoomed_line.draw_from_y = data->draw_from_y / zoom_factor;
+	zoomed_line.draw_to_y = data->draw_to_y;
+	zoomed_line.draw_to_x = data->draw_to_x;
+	careful_linedraw_to_buffer_fixed(&zoomed_line, buff, color, avoid);
+}
+
 void	linedraw_to_buffer_fixed(t_linedraw *data, SDL_Surface *buff, uint32_t color)
 {
 	t_line	line;

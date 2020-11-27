@@ -39,10 +39,9 @@ void 			polydraw_continue(t_status *status)
         data->draw_to_y = status->click_y * get_state()->zoom_factor;
     }
 	wall_to_buffer(linedraw_to_wall(data), editor_back_buffer()->buff, 0xffffffff);
-	printf("With zoom of %d: linedraw (%d, %d) to (%d, %d)\n", get_state()->zoom_factor,
-		data->draw_from_x, data->draw_from_y, data->draw_to_x, data->draw_to_y);
-	debug_model_walls();
-	//linedraw_to_buffer_safe(data, editor_back_buffer()->buff, 0xffffffff);
+		//printf("With zoom of %d: linedraw (%d, %d) to (%d, %d)\n", get_state()->zoom_factor,
+		//data->draw_from_x, data->draw_from_y, data->draw_to_x, data->draw_to_y);
+		//debug_model_walls();
 	editor_back_buffer()->rendering_on = 1;
 	*data = (t_linedraw){data->origin_id, 1, status->click_x * get_state()->zoom_factor,
 					  status->click_y * get_state()->zoom_factor, 0};

@@ -33,14 +33,14 @@
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 512
-# define EDT_WIN_WIDTH 1024
-# define EDT_WIN_HEIGHT 512
+# define EDT_WIN_WIDTH 1600
+# define EDT_WIN_HEIGHT 900
 # define GAME_WIN_WIDTH 1024
 # define GAME_WIN_HEIGHT 512
 # define GAME_MIDWIDTH (GAME_WIN_WIDTH / 2)
 # define GAME_MIDHEIGHT (GAME_WIN_HEIGHT / 2)
-# define GAME_POLYMAP_WIDTH 5000
-# define GAME_POLYMAP_HEIGHT 5000
+# define GAME_POLYMAP_WIDTH 6400
+# define GAME_POLYMAP_HEIGHT 3600
 # define UINT_ERROR_CONSTANT 32202
 
 # define FPS 60
@@ -212,6 +212,7 @@ typedef struct 			s_line
 	int 				px;
 	int 				py;
 	uint32_t 			color;
+	uint32_t 			avoid;
 	struct SDL_Surface 	*buff;
 	struct s_doom		*doom;
 }						t_line;
@@ -344,6 +345,7 @@ SDL_Surface		*load_texture(t_doom *doom, char *path);
  * */
 void			render_line_safe(t_line *l);
 void 			render_line(t_line *l);
+void			careful_render_line(t_line *l);
 
 /*
  * from pixel.c

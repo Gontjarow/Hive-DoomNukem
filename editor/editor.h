@@ -57,11 +57,11 @@ typedef struct 			s_status
 	void                *data;
 }						t_status;
 
-typedef struct 			s_gui
-{
+typedef struct 			s_gui // Mode_Polydraw() .... infinite amount of Mode_Somethings() which all define their own
+{							  // interactions etc. for example Mode_Placement()
     gui_event			activate;
     gui_event			change_zoom;
-	gui_click  			left_click;
+	gui_click  			left_click; // Function pointer to polydraw_leftclick
 	gui_click			middle_click;
 	gui_click			right_click;
 	gui_motion			motion;
@@ -112,17 +112,26 @@ void			relink_model_walls(t_wall *relinking_wall);
 void            wipe_editor_back_buffer(uint32_t color);
 void            wipe_editor_front_buffer(uint32_t color);
 t_2d_layer      *editor_back_buffer(void);
-void            circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 t_2d_layer      *editor_front_buffer(void);
 SDL_Surface     *mixing_surface();
+
+/*
+ * from circle_to_buffer.c
+ * */
+
+void			unmasked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t mask);
+void			masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t avoid);
+void            circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 
 /*
  * from linedraw.c
  * */
 
 void			init_linedraw_data(void *data_ptr);
+void			careful_linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color, uint32_t avoid);
 void			linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color);
 t_wall			*linedraw_to_wall(t_linedraw *data);
+
 
 /*
  * from magnets.c

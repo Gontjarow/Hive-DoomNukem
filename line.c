@@ -40,6 +40,82 @@ static t_line	*quad(int quad_mode, t_line *l)
 	return (l);
 }
 
+static void		line_quick_draw(t_line *l, int delta_x, int delta_y)
+{
+	int				abs_deltas[2];
+	int				kx;
+	int				loc;
+	int				line_width;
+	uint32_t		col;
+	uint32_t		*pixels;
+
+	pixels = l->buff->pixels;
+	line_width = l->buff->w;
+	col = l->color;
+
+	abs_deltas[0] = abs(delta_x);
+	abs_deltas[1] = abs(delta_y);
+	kx = 2 * abs_deltas[1] - abs_deltas[0];
+	loc = l->fx + (l->fy * line_width);
+	pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	while (l->fx < l->px)
+	{
+		loc++;
+		l->fx++;
+		if (kx < 0)
+			kx += 2 * abs_deltas[1];
+		else
+		{
+			if ((delta_x < 0 && delta_y < 0) || (delta_x > 0 && delta_y > 0))
+				loc += line_width;//l->fy++;
+			else
+				loc -= line_width;//l->fy--;
+			kx += 2 * (abs_deltas[1] - abs_deltas[0]);
+		}
+		pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	}
+}
+
+static void		line_care_draw(t_line *l, int delta_x, int delta_y)
+{
+	int				abs_deltas[2];
+	int				kx;
+	int				loc;
+	int				line_width;
+	uint32_t		col;
+	uint32_t		*pixels;
+	uint32_t		avoid;
+
+	pixels = l->buff->pixels;
+	line_width = l->buff->w;
+	col = l->color;
+	avoid = l->avoid;
+
+	abs_deltas[0] = abs(delta_x);
+	abs_deltas[1] = abs(delta_y);
+	kx = 2 * abs_deltas[1] - abs_deltas[0];
+	loc = l->fx + (l->fy * line_width);
+	if (pixels[loc] != avoid)
+		pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	while (l->fx < l->px)
+	{
+		loc++;
+		l->fx++;
+		if (kx < 0)
+			kx += 2 * abs_deltas[1];
+		else
+		{
+			if ((delta_x < 0 && delta_y < 0) || (delta_x > 0 && delta_y > 0))
+				loc += line_width;//l->fy++;
+			else
+				loc -= line_width;//l->fy--;
+			kx += 2 * (abs_deltas[1] - abs_deltas[0]);
+		}
+		if (pixels[loc] != avoid)
+			pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	}
+}
+
 static void		line_draw(t_line *l, int delta_x, int delta_y)
 {
 	int	abs_deltas[2];
@@ -63,6 +139,87 @@ static void		line_draw(t_line *l, int delta_x, int delta_y)
 			kx += 2 * (abs_deltas[1] - abs_deltas[0]);
 		}
 		set_pixel(l->buff, l->fx, l->fy, l->color);
+	}
+}
+
+// TODO: Norminettize, plus make caution calculations. Calculate once, that initial loc is not below 0
+//	Also calculate, that the last expected pixel will not be off buffer. If it is off the buffer, redirect
+//	To calling line_safe instead which is slow but wont crash. Write a warning message to help debug aswell.
+//	Also do these steps for the line_quick. Archive depreceated respective functions as well.
+
+static void 	line_quick_mirror(t_line *l, int delta_x, int delta_y)
+{
+	int			abs_deltas[2];
+	int			ky;
+	int			loc;
+	int			line_width;
+	uint32_t	col;
+	uint32_t	*pixels;
+
+	pixels = l->buff->pixels;
+	line_width = l->buff->w;
+	col = l->color;
+
+	abs_deltas[0] = abs(delta_x);
+	abs_deltas[1] = abs(delta_y);
+	ky = 2 * abs_deltas[0] - abs_deltas[1];
+	loc = l->fx + (l->fy * line_width);
+	pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	while (l->fy < l->py)
+	{
+		loc += line_width;
+		l->fy++;
+		if (ky <= 0)
+			ky += 2 * abs_deltas[0];
+		else
+		{
+			if ((delta_x < 0 && delta_y < 0) || (delta_x > 0 && delta_y > 0))
+				loc++;//l->fx++;
+			else
+				loc--;//l->fx--;
+			ky += 2 * (abs_deltas[0] - abs_deltas[1]);
+		}
+		pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	}
+}
+
+static void 	line_care_mirror(t_line *l, int delta_x, int delta_y)
+{
+	int			abs_deltas[2];
+	int			ky;
+	int			loc;
+	int			line_width;
+	uint32_t	col;
+	uint32_t 	avoid;
+	uint32_t	*pixels;
+
+	pixels = l->buff->pixels;
+	line_width = l->buff->w;
+	col = l->color;
+	avoid = l->avoid;
+
+	abs_deltas[0] = abs(delta_x);
+	abs_deltas[1] = abs(delta_y);
+	ky = 2 * abs_deltas[0] - abs_deltas[1];
+	loc = l->fx + (l->fy * line_width);
+	if (pixels[loc] != avoid)
+		pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	while (l->fy < l->py)
+	{
+		loc += line_width;
+		l->fy++;
+		if (ky <= 0)
+			ky += 2 * abs_deltas[0];
+		else
+		{
+			if ((delta_x < 0 && delta_y < 0) || (delta_x > 0 && delta_y > 0))
+				loc++;//l->fx++;
+			else
+				loc--;//l->fx--;
+			ky += 2 * (abs_deltas[0] - abs_deltas[1]);
+		}
+		if (pixels[loc] != avoid)
+			pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
 	}
 }
 
@@ -108,7 +265,7 @@ void			render_line(t_line *l)
 			l = quad(0, l);
 		else
 			l = quad(1, l);
-		line_draw(l, delta_x, delta_y);
+		line_quick_draw(l, delta_x, delta_y);
 	}
 	else
 	{
@@ -116,6 +273,31 @@ void			render_line(t_line *l)
 			l = quad(2, l);
 		else
 			l = quad(3, l);
-		line_mirror(l, delta_x, delta_y);
+		line_quick_mirror(l, delta_x, delta_y);
+	}
+}
+
+void			careful_render_line(t_line *l)
+{
+	int delta_x;
+	int	delta_y;
+
+	delta_x = l->x2 - l->x1;
+	delta_y = l->y2 - l->y1;
+	if (abs(delta_y) <= abs(delta_x))
+	{
+		if (delta_x >= 0)
+			l = quad(0, l);
+		else
+			l = quad(1, l);
+		line_care_draw(l, delta_x, delta_y);
+	}
+	else
+	{
+		if (delta_y >= 0)
+			l = quad(2, l);
+		else
+			l = quad(3, l);
+		line_care_mirror(l, delta_x, delta_y);
 	}
 }

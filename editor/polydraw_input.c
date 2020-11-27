@@ -24,13 +24,23 @@ t_status		*polydraw_status(void)
     return (status);
 }
 
+// Cleared TO-DO Create a direct draw system for the preview lines.
+//  	Stage 1: For each line, have a) "draw" and b) "undraw" // DONE
+//		Stage 2: draw->undraw->draw-> for the preview lines directly in buffer // DONE
+//		Stage 3: This will cause overwritten data to be lost. "Solution": Disable overwrite "draw" and "undraw" // DONE
+//		Stage 4: Detect bug in the cycle where the magnetization kicks in and causes undraw to be lost // DONE
+//		Stage 5: Create masked_circle_to_buffer function to replace the default version from the code // DONE
+//		Stage 6: Cleanup the additional code, update headers, and test for bugs // DONE
+//		Stage 7: Commit and move to the next task // DONE
+
 void 		polydraw_mouse_motion(int x, int y)
 {
 	t_linedraw          *data;
+	static t_linedraw	previous_data = { 0 };
+	static uint32_t 	masked_color = 0;
 	static pthread_t    magnet_thread;
 	static int          updated_magnet_hover = 0;
 
-	// TODO UPDATE BELOW CODE TO WORK ALSO FOR OTHER ZOOM FACTORS THAN 1
 	// Check if polydraw_status->phase is not polydraw_continue() to early exit!
 	if (polydraw_status()->phase != 1)
 		return ;
@@ -51,10 +61,21 @@ void 		polydraw_mouse_motion(int x, int y)
     {
         data->draw_to_x = get_state()->thread_x; //* get_state()->zoom_factor;
         data->draw_to_y = get_state()->thread_y; //* get_state()->zoom_factor;
-        wipe_editor_front_buffer(0xff000000);
-        linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
-        circle_to_buffer(editor_front_buffer()->buff, (t_point){data->draw_to_x, data->draw_to_y}, 15, get_state()->thread_color);
-        editor_front_buffer()->rendering_on = 1;
+        //wipe_editor_front_buffer(0xff000000);
+		if (previous_data.drawing_underway)
+			careful_linedraw_to_buffer(&previous_data, doom_ptr()->edt->buff, 0xff000000, 0xffffffff);
+		previous_data.draw_to_y = data->draw_to_y;
+		previous_data.draw_to_x = data->draw_to_x;
+		previous_data.draw_from_y = data->draw_from_y;
+		previous_data.draw_from_x = data->draw_from_x;
+		previous_data.drawing_underway = 1;
+        careful_linedraw_to_buffer(data, doom_ptr()->edt->buff, 0xfffffffe, 0xffffffff);
+		masked_color = get_state()->thread_color;
+        masked_circle_to_buffer(doom_ptr()->edt->buff, (t_point){data->draw_to_x, data->draw_to_y}, 15,
+								masked_color, 0xffffffff);
+		//linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
+		//circle_to_buffer(editor_front_buffer()->buff, (t_point){data->draw_to_x, data->draw_to_y}, 15, get_state()->thread_color);
+        //editor_front_buffer()->rendering_on = 1;
         updated_magnet_hover = 1;
         return ;
     }
@@ -63,13 +84,23 @@ void 		polydraw_mouse_motion(int x, int y)
     	// Regular case. Draw a preview line on the screens front buffer.
         data->draw_to_x = x;
         data->draw_to_y = y;
-        wipe_editor_front_buffer(0xff000000);
-        linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
-        editor_front_buffer()->rendering_on = 1;
+        //wipe_editor_front_buffer(0xff000000);
+        //linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
+        //editor_front_buffer()->rendering_on = 1;
+		if (previous_data.drawing_underway)
+			careful_linedraw_to_buffer(&previous_data, doom_ptr()->edt->buff, 0xff000000, 0xffffffff);
+		if (updated_magnet_hover)
+			unmasked_circle_to_buffer(doom_ptr()->edt->buff, (t_point){previous_data.draw_to_x, previous_data.draw_to_y}, 15,
+									  0xffffffff, masked_color);
+		previous_data.draw_to_y = data->draw_to_y;
+		previous_data.draw_to_x = data->draw_to_x;
+		previous_data.draw_from_y = data->draw_from_y;
+		previous_data.draw_from_x = data->draw_from_x;
+		previous_data.drawing_underway = 1;
+		careful_linedraw_to_buffer(data, doom_ptr()->edt->buff, 0xfffffffe, 0xffffffff);
 		updated_magnet_hover = 0;
     }
 }
-// TODO ADJUST ABOVE TO FUNCTION WITH ZOOM
 
 void 		polydraw_left_click(int x, int y)
 {

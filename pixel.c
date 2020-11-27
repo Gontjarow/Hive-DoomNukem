@@ -45,7 +45,6 @@ int 	set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color)
 	uint32_t	*pixels;
 	int 		location;
 	int 		maximum_limit;
-	static int 	warned_times;
 
 	pixels = buff->pixels;
 	location = x + buff->w * y;
@@ -67,7 +66,6 @@ void 	set_pixel(SDL_Surface *buff, int x, int y, uint32_t color)
 	uint32_t	*pixels;
 	int 		location;
 	int 		maximum_limit;
-	static int 	warned_times;
 
 	pixels = buff->pixels;
 	location = x + buff->w * y;
