@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   load_model.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/18 17:34:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/11/27 19:15:33 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void init_model(t_doom *doom)
 	doom->mdl->player.min_speed = 5;	// crouched
 	doom->mdl->player.mov_speed = 10;	// walking
 	doom->mdl->player.max_speed = 20;	// running
-	doom->mdl->player.rot_speed = 1;
+	doom->mdl->player.rot_speed = 5;
 	doom->mdl->player.run_lock = 0;
 	doom->mdl->player.crouch_lock = 0;
 }
