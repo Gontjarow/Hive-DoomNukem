@@ -63,6 +63,10 @@ $(NAME): $(LIBFT_PATH)/libft.a $(OBJECTS)
 	@gcc $(OBJECTS) -o $(NAME) $(FLAGS)
 	@echo "$(MSG)Done! (Shell: $(SHELL_NAME))$(END)"
 
+prod: $(LIBFT_PATH)/libft.a $(OBJECTS)
+	@gcc $(OBJECTS) -o $(NAME) $(FLAGS) -DNDEBUG
+	@echo "$(MSG)Done! Assert calls were disabled! (Shell: $(SHELL_NAME))$(END)"
+
 $(LIBFT_PATH)/libft.a:
 	@make -C libft
 

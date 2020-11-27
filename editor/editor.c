@@ -17,8 +17,9 @@
 //  https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order/
 
 // TODO:
-//  LET USER KNOW WHICH MODE IS ACTIVE
-//  LET USER ZOOM AND SCROLL FREELY IN THE EDITOR
+//  LET USER ZOOM SCROLL FREELY IN THE EDITOR
+//	SCROLLING REQUIRES CLIPPING CODE TO KNOW THE OFFSETTED VIEW AREA
+//	EXPLORE DIFFERENT RESOLUTIONS IN EDITOR WINDOW
 
 // TODO NEXT FEATURE:
 //  MODE TO ADD ENEMY AND PLAYER OBJECTS
@@ -36,7 +37,7 @@
 // TODO: Utilize trigger_protection to detect illegal wall draws or room draws
 //  (creation of intersection (overlapping) walls should not be possible
 
-// MOVE THIS SOMEWHERE COMMONPLACE
+// TODO MOVE THIS SOMEWHERE COMMONPLACE
 void 				trigger_protection(int clear)
 {
 	static int triggers = 0;
@@ -63,7 +64,7 @@ void 				trigger_protection(int clear)
  * or the editor exits) it should know how to reset and clean itself up by
  * polydraw_status()->reset(polydraw_status());*/
 
-// MOVE THIS SOMEWHERE MODE_* PLACE
+// TODO MOVE THIS SOMEWHERE MODE_* PLACE
 static t_gui        *mode_polydraw()
 {
 	static t_gui	*polydraw = NULL;
@@ -84,6 +85,8 @@ static t_gui        *mode_polydraw()
 	}
 	return (polydraw);
 }
+
+// TODO MOVE ZOOM_XPM, NODE_XPM AND PRINT_MODE_INFO SOMEWHERE COMMONPLACE
 
 SDL_Surface			*zoom_xpm(int factor)
 {
@@ -190,7 +193,7 @@ void				destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
-// TODO MOVE THESE THREE TO EDT_INPUT
+// TODO MOVE THESE FIVE BELOW FUNCTIONS TO EDT_INPUT
 void				edt_mouse_motion(t_doom *doom)
 {
 	t_state			*state;
