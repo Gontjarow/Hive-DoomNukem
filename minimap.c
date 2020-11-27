@@ -45,7 +45,7 @@ void	print_minimap_walls(t_doom *doom)
 	}
 }
 
-static void minimap_circle_enemy(t_doom *doom, t_enemy *enemy)
+static void minimap_circle_enemy(t_doom *doom, t_enemy *enemy, unsigned int color)
 {
 	unsigned int *pixels;
 	int radius;
@@ -64,7 +64,7 @@ static void minimap_circle_enemy(t_doom *doom, t_enemy *enemy)
 			scaled.x = enemy->x * doom->minimap->scale;
 			scaled.y = enemy->y * doom->minimap->scale;
 			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
-				pixels[scaled.x + x + ((scaled.y + y) * MINIMAP_WIN_WIDTH)] = 0xff00ff00;
+				pixels[scaled.x + x + ((scaled.y + y) * MINIMAP_WIN_WIDTH)] = color;
 			x++;
 		}
 		y++;
@@ -77,6 +77,7 @@ void	print_minimap_enemies(t_doom *doom)
 	t_enemy	*enemy;
 	t_line	line;
 	int 	ec;
+	unsigned int color;
 
 	ec = doom->mdl->enemy_count;
 	if (ec == 0)
@@ -88,10 +89,14 @@ void	print_minimap_enemies(t_doom *doom)
 		line.y1 = enemy->y * doom->minimap->scale;
 		line.x2 = enemy->tail.x * doom->minimap->scale;
 		line.y2 = enemy->tail.y * doom->minimap->scale;
-		line.color = 0xff00ff00;
+		if (enemy->hp.cur == 0)
+			color = 0xffff0000;
+		else
+			color = 0xff00ff00;
+		line.color = color;
 		line.buff = doom->minimap->buff;
 		render_line(&line);
-		minimap_circle_enemy(doom, enemy);
+		minimap_circle_enemy(doom, enemy, color);
 		enemy = enemy->next;
 	}
 }

@@ -89,14 +89,14 @@ int		player_collision_with_enemies(t_doom *doom)
 
 	ec = doom->mdl->enemy_count;
 	if (ec == 0)
-		return ;
+		return (0);
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
 		dx = (int)doom->mdl->player.x - enemy->x;
 		dy = (int)doom->mdl->player.y - enemy->y;
 		distance = sqrt(dx * dx + dy * dy);
-		if (distance < 10 + 10)
+		if ((distance < 10 + 10) && enemy->hp.cur > 0)
 			return (-1);
 		enemy = enemy->next;
 	}
@@ -189,10 +189,11 @@ int		check_hit(t_doom *doom)
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
+		// printf("enemy hp: %d\nenemy id: %d\n", enemy->hp.cur, enemy->id);
 		inside1 = point_circle(doom->mdl->player.x, doom->mdl->player.y, enemy->x, enemy->y);
 		inside2 = point_circle(doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y, enemy->x, enemy->y);
-		if (inside1 || inside2) 
-			return (ec);
+		if ((inside1 || inside2) && enemy->hp.cur > 0) 
+			return (enemy->id);
 		// get length of the line
 		dist_x = doom->mdl->player.x - doom->mdl->player.bullet_pos_x;
 		dist_y = doom->mdl->player.y - doom->mdl->player.bullet_pos_y;
@@ -213,8 +214,8 @@ int		check_hit(t_doom *doom)
 		dist_x = closest_x - enemy->x;
 		dist_y = closest_y - enemy->y;
 		distance = sqrt((dist_x * dist_x) + (dist_y * dist_y));
-		if (distance <= 15)
-    		return (ec);
+		if (distance <= 15 && enemy->hp.cur > 0)
+    		return (enemy->id);
 		enemy = enemy->next;
 	}
 	return (-1);
@@ -238,15 +239,15 @@ void		deal_damage(t_doom *doom, int enemy_id)
 		if (enemy->id == enemy_id && enemy->hp.cur > 0)
 		{
 			enemy->hp.cur -= 10;
+			// printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
 			if (enemy->hp.cur <= 0)
 			{
-				printf("HE IS DEAD ;-;\n");
+				// printf("HE IS DEAD ;-;\n");
 				enemy->hp.cur = 0;
 			}
 		}
 		enemy = enemy->next;
 	}
-	printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
 }
 
 int			player_shoots(t_doom *doom)
