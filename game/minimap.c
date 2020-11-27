@@ -13,6 +13,18 @@
 #include "doom-nukem.h"
 #include "minimap.h"
 
+static void	rescale_minimap(t_wall *wall, t_doom *doom)
+{
+	while (wall->start.x * doom->minimap->scale > MINIMAP_WIN_WIDTH)
+		doom->minimap->scale -= 0.1;
+	while (wall->start.y * doom->minimap->scale > MINIMAP_WIN_HEIGHT)
+		doom->minimap->scale -= 0.1;
+	while (wall->end.x * doom->minimap->scale > MINIMAP_WIN_WIDTH)
+		doom->minimap->scale -= 0.1;
+	while (wall->end.y * doom->minimap->scale > MINIMAP_WIN_HEIGHT)
+		doom->minimap->scale -= 0.1;
+}
+
 void	print_minimap_walls(t_doom *doom)
 {
 	int		wc;
@@ -26,14 +38,7 @@ void	print_minimap_walls(t_doom *doom)
 	{
 		// printf("Wall id: %d | start: %d, %d | end: %d, %d\n",
 		// 		wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
-		while (wall->start.x * doom->minimap->scale > 400)
-			doom->minimap->scale -= 0.1;
-		while (wall->start.y * doom->minimap->scale > 400)
-			doom->minimap->scale -= 0.1;
-		while (wall->end.x * doom->minimap->scale > 400)
-			doom->minimap->scale -= 0.1;
-		while (wall->end.y * doom->minimap->scale > 400)
-			doom->minimap->scale -= 0.1;
+		rescale_minimap(wall, doom);
 		line.x1 = wall->start.x * doom->minimap->scale;
 		line.y1 = wall->start.y * doom->minimap->scale;
 		line.x2 = wall->end.x * doom->minimap->scale;

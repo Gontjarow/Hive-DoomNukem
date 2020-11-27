@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/10/05 19:00:37 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/11/27 16:28:52 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,209 +74,9 @@ void 		game_loop(t_doom *doom)
 		doom->game_quit = 0;
 }
 
-static double deg_to_rad(int deg)
+double deg_to_rad(int deg)
 {
 	return (deg * M_PI / 180);
-}
-
-int		player_collision_with_enemies(t_doom *doom)
-{
-	t_enemy	*enemy;
-	int	dx;
-	int	dy;
-	int	ec;
-	int	distance;
-
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return (0);
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
-	{
-		dx = (int)doom->mdl->player.x - enemy->x;
-		dy = (int)doom->mdl->player.y - enemy->y;
-		distance = sqrt(dx * dx + dy * dy);
-		if ((distance < 10 + 10) && enemy->hp.cur > 0)
-			return (-1);
-		enemy = enemy->next;
-	}
-	return (0);
-}
-
-unsigned int		check_location(t_doom *doom, int x, int y)
-{
-	int				location;
-	unsigned int	*pixels;
-
-	pixels = (unsigned int*)doom->mdl->poly_map->pixels;
-	location = (int)x + (int)y * GAME_POLYMAP_WIDTH;
-	if (location < 0 || location > ((GAME_POLYMAP_WIDTH * GAME_POLYMAP_HEIGHT) -1))
-		return (UINT_ERROR_CONSTANT);
-	return ((int)(pixels[location]));
-	// printf("pro debug: %d\n", doom->mdl->poly_map[location]);
-}
-
-static int	point_circle(double px, double py, double cx, double cy)
-{
-	// get distance between the point and circle's center
-	// using the Pythagorean Theorem
-	double	dist_x;
-	double	dist_y;
-	double	dist;
-
-	dist_x = px - cx;
-	dist_y = py - cy;
-	dist = sqrt((dist_x * dist_x) + (dist_y * dist_y));
-	// if the distance is less than the circle's
-	// radius the point is inside!
-	if (dist <= 15) 
-    	return (1);
-  return (0);
-}
-
-static double	dist(double px, double py, double x1, double y1)
-{
-	double	distance;
-
-	distance = sqrt(((px - x1) * (px - x1)) + ((py - y1) * (py - y1)));
-	return (distance);
-}
-
-static int	line_point(double x1, double y1, double x2, double y2, double px, double py)
-{
-	double	d1;
-	double	d2;
-	double	len;
-	double	buffer;
-	// get distance from the point to the two ends of the line
-	d1 = dist(px, py, x1, y1);
-	d2 = dist(px, py, x2, y2);
-
-	// get the length of the line
-	len = dist(x1, y1, x2, y2);
-
-	// since floats are so minutely accurate, add
-	// a little buffer zone that will give collision
-	buffer = 0.001;    // higher # = less accurate
-
-	// if the two distances are equal to the line's
-	// length, the point is on the line!
-	// note we use the buffer here to give a range,
-	// rather than one #
-	if (d1 + d2 >= len - buffer && d1 + d2 <= len + buffer)
-		return (1);
-	return (0);
-}
-
-int		check_hit(t_doom *doom)
-{
-	int		ec;
-	int		inside1;
-	int		inside2;
-	int		on_segment;
-	double	dist_x;
-	double	dist_y;
-	double	len;
-	double	dot;
-	double	closest_x;
-	double	closest_y;
-	double	distance;
-	t_enemy	*enemy;
-
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return (0);
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
-	{
-		// printf("enemy hp: %d\nenemy id: %d\n", enemy->hp.cur, enemy->id);
-		inside1 = point_circle(doom->mdl->player.x, doom->mdl->player.y, enemy->x, enemy->y);
-		inside2 = point_circle(doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y, enemy->x, enemy->y);
-		if ((inside1 || inside2) && enemy->hp.cur > 0) 
-			return (enemy->id);
-		// get length of the line
-		dist_x = doom->mdl->player.x - doom->mdl->player.bullet_pos_x;
-		dist_y = doom->mdl->player.y - doom->mdl->player.bullet_pos_y;
-		len = sqrt((dist_x * dist_x) + (dist_y * dist_y));
-		// get dot product of the line and circle
-		dot = ( ((enemy->x - doom->mdl->player.x) * (doom->mdl->player.bullet_pos_x - doom->mdl->player.x)) +
-			((enemy->y - doom->mdl->player.y) * (doom->mdl->player.bullet_pos_y - doom->mdl->player.y)) ) / pow(len,2);
-		// find the closest point on the line
-		closest_x = doom->mdl->player.x + (dot * (doom->mdl->player.bullet_pos_x - doom->mdl->player.x));
-		closest_y = doom->mdl->player.y + (dot * (doom->mdl->player.bullet_pos_y - doom->mdl->player.y));
-		// is this point actually on the line segment?
-		// if so keep going, but if not, return false
-		on_segment = line_point(doom->mdl->player.x, doom->mdl->player.y, doom->mdl->player.bullet_pos_x,
-								doom->mdl->player.bullet_pos_y, closest_x, closest_y);
-		if (!on_segment)
-			return (-1);
-		// get distance to closest point
-		dist_x = closest_x - enemy->x;
-		dist_y = closest_y - enemy->y;
-		distance = sqrt((dist_x * dist_x) + (dist_y * dist_y));
-		if (distance <= 15 && enemy->hp.cur > 0)
-    		return (enemy->id);
-		enemy = enemy->next;
-	}
-	return (-1);
-}
-
-void		deal_damage(t_doom *doom, int enemy_id)
-{
-	t_enemy	*enemy;
-	int	dx;
-	int	dy;
-	int	ec;
-	int	distance;
-
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return ;
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
-	{
-		// printf("enemy %d hp: %d\n", enemy->id, enemy->hp.cur);
-		if (enemy->id == enemy_id && enemy->hp.cur > 0)
-		{
-			enemy->hp.cur -= 10;
-			// printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
-			if (enemy->hp.cur <= 0)
-			{
-				// printf("HE IS DEAD ;-;\n");
-				enemy->hp.cur = 0;
-			}
-		}
-		enemy = enemy->next;
-	}
-}
-
-int			player_shoots(t_doom *doom)
-{
-	int		bullet_speed;
-	int		enemy_who_was_hit;
-	double	rad;
-
-	rad = deg_to_rad(doom->mdl->player.rot);
-	bullet_speed = 1;
-	enemy_who_was_hit = -1;
-	doom->mdl->player.bullet_pos_x = doom->mdl->player.x;
-	doom->mdl->player.bullet_pos_y = doom->mdl->player.y;
-	doom->minimap->debug_ray_color = 0xffff0000;
-	doom->minimap->debug_ray_timeout = 15;
-	while (check_location(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y) != -1 && enemy_who_was_hit < 0)
-	{
-		doom->mdl->player.bullet_pos_x += bullet_speed * -cos(rad);
-		doom->mdl->player.bullet_pos_y += bullet_speed * -sin(rad);
-		enemy_who_was_hit = check_hit(doom);
-		//ft_putnbr(discriminant);
-		//ft_putendl(" ");
-		if (enemy_who_was_hit >= 0)
-		{
-			doom->minimap->debug_ray_color = 0xff00ff00;
-			deal_damage(doom, enemy_who_was_hit);
-		}
-	}
-	return (0);
 }
 
 void		game_render(t_doom *doom)
@@ -439,5 +239,4 @@ void		game_render(t_doom *doom)
 	update_minimap(doom);
 	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
-	
 }

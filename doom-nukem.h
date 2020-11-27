@@ -16,7 +16,8 @@
 # include "libft.h"
 # include "objects.h"
 # include "editor.h"
-# include "minimap.h"
+# include "game/game.h"
+# include "game/minimap.h"
 # include "renderer.h"
 
 # include "SDL.h"

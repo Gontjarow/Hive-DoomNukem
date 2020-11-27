@@ -2,7 +2,7 @@
 NAME		:=	doom-nukem
 
 #	http://nuclear.mutantstargoat.com/articles/make/#multiple-source-directories
-SOURCES		:=	$(wildcard *.c) $(wildcard renderer/*.c) $(wildcard editor/*.c)
+SOURCES		:=	$(wildcard *.c) $(wildcard renderer/*.c) $(wildcard editor/*.c) $(wildcard game/*.c)
 OBJECTS		:=	$(SOURCES:.c=.o)
 
 #	http://nuclear.mutantstargoat.com/articles/make/#automatic-include-dependency-tracking
