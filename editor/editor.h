@@ -80,6 +80,8 @@ typedef struct 			s_state
     int                 job_running;
     int                 job_abort;
     int 				zoom_factor;
+    int					scroll_x;
+    int 				scroll_y;
 }						t_state;
 
 typedef struct 			s_editor

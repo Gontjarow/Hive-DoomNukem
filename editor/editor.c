@@ -17,9 +17,17 @@
 //  https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order/
 
 // TODO:
-//		LET USER ZOOM SCROLL FREELY IN THE EDITOR
-//		SCROLLING REQUIRES CLIPPING CODE TO KNOW THE OFFSETTED VIEW AREA
-//		EXPLORE DIFFERENT RESOLUTIONS IN EDITOR WINDOW
+//		LET USER SCROLL UP AND DOWN IN THE EDITOR WITH ARROW KEYS
+//		Stage 1: Offset_x, Offset_y, Live in same memory space as Zoom_factor // DONE
+//		Stage 2: These offsets can be between 0-(Max limit depending on Zoom-factor) both X, Y
+//		Stage 3: For Zoom Factor 1: Between 0 and 3*EDT_WINDOW_WIDTH / HEIGHT, X / Y
+//								 2: Between 0 and 2*EDT_WINDOW_WIDTH / HEIGHT, X / Y
+//								 4: Between 0 and 0, X, Y // ... DONE
+//		Stage 4: For rendering the correct space displace all walls' X&Y values by the offsets // DONE
+//		Stage 5: Test if this works as imagined // DONE
+//		Stage 6: Debug the program to detect where it is crashing and why, and fix that <-- YOU ARE HERE !!
+//		Stage 7: Adjust the sensitivity and acceleration of the keyboard control and commit
+//		EXPLORE DIFFERENT RESOLUTIONS IN EDITOR WINDOW // DONE
 
 // TODO NEXT FEATURE:
 //  MODE TO ADD ENEMY AND PLAYER OBJECTS
@@ -159,6 +167,8 @@ t_state				*get_state(void)
 		state->gui = mode_polydraw();
 		state->gui->activate(state);
 		state->zoom_factor = 1;
+		state->scroll_x = 0;
+		state->scroll_y = 0;
 		print_mode_info(state->gui);
 	}
 	    //printf("States address returned: %p\n", (void*)state);
@@ -234,19 +244,111 @@ static void			edt_inward_zoom(void)
 	print_mode_info(get_state()->gui);
 }
 
+static void 		redraw_walls_to_backbuffer(uint32_t color)
+{
+	wipe_editor_back_buffer(0xff000000);
+	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, color);
+	print_mode_info(get_state()->gui);
+}
+
+static void			accelerate_scroll(t_state *state)
+{
+	static int acc_x = 0;
+	static int acc_y = 0;
+	static int previous_x = 0;
+	static int previous_y = 0;
+
+	if (acc_x > 0)
+		acc_x--;
+	if (acc_y > 0)
+		acc_y--;
+	if (state->scroll_x == previous_x && state->scroll_y == previous_y)
+		return ;
+	if (state->scroll_x > previous_x)
+	{
+		acc_x += 2;
+		state->scroll_x += acc_x;
+	}
+	else if (state->scroll_x < previous_x)
+	{
+		acc_x += 2;
+		state->scroll_x -= acc_x;
+	}
+	if (state->scroll_y > previous_y)
+	{
+		acc_y += 2;
+		state->scroll_y += acc_y;
+	}
+	else if (state->scroll_y < previous_y)
+	{
+		acc_y += 2;
+		state->scroll_y -= acc_y;
+	}
+	previous_x = state->scroll_x;
+	previous_y = state->scroll_y;
+}
+
+// TODO: Systematize and change from constants to dynamic formulas,
+//  if having Norminette trouble or flexibility requirements increase
+
+static void			confine_scroll(t_state *state)
+{
+	static int previous_x;
+	static int previous_y;
+
+	if (state->scroll_x == previous_x && state->scroll_y == previous_y)
+		return ;
+	if (state->scroll_x < 0)
+		state->scroll_x = 0;
+	if (state->scroll_y < 0)
+		state->scroll_y = 0;
+	if (state->zoom_factor == 1)
+	{
+		if (state->scroll_x > EDT_WIN_WIDTH * 3)
+			state->scroll_x = EDT_WIN_WIDTH * 3;
+		if (state->scroll_y > EDT_WIN_HEIGHT * 3)
+			state->scroll_y = EDT_WIN_HEIGHT * 3;
+	}
+	else if (state->zoom_factor == 2)
+	{
+		if (state->scroll_x > EDT_WIN_WIDTH * 2)
+			state->scroll_x = EDT_WIN_WIDTH * 2;
+		if (state->scroll_y > EDT_WIN_HEIGHT * 2)
+			state->scroll_y = EDT_WIN_HEIGHT * 2;
+	}
+	else if (state->zoom_factor == 4)
+	{
+		state->scroll_y = 0;
+		state->scroll_x = 0;
+	}
+	previous_x = state->scroll_x;
+	previous_y = state->scroll_y;
+		//printf("Scroll {X, Y} = {%d, %d}\n", state->scroll_x, state->scroll_y);
+	redraw_walls_to_backbuffer(0xffffffff);
+}
+
 static void         edt_keystate_input(t_doom *doom) {
 	static int lock_w = 0;
 	static int lock_p = 0;
 	static int lock_z = 0;
 	static int lock_x = 0;
 
+	if (doom->keystates[SDL_SCANCODE_RIGHT])
+		get_state()->scroll_x += 10;
+	if (doom->keystates[SDL_SCANCODE_LEFT])
+		get_state()->scroll_x -= 10;
+	if (doom->keystates[SDL_SCANCODE_DOWN])
+		get_state()->scroll_y += 10;
+	if (doom->keystates[SDL_SCANCODE_UP])
+		get_state()->scroll_y -= 10;
+	//accelerate_scroll(get_state());
+	confine_scroll(get_state());
+
 	if (lock_p && !doom->keystates[SDL_SCANCODE_P])
 		lock_p = 0;
 	else if (doom->keystates[SDL_SCANCODE_P] && !lock_p)
 	{
-		wipe_editor_back_buffer(0xff000000);
-		x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
-		print_mode_info(get_state()->gui);
+		redraw_walls_to_backbuffer(0xffffffff);
 		lock_p = 1;
 	}
 

@@ -15,6 +15,7 @@ static unsigned int code_from_point(t_point *point, SDL_Surface *buff)
 		code |= (1 << 3);
 	return (code);
 }
+// TODO				Scrolling must be taken into account here to prevent crashing.
 
 static int			clip_wall_to_buff(t_wall *clip, t_wall *wall, SDL_Surface *buff)
 {
@@ -85,7 +86,7 @@ static int			clip_wall_to_buff(t_wall *clip, t_wall *wall, SDL_Surface *buff)
 	return (1);
 }
 
-static void			wall_to_buffer_debugged(t_wall *wall, SDL_Surface *buff, uint32_t color)
+static void			wall_to_buffer_clipped(t_wall *wall, SDL_Surface *buff, uint32_t color)
 {
 	t_line line;
 
@@ -111,26 +112,30 @@ static void			wall_to_buffer_fixed(t_wall *wall, SDL_Surface *buff, uint32_t col
 	line.y1 = wall->start.y;
 	line.x2 = wall->end.x;
 	line.y2 = wall->end.y;
-	if ((line.x1 > 0 && line.x1 < buff->w) && (line.y1 > 0 && line.y1 < buff->h)
-		&& (line.x2 > 0 && line.x2 < buff->w) && (line.y2 > 0 && line.y2 < buff->h))
+	if ((line.x1 >= 0 && line.x1 < buff->w) && (line.y1 >= 0 && line.y1 < buff->h)
+		&& (line.x2 >= 0 && line.x2 < buff->w) && (line.y2 >= 0 && line.y2 < buff->h))
 		render_line(&line);
 	else if (clip_wall_to_buff(&clipped_wall, wall, buff))
-		wall_to_buffer_debugged(&clipped_wall, buff, 0xffffffff);
+		wall_to_buffer_clipped(&clipped_wall, buff, 0xffffffff);
 }
 
 void 				wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color)
 {
-	t_wall			zoomed_wall;
+	t_wall			adjusted_wall;
 	int 			zoom_factor;
+	int 			sx;
+	int 			sy;
 
 	zoom_factor = get_state()->zoom_factor;
-	if (zoom_factor == 1)
+	sx = get_state()->scroll_x;
+	sy = get_state()->scroll_y;	
+	if (zoom_factor == 1 && sx == 0 && sy == 0)
 		return (wall_to_buffer_fixed(wall, buff, color));
-	zoomed_wall.start.x = wall->start.x / zoom_factor;
-	zoomed_wall.start.y = wall->start.y / zoom_factor;
-	zoomed_wall.end.x = wall->end.x / zoom_factor;
-	zoomed_wall.end.y = wall->end.y / zoom_factor;
-	return (wall_to_buffer_fixed(&zoomed_wall, buff, color));
+	adjusted_wall.start.x = (wall->start.x - sx) / zoom_factor;
+	adjusted_wall.start.y = (wall->start.y - sy) / zoom_factor;
+	adjusted_wall.end.x = (wall->end.x - sx) / zoom_factor;
+	adjusted_wall.end.y = (wall->end.y - sy) / zoom_factor;
+	return (wall_to_buffer_fixed(&adjusted_wall, buff, color));
 }
 
 void				x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color)
