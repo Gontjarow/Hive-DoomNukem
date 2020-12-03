@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/11/27 19:07:23 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/03 20:18:51 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ typedef struct 			s_enemy
 	int 				x;
 	int 				y;
 	int 				rot;
+	double				bullet_pos_x;
+	double				bullet_pos_y;
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;

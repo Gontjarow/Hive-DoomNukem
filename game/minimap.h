@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 21:42:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/24 16:04:22 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/03 20:11:01 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,18 @@
 # define MINIMAP_H
 
 # include "doom-nukem.h"
-# define MINIMAP_WIN_WIDTH 400
-# define MINIMAP_WIN_HEIGHT 400
+# define MINIMAP_WIN_WIDTH 1024
+# define MINIMAP_WIN_HEIGHT 512
 
 typedef struct		s_minimap
 {
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	double				scale;
-	int					debug_ray_timeout;
-	uint32_t			debug_ray_color;
+	int					enemy_ray_timeout;
+	uint32_t			enemy_ray_color;
+	int					player_ray_timeout;
+	uint32_t			player_ray_color;
 }					t_minimap;
 
 void			init_minimap(t_doom *doom);

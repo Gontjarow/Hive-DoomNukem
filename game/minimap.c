@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/24 17:20:03 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/03 20:18:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ void		print_minimap_player(t_doom *doom)
 	minimap_circle_player(doom);
 }
 
-void		print_debug_ray(t_doom *doom)
+void		print_player_ray(t_doom *doom)
 {
 	t_line	line;
 
@@ -155,10 +155,33 @@ void		print_debug_ray(t_doom *doom)
 	line.y1 = doom->mdl->player.y * doom->minimap->scale;
 	line.x2 = doom->mdl->player.bullet_pos_x * doom->minimap->scale;
 	line.y2 = doom->mdl->player.bullet_pos_y * doom->minimap->scale;
-	line.color = doom->minimap->debug_ray_color;
+	line.color = doom->minimap->player_ray_color;
 	line.buff = doom->minimap->buff;
 	render_line(&line);
-	doom->minimap->debug_ray_timeout--;
+	doom->minimap->player_ray_timeout--;
+}
+
+void		print_enemy_ray(t_doom *doom)
+{
+	t_line	line;
+	t_enemy *enemy;
+	int		ec;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		line.x1 = enemy->x * doom->minimap->scale;
+		line.y1 = enemy->y * doom->minimap->scale;
+		line.x2 = enemy->bullet_pos_x * doom->minimap->scale;
+		line.y2 = enemy->bullet_pos_y * doom->minimap->scale;
+		line.color = doom->minimap->enemy_ray_color;
+		line.buff = doom->minimap->buff;
+		render_line(&line);
+		doom->minimap->enemy_ray_timeout--;
+	}
 }
 
 void		destroy_minimap(t_doom *doom)
@@ -174,8 +197,10 @@ void		destroy_minimap(t_doom *doom)
 void		update_minimap(t_doom *doom)
 {
 	flood_buffer(doom->minimap->buff, 0xff000000);
-	if (doom->minimap->debug_ray_timeout > 0)
-		print_debug_ray(doom);
+	if (doom->minimap->player_ray_timeout > 0)
+		print_player_ray(doom);
+	if (doom->minimap->enemy_ray_timeout > 0)
+		print_enemy_ray(doom);
 	print_minimap_walls(doom);
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);

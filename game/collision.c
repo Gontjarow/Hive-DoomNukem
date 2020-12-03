@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/11/27 16:28:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/03 17:58:42 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		player_collision_with_enemies(t_doom *doom)
 	return (0);
 }
 
-static int	point_circle(double px, double py, double cx, double cy)
+int	point_circle(double px, double py, double cx, double cy)
 {
 	// get distance between the point and circle's center
 	// using the Pythagorean Theorem
@@ -54,7 +54,7 @@ static int	point_circle(double px, double py, double cx, double cy)
   return (0);
 }
 
-static double	dist(double px, double py, double x1, double y1)
+double	dist(double px, double py, double x1, double y1)
 {
 	double	distance;
 
@@ -62,7 +62,7 @@ static double	dist(double px, double py, double x1, double y1)
 	return (distance);
 }
 
-static int	line_point(double x1, double y1, double x2, double y2, double px, double py)
+int	line_point(double x1, double y1, double x2, double y2, double px, double py)
 {
 	double	d1;
 	double	d2;
