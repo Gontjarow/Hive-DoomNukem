@@ -1,4 +1,67 @@
 #include "doom-nukem.h"
+
+void				redraw_editor_to_backbuffer(uint32_t color)
+{
+	wipe_editor_back_buffer(0xff000000);
+	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, color);
+	print_mode_info(get_state()->gui);
+	draw_scroll_bars_to_backbuffer(get_state());
+}
+
+SDL_Surface			*zoom_xpm(int factor)
+{
+	static SDL_Surface *normal_zoom = NULL;
+	static SDL_Surface *double_zoom = NULL;
+	static SDL_Surface *triple_zoom = NULL;
+	static SDL_Surface *quad_zoom = NULL;
+	if (factor == 1)
+		return (normal_zoom == NULL ? normal_zoom = xpm2surface("img/edt/normal_zoom.xpm") : normal_zoom);
+	if (factor == 2)
+		return (double_zoom == NULL ? double_zoom = xpm2surface("img/edt/double_zoom.xpm") : double_zoom);
+	if (factor == 3)
+		return (triple_zoom == NULL ? triple_zoom = xpm2surface("img/edt/triple_zoom.xpm") : triple_zoom);
+	if (factor == 4)
+		return (quad_zoom == NULL ? quad_zoom = xpm2surface("img/edt/quad_zoom.xpm") : quad_zoom);
+	ft_die("Fatal error: Could not return zoom_xpm.");
+	return (NULL);
+}
+
+SDL_Surface			*mode_xpm(t_gui *mode)
+{
+	static SDL_Surface *polydraw_xpm = NULL;
+	static SDL_Surface *planting_xpm = NULL;
+
+	if (mode == mode_polydraw())
+		return (polydraw_xpm == NULL ? polydraw_xpm = xpm2surface("img/edt/wall_drawing.xpm") : polydraw_xpm);
+	if (mode == mode_planting())
+		return (planting_xpm == NULL ? planting_xpm = xpm2surface("img/edt/planting.xpm") : planting_xpm);
+	ft_die("Fatal error: Could not return mode_xpm.");
+	return (NULL);
+}
+
+// TODO: Consider alternative to SDL_Blit / SDL_Rect ?
+void                print_mode_info(t_gui *mode)
+{
+	SDL_Surface *mode_surface;
+	SDL_Surface *zoom_surface;
+	SDL_Rect 	place;
+
+	mode_surface = mode_xpm(mode);
+	zoom_surface = zoom_xpm(get_state()->zoom_factor);
+	if (!mode_surface || !zoom_surface)
+		ft_die("Fatal error: print_mode_info failed to retrieve mode/zoom surfaces.");
+	place.w = mode_surface->w;
+	place.h = mode_surface->h;
+	place.x = zoom_surface->w + 10;
+	place.y = EDT_WIN_HEIGHT - (place.h + 2) - 10;
+	SDL_BlitSurface(mode_surface, NULL, editor_back_buffer()->buff, &place);
+	place.w = zoom_surface->w;
+	place.h = zoom_surface->h;
+	place.x -= zoom_surface->w + 5;
+	SDL_BlitSurface(zoom_surface, NULL, editor_back_buffer()->buff, &place);
+	editor_back_buffer()->rendering_on = 1;
+}
+
 /*
 void	print_characters(t_editor *edt)
 {
@@ -104,40 +167,7 @@ void	circle_rooms(t_doom *doom)
 		room = room->next;
 	}
 }
-*/
 
-void	draw_scroll_bars_to_backbuffer(t_state *state)
-{
-	t_line	line;
-
-	line.doom = doom_ptr();
-	line.color = 0xffffffff;
-	line.buff = editor_back_buffer()->buff;
-	// Lines that bound the bottom and left edge of screen
-	line.x1 = 0;
-	line.y1 = EDT_WIN_HEIGHT - 10;
-	line.x2 = EDT_WIN_WIDTH - 10;
-	line.y2 = line.y1;
-	render_line(&line);
-	line.x1 = line.x2;
-	line.y1 = 0;
-	line.y2 = EDT_WIN_HEIGHT - 10;
-	render_line(&line);
-	// Line that represents the horizontal scroll
-	line.x1 = (int)((float)state->scroll_x * 0.25f);
-	line.x2 = line.x1 + (int)((float)EDT_WIN_WIDTH * 0.25f * (float)state->zoom_factor) - 5;
-	line.y1 = EDT_WIN_HEIGHT - 5;
-	line.y2 = line.y1;
-	render_line(&line);
-	// Line that represents the vertical scroll
-	line.y1 = (int)((float)state->scroll_y * 0.25f);
-	line.y2 = line.y1 + (int)((float)EDT_WIN_HEIGHT * 0.25f * (float)state->zoom_factor) - 5;
-	line.x1 = EDT_WIN_WIDTH - 5;
-	line.x2 = line.x1;
-	render_line(&line);
-	editor_back_buffer()->rendering_on = 1;
-}
-/*
 void 	circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color)
 {
 	unsigned int *pixels;

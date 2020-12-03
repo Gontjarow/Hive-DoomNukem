@@ -13,8 +13,10 @@
 #ifndef EDITOR_H
 # define EDITOR_H
 
-#include "objects.h"
-#include <stdint.h>
+# include "doom-nukem.h"
+# include "SDL.h"
+# include "objects.h"
+# include <stdint.h>
 
 typedef struct 			s_doom t_doom;
 typedef struct			s_status t_status;
@@ -104,100 +106,136 @@ typedef struct 			s_editor
 	struct s_doom		*parent;
 }						t_editor;
 
-t_state         *get_state(void);
-void 			trigger_protection(int clear);
-void 			init_edt(t_doom *doom);
-void	 		destroy_edt(t_doom *doom);
-void 			edt_mouse_motion(t_doom *doom);
-void 			edt_mouse_down(t_doom *doom);
-void			edt_render(t_doom *doom);
+/*
+ * from editor.c
+ * */
+
+void 					init_edt(t_doom *doom);
+void	 				destroy_edt(t_doom *doom);
+void					edt_render(t_doom *doom);
+
+/*
+ * from editor_input.c
+ * */
+
+void					edt_mouse_motion(t_doom *doom);
+void					edt_mouse_down(t_doom *doom);
+void					edt_keystate_input(t_doom *doom);
 
 /*
  * from draw_editor.c
- */
+ * */
 
-void			draw_scroll_bars_to_backbuffer(t_state *state);
+void					redraw_editor_to_backbuffer(uint32_t color);
+SDL_Surface				*zoom_xpm(int factor);
+SDL_Surface				*mode_xpm(t_gui *mode);
+void                	print_mode_info(t_gui *mode);
+
+/*
+ * from scrolling.c
+ * */
+
+void					draw_scroll_bars_to_backbuffer(t_state *state);
+void					accelerate_scroll(t_state *state, SDL_Scancode direction);
+void					confine_scroll(t_state *state);
+void	 				handle_keyboard_scrolling(t_doom *doom);
 
 /*
  * from walls.c
  * */
 
-void			wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
-void			x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
-void			relink_model_walls(t_wall *relinking_wall);
+void					wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
+void					x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
+void					relink_model_walls(t_wall *relinking_wall);
 
 /*
  * from editor_buffers.c
  * */
 
-void            wipe_editor_back_buffer(uint32_t color);
-void            wipe_editor_front_buffer(uint32_t color);
-t_2d_layer      *editor_back_buffer(void);
-t_2d_layer      *editor_front_buffer(void);
-SDL_Surface     *mixing_surface();
+void            		wipe_editor_back_buffer(uint32_t color);
+void            		wipe_editor_front_buffer(uint32_t color);
+t_2d_layer      		*editor_back_buffer(void);
+t_2d_layer      		*editor_front_buffer(void);
+SDL_Surface     		*mixing_surface();
 
 /*
  * from circle_to_buffer.c
  * */
 
-void			preserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
-void			unpreserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
-void			unmasked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t mask);
-void			masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t avoid);
-void            circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void					preserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
+void					unpreserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void					unmasked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t mask);
+void					masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t avoid);
+void            		circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 
 /*
  * from linedraw.c
  * */
 
-void			init_linedraw_data(void *data_ptr);
-void			careful_linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color, uint32_t avoid);
-void			linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color);
-t_wall			*linedraw_to_wall(t_linedraw *data);
-
+void					init_linedraw_data(void *data_ptr);
+void					careful_linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color, uint32_t avoid);
+void					linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color);
+t_wall					*linedraw_to_wall(t_linedraw *data);
 
 /*
  * from magnets.c
  * */
 
-void            check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state);
-void            magnet_test(void* argv);
+void            		check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state);
+void            		magnet_test(void* argv);
+
+/*
+ * from mode_editor.c
+ * */
+
+t_gui					*mode_planting(void);
+t_gui					*mode_polydraw(void);
+
+/*
+ * from state_editor.c
+ * */
+
+void 					trigger_protection(int clear);
+void		 			edt_swap_mode(t_state *state);
+void					edt_outward_zoom(void);
+void					edt_inward_zoom(void);
+t_state					*get_state(void);
 
 /*
  * from planting.c
  * */
 
-t_logic 		*planting_logic(void);
-void 			planting_plant(int x, int y);
-void 			planting_swap_type(void);
+t_logic 				*planting_logic(void);
+void 					planting_plant(int x, int y);
+void 					planting_swap_type(void);
 
-void			planting_activate(t_state *state);
-void			planting_deactivate(t_state *state);
-void			planting_change_zoom(t_state *state);
+void					planting_activate(t_state *state);
+void					planting_deactivate(t_state *state);
+void					planting_change_zoom(t_state *state);
 
-void 			planting_mouse_motion(int x, int y);
-void 			planting_left_click(int x, int y);
-void 			planting_right_click(int x, int y);
-void 			planting_middle_click(int x, int y);
+void 					planting_mouse_motion(int x, int y);
+void 					planting_left_click(int x, int y);
+void 					planting_right_click(int x, int y);
+void 					planting_middle_click(int x, int y);
 
 /*
  * from polydraw_logic.c, polydraw.c, polydraw_input.c
  * */
 
-t_status		*polydraw_status(void);
-void 			polydraw_start(t_status *status);
-void 			polydraw_continue(t_status *status);
-void 			polydraw_end(t_status *status);
-void			polydraw_reset(t_status *status);
+t_status				*polydraw_status(void);
+void 					polydraw_start(t_status *status);
+void 					polydraw_continue(t_status *status);
+void 					polydraw_end(t_status *status);
+void					polydraw_reset(t_status *status);
 
-void			polydraw_activate(t_state *state);
-void			polydraw_deactivate(t_state *state);
-void 			polydraw_change_zoom(t_state *state);
+void					polydraw_activate(t_state *state);
+void					polydraw_deactivate(t_state *state);
+void 					polydraw_change_zoom(t_state *state);
 
-void 			polydraw_mouse_motion(int x, int y);
-void 			polydraw_left_click(int x, int y);
-void 			polydraw_right_click(int x, int y);
-void 			polydraw_middle_click(int x, int y);
+void 					polydraw_mouse_motion(int x, int y);
+void 					polydraw_left_click(int x, int y);
+void 					polydraw_right_click(int x, int y);
+void 					polydraw_middle_click(int x, int y);
 
 #if 0
 /*
