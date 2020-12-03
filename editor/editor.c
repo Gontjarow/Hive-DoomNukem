@@ -17,6 +17,7 @@
 //  https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order/
 
 // TODO:
+//		EXPLORE DIFFERENT RESOLUTIONS IN EDITOR WINDOW // DONE
 //		LET USER SCROLL UP AND DOWN IN THE EDITOR WITH ARROW KEYS
 //		Stage 1: Offset_x, Offset_y, Live in same memory space as Zoom_factor // DONE
 //		Stage 2: These offsets can be between 0-(Max limit depending on Zoom-factor) both X, Y
@@ -25,9 +26,15 @@
 //								 4: Between 0 and 0, X, Y // ... DONE
 //		Stage 4: For rendering the correct space displace all walls' X&Y values by the offsets // DONE
 //		Stage 5: Test if this works as imagined // DONE
-//		Stage 6: Debug the program to detect where it is crashing and why, and fix that <-- YOU ARE HERE !!
-//		Stage 7: Adjust the sensitivity and acceleration of the keyboard control and commit
-//		EXPLORE DIFFERENT RESOLUTIONS IN EDITOR WINDOW // DONE
+//		Stage 6: Debug the program to detect where it is crashing and why, and fix that // TECH DEBT
+//		I think it is crashing because sometimes it infinite loops during Cohen-Sutherland when
+//		the clipped line crosses two segments? Possibly? It should be protected, aborted, modified to
+//		escape such scenario or resolve it correctly...
+//		Solution for now: Add a limit of 10 loops before autoexiting the infinite looping part. // DONE
+//		Stage 7: Adjust the sensitivity and acceleration of the keyboard control // DONE
+//		Stage 8: Add visual scrollbars to let user know the amount of scrolling applied // DONE
+//			Technical debt: Can be done with XPM graphics propably later, implemented with linedraws.
+
 
 // TODO NEXT FEATURE:
 //  MODE TO ADD ENEMY AND PLAYER OBJECTS
@@ -124,6 +131,7 @@ SDL_Surface			*mode_xpm(t_gui *mode)
 	return (NULL);
 }
 
+// TODO: Consider alternative to SDL_Blit / SDL_Rect ?
 void                print_mode_info(t_gui *mode)
 {
 	SDL_Surface *mode_surface;
@@ -138,7 +146,7 @@ void                print_mode_info(t_gui *mode)
     place.w = mode_surface->w;
     place.h = mode_surface->h;
 	place.x = zoom_surface->w + 10;
-	place.y = EDT_WIN_HEIGHT - (place.h + 2);
+	place.y = EDT_WIN_HEIGHT - (place.h + 2) - 10;
 	SDL_BlitSurface(mode_surface, NULL, editor_back_buffer()->buff, &place);
 	place.w = zoom_surface->w;
 	place.h = zoom_surface->h;
@@ -170,6 +178,7 @@ t_state				*get_state(void)
 		state->scroll_x = 0;
 		state->scroll_y = 0;
 		print_mode_info(state->gui);
+		draw_scroll_bars_to_backbuffer(state);
 	}
 	    //printf("States address returned: %p\n", (void*)state);
 	return (state);
@@ -250,42 +259,42 @@ static void 		redraw_walls_to_backbuffer(uint32_t color)
 	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, color);
 	print_mode_info(get_state()->gui);
 }
-
-static void			accelerate_scroll(t_state *state)
+/*
+ * Call this function like accelerate_scroll(get_state(), SDL_SCANCODE_LEFT) to scroll left,
+ * and call this function like accelerate_scroll(NULL, 0) when no key is pressed to decelerate.
+ */
+static void			accelerate_scroll(t_state *state, SDL_Scancode direction)
 {
-	static int acc_x = 0;
-	static int acc_y = 0;
-	static int previous_x = 0;
-	static int previous_y = 0;
+	static int acceleration = 0;
 
-	if (acc_x > 0)
-		acc_x--;
-	if (acc_y > 0)
-		acc_y--;
-	if (state->scroll_x == previous_x && state->scroll_y == previous_y)
-		return ;
-	if (state->scroll_x > previous_x)
+	if (acceleration > 0)
+		acceleration--;
+	if (state == NULL && direction == 0)
 	{
-		acc_x += 2;
-		state->scroll_x += acc_x;
+		acceleration /= 2;
+		return;
 	}
-	else if (state->scroll_x < previous_x)
+	acceleration += 2;
+	if (direction == SDL_SCANCODE_RIGHT)
 	{
-		acc_x += 2;
-		state->scroll_x -= acc_x;
+		state->scroll_x += acceleration;
+			//ft_putendl("Increasing Scroll_X!");
 	}
-	if (state->scroll_y > previous_y)
+	else if (direction == SDL_SCANCODE_LEFT)
 	{
-		acc_y += 2;
-		state->scroll_y += acc_y;
+		state->scroll_x -= acceleration;
+			//ft_putendl("Decreasing Scroll_X!");
 	}
-	else if (state->scroll_y < previous_y)
+	else if (direction == SDL_SCANCODE_DOWN)
 	{
-		acc_y += 2;
-		state->scroll_y -= acc_y;
+		state->scroll_y += acceleration;
+			//ft_putendl("Increasing Scroll_Y!");
 	}
-	previous_x = state->scroll_x;
-	previous_y = state->scroll_y;
+	else if (direction == SDL_SCANCODE_UP)
+	{
+		state->scroll_y -= acceleration;
+			//ft_putendl("Decreasing Scroll_Y!");
+	}
 }
 
 // TODO: Systematize and change from constants to dynamic formulas,
@@ -318,13 +327,14 @@ static void			confine_scroll(t_state *state)
 	}
 	else if (state->zoom_factor == 4)
 	{
-		state->scroll_y = 0;
 		state->scroll_x = 0;
+		state->scroll_y = 0;
 	}
 	previous_x = state->scroll_x;
 	previous_y = state->scroll_y;
-		//printf("Scroll {X, Y} = {%d, %d}\n", state->scroll_x, state->scroll_y);
+		//printf("Confined Scroll X, Y {%d, %d}\n", state->scroll_x, state->scroll_y);
 	redraw_walls_to_backbuffer(0xffffffff);
+	draw_scroll_bars_to_backbuffer(state);
 }
 
 static void         edt_keystate_input(t_doom *doom) {
@@ -334,14 +344,15 @@ static void         edt_keystate_input(t_doom *doom) {
 	static int lock_x = 0;
 
 	if (doom->keystates[SDL_SCANCODE_RIGHT])
-		get_state()->scroll_x += 10;
-	if (doom->keystates[SDL_SCANCODE_LEFT])
-		get_state()->scroll_x -= 10;
-	if (doom->keystates[SDL_SCANCODE_DOWN])
-		get_state()->scroll_y += 10;
-	if (doom->keystates[SDL_SCANCODE_UP])
-		get_state()->scroll_y -= 10;
-	//accelerate_scroll(get_state());
+		accelerate_scroll(get_state(), SDL_SCANCODE_RIGHT);
+	else if (doom->keystates[SDL_SCANCODE_LEFT])
+		accelerate_scroll(get_state(), SDL_SCANCODE_LEFT);
+	else if (doom->keystates[SDL_SCANCODE_DOWN])
+		accelerate_scroll(get_state(), SDL_SCANCODE_DOWN);
+	else if (doom->keystates[SDL_SCANCODE_UP])
+		accelerate_scroll(get_state(), SDL_SCANCODE_UP);
+	else
+		accelerate_scroll(NULL, 0);
 	confine_scroll(get_state());
 
 	if (lock_p && !doom->keystates[SDL_SCANCODE_P])

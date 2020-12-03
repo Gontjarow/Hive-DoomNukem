@@ -100,6 +100,12 @@ void 			edt_mouse_down(t_doom *doom);
 void			edt_render(t_doom *doom);
 
 /*
+ * from draw_editor.c
+ */
+
+void			draw_scroll_bars_to_backbuffer(t_state *state);
+
+/*
  * from walls.c
  * */
 

@@ -105,6 +105,38 @@ void	circle_rooms(t_doom *doom)
 	}
 }
 */
+
+void	draw_scroll_bars_to_backbuffer(t_state *state)
+{
+	t_line	line;
+
+	line.doom = doom_ptr();
+	line.color = 0xffffffff;
+	line.buff = editor_back_buffer()->buff;
+	// Lines that bound the bottom and left edge of screen
+	line.x1 = 0;
+	line.y1 = EDT_WIN_HEIGHT - 10;
+	line.x2 = EDT_WIN_WIDTH - 10;
+	line.y2 = line.y1;
+	render_line(&line);
+	line.x1 = line.x2;
+	line.y1 = 0;
+	line.y2 = EDT_WIN_HEIGHT - 10;
+	render_line(&line);
+	// Line that represents the horizontal scroll
+	line.x1 = (int)((float)state->scroll_x * 0.25f);
+	line.x2 = line.x1 + (int)((float)EDT_WIN_WIDTH * 0.25f * (float)state->zoom_factor) - 5;
+	line.y1 = EDT_WIN_HEIGHT - 5;
+	line.y2 = line.y1;
+	render_line(&line);
+	// Line that represents the vertical scroll
+	line.y1 = (int)((float)state->scroll_y * 0.25f);
+	line.y2 = line.y1 + (int)((float)EDT_WIN_HEIGHT * 0.25f * (float)state->zoom_factor) - 5;
+	line.x1 = EDT_WIN_WIDTH - 5;
+	line.x2 = line.x1;
+	render_line(&line);
+}
+/*
 void 	circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color)
 {
 	unsigned int *pixels;
@@ -152,7 +184,7 @@ void	circle_room(t_doom *doom, t_room *room)
 		x = -radius;
 	}
 }
-/*
+
 void	circle_player(t_doom *doom)
 {
 	unsigned int *pixels;

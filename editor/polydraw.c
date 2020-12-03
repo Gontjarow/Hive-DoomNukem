@@ -111,10 +111,8 @@ void 			polydraw_change_zoom(t_state *state)
 {
 	if (polydraw_status()->phase != 0)
 		polydraw_status()->reset;
-	// Simplify debug with incomplete code
-		state->scroll_x = 0;
-		state->scroll_y = 0;
 	wipe_editor_back_buffer(0xff000000);
 	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
 	print_mode_info(state->gui);
+	draw_scroll_bars_to_backbuffer(state);
 }

@@ -24,7 +24,9 @@ static int			clip_wall_to_buff(t_wall *clip, t_wall *wall, SDL_Surface *buff)
 	unsigned int 	code;
 	double 			new_x;
 	double 			new_y;
+	int		 		infinite_loop_guard;
 
+	infinite_loop_guard = 0;
 	start_code = code_from_point(&wall->start, buff);
 	end_code = code_from_point(&wall->end, buff);
 	if ((start_code & end_code) != 0)
@@ -34,6 +36,12 @@ static int			clip_wall_to_buff(t_wall *clip, t_wall *wall, SDL_Surface *buff)
 	}
 	while (!(start_code == 0 && end_code == 0))
 	{
+		infinite_loop_guard++;
+		if (infinite_loop_guard > 9)
+		{
+			ft_putendl("Warning: Escaped from an infinitely repeating loop from the Cohen-Sutherland algorithm.");
+			return (0);
+		}
 		code = start_code != 0 ? start_code : end_code;
 		if ((code & (1 << 0)) != 0)
 		{
