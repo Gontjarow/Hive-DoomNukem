@@ -35,7 +35,7 @@ t_global_vert	*list2vert(t_global_vert *list, int index)
 	return (list);
 }
 
-t_face_vert	*list2face(t_face_vert *list, int index)
+t_face_vert		*list2face(t_face_vert *list, int index)
 {
 	if (index > 0)
 	{
@@ -58,6 +58,33 @@ t_face_vert	*list2face(t_face_vert *list, int index)
 		}
 	}
 	return (list);
+}
+
+void			global_vert_add(t_global_vert *dest, t_global_vert *node)
+{
+	t_global_vert *last;
+
+	last = list2vert(dest, -1);
+	last->next = node;
+	node->prev = last;
+}
+
+void			face_vert_add(t_face_vert *dest, t_global_vert *node)
+{
+	t_face_vert *last;
+
+	last = list2face(dest, -1);
+	last->next = node;
+	node->prev = last;
+}
+
+void			join_face_list(t_face_vert *a, t_face_vert *b)
+{
+	t_face_vert	*last;
+
+	last = list2face(a, -1);
+	last->next = b;
+	b->prev = last;
 }
 
 // adds given verts to the global list
@@ -178,7 +205,7 @@ t_obj	mdl_to_usable_data()
 
 t_face_vert	*make_wall(t_wall *a, t_wall *b, int floor, int roof)
 {
-	t_vert			v[3];
+	t_vert		v[3];
 	t_face_vert	*f[2];
 
 	v[0] = vec4(a->start.x, a->start.y, roof, T_POS);
@@ -193,7 +220,4 @@ t_face_vert	*make_wall(t_wall *a, t_wall *b, int floor, int roof)
 	return (f[0]);
 }
 
-void			join_face_list(t_face_vert *a, t_face_vert *b)
-{
-	list2face(a, -1)->next = b; // lol
-}
+
