@@ -40,18 +40,20 @@ void 		polydraw_mouse_motion(int x, int y)
 	static uint32_t 	masked_color = 0;
 	static pthread_t    magnet_thread;
 	static int          updated_magnet_hover = 0;
+	int					tmp_scroll_x;
+	int					tmp_scroll_y;
 
 	// Check if polydraw_status->phase is not polydraw_continue() to early exit!
 	if (polydraw_status()->phase != 1)
 		return ;
-	// When the phase is polydraw_continue(), draw a line at the front buffer
 	data = polydraw_status()->data;
 	assert(data->drawing_underway);
-	assert(data->draw_from_x >= 0 && data->draw_from_x < EDT_WIN_WIDTH * get_state()->zoom_factor &&
-		   data->draw_from_y >= 0 && data->draw_from_y < EDT_WIN_HEIGHT * get_state()->zoom_factor);
 	// When the phase is polydraw_continue(), check for magnetization
     polydraw_status()->motion_x = x;
     polydraw_status()->motion_y = y;
+    // Save local copies of scroll_x and scroll_y for adjusting the screen drawing code with
+	tmp_scroll_x = get_state()->scroll_x;
+	tmp_scroll_y = get_state()->scroll_y;
 	if (!get_state()->job_running)
 	{
         get_state()->job_running = 1;
@@ -59,11 +61,14 @@ void 		polydraw_mouse_motion(int x, int y)
     }
     if (get_state()->thread_hit && !updated_magnet_hover)
     {
-        data->draw_to_x = get_state()->thread_x; //* get_state()->zoom_factor;
-        data->draw_to_y = get_state()->thread_y; //* get_state()->zoom_factor;
-        //wipe_editor_front_buffer(0xff000000);
+		// This block of code is for when the magnetization has hitted and we draw the
+		// preview line to magnetized target point, when user aims to end polydrawing
+        data->draw_to_x = get_state()->thread_x;
+        data->draw_to_y = get_state()->thread_y;
 		if (previous_data.drawing_underway)
 			careful_linedraw_to_buffer(&previous_data, doom_ptr()->edt->buff, 0xff000000, 0xffffffff);
+		data->draw_from_x -= tmp_scroll_x;
+		data->draw_from_y -= tmp_scroll_y;
 		previous_data.draw_to_y = data->draw_to_y;
 		previous_data.draw_to_x = data->draw_to_x;
 		previous_data.draw_from_y = data->draw_from_y;
@@ -73,31 +78,30 @@ void 		polydraw_mouse_motion(int x, int y)
 		masked_color = get_state()->thread_color;
         masked_circle_to_buffer(doom_ptr()->edt->buff, (t_point){data->draw_to_x, data->draw_to_y}, 15,
 								masked_color, 0xffffffff);
-		//linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
-		//circle_to_buffer(editor_front_buffer()->buff, (t_point){data->draw_to_x, data->draw_to_y}, 15, get_state()->thread_color);
-        //editor_front_buffer()->rendering_on = 1;
+		data->draw_from_x += tmp_scroll_x;
+		data->draw_from_y += tmp_scroll_y;
         updated_magnet_hover = 1;
-        return ;
     }
     else if (!get_state()->thread_hit)
     {
-    	// Regular case. Draw a preview line on the screens front buffer.
+    	// Regular case. Draw a preview line to mouse cursors position on the screen
         data->draw_to_x = x;
         data->draw_to_y = y;
-        //wipe_editor_front_buffer(0xff000000);
-        //linedraw_to_buffer(data, editor_front_buffer()->buff, 0xffffffff);
-        //editor_front_buffer()->rendering_on = 1;
 		if (previous_data.drawing_underway)
 			careful_linedraw_to_buffer(&previous_data, doom_ptr()->edt->buff, 0xff000000, 0xffffffff);
 		if (updated_magnet_hover)
 			unmasked_circle_to_buffer(doom_ptr()->edt->buff, (t_point){previous_data.draw_to_x, previous_data.draw_to_y}, 15,
 									  0xffffffff, masked_color);
+		data->draw_from_x -= tmp_scroll_x;
+		data->draw_from_y -= tmp_scroll_y;
 		previous_data.draw_to_y = data->draw_to_y;
 		previous_data.draw_to_x = data->draw_to_x;
 		previous_data.draw_from_y = data->draw_from_y;
 		previous_data.draw_from_x = data->draw_from_x;
 		previous_data.drawing_underway = 1;
 		careful_linedraw_to_buffer(data, doom_ptr()->edt->buff, 0xfffffffe, 0xffffffff);
+		data->draw_from_x += tmp_scroll_x;
+		data->draw_from_y += tmp_scroll_y;
 		updated_magnet_hover = 0;
     }
 }
@@ -131,6 +135,7 @@ void 		polydraw_right_click(int x, int y)
 	status->phases[status->phase](status);
 	status->phase++;
 	assert(status->phase == 2);
+	// TODO: THIS FAILS IF RIGHT CLICKING ON GREEN MAGNETIZED AREA
 	// This invokes polydraw_end()
 	status->phases[status->phase](status);
 }

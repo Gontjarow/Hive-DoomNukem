@@ -4,6 +4,8 @@ void            check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state
 {
     int         wc;
     int			zf;
+    int 		sx;
+    int 		sy;
     t_wall      *wall;
 
     wc = mdl->wall_count;
@@ -19,16 +21,18 @@ void            check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state
         state->thread_hit = 0;
     }
     zf = state->zoom_factor;
+    sx = state->scroll_x;
+    sy = state->scroll_y;
     // Loop through all the walls to search for hits
     state->thread_permission = 0;
     state->thread_color = 0xffff0000;
     while (wc--)
     {
-        if (abs((wall->start.x / zf) - x) < 15 && abs((wall->start.y / zf) - y) < 15)
+        if (abs((wall->start.x / zf) - x - (sx / zf)) < 15 && abs((wall->start.y / zf) - y - (sy / zf)) < 15)
         {
                 //ft_putendl("Magnet hit within 15 units for a starting point of a wall.");
-            state->thread_x = (wall->start.x / zf);
-            state->thread_y = (wall->start.y / zf);
+            state->thread_x = (wall->start.x / zf) - (sx / zf);
+            state->thread_y = (wall->start.y / zf) - (sy / zf);
             state->thread_hit = 1;
             if (wall->id == state->thread_target_id)
             {
@@ -37,11 +41,11 @@ void            check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state
             }
             return ;
         }
-        else if (abs((wall->end.x / zf) - x) < 15 && abs((wall->end.y / zf) - y) < 15)
+        else if (abs((wall->end.x / zf) - x - (sx / zf)) < 15 && abs((wall->end.y / zf) - y - (sy / zf)) < 15)
         {
                 //ft_putendl("Magnet hit within 15 units for a ending point of a wall.");
-            state->thread_x = (wall->end.x / zf);
-            state->thread_y = (wall->end.y / zf);
+            state->thread_x = (wall->end.x / zf) - (sx / zf);
+            state->thread_y = (wall->end.y / zf) - (sy / zf);
             state->thread_hit = 1;
             return ;
         }

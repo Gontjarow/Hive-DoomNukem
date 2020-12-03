@@ -9,13 +9,16 @@ void 			polydraw_start(t_status *status)
 	data->origin_id = get_model()->wall_count;
 		//printf("Data->origin_id SET = %d\n", data->origin_id);
 	data->drawing_underway = 1;
-	data->draw_from_x = status->click_x * get_state()->zoom_factor;
-	data->draw_from_y = status->click_y * get_state()->zoom_factor;
+	data->draw_from_x = (status->click_x * get_state()->zoom_factor) + get_state()->scroll_x;
+	data->draw_from_y = (status->click_y * get_state()->zoom_factor) + get_state()->scroll_y;
+		//printf("scroll x | y: %d | %d\n", get_state()->scroll_x, get_state()->scroll_y);
+		//printf("from x | y: %d | %d\n", data->draw_from_x, data->draw_from_y);
 	status->phase = 1;
 	get_state()->thread_target_id = data->origin_id;
 		//ft_putendl("Polydraw start");
 }
 
+// TODO: This is correct for left clicks, but right clicks are COUPLED in a crashing way
 void 			polydraw_continue(t_status *status)
 {
 	t_linedraw      *data;
@@ -28,23 +31,25 @@ void 			polydraw_continue(t_status *status)
     {
         if (!get_state()->thread_permission)
             return ;
-	    data->draw_to_x = get_state()->thread_x * get_state()->zoom_factor;
-	    data->draw_to_y = get_state()->thread_y * get_state()->zoom_factor;
+	    data->draw_to_x = (get_state()->thread_x * get_state()->zoom_factor) + get_state()->scroll_x;
+	    data->draw_to_y = (get_state()->thread_y * get_state()->zoom_factor) + get_state()->scroll_y;
 	    status->phase++;
 	    assert(status->phase == 2);
     }
 	else
     {
-        data->draw_to_x = status->click_x * get_state()->zoom_factor;
-        data->draw_to_y = status->click_y * get_state()->zoom_factor;
+        data->draw_to_x = (status->click_x * get_state()->zoom_factor) + get_state()->scroll_x;
+        data->draw_to_y = (status->click_y * get_state()->zoom_factor) + get_state()->scroll_y;
+			//printf("scroll x | y: %d | %d\n", get_state()->scroll_x, get_state()->scroll_y);
+			//printf("to x | y: %d | %d\n", data->draw_to_x, data->draw_to_y);
     }
 	wall_to_buffer(linedraw_to_wall(data), editor_back_buffer()->buff, 0xffffffff);
 		//printf("With zoom of %d: linedraw (%d, %d) to (%d, %d)\n", get_state()->zoom_factor,
 		//data->draw_from_x, data->draw_from_y, data->draw_to_x, data->draw_to_y);
 		//debug_model_walls();
 	editor_back_buffer()->rendering_on = 1;
-	*data = (t_linedraw){data->origin_id, 1, status->click_x * get_state()->zoom_factor,
-					  status->click_y * get_state()->zoom_factor, 0};
+	*data = (t_linedraw){data->origin_id, 1, (status->click_x * get_state()->zoom_factor) + get_state()->scroll_x,
+						 (status->click_y * get_state()->zoom_factor) + get_state()->scroll_y, 0};
 	// Invokation of the ending phase, polydraw_end, if status->thread_hit was TRUE, do polydraw_end (phase 2)
 	if (status->phase == 2)
 		status->phases[status->phase](status);

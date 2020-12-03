@@ -135,6 +135,7 @@ void	draw_scroll_bars_to_backbuffer(t_state *state)
 	line.x1 = EDT_WIN_WIDTH - 5;
 	line.x2 = line.x1;
 	render_line(&line);
+	editor_back_buffer()->rendering_on = 1;
 }
 /*
 void 	circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color)

@@ -274,7 +274,7 @@ static void			accelerate_scroll(t_state *state, SDL_Scancode direction)
 		acceleration /= 2;
 		return;
 	}
-	acceleration += 2;
+	acceleration += 2 * state->zoom_factor;
 	if (direction == SDL_SCANCODE_RIGHT)
 	{
 		state->scroll_x += acceleration;
@@ -336,32 +336,52 @@ static void			confine_scroll(t_state *state)
 	redraw_walls_to_backbuffer(0xffffffff);
 	draw_scroll_bars_to_backbuffer(state);
 }
-
-static void         edt_keystate_input(t_doom *doom) {
-	static int lock_w = 0;
-	static int lock_p = 0;
-	static int lock_z = 0;
-	static int lock_x = 0;
-
-	if (doom->keystates[SDL_SCANCODE_RIGHT])
+/*
+ * Looks horrible, but it simply handles the 8 possible directions with a waterfall early exit.
+ * If both left and right pressed, right dominates. If both up and down pressed, up dominates.
+ * If none of right, left, up, down pressed, decceleration happens.
+ */
+static void 		handle_keyboard_scrolling(t_doom *doom)
+{
+	if (doom->keystates[SDL_SCANCODE_RIGHT] && doom->keystates[SDL_SCANCODE_UP])
+	{
+		accelerate_scroll(get_state(), SDL_SCANCODE_RIGHT);
+		accelerate_scroll(get_state(), SDL_SCANCODE_UP);
+	}
+	else if (doom->keystates[SDL_SCANCODE_RIGHT] && doom->keystates[SDL_SCANCODE_DOWN])
+	{
+		accelerate_scroll(get_state(), SDL_SCANCODE_RIGHT);
+		accelerate_scroll(get_state(), SDL_SCANCODE_DOWN);
+	}
+	else if (doom->keystates[SDL_SCANCODE_LEFT] && doom->keystates[SDL_SCANCODE_UP])
+	{
+		accelerate_scroll(get_state(), SDL_SCANCODE_LEFT);
+		accelerate_scroll(get_state(), SDL_SCANCODE_UP);
+	}
+	else if (doom->keystates[SDL_SCANCODE_LEFT] && doom->keystates[SDL_SCANCODE_DOWN])
+	{
+		accelerate_scroll(get_state(), SDL_SCANCODE_LEFT);
+		accelerate_scroll(get_state(), SDL_SCANCODE_DOWN);
+	}
+	else if (doom->keystates[SDL_SCANCODE_RIGHT])
 		accelerate_scroll(get_state(), SDL_SCANCODE_RIGHT);
 	else if (doom->keystates[SDL_SCANCODE_LEFT])
 		accelerate_scroll(get_state(), SDL_SCANCODE_LEFT);
-	else if (doom->keystates[SDL_SCANCODE_DOWN])
-		accelerate_scroll(get_state(), SDL_SCANCODE_DOWN);
 	else if (doom->keystates[SDL_SCANCODE_UP])
 		accelerate_scroll(get_state(), SDL_SCANCODE_UP);
+	else if (doom->keystates[SDL_SCANCODE_DOWN])
+		accelerate_scroll(get_state(), SDL_SCANCODE_DOWN);
 	else
 		accelerate_scroll(NULL, 0);
 	confine_scroll(get_state());
+}
 
-	if (lock_p && !doom->keystates[SDL_SCANCODE_P])
-		lock_p = 0;
-	else if (doom->keystates[SDL_SCANCODE_P] && !lock_p)
-	{
-		redraw_walls_to_backbuffer(0xffffffff);
-		lock_p = 1;
-	}
+static void         edt_keystate_input(t_doom *doom) {
+	static int lock_w = 0;
+	static int lock_z = 0;
+	static int lock_x = 0;
+
+	handle_keyboard_scrolling(doom);
 
 	if (lock_w && !doom->keystates[SDL_SCANCODE_W])
 		lock_w = 0;
