@@ -243,11 +243,12 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 	{
 		SDL_MinimizeWindow(doom->win);
 		doom->buff = SDL_GetWindowSurface(doom->win);
-		init_edt(doom);
+		if (load_model(doom))
+			init_edt(doom);
+		else
+			ft_die("Fatal error: Could not load model when entering Editor from the main menu.");
 		doom->edt_quit = 0;
 		doom->menu_out_of_focus = 1;
-		if (load_model(doom))
-			ft_putendl("Editor started.");
 		//if (doom->map->was_filled)
 		//	ft_putendl("Model loaded from mapfile.");
 		SDL_UpdateWindowSurface(doom->edt->win);

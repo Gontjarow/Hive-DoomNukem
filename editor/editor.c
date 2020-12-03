@@ -16,9 +16,9 @@
 //  EDITOR MUST GUARANTEE CLOCKWISE ARRANGEMENT OF WALL NODES IN ROOMS
 //  https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order/
 
-// TODO:
+// COMPLETED
 //		EXPLORE DIFFERENT RESOLUTIONS IN EDITOR WINDOW // DONE
-//		LET USER SCROLL UP AND DOWN IN THE EDITOR WITH ARROW KEYS
+//		LET USER SCROLL UP AND DOWN IN THE EDITOR WITH ARROW KEYS // DONE
 //		Stage 1: Offset_x, Offset_y, Live in same memory space as Zoom_factor // DONE
 //		Stage 2: These offsets can be between 0-(Max limit depending on Zoom-factor) both X, Y
 //		Stage 3: For Zoom Factor 1: Between 0 and 3*EDT_WINDOW_WIDTH / HEIGHT, X / Y
@@ -80,6 +80,28 @@ void 				trigger_protection(int clear)
  * polydraw_status()->reset(polydraw_status());*/
 
 // TODO MOVE THIS SOMEWHERE MODE_* PLACE
+
+static t_gui		*mode_planting()
+{
+	static t_gui	*planting = NULL;
+
+	if (!planting)
+	{
+		planting = (t_gui*)malloc(sizeof(t_gui));
+		if (!planting)
+			ft_die("Fatal error: Could not malloc t_gui at mode_planting.");
+		planting->activate = planting_activate;
+		planting->deactivate = planting_deactivate;
+		planting->change_zoom = planting_change_zoom;
+		planting->left_click = planting_left_click;
+		planting->right_click = planting_right_click;
+		planting->middle_click = planting_middle_click;
+		planting->motion = planting_mouse_motion;
+		planting->has_motion = 1;
+		set_protected_color(0xffffffff);
+	}
+	return (planting);
+}
 static t_gui        *mode_polydraw()
 {
 	static t_gui	*polydraw = NULL;
@@ -88,14 +110,15 @@ static t_gui        *mode_polydraw()
 	{
 		polydraw = (t_gui*)malloc(sizeof(t_gui));
 		if (!polydraw)
-			ft_die("Fatal error: Could not malloc polydraw struct at mode_polydraw.");
+			ft_die("Fatal error: Could not malloc t_gui at mode_polydraw.");
         polydraw->activate = polydraw_activate;
+		polydraw->deactivate = polydraw_deactivate;
         polydraw->change_zoom = polydraw_change_zoom;
 		polydraw->left_click = polydraw_left_click;
 		polydraw->right_click = polydraw_right_click;
 		polydraw->middle_click = polydraw_middle_click;
-		polydraw->has_motion = 1;
 		polydraw->motion = polydraw_mouse_motion;
+		polydraw->has_motion = 1;
 		set_protected_color(0xffffffff);
 	}
 	return (polydraw);
@@ -124,9 +147,12 @@ SDL_Surface			*zoom_xpm(int factor)
 SDL_Surface			*mode_xpm(t_gui *mode)
 {
 	static SDL_Surface *polydraw_xpm = NULL;
+	static SDL_Surface *planting_xpm = NULL;
 
 	if (mode == mode_polydraw())
 		return (polydraw_xpm == NULL ? polydraw_xpm = xpm2surface("img/edt/wall_drawing.xpm") : polydraw_xpm);
+	if (mode == mode_planting())
+		return (planting_xpm == NULL ? planting_xpm = xpm2surface("img/edt/planting.xpm") : planting_xpm);
 	ft_die("Fatal error: Could not return mode_xpm.");
 	return (NULL);
 }
@@ -138,8 +164,7 @@ void                print_mode_info(t_gui *mode)
     SDL_Surface *zoom_surface;
     SDL_Rect 	place;
 
-	if (mode == mode_polydraw())
-        mode_surface = mode_xpm(mode);
+	mode_surface = mode_xpm(mode);
     zoom_surface = zoom_xpm(get_state()->zoom_factor);
     if (!mode_surface || !zoom_surface)
     	ft_die("Fatal error: print_mode_info failed to retrieve mode/zoom surfaces.");
@@ -172,13 +197,13 @@ t_state				*get_state(void)
 		state = (t_state*)malloc(sizeof(t_state));
 		if (!state)
 			ft_die("Fatal error: Could not malloc state struct at get_state");
-		state->gui = mode_polydraw();
-		state->gui->activate(state);
+		state->gui = mode_planting();//Usually mode_polydraw()
 		state->zoom_factor = 1;
 		state->scroll_x = 0;
 		state->scroll_y = 0;
-		print_mode_info(state->gui);
-		draw_scroll_bars_to_backbuffer(state);
+		state->gui->activate(state);
+		//print_mode_info(state->gui);
+		//draw_scroll_bars_to_backbuffer(state);
 	}
 	    //printf("States address returned: %p\n", (void*)state);
 	return (state);
@@ -212,6 +237,18 @@ void				destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
+static void 		edt_swap_mode(t_state *state)
+{
+	//ft_putendl("Deactivating GUI mode");
+	state->gui->deactivate(state);
+	if (state->gui == mode_polydraw())
+		state->gui = mode_planting();
+	else if (state->gui == mode_planting())
+		state->gui = mode_polydraw();
+	//ft_putendl("Activating GUI mode");
+	state->gui->activate(state);
+}
+
 // TODO MOVE THESE FIVE BELOW FUNCTIONS TO EDT_INPUT
 void				edt_mouse_motion(t_doom *doom)
 {
@@ -227,6 +264,11 @@ void				edt_mouse_down(t_doom *doom)
 	t_state			*state;
 
 	state = doom_ptr()->edt_state;
+	if (doom->event.type == SDL_MOUSEWHEEL)
+	{
+		edt_swap_mode(state);
+		return ;
+	}
 	if (doom->event.button.button == SDL_BUTTON_LEFT)
 		state->gui->left_click(doom->event.button.x, doom->event.button.y);
 	if (doom->event.button.button == SDL_BUTTON_MIDDLE)
@@ -380,6 +422,7 @@ static void         edt_keystate_input(t_doom *doom) {
 	static int lock_w = 0;
 	static int lock_z = 0;
 	static int lock_x = 0;
+	static int lock_s = 0;
 
 	handle_keyboard_scrolling(doom);
 
@@ -406,6 +449,14 @@ static void         edt_keystate_input(t_doom *doom) {
         edt_outward_zoom();
         lock_x = 1;
     }
+
+    if (lock_s && !doom->keystates[SDL_SCANCODE_S])
+		lock_s = 0;
+	else if (doom->keystates[SDL_SCANCODE_S] && !lock_s)
+	{
+		edt_swap_mode(get_state());
+		lock_s = 1;
+	}
 }
 
 void				edt_render(t_doom *doom)

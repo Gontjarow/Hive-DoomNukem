@@ -60,6 +60,7 @@ typedef struct 			s_status
 typedef struct 			s_gui // Mode_Polydraw() .... infinite amount of Mode_Somethings() which all define their own
 {							  // interactions etc. for example Mode_Placement()
     gui_event			activate;
+    gui_event			deactivate;
     gui_event			change_zoom;
 	gui_click  			left_click; // Function pointer to polydraw_leftclick
 	gui_click			middle_click;
@@ -149,14 +150,27 @@ void            check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state
 void            magnet_test(void* argv);
 
 /*
+ * from planting.c
+ * */
+
+void			planting_activate(t_state *state);
+void			planting_deactivate(t_state *state);
+void			planting_change_zoom(t_state *state);
+void 			planting_mouse_motion(int x, int y);
+void 			planting_left_click(int x, int y);
+void 			planting_right_click(int x, int y);
+void 			planting_middle_click(int x, int y);
+
+/*
  * from polydraw.c
  * */
 
+void			polydraw_activate(t_state *state);
+void			polydraw_deactivate(t_state *state);
 void 			polydraw_start(t_status *status);
 void 			polydraw_continue(t_status *status);
 void 			polydraw_end(t_status *status);
 void			polydraw_reset(t_status *status);
-void			polydraw_activate(t_state *state);
 void 			polydraw_change_zoom(t_state *state);
 
 /*

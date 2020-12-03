@@ -72,8 +72,8 @@ static void distribute_inputs(t_doom *doom)
 		if (doom->event.type == SDL_MOUSEMOTION && !doom->edt_quit &&
 			doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
 			edt_mouse_motion(doom);
-		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->edt_quit &&
-				 doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
+		else if ((doom->event.type == SDL_MOUSEBUTTONDOWN || doom->event.type == SDL_MOUSEWHEEL)
+		&& !doom->edt_quit && doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
 			edt_mouse_down(doom);
 		else if (doom->event.type == SDL_MOUSEMOTION && !doom->game_quit &&
 				 doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
