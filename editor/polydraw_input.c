@@ -1,29 +1,5 @@
 #include "doom-nukem.h"
 
-t_status		*polydraw_status(void)
-{
-    static		t_status *status = NULL;
-
-    if (!status)
-    {
-        status = (t_status*)malloc(sizeof(t_status));
-        if (!status)
-            ft_die("Fatal error: Could not malloc status for polydraw at polydraw_status");
-        status->data = (t_linedraw*)malloc(sizeof(t_linedraw));
-        if (!status->data)
-            ft_die("Fatal error: Could not malloc data for polydraw at polydraw_status");
-        init_linedraw_data(status->data);
-        status->phase = 0;
-        status->phase_count = 3;
-        status->phases = (gui_action*)malloc(sizeof(gui_action) * status->phase_count);
-        status->phases[0] = polydraw_start;
-        status->phases[1] = polydraw_continue;
-        status->phases[2] = polydraw_end;
-        status->reset = polydraw_reset;
-    }
-    return (status);
-}
-
 // Cleared TO-DO Create a direct draw system for the preview lines.
 //  	Stage 1: For each line, have a) "draw" and b) "undraw" // DONE
 //		Stage 2: draw->undraw->draw-> for the preview lines directly in buffer // DONE

@@ -25,7 +25,9 @@ typedef struct 			SDL_Surface SDL_Surface;
 typedef void            (*gui_event)(t_state *state);
 typedef void 			(*gui_click)(int x, int y);
 typedef void 			(*gui_motion)(int x, int y);
-typedef void 			(*gui_action)(t_status *status);
+typedef void 			(*status_action)(t_status *status);
+typedef void 			(*logic_xy)(int x, int y);
+typedef void 			(*logic_void)(void);
 
 typedef struct 			s_2d_layer
 {
@@ -43,13 +45,23 @@ typedef struct 			s_linedraw
     int                 draw_to_y;
 }						t_linedraw;
 
+enum 					e_logic_type {PLAYER, ENEMY};
+
+typedef struct 			s_logic
+{
+	int 				plant_type;
+	logic_void			swap_type;
+	logic_xy			plant;
+	int 				planted_ticks;
+}						t_logic;
+
 typedef struct 			s_status
 {
 	struct s_gui		*gui;
 	int					phase;
 	int					phase_count;
-	gui_action			*phases;
-	gui_action			reset;
+	status_action		*phases;
+	status_action		reset;
 	int 				click_x;
 	int 				click_y;
 	int                 motion_x;
@@ -128,6 +140,8 @@ SDL_Surface     *mixing_surface();
  * from circle_to_buffer.c
  * */
 
+void			preserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
+void			unpreserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void			unmasked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t mask);
 void			masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t avoid);
 void            circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
@@ -153,31 +167,33 @@ void            magnet_test(void* argv);
  * from planting.c
  * */
 
+t_logic 		*planting_logic(void);
+void 			planting_plant(int x, int y);
+void 			planting_swap_type(void);
+
 void			planting_activate(t_state *state);
 void			planting_deactivate(t_state *state);
 void			planting_change_zoom(t_state *state);
+
 void 			planting_mouse_motion(int x, int y);
 void 			planting_left_click(int x, int y);
 void 			planting_right_click(int x, int y);
 void 			planting_middle_click(int x, int y);
 
 /*
- * from polydraw.c
+ * from polydraw_logic.c, polydraw.c, polydraw_input.c
  * */
 
-void			polydraw_activate(t_state *state);
-void			polydraw_deactivate(t_state *state);
+t_status		*polydraw_status(void);
 void 			polydraw_start(t_status *status);
 void 			polydraw_continue(t_status *status);
 void 			polydraw_end(t_status *status);
 void			polydraw_reset(t_status *status);
+
+void			polydraw_activate(t_state *state);
+void			polydraw_deactivate(t_state *state);
 void 			polydraw_change_zoom(t_state *state);
 
-/*
- * from polydraw_input.c
- * */
-
-t_status		*polydraw_status();
 void 			polydraw_mouse_motion(int x, int y);
 void 			polydraw_left_click(int x, int y);
 void 			polydraw_right_click(int x, int y);

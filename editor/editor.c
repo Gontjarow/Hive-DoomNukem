@@ -36,10 +36,11 @@
 //			Technical debt: Can be done with XPM graphics propably later, implemented with linedraws.
 
 
-// TODO NEXT FEATURE:
-//  MODE TO ADD ENEMY AND PLAYER OBJECTS
-//  ENABLE SAVING TO MAPFILE AGAIN
-//  MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
+// TODO NEXT FEATURE
+//		MODE TO ADD ENEMY AND PLAYER OBJECTS
+//		ENABLE RECORDING OF ROOMS AGAIN
+//		ENABLE SAVING TO MAPFILE AGAIN
+//		MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
 
 /* trigger_protection() is a notifier function called by set_pixel_safe() when
  * overwriting to a buffer over a set_protected_color() has occured. Triggers
