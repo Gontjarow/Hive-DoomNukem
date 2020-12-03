@@ -1,15 +1,5 @@
 #include "doom-nukem.h"
 
-static int 	degree_rot(int x, int y, t_point *tail)
-{
-	double result;
-
-	x = tail->x - x;
-	y = tail->y - y;
-	result = atan2(y, x) * 180.0 / M_PI;;
-	result += 180.0;
-	return ((int)result);
-}
 /*
 void		create_strings_from_state(t_editor *edt)
 {
@@ -74,8 +64,32 @@ void	record_room(t_editor *edt)
 	edt->rooms->next = next_room;
 	edt->rooms = next_room;
 }
+*/
 
-void	record_enemy(int x, int y, t_editor *edt)
+static int 	degree_rot(t_point *location, t_point *tail)
+{
+	double	result;
+	int		x;
+	int 	y;
+
+	x = tail->x - location->x;
+	y = tail->y - location->y;
+	result = atan2(y, x) * 180.0 / M_PI;;
+	result += 180.0;
+	return ((int)result);
+}
+
+//	TODO YOU ARE HERE!!! KEEP ADDING THE RECORD ENEMY / PLAYER FEATURE!
+void	record_enemy(t_point location, t_point tail, t_model *mdl)
+{
+	mdl->enemies->id = mdl->enemy_count;
+	mdl->enemies->x = location.x;
+	mdl->enemies->y = location.y;
+	//TODO FILL FROM LEGACY CODE BASE
+
+}
+/*
+void	record_enemy_legacy(int x, int y, t_editor *edt)
 {
 	t_point		rot_point;
 	t_point		enemy_point;
@@ -111,7 +125,8 @@ void	record_enemy(int x, int y, t_editor *edt)
 	edt->enemy_set = 0;
 	print_walls(edt);
 }
-
+*/
+/*
 void	record_player(int x, int y, t_editor *edt)
 {
 	t_point	start;
