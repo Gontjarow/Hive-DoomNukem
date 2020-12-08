@@ -6,13 +6,37 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/08 15:34:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 17:05:12 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
 int		player_collision_with_enemies(t_doom *doom)
+{
+	t_enemy	*enemy;
+	int	dx;
+	int	dy;
+	int	ec;
+	int	distance;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return (0);
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		dx = (int)doom->mdl->player.x - enemy->x;
+		dy = (int)doom->mdl->player.y - enemy->y;
+		distance = sqrt(dx * dx + dy * dy);
+		if ((distance < 10 + 10) && enemy->hp.cur > 0)
+			return (-1);
+		enemy = enemy->next;
+	}
+	return (0);
+}
+
+int		enemy_collision_with_enemies(t_doom *doom)
 {
 	t_enemy	*enemy;
 	int	dx;
@@ -105,7 +129,7 @@ int		check_hit(t_doom *doom)
 
 	ec = doom->mdl->enemy_count;
 	if (ec == 0)
-		return (0);
+		return (-1);
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
