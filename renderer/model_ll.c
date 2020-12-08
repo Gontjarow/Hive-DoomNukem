@@ -181,24 +181,23 @@ t_actual_face	*new_face(t_vert a, t_vert b, t_vert c)
 }
 
 // - Builds a vertical wall from a 2D line as if viewed top-down.
+// - The wall consists of two counter-clockwise triangles.
 // - Two verts will be at the same XY coordinate but different Z (height)
 // - The third vert will be at the opposite end of the line.
 // - A second triangle is made with the same method,
 //	only with two points at the opposite end instead.
 t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof)
 {
-	t_vert			v[3];
+	t_vert			v[4];
 	t_actual_face	*f[2];
 
-	v[0] = vec4(a->start.x, a->start.y, roof, T_POS);
-	v[1] = vec4(a->start.x, a->start.y, floor, T_POS);
-	v[2] = vec4(b->start.x, b->start.y, roof, T_POS);
-	f[0] = new_face(v[0], v[1], v[2]);
+	v[0] = vec4_mul(vec4(a->start.x, a->start.y, roof,  T_POS), WORLD_SCALE_FACTOR);
+	v[1] = vec4_mul(vec4(a->start.x, a->start.y, floor, T_POS), WORLD_SCALE_FACTOR);
+	v[2] = vec4_mul(vec4(b->start.x, b->start.y, roof,  T_POS), WORLD_SCALE_FACTOR);
+	v[3] = vec4_mul(vec4(b->start.x, b->start.y, floor, T_POS), WORLD_SCALE_FACTOR);
 
-	v[0] = vec4(a->start.x, a->start.y, floor, T_POS);
-	v[1] = vec4(b->start.x, b->start.y, floor, T_POS);
-	v[2] = vec4(b->start.x, b->start.y, roof, T_POS);
-	f[1] = new_face(v[0], v[1], v[2]);
+	f[0] = new_face(v[0], v[1], v[2]);
+	f[1] = new_face(v[1], v[3], v[2]);
 
 	return (face_list_add(f[0], f[1]));
 }
@@ -255,10 +254,12 @@ t_obj			mdl_to_usable_data(t_doom *doom)
 
 	room_object.face = wall_tris;
 	room_object.vert = g_verts;
-	printf("FINAL ROOM STATS: %d verts, %d faces, v:%p, f:%p\n",
-		room_object.v_count,
-		room_object.f_count,
-		room_object.vert,
-		room_object.face);
+	printf("FINAL ROOM STATS: %d verts, %d faces, v:%p, f:%p\n", room_object.v_count, room_object.f_count, room_object.vert, room_object.face);
+
+	// Tests to make sure there are the correct amount of nodes:
+	// int x = room_object.f_count, y = room_object.v_count;
+	// while (--x) room_object.face = room_object.face->next; assert(room_object.face->next == NULL);
+	// while (--y) room_object.vert = room_object.vert->next; assert(room_object.vert->next == NULL);
+
 	return (room_object);
 }

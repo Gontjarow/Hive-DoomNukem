@@ -1,6 +1,8 @@
 #ifndef MODEL_LL_H
 # define MODEL_LL_H
 
+// 20 pixels = 1 meter; 1/20 = 0.05
+# define WORLD_SCALE_FACTOR 0.05
 # define LAST -1
 
 /*
@@ -90,6 +92,6 @@ t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail);
 
 t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof);
 
-t_obj			mdl_to_usable_data();
+t_obj			mdl_to_usable_data(t_doom *doom);
 
 #endif

@@ -1,2 +1,5 @@
 .idea
 doom-nukem
+*.o
+*.d
+*.backup
