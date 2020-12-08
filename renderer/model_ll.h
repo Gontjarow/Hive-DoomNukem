@@ -90,4 +90,6 @@ t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail);
 
 t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof);
 
+t_obj			mdl_to_usable_data();
+
 #endif

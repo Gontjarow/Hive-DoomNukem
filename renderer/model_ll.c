@@ -89,9 +89,17 @@ t_global_vert	*global_vert_add(t_global_vert *head, t_global_vert *node)
 {
 	t_global_vert	*last;
 
-	last = list2vert(head, LAST);
-	last->next = node;
-	node->prev = last;
+	if (head != NULL)
+	{
+		last = list2vert(head, LAST);
+		last->next = node;
+		node->prev = last;
+	}
+	else
+	{
+		head = node;
+	}
+
 	return (head);
 }
 
@@ -99,9 +107,16 @@ t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail)
 {
 	t_face_vert	*last;
 
-	last = list2fvert(head, LAST);
-	last->next = tail;
-	tail->prev = last;
+	if (head != NULL)
+	{
+		last = list2fvert(head, LAST);
+		last->next = tail;
+		tail->prev = last;
+	}
+	else
+	{
+		head = tail;
+	}
 	return (head);
 }
 
@@ -109,12 +124,21 @@ t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail)
 {
 	t_actual_face	*last;
 
-	last = list2face(head, LAST);
-	last->next = tail;
-	tail->prev = last;
+	if (head != NULL)
+	{
+		last = list2face(head, LAST);
+		last->next = tail;
+		tail->prev = last;
+	}
+	else
+	{
+		head = tail;
+	}
+
 	return (head);
 }
 
+// Allocates new t_global_vert node (with actual vert data) and appends it to the a global list.
 t_global_vert	*new_vert(t_global_vert *prev, t_vert v, t_global_vert *next)
 {
 	t_global_vert	*current;
@@ -124,10 +148,11 @@ t_global_vert	*new_vert(t_global_vert *prev, t_vert v, t_global_vert *next)
 	current->pos = v;
 	current->prev = prev;
 	current->next = next;
-	global_vert_add(g_verts, current);
+	g_verts = global_vert_add(g_verts, current);
 	return (current);
 }
 
+// Allocates new t_face_vert node and assigns values to it.
 t_face_vert		*new_fvert(t_face_vert *prev, t_global_vert *data, t_face_vert *next)
 {
 	t_face_vert	*current;
@@ -140,8 +165,7 @@ t_face_vert		*new_fvert(t_face_vert *prev, t_global_vert *data, t_face_vert *nex
 	return (current);
 }
 
-// adds given verts to the global list
-// creates 3 face nodes which contain pointers to verts in global list
+// Allocates new t_actual_face node and the appropriate sub-structs.
 t_actual_face	*new_face(t_vert a, t_vert b, t_vert c)
 {
 	t_actual_face	*out;
@@ -156,11 +180,11 @@ t_actual_face	*new_face(t_vert a, t_vert b, t_vert c)
 	return (out);
 }
 
-// Builds a vertical wall from a 2D line as if viewed top-down.
-// Two verts will be at the same XY coordinate but different Z (height)
-// The third vert will be at the opposite end of the line.
-// A second triangle is made with the same method,
-// only with two points at the opposite end instead.
+// - Builds a vertical wall from a 2D line as if viewed top-down.
+// - Two verts will be at the same XY coordinate but different Z (height)
+// - The third vert will be at the opposite end of the line.
+// - A second triangle is made with the same method,
+//	only with two points at the opposite end instead.
 t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof)
 {
 	t_vert			v[3];
@@ -179,20 +203,22 @@ t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof)
 	return (face_list_add(f[0], f[1]));
 }
 
-t_obj			mdl_to_usable_data()
+t_obj			mdl_to_usable_data(t_doom *doom)
 {
 	t_obj			room_object;
-	t_doom			*doom;
 
 	int				wall_count;
 	int				room_count;
 	int				floor_height;
 	int				roof_height;
-	t_wall			*wall;
-	t_room			*room;
+	t_wall			*wall = NULL;
+	t_room			*room = NULL;
 
-	t_actual_face	*wall_tris;
-	t_actual_face	*single_wall;
+	t_actual_face	*wall_tris = NULL;
+	t_actual_face	*single_wall = NULL;
+
+	room_object.v_count = 0;
+	room_object.f_count = 0;
 
 	room_count = doom->mdl->room_count;
 	room       = doom->mdl->room_first;
@@ -219,7 +245,7 @@ t_obj			mdl_to_usable_data()
 				single_wall = make_wall(wall, room->first_wall, floor_height, roof_height);
 
 			// join those triangles to some bigger list
-			face_list_add(wall_tris, single_wall);
+			wall_tris = face_list_add(wall_tris, single_wall);
 			room_object.v_count += 6;
 			room_object.f_count += 2;
 			wall = wall->next;
@@ -227,5 +253,12 @@ t_obj			mdl_to_usable_data()
 		room = room->next;
 	}
 
-	printf("FINAL ROOM STATS: %d verts, %d faces, v:%p, f:%p\n", room_object.v_count, room_object.f_count, room_object.vert, room_object.face);
+	room_object.face = wall_tris;
+	room_object.vert = g_verts;
+	printf("FINAL ROOM STATS: %d verts, %d faces, v:%p, f:%p\n",
+		room_object.v_count,
+		room_object.f_count,
+		room_object.vert,
+		room_object.face);
+	return (room_object);
 }

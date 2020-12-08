@@ -7,6 +7,12 @@
 // https://www.cs.helsinki.fi/group/goa/viewing/leikkaus/lineClip.html
 // https://www.youtube.com/watch?v=VMD7fsCYO9o
 
+t_mesh	clip_whole_object(t_mesh mesh);
+int		get_clip_type(t_face face);
+int		get_outcode(t_vert v);
+void	modify_faces(t_mesh *out, t_face target);
+int		vert_within_view(t_vert vert);
+
 render_frame_mocup()
 {
 	t_mesh clip_space;
@@ -65,17 +71,17 @@ int		get_clip_type(t_face face)
 		return (CLIP_REQUIRED);
 }
 
-int get_outcode(t_vert v)
+int		get_outcode(t_vert v)
 {
 	int outcode;
 
 	outcode = 0;
 	outcode |= 0b000001 * (v.x <= -v.w);
-	outcode |= 0b000010 * (v.x >= v.w);
+	outcode |= 0b000010 * (v.x >=  v.w);
 	outcode |= 0b000100 * (v.y <= -v.w);
-	outcode |= 0b001000 * (v.y >= v.w);
+	outcode |= 0b001000 * (v.y >=  v.w);
 	outcode |= 0b010000 * (v.z <= -v.w);
-	outcode |= 0b100000 * (v.z >= v.w);
+	outcode |= 0b100000 * (v.z >=  v.w);
 }
 
 void	modify_faces(t_mesh *out, t_face target)
