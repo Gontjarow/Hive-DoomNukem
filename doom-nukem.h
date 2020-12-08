@@ -16,7 +16,8 @@
 # include "libft.h"
 # include "objects.h"
 # include "editor.h"
-# include "minimap.h"
+# include "game/game.h"
+# include "game/minimap.h"
 # include "renderer.h"
 
 # include "SDL.h"
@@ -40,6 +41,7 @@
 # define GAME_POLYMAP_WIDTH 6400
 # define GAME_POLYMAP_HEIGHT 3600
 # define UINT_ERROR_CONSTANT 32202
+# define EPS 1e-14
 
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS

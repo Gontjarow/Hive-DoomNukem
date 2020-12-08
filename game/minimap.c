@@ -6,12 +6,24 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/24 17:20:03 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 16:43:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 #include "minimap.h"
+
+static void	rescale_minimap(t_wall *wall, t_doom *doom)
+{
+	while (wall->start.x * doom->minimap->scale > MINIMAP_WIN_WIDTH)
+		doom->minimap->scale -= 0.1;
+	while (wall->start.y * doom->minimap->scale > MINIMAP_WIN_HEIGHT)
+		doom->minimap->scale -= 0.1;
+	while (wall->end.x * doom->minimap->scale > MINIMAP_WIN_WIDTH)
+		doom->minimap->scale -= 0.1;
+	while (wall->end.y * doom->minimap->scale > MINIMAP_WIN_HEIGHT)
+		doom->minimap->scale -= 0.1;
+}
 
 void	print_minimap_walls(t_doom *doom)
 {
@@ -26,14 +38,7 @@ void	print_minimap_walls(t_doom *doom)
 	{
 		// printf("Wall id: %d | start: %d, %d | end: %d, %d\n",
 		// 		wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
-		while (wall->start.x * doom->minimap->scale > 400)
-			doom->minimap->scale -= 0.1;
-		while (wall->start.y * doom->minimap->scale > 400)
-			doom->minimap->scale -= 0.1;
-		while (wall->end.x * doom->minimap->scale > 400)
-			doom->minimap->scale -= 0.1;
-		while (wall->end.y * doom->minimap->scale > 400)
-			doom->minimap->scale -= 0.1;
+		rescale_minimap(wall, doom);
 		line.x1 = wall->start.x * doom->minimap->scale;
 		line.y1 = wall->start.y * doom->minimap->scale;
 		line.x2 = wall->end.x * doom->minimap->scale;
@@ -45,7 +50,7 @@ void	print_minimap_walls(t_doom *doom)
 	}
 }
 
-static void minimap_circle_enemy(t_doom *doom, t_enemy *enemy)
+static void minimap_circle_enemy(t_doom *doom, t_enemy *enemy, unsigned int color)
 {
 	unsigned int *pixels;
 	int radius;
@@ -64,7 +69,7 @@ static void minimap_circle_enemy(t_doom *doom, t_enemy *enemy)
 			scaled.x = enemy->x * doom->minimap->scale;
 			scaled.y = enemy->y * doom->minimap->scale;
 			if (x * x + y * y > radius * radius - radius && x * x + y * y < radius * radius + radius)
-				pixels[scaled.x + x + ((scaled.y + y) * MINIMAP_WIN_WIDTH)] = 0xff00ff00;
+				pixels[scaled.x + x + ((scaled.y + y) * MINIMAP_WIN_WIDTH)] = color;
 			x++;
 		}
 		y++;
@@ -77,6 +82,7 @@ void	print_minimap_enemies(t_doom *doom)
 	t_enemy	*enemy;
 	t_line	line;
 	int 	ec;
+	unsigned int color;
 
 	ec = doom->mdl->enemy_count;
 	if (ec == 0)
@@ -88,10 +94,14 @@ void	print_minimap_enemies(t_doom *doom)
 		line.y1 = enemy->y * doom->minimap->scale;
 		line.x2 = enemy->tail.x * doom->minimap->scale;
 		line.y2 = enemy->tail.y * doom->minimap->scale;
-		line.color = 0xff00ff00;
+		if (enemy->hp.cur == 0)
+			color = 0xffff0000;
+		else
+			color = 0xff00ff00;
+		line.color = color;
 		line.buff = doom->minimap->buff;
 		render_line(&line);
-		minimap_circle_enemy(doom, enemy);
+		minimap_circle_enemy(doom, enemy, color);
 		enemy = enemy->next;
 	}
 }
@@ -137,6 +147,49 @@ void		print_minimap_player(t_doom *doom)
 	minimap_circle_player(doom);
 }
 
+void		print_player_ray(t_doom *doom)
+{
+	t_line	line;
+
+	line.x1 = doom->mdl->player.x * doom->minimap->scale;
+	line.y1 = doom->mdl->player.y * doom->minimap->scale;
+	line.x2 = doom->mdl->player.bullet_pos_x * doom->minimap->scale;
+	line.y2 = doom->mdl->player.bullet_pos_y * doom->minimap->scale;
+	line.color = doom->minimap->player_ray_color;
+	line.buff = doom->minimap->buff;
+	render_line(&line);
+	doom->minimap->player_ray_timeout--;
+}
+
+void		print_enemy_ray(t_doom *doom)
+{
+	t_line	line;
+	t_enemy *enemy;
+	int		ec;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		if (enemy->did_shoot == 1 && enemy->who_shot == enemy->id && enemy->hp.cur > 0)
+		{
+			// printf("Who shot: %d\n", doom->mdl->player.who_shot);
+			line.x1 = enemy->x * doom->minimap->scale;
+			line.y1 = enemy->y * doom->minimap->scale;
+			line.x2 = enemy->bullet_pos_x * doom->minimap->scale;
+			line.y2 = enemy->bullet_pos_y * doom->minimap->scale;
+			line.color = enemy->ray_color;
+			line.buff = doom->minimap->buff;
+			render_line(&line);
+			enemy->did_shoot = 0;
+		}
+		doom->minimap->enemy_ray_timeout--;
+		enemy = enemy->next;
+	}
+}
+
 void		destroy_minimap(t_doom *doom)
 {
 	SDL_FreeSurface(doom->minimap->buff);
@@ -150,6 +203,10 @@ void		destroy_minimap(t_doom *doom)
 void		update_minimap(t_doom *doom)
 {
 	flood_buffer(doom->minimap->buff, 0xff000000);
+	if (doom->minimap->player_ray_timeout > 0)
+		print_player_ray(doom);
+	if (doom->minimap->enemy_ray_timeout > 0)
+		print_enemy_ray(doom);
 	print_minimap_walls(doom);
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);

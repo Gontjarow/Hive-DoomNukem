@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   load_model.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/18 17:34:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/12/03 20:15:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -478,6 +478,22 @@ static t_wall   *mdl_wall_by_id(t_model *mdl, int id)
     return (NULL);
 }
 
+static void		assign_enemy_hps(t_model *mdl)
+{
+	t_enemy *enemy;
+	int		ec;
+
+	ec = mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = mdl->enemy_first;
+	while (ec--)
+	{
+		enemy->hp.cur = enemy->hp.max;
+		enemy = enemy->next;
+	}
+}
+
 static void		link_mdl_rooms(t_model *mdl)
 {
     t_room *room;
@@ -515,6 +531,8 @@ int			load_model(t_doom *doom)
 		parse_mapfile(doom, doom->mdl);
 		// Linking the loaded rooms data to objects to enable iteration code
 		link_mdl_rooms(doom->mdl);
+		// Assign the enemy current HPs, deriving them from their max hps
+		assign_enemy_hps(doom->mdl);
 		// Create polymap buffer for rooms for instant tracking of room_id where player is
 		ft_putendl("Launching game, calling expand_mdl_polygon_maps");
 		expand_mdl_polygon_maps(doom->mdl);

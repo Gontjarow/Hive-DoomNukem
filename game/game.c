@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/10/05 19:00:37 by ngontjar         ###   ########.fr       */
+/*   Updated: 2020/12/08 18:17:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,22 +74,9 @@ void 		game_loop(t_doom *doom)
 		doom->game_quit = 0;
 }
 
-static double deg_to_rad(int deg)
+double deg_to_rad(int deg)
 {
 	return (deg * M_PI / 180);
-}
-
-unsigned int		check_location(t_doom *doom)
-{
-	int				location;
-	unsigned int	*pixels;
-
-	pixels = (unsigned int*)doom->mdl->poly_map->pixels;
-	location = (int)doom->mdl->player.x + (int)doom->mdl->player.y * GAME_POLYMAP_WIDTH;
-	if (location < 0 || location > ((GAME_POLYMAP_WIDTH * GAME_POLYMAP_HEIGHT) -1))
-		return (UINT_ERROR_CONSTANT);
-	return ((int)(pixels[location]));
-	// printf("pro debug: %d\n", doom->mdl->poly_map[location]);
 }
 
 void		game_render(t_doom *doom)
@@ -167,6 +154,7 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_E])
 	{
 		// Use button, open doors, talk to NPC's...
+		player_shoots(doom);
 		printf("E key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_SPACE])
@@ -236,8 +224,8 @@ void		game_render(t_doom *doom)
 	/*
 	**	Player Collision Detection, checking if it's position is valid according to where he is currently located
 	*/
-	location_id = check_location(doom);
-	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT)
+	location_id = check_location(doom, doom->mdl->player.x, doom->mdl->player.y);
+	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT || player_collision_with_enemies(doom) == -1)
 	{
 		doom->mdl->player.x = old_x;
 		doom->mdl->player.y = old_y;
@@ -248,8 +236,9 @@ void		game_render(t_doom *doom)
 	// ft_putstr(",");
 	// ft_putnbr(doom->mdl->player.y);
 	// ft_putendl("] <- poly_map value.");
+	rotate_enemy_towards_player(doom);
+	move_enemy_towards_player(doom);
 	update_minimap(doom);
 	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
-	
 }

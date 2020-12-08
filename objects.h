@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   objects.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/20 18:18:44 by krusthol         ###   ########.fr       */
+/*   Updated: 2020/12/08 18:18:43 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OBJECTS_H
 # define OBJECTS_H
+
+# include <stdint.h>
 
 /*
 ** *
@@ -58,6 +60,8 @@ typedef struct 			s_player
 	double				rot_vertical;
 	double 				x;
 	double 				y;
+	double				bullet_pos_x;
+	double				bullet_pos_y;
 	int 				rot;
 	int					height;
 	int					is_jumping;
@@ -80,6 +84,11 @@ typedef struct 			s_enemy
 	int 				x;
 	int 				y;
 	int 				rot;
+	int					did_shoot;
+	int					who_shot;
+	uint32_t			ray_color;
+	double				bullet_pos_x;
+	double				bullet_pos_y;
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;
