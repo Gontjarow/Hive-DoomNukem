@@ -66,27 +66,49 @@ void	record_room(t_editor *edt)
 }
 */
 
-static int 	degree_rot(t_point *location, t_point *tail)
+static int 	degree_rot(t_point location, t_point *tail)
 {
 	double	result;
 	int		x;
 	int 	y;
 
-	x = tail->x - location->x;
-	y = tail->y - location->y;
+	x = tail->x - location.x;
+	y = tail->y - location.y;
 	result = atan2(y, x) * 180.0 / M_PI;;
 	result += 180.0;
 	return ((int)result);
 }
 
-//	TODO YOU ARE HERE!!! KEEP ADDING THE RECORD ENEMY / PLAYER FEATURE!
+void	record_player(t_point location, t_point tail, t_model *mdl)
+{
+	//TODO FILL FROM LEGACY CODE BASE
+	//TODO STRINGIFY THE RESULT ?
+	mdl->player.x = (double)location.x;
+	mdl->player.y = (double)location.y;
+	puts("Player planted!");
+}
+
 void	record_enemy(t_point location, t_point tail, t_model *mdl)
 {
+	t_enemy	*new_enemy;
+
 	mdl->enemies->id = mdl->enemy_count;
 	mdl->enemies->x = location.x;
 	mdl->enemies->y = location.y;
-	//TODO FILL FROM LEGACY CODE BASE
-
+	mdl->enemies->wep.type_id = 0;
+	mdl->enemies->hp.max = 100;
+	mdl->enemies->rot = degree_rot((t_point){location.x, location.y}, &tail);
+	new_enemy = (t_enemy*)malloc(sizeof(t_enemy));
+	if (!new_enemy)
+		ft_die("Fatal error: Could not malloc t_enemy at record_enemy");
+	if (mdl->enemy_count == 0)
+		mdl->enemy_first = mdl->enemies;
+	mdl->enemy_count++;
+	mdl->enemies->next = new_enemy;
+	mdl->enemies = new_enemy;
+	//TODO FILL FROM LEGACY CODE BASE // DONE
+	//TODO STRINGIFY THE RESULT ?
+	puts("Enemy planted!");
 }
 /*
 void	record_enemy_legacy(int x, int y, t_editor *edt)

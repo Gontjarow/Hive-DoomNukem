@@ -43,6 +43,8 @@ static void init_model(t_doom *doom)
 	doom->mdl->room_count = 0;
 	doom->mdl->portal_count = 0;
 	doom->mdl->enemy_count = 0;
+	doom->mdl->player.x = -1;
+	doom->mdl->player.y = -1;
 	doom->mdl->player.rot_horizontal = 0;
 	doom->mdl->player.rot_vertical = 0;
 	doom->mdl->player.is_jumping = 0;

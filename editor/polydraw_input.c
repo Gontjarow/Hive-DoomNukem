@@ -14,6 +14,7 @@ void 		polydraw_mouse_motion(int x, int y)
 	t_linedraw          *data;
 	static t_linedraw	previous_data = { 0 };
 	static uint32_t 	masked_color = 0;
+	static uint32_t 	avoid[3] = { COLOR_LINE, COLOR_PLAYER, COLOR_ENEMY };
 	static pthread_t    magnet_thread;
 	static int          updated_magnet_hover = 0;
 	int					tmp_scroll_x;
@@ -42,7 +43,7 @@ void 		polydraw_mouse_motion(int x, int y)
         data->draw_to_x = get_state()->thread_x;
         data->draw_to_y = get_state()->thread_y;
 		if (previous_data.drawing_underway)
-			careful_linedraw_to_buffer(&previous_data, doom_ptr()->edt->buff, 0xff000000, 0xffffffff);
+			careful_linedraw_to_buffer(&previous_data, doom_ptr()->edt->buff, 0xff000000, &avoid);
 		data->draw_from_x -= tmp_scroll_x;
 		data->draw_from_y -= tmp_scroll_y;
 		previous_data.draw_to_y = data->draw_to_y;
@@ -50,10 +51,10 @@ void 		polydraw_mouse_motion(int x, int y)
 		previous_data.draw_from_y = data->draw_from_y;
 		previous_data.draw_from_x = data->draw_from_x;
 		previous_data.drawing_underway = 1;
-        careful_linedraw_to_buffer(data, doom_ptr()->edt->buff, 0xfffffffe, 0xffffffff);
+        careful_linedraw_to_buffer(data, doom_ptr()->edt->buff, 0xfffffffe, &avoid);
 		masked_color = get_state()->thread_color;
         masked_circle_to_buffer(doom_ptr()->edt->buff, (t_point){data->draw_to_x, data->draw_to_y}, 15,
-								masked_color, 0xffffffff);
+								masked_color, &avoid);
 		data->draw_from_x += tmp_scroll_x;
 		data->draw_from_y += tmp_scroll_y;
         updated_magnet_hover = 1;
@@ -64,7 +65,7 @@ void 		polydraw_mouse_motion(int x, int y)
         data->draw_to_x = x;
         data->draw_to_y = y;
 		if (previous_data.drawing_underway)
-			careful_linedraw_to_buffer(&previous_data, doom_ptr()->edt->buff, 0xff000000, 0xffffffff);
+			careful_linedraw_to_buffer(&previous_data, doom_ptr()->edt->buff, 0xff000000, &avoid);
 		if (updated_magnet_hover)
 			unmasked_circle_to_buffer(doom_ptr()->edt->buff, (t_point){previous_data.draw_to_x, previous_data.draw_to_y}, 15,
 									  0xffffffff, masked_color);
@@ -75,7 +76,7 @@ void 		polydraw_mouse_motion(int x, int y)
 		previous_data.draw_from_y = data->draw_from_y;
 		previous_data.draw_from_x = data->draw_from_x;
 		previous_data.drawing_underway = 1;
-		careful_linedraw_to_buffer(data, doom_ptr()->edt->buff, 0xfffffffe, 0xffffffff);
+		careful_linedraw_to_buffer(data, doom_ptr()->edt->buff, 0xfffffffe, &avoid);
 		data->draw_from_x += tmp_scroll_x;
 		data->draw_from_y += tmp_scroll_y;
 		updated_magnet_hover = 0;

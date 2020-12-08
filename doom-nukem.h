@@ -33,8 +33,6 @@
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 512
-# define EDT_WIN_WIDTH 1600
-# define EDT_WIN_HEIGHT 900
 # define GAME_WIN_WIDTH 1024
 # define GAME_WIN_HEIGHT 512
 # define GAME_MIDWIDTH (GAME_WIN_WIDTH / 2)
@@ -212,7 +210,7 @@ typedef struct 			s_line
 	int 				px;
 	int 				py;
 	uint32_t 			color;
-	uint32_t 			avoid;
+	uint32_t 			avoid[3];
 	struct SDL_Surface 	*buff;
 	struct s_doom		*doom;
 }						t_line;

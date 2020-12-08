@@ -27,4 +27,5 @@ void 			polydraw_change_zoom(t_state *state)
 	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
 	print_mode_info(state->gui);
 	draw_scroll_bars_to_backbuffer(state);
+	draw_plantings_to_backbuffer(get_model());
 }

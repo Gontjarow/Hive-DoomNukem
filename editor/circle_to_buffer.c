@@ -27,8 +27,8 @@ void			preserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, ui
 						if (com_pixels[address] == 0xff000000)
 							pixels[address] = 0xff000000;
 				}
-				else
-					ft_putendl("preserving_circle_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
+				//else
+					//ft_putendl("preserving_circle_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
 			}
 			x++;
 		}
@@ -59,8 +59,8 @@ void			unpreserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, 
 					if (pixels[address] == 0xff000000)
 						pixels[address] = color;
 				}
-				else
-					ft_putendl("unpreserving_circle_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
+				//else
+					//ft_putendl("unpreserving_circle_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
 			}
 			x++;
 		}

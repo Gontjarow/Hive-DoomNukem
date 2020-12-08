@@ -84,19 +84,16 @@ static void		line_care_draw(t_line *l, int delta_x, int delta_y)
 	int				line_width;
 	uint32_t		col;
 	uint32_t		*pixels;
-	uint32_t		avoid;
 
 	pixels = l->buff->pixels;
 	line_width = l->buff->w;
 	col = l->color;
-	avoid = l->avoid;
-
 	abs_deltas[0] = abs(delta_x);
 	abs_deltas[1] = abs(delta_y);
 	kx = 2 * abs_deltas[1] - abs_deltas[0];
 	loc = l->fx + (l->fy * line_width);
-	if (pixels[loc] != avoid)
-		pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	if (!(pixels[loc] == l->avoid[0] || pixels[loc] == l->avoid[1] || pixels[loc] == l->avoid[2]))
+		pixels[loc] = col;
 	while (l->fx < l->px)
 	{
 		loc++;
@@ -111,7 +108,7 @@ static void		line_care_draw(t_line *l, int delta_x, int delta_y)
 				loc -= line_width;//l->fy--;
 			kx += 2 * (abs_deltas[1] - abs_deltas[0]);
 		}
-		if (pixels[loc] != avoid)
+		if (!(pixels[loc] == l->avoid[0] || pixels[loc] == l->avoid[1] || pixels[loc] == l->avoid[2]))
 			pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
 	}
 }
@@ -190,20 +187,18 @@ static void 	line_care_mirror(t_line *l, int delta_x, int delta_y)
 	int			loc;
 	int			line_width;
 	uint32_t	col;
-	uint32_t 	avoid;
 	uint32_t	*pixels;
 
 	pixels = l->buff->pixels;
 	line_width = l->buff->w;
 	col = l->color;
-	avoid = l->avoid;
 
 	abs_deltas[0] = abs(delta_x);
 	abs_deltas[1] = abs(delta_y);
 	ky = 2 * abs_deltas[0] - abs_deltas[1];
 	loc = l->fx + (l->fy * line_width);
-	if (pixels[loc] != avoid)
-		pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+	if (!(pixels[loc] == l->avoid[0] || pixels[loc] == l->avoid[1] || pixels[loc] == l->avoid[2]))
+		pixels[loc] = col;
 	while (l->fy < l->py)
 	{
 		loc += line_width;
@@ -218,8 +213,8 @@ static void 	line_care_mirror(t_line *l, int delta_x, int delta_y)
 				loc--;//l->fx--;
 			ky += 2 * (abs_deltas[0] - abs_deltas[1]);
 		}
-		if (pixels[loc] != avoid)
-			pixels[loc] = col;//set_pixel(l->buff, l->fx, l->fy, l->color);
+		if (!(pixels[loc] == l->avoid[0] || pixels[loc] == l->avoid[1] || pixels[loc] == l->avoid[2]))
+			pixels[loc] = col;
 	}
 }
 

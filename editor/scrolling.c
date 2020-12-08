@@ -76,13 +76,39 @@ static inline void	set_point(t_point *point, int x, int y)
 	point->y = y;
 }
 
+static void 		restore_scroll(int *restoration_available, t_state *state)
+{
+	static int 		restore_x = -1;
+	static int 		restore_y = -1;
+
+	if (state->confine_skip == 0 && state->zoom_factor == 4)
+	{
+		restore_x = state->scroll_x;
+		restore_y = state->scroll_y;
+		*restoration_available = 1;
+	}
+	else if (state->confine_skip == 0 && state->zoom_factor == 2 && *restoration_available)
+	{
+		state->scroll_x = restore_x;
+		state->scroll_y = restore_y;
+		restore_x = -1;
+		restore_y = -1;
+		*restoration_available = 0;
+	}
+}
+
 void				confine_scroll(t_state *state)
 {
 	static t_point	previous;
+	static int 		restoration_available;
 	int 			zf_mult;
 
-	if (state->scroll_x == previous.x && state->scroll_y == previous.y)
+
+	if (state->scroll_x == previous.x && state->scroll_y == previous.y && state->confine_skip)
 		return ;
+	if ((state->confine_skip == 0 && state->zoom_factor == 4) || (state->confine_skip == 0 && state->zoom_factor == 2 && restoration_available))
+		restore_scroll(&restoration_available, state);
+	state->confine_skip = 1;
 	state->scroll_x = (state->scroll_x < 0) ? 0 : state->scroll_x;
 	state->scroll_y = (state->scroll_y < 0) ? 0 : state->scroll_y;
 	if (state->zoom_factor == 4)

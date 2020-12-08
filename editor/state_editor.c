@@ -44,6 +44,8 @@ void				edt_outward_zoom(void)
 	//printf("Zoomed editor outward\n");
 	if (get_state()->zoom_factor < 4)
 		get_state()->zoom_factor *= 2;
+	get_state()->confine_skip = 0;
+	confine_scroll(get_state());
 	get_state()->gui->change_zoom(get_state());
 	print_mode_info(get_state()->gui);
 }
@@ -53,6 +55,7 @@ void				edt_inward_zoom(void)
 	//printf("Zoomed editor inward\n");
 	if (get_state()->zoom_factor > 1)
 		get_state()->zoom_factor /= 2;
+	get_state()->confine_skip = 0;
 	confine_scroll(get_state());
 	get_state()->gui->change_zoom(get_state());
 	print_mode_info(get_state()->gui);
@@ -78,6 +81,7 @@ t_state				*get_state(void)
 		state->zoom_factor = 1;
 		state->scroll_x = 0;
 		state->scroll_y = 0;
+		state->confine_skip = 1;
 		state->gui->activate(state);
 		//print_mode_info(state->gui);
 		//draw_scroll_bars_to_backbuffer(state);

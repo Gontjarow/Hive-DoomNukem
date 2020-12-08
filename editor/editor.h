@@ -31,6 +31,12 @@ typedef void 			(*status_action)(t_status *status);
 typedef void 			(*logic_xy)(int x, int y);
 typedef void 			(*logic_void)(void);
 
+# define EDT_WIN_WIDTH	1600
+# define EDT_WIN_HEIGHT	900
+# define COLOR_LINE		0xffffffff
+# define COLOR_PLAYER	0xff00ff00
+# define COLOR_ENEMY	0xffffff00
+
 typedef struct 			s_2d_layer
 {
     struct SDL_Surface	*buff;
@@ -97,6 +103,7 @@ typedef struct 			s_state
     int 				zoom_factor;
     int					scroll_x;
     int 				scroll_y;
+    int 				confine_skip;
 }						t_state;
 
 typedef struct 			s_editor
@@ -173,7 +180,7 @@ void            		circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, ui
  * */
 
 void					init_linedraw_data(void *data_ptr);
-void					careful_linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color, uint32_t avoid);
+void					careful_linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color, uint32_t *avoid);
 void					linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color);
 t_wall					*linedraw_to_wall(t_linedraw *data);
 
@@ -204,6 +211,7 @@ t_state					*get_state(void);
 /*
  * from planting.c
  * */
+void		 			draw_plantings_to_backbuffer(t_model *mdl);
 
 t_logic 				*planting_logic(void);
 void 					planting_plant(int x, int y);
@@ -237,112 +245,11 @@ void 					polydraw_left_click(int x, int y);
 void 					polydraw_right_click(int x, int y);
 void 					polydraw_middle_click(int x, int y);
 
-#if 0
 /*
-** *
-** Level Editor struct
-** *
-*/
+ * from record.c
+ * */
 
-struct 					s_player;
-struct 					s_point;
-
-typedef struct 			s_editor
-{
-	struct SDL_Window	*win;
-	struct SDL_Surface	*buff;
-	struct SDL_Surface  *poly_map;
-	struct SDL_Surface	*grid_buffer;
-	struct SDL_Surface	*grid_temp;
-	struct SDL_Surface  *back_buffer;
-	struct SDL_Surface	*front_buffer;
-	struct s_wall		*walls;
-	struct s_wall		*wall_begin;
-	struct s_room		*rooms;
-	struct s_room		*room_first;
-	struct s_wall		*portals;
-	struct s_wall		*portal_begin;
-	struct s_wall		*subselection_wall;
-	int 				wall_count;
-	int 				room_count;
-	int 				portal_count;
-	int 				enemy_count;
-	struct s_player		player;
-	struct s_enemy		*enemies;
-	struct s_enemy		*enemy_first;
-	struct s_point		tail;
-	struct s_point		last_enemy;
-	int 				is_wall_start;
-	char 				*wall_string;
-	char 				*portal_string;
-	char 				*room_string;
-	char 				*enemy_string;
-	char 				*player_string;
-	char 				*join_string;
-	int 				hover_status;
-	int 				hover_id;
-	int 				selection_status;
-	int 				selection_room_id;
-	int					subselection_id;
-	int 				polygon_start_x;
-	int 				polygon_start_y;
-	int 				polygon_binding;
-	int 				portalization_binding;
-	int 				portalization_ending;
-	int					portal_x;
-	int 				portal_y;
-	int					new_portal_x;
-	int					new_portal_y;
-	int 				player_set;
-	int 				enemy_set;
-	struct s_wall		*portalization_a;
-	struct s_wall		*portalization_b;
-	struct s_wall		*new_portal;
-	int 				load_map;
-	int 				write_maps;
-	int 				overwrite_map;
-	char 				*map_path;
-	struct s_doom		*parent;
-	uint32_t            conversion_colors[512];
-}						t_editor;
-
-void			transfer_model_to_editor(t_doom *doom);
-void			edt_mouse_motion(t_doom *doom);
-void 			edt_mouse_down(t_doom *doom);
-void			edt_render(t_doom *doom);
-void            create_grid_buffer(t_editor *edt);
-
-/* from walls.c */
-int				wall_count_of_previous_rooms(t_editor *edt);
-t_wall 			*wall_by_count(t_editor *edt, int count);
-t_wall			*wall_by_id(t_editor *edt, int id);
-
-/* from draw_editor.c */
-void			print_portals(t_editor *edt);
-void			print_characters(t_editor *edt);
-void			print_walls(t_editor *edt);
-void			circle_rooms(t_doom *doom);
-void			circle_visual(SDL_Surface *buff, t_point *visual, uint32_t color);
-void			circle_room(t_doom *doom, t_room *room);
-void			circle_player(t_doom *doom);
-void			circle_enemy(t_doom *doom);
-
-/* from find_visual.c */
-void			find_visual_xy(t_editor *edt, t_room *room);
-
-/* from record.c */
-void			create_strings_from_state(t_editor *edt);
-void			record_room(t_editor *edt);
-void			record_enemy(int x, int y, t_editor *edt);
-void			record_player(int x, int y, t_editor *edt);
-void 			record_portal(t_editor *edt);
-
-/* from room_polygon_map.c */
-int				room_id_from_pixel(SDL_Surface *buff, int x, int y);
-void            create_room_polygon_map(t_editor *edt);
-void	 		wipe_room_polygon_map(t_room *room, t_doom *doom);
-void            expand_room_polygon_map(t_room *room, t_doom *doom, struct SDL_Surface *poly_map, uint32_t *conversion_colors);
-
-#endif
+void					record_player(t_point location, t_point tail, t_model *mdl);
+void					record_enemy(t_point location, t_point tail, t_model *mdl);
 
 #endif
