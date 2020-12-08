@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/08 18:17:06 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 20:43:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,8 +154,29 @@ void		game_render(t_doom *doom)
 	if (doom->keystates[SDL_SCANCODE_E])
 	{
 		// Use button, open doors, talk to NPC's...
-		player_shoots(doom);
+		if (doom->mdl->player.shoot_cd == 0)
+		{
+			player_shoots(doom);
+		}
 		printf("E key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_1])
+	{
+		doom->mdl->player.wep.type_id = 1;
+		update_player_weapon(doom);
+		printf("Switched to Weapon 1\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_2])
+	{
+		doom->mdl->player.wep.type_id = 2;
+		update_player_weapon(doom);
+		printf("Switched to Weapon 2\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_3])
+	{
+		doom->mdl->player.wep.type_id = 3;
+		update_player_weapon(doom);
+		printf("Switched to Weapon 3\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_SPACE])
 	{
@@ -236,6 +257,7 @@ void		game_render(t_doom *doom)
 	// ft_putstr(",");
 	// ft_putnbr(doom->mdl->player.y);
 	// ft_putendl("] <- poly_map value.");
+	printf("Player ammo: %d/%d\n", doom->mdl->player.wep.ammo_cur, doom->mdl->player.wep.ammo_max);
 	rotate_enemy_towards_player(doom);
 	move_enemy_towards_player(doom);
 	update_minimap(doom);

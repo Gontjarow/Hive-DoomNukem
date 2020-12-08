@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/08 18:51:55 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 20:33:50 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,7 @@ double          dist(double px, double py, double x1, double y1);
 
 void            rotate_enemy_towards_player(t_doom *doom);
 void            move_enemy_towards_player(t_doom *doom);
+
+void            update_player_weapon(t_doom *doom);
 
 #endif

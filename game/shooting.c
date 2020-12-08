@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/08 17:03:18 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 20:46:53 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,8 @@ void		deal_damage(t_doom *doom, int enemy_id)
 /*
 	TODO: 
 	- There is a known bug that makes it really hard to shoot an enemy if there are more than 4-5 enemies placed in the world (the collision gets really innacurate the more enemies u place...
-		is this the linked list fault?)
-	- Give enemy collision with each other
-	- Fill all the enemies shooting cooldown so that each one can shoot in their own times, probaby just like their HP's. Right now only 1 enemy can shoot ;-;
+		is this the linked list fault?
+	- Fill all the enemies shooting cooldown so that each one can shoot in their own times, probaby just like their HP's.
 	- Player magazine, reload time... This will be done once weapons have been designated so that I can balance each one. We dont want a pistol shooting like a mini gun ;-;
 */
 
@@ -76,6 +75,8 @@ int			player_shoots(t_doom *doom)
 	doom->mdl->player.bullet_pos_y = doom->mdl->player.y;
 	doom->minimap->player_ray_color = 0xffff0000;
 	doom->minimap->player_ray_timeout = 15;
+	doom->mdl->player.shoot_cd = doom->mdl->player.wep.cooldown;
+	doom->mdl->player.wep.ammo_cur--;	// stopped here :)
 	while (check_location(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y) != -1 && enemy_who_was_hit < 0)
 	{
 		doom->mdl->player.bullet_pos_x += bullet_speed * -cos(rad);
