@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/03 20:38:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 16:57:18 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void		deal_damage(t_doom *doom, int enemy_id)
 		// printf("enemy %d hp: %d\n", enemy->id, enemy->hp.cur);
 		if (enemy->id == enemy_id && enemy->hp.cur > 0)
 		{
-			enemy->hp.cur -= 10;
+			enemy->hp.cur -= 50;
 			// printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
 			if (enemy->hp.cur <= 0)
 			{
@@ -58,7 +58,7 @@ void		deal_damage(t_doom *doom, int enemy_id)
 	TODO: 
 	- There is a known bug that makes it really hard to shoot an enemy if there are more than 4-5 enemies placed in the world (the collision gets really innacurate the more enemies u place...
 		is this the linked list fault?)
-	- Fix the enemy shooting, the bullet_pos is only assigned to the first enemy -.-'
+	- Give enemy collision with each other
 	- Fill all the enemies shooting cooldown so that each one can shoot in their own times, probaby just like their HP's. Right now only 1 enemy can shoot ;-;
 	- Player magazine, reload time... This will be done once weapons have been designated so that I can balance each one. We dont want a pistol shooting like a mini gun ;-;
 */

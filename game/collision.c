@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/03 17:58:42 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 15:34:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	point_circle(double px, double py, double cx, double cy)
 	dist = sqrt((dist_x * dist_x) + (dist_y * dist_y));
 	// if the distance is less than the circle's
 	// radius the point is inside!
-	if (dist <= 15) 
+	if (dist <= 10) 
     	return (1);
   return (0);
 }
@@ -134,7 +134,7 @@ int		check_hit(t_doom *doom)
 		dist_x = closest_x - enemy->x;
 		dist_y = closest_y - enemy->y;
 		distance = sqrt((dist_x * dist_x) + (dist_y * dist_y));
-		if (distance <= 15 && enemy->hp.cur > 0)
+		if (distance <= 10 && enemy->hp.cur > 0)
     		return (enemy->id);
 		enemy = enemy->next;
 	}

@@ -6,12 +6,14 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/03 20:18:51 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 16:42:26 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OBJECTS_H
 # define OBJECTS_H
+
+# include <stdint.h>
 
 /*
 ** *
@@ -82,6 +84,9 @@ typedef struct 			s_enemy
 	int 				x;
 	int 				y;
 	int 				rot;
+	int					did_shoot;
+	int					who_shot;
+	uint32_t			ray_color;
 	double				bullet_pos_x;
 	double				bullet_pos_y;
 	struct s_point		tail;

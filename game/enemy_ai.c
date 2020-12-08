@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/03 20:21:27 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 16:54:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,10 +121,10 @@ void            move_enemy_towards_player(t_doom *doom)
             {
                 // printf("FOUND ENEMY, MOVING TO ENGAGE!\n");
                 rad = deg_to_rad(enemy->rot);
-                enemy->x += 10 * -cos(rad);
-                enemy->y += 10 * -sin(rad);
-                x = enemy->x + 10 * -cos(rad);
-                y = enemy->y + 10 * -sin(rad);
+                enemy->x += 5 * -cos(rad);
+                enemy->y += 5 * -sin(rad);
+                x = enemy->x + 5 * -cos(rad);
+                y = enemy->y + 5 * -sin(rad);
                 enemy->tail.x = x;
                 enemy->tail.y = y;
                 if (check_location(doom, enemy->x, enemy->y) == -1 || check_location(doom, enemy->x, enemy->y) == UINT_ERROR_CONSTANT)
@@ -135,7 +135,7 @@ void            move_enemy_towards_player(t_doom *doom)
             }
             if (distance < 70)
             {
-                enemy_shoot_the_player(doom, enemy, distance);
+                enemy_shoot_the_player(doom, enemy);
             }
         }
         enemy = enemy->next;
@@ -180,28 +180,28 @@ static int	check_hit_on_player(t_doom *doom, t_enemy *enemy)
 	dist_x = closest_x - doom->mdl->player.x;
 	dist_y = closest_y - doom->mdl->player.y;
 	distance = sqrt((dist_x * dist_x) + (dist_y * dist_y));
-	if (distance <= 15)
+	if (distance <= 10)
     	return (1);
 	return (0);
 }
 
 static void deal_damage_on_player(t_doom *doom)
 {
-    ft_putstr("Player HP: ");
-    ft_putnbr(doom->mdl->player.hp.cur);
-    ft_putendl(" ");
+    // ft_putstr("Player HP: ");
+    // ft_putnbr(doom->mdl->player.hp.cur);
+    // ft_putendl(" ");
     if (doom->mdl->player.hp.cur > 0)
     {
         doom->mdl->player.hp.cur -= 5;
         if (doom->mdl->player.hp.cur <= 0)
         {
-            printf("GAME OVER :(\n");
+            // printf("GAME OVER :(\n");
             doom->mdl->player.hp.cur = 0;
         }
     }
 }
 
-void        enemy_shoot_the_player(t_doom *doom, t_enemy *enemy, double distance)
+void        enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 {
     int         bullet_speed;
     int         did_hit;
@@ -210,7 +210,8 @@ void        enemy_shoot_the_player(t_doom *doom, t_enemy *enemy, double distance
 
     bullet_speed = 1;
     did_hit = 0;
-    doom->minimap->enemy_ray_color = 0xffff0000;
+    enemy->ray_color = 0xffff0000;
+    // doom->minimap->enemy_ray_color = 0xffff0000;
     doom->minimap->enemy_ray_timeout = 15;
     enemy->bullet_pos_x = enemy->x;
     enemy->bullet_pos_y = enemy->y;
@@ -222,8 +223,11 @@ void        enemy_shoot_the_player(t_doom *doom, t_enemy *enemy, double distance
 		did_hit = check_hit_on_player(doom, enemy);
 		if (did_hit == 1)
 		{
-			doom->minimap->enemy_ray_color = 0xff00ff00;
+            enemy->ray_color = 0xff00ff00;
+			// doom->minimap->enemy_ray_color = 0xff00ff00;
 			deal_damage_on_player(doom);
 		}
 	}
+    enemy->did_shoot = 1;
+    enemy->who_shot = enemy->id;
 }

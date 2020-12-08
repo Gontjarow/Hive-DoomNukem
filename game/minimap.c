@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/03 20:18:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 16:43:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,14 +173,20 @@ void		print_enemy_ray(t_doom *doom)
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
-		line.x1 = enemy->x * doom->minimap->scale;
-		line.y1 = enemy->y * doom->minimap->scale;
-		line.x2 = enemy->bullet_pos_x * doom->minimap->scale;
-		line.y2 = enemy->bullet_pos_y * doom->minimap->scale;
-		line.color = doom->minimap->enemy_ray_color;
-		line.buff = doom->minimap->buff;
-		render_line(&line);
+		if (enemy->did_shoot == 1 && enemy->who_shot == enemy->id && enemy->hp.cur > 0)
+		{
+			// printf("Who shot: %d\n", doom->mdl->player.who_shot);
+			line.x1 = enemy->x * doom->minimap->scale;
+			line.y1 = enemy->y * doom->minimap->scale;
+			line.x2 = enemy->bullet_pos_x * doom->minimap->scale;
+			line.y2 = enemy->bullet_pos_y * doom->minimap->scale;
+			line.color = enemy->ray_color;
+			line.buff = doom->minimap->buff;
+			render_line(&line);
+			enemy->did_shoot = 0;
+		}
 		doom->minimap->enemy_ray_timeout--;
+		enemy = enemy->next;
 	}
 }
 
