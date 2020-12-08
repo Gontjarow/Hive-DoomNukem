@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/08 16:54:08 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/08 19:02:26 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void            move_enemy_towards_player(t_doom *doom)
                 y = enemy->y + 5 * -sin(rad);
                 enemy->tail.x = x;
                 enemy->tail.y = y;
-                if (check_location(doom, enemy->x, enemy->y) == -1 || check_location(doom, enemy->x, enemy->y) == UINT_ERROR_CONSTANT)
+                if (check_location(doom, enemy->x, enemy->y) == -1 || check_location(doom, enemy->x, enemy->y) == UINT_ERROR_CONSTANT || enemy_collision_with_enemies(doom, enemy) == -1)
                 {
                     enemy->x = old_x;
                     enemy->y = old_y;
