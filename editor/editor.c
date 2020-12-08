@@ -35,11 +35,13 @@
 //		Stage 8: Add visual scrollbars to let user know the amount of scrolling applied // DONE
 //			Technical debt: Can be done with XPM graphics propably later, implemented with linedraws.
 
-// TODO NEXT FEATURE
+// TODO BEFORE MASTER MERGE
 //		MODE TO ADD ENEMY AND PLAYER OBJECTS // IN PROGRESS
 //			RECORD POSITIONS TO MODEL // <-- YOU ARE HERE !
-//		ENABLE RECORDING OF ROOMS AGAIN
-//		ENABLE SAVING TO MAPFILE AGAIN
+//		RECORD ROOMS TO MODEL
+//		ENABLE SAVING MODELS DATA TO MAPFILE AGAIN
+
+// TODO AFTER MASTER MERGE
 //		MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
 
 void				init_edt(t_doom *doom)

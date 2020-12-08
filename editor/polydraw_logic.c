@@ -42,7 +42,6 @@ void 			polydraw_start(t_status *status)
 	//ft_putendl("Polydraw start");
 }
 
-// TODO: This is correct for left clicks, but right clicks are COUPLED in a crashing way
 void 			polydraw_continue(t_status *status)
 {
 	t_linedraw      *data;

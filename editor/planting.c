@@ -60,10 +60,10 @@ static void		draw_enemy(t_enemy *enemy, t_state *state)
 	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 10, type_colors(ENEMY));
 }
 
-
 // TODO			BLIT BASED RENDERING IS SLOW!!!! FIX???
 //					BEFORE OPTIMIZING CODE, TRY OPTIMIZING SURFACE WITH SDL_CONVERT
 //				ALTERNATIVE SUGGESTION: DRAW DIRECTLY TO WINDOW BUFFER, SKIPPING BLIT
+
 void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 {
 	t_enemy		*enemy;
@@ -96,6 +96,9 @@ t_logic 		*planting_logic(void)
 		logic->plant_type = PLAYER;
 		logic->plant = planting_plant;
 		logic->swap_type = planting_swap_type;
+		logic->sweep_counter = 0;
+		logic->sweep[0].x = 0;
+		logic->sweep[0].y = 0;
 	}
 	return (logic);
 }
@@ -108,27 +111,27 @@ void 			planting_swap_type(void)
 		planting_logic()->plant_type = PLAYER;
 }
 
-// TODO			ADD PLAYER REPLACEMENT
-
 void 			planting_plant(int x, int y)
 {
 	int 		clean_up;
 	t_point		relative;
+	t_point		*tail;
 
 	clean_up = 0;
 	relative = relative_position(x, y, get_state());
+	tail = &planting_logic()->sweep[1];
 	if (planting_logic()->plant_type == PLAYER && get_model()->player.x == -1)
 	{
-		record_player(relative, (t_point) {relative.x + 10, relative.y + 10}, get_model());
+		record_player(relative, tail, get_model());
 		clean_up = 1;
 	}
 	else if (planting_logic()->plant_type == PLAYER && get_model()->player.x != -1)
 	{
-		record_player(relative, (t_point) {relative.x + 10, relative.y + 10}, get_model());
+		record_player(relative, tail, get_model());
 		clean_up = 2;
 	}
 	else if (planting_logic()->plant_type == ENEMY)
-		record_enemy(relative, (t_point){relative.x + 10, relative.y + 10}, get_model());
+		record_enemy(relative, tail, get_model());
 	planting_logic()->planted_ticks = SDL_GetTicks();
 	circle_to_buffer(editor_back_buffer()->buff, (t_point){x, y}, 10, type_colors(planting_logic()->plant_type));
 	editor_back_buffer()->rendering_on = 1;
@@ -170,7 +173,20 @@ void			planting_change_zoom(t_state *state)
 void 			planting_mouse_motion(int x, int y)
 {
 	static t_point	last_preview = {-1, -1};
+	t_point			*sweep;
 
+	if (planting_logic()->sweep_counter == 0)
+	{
+		sweep = planting_logic()->sweep;
+		sweep[1].x = sweep[0].x;
+		sweep[1].y = sweep[0].y;
+		sweep[0].x = x;
+		sweep[0].y = y;
+		planting_logic()->sweep_counter = 10;
+			//puts("*sweeping*");
+	}
+	else
+		planting_logic()->sweep_counter--;
 	if (SDL_GetTicks() - planting_logic()->planted_ticks < 20)
 	{
 		last_preview.x = -1;

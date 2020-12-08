@@ -61,6 +61,8 @@ typedef struct 			s_logic
 	logic_void			swap_type;
 	logic_xy			plant;
 	int 				planted_ticks;
+	t_point				sweep[2];
+	int 				sweep_counter;
 }						t_logic;
 
 typedef struct 			s_status
@@ -249,7 +251,7 @@ void 					polydraw_middle_click(int x, int y);
  * from record.c
  * */
 
-void					record_player(t_point location, t_point tail, t_model *mdl);
-void					record_enemy(t_point location, t_point tail, t_model *mdl);
+void					record_player(t_point location, t_point *tail, t_model *mdl);
+void					record_enemy(t_point location, t_point *tail, t_model *mdl);
 
 #endif

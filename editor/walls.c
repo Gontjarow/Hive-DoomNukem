@@ -15,7 +15,6 @@ static unsigned int code_from_point(t_point *point, SDL_Surface *buff)
 		code |= (1 << 3);
 	return (code);
 }
-// TODO				Scrolling must be taken into account here to prevent crashing.
 
 static int			clip_wall_to_buff(t_wall *clip, t_wall *wall, SDL_Surface *buff)
 {

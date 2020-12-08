@@ -94,6 +94,8 @@ void 		polydraw_left_click(int x, int y)
 	status->phases[status->phase](status);
 }
 
+// WAS BUGGED: POLYDRAW_RIGHT_CLICK FAILS IF RIGHT CLICKING ON GREEN MAGNETIZED AREA
+// FIXED BY: NOW CHECKING THREAD PERMISSION IS NOT 1
 void 		polydraw_right_click(int x, int y)
 {
 	//ft_putendl("Polydraw right_clicked");
@@ -101,7 +103,7 @@ void 		polydraw_right_click(int x, int y)
 
 	status = polydraw_status();
 	// Check if polydraw_status->phase is not polydraw_continue() to early exit!
-	if (status->phase != 1)
+	if (status->phase != 1 || get_state()->thread_permission == 1)
 		return ;
 	// When the phase is polydraw_continue(), proceed a cycle of polydraw_continue() followed
 	// by the polydraw_end(). Invoke them in order with the "reflection", to maintain
@@ -112,7 +114,6 @@ void 		polydraw_right_click(int x, int y)
 	status->phases[status->phase](status);
 	status->phase++;
 	assert(status->phase == 2);
-	// TODO: THIS FAILS IF RIGHT CLICKING ON GREEN MAGNETIZED AREA
 	// This invokes polydraw_end()
 	status->phases[status->phase](status);
 }

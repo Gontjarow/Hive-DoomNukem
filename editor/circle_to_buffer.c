@@ -1,7 +1,6 @@
 #include "doom-nukem.h"
 
 // TODO	REFACTOR!! I WANT CIRCLES RADIUSES TO SCALE WITH ZOOM FACTOR, CREATE A CIRCLE STRUCT FOR PASSING THE DATA
-
 // TODO Norminettize function sizes, if going to production with these still in use (YAGNI?)
 
 void			preserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask)
