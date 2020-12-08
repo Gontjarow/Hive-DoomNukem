@@ -234,6 +234,7 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 		doom->game_quit = 0;
 		doom->menu_out_of_focus = 1;
 		load_model(doom);
+		doom->game->world_obj = mdl_to_usable_data(doom);
 		if (DEBUG == 1)
 			init_minimap(doom);
 		SDL_UpdateWindowSurface(doom->game->win);

@@ -37,20 +37,13 @@ void zbuffer_to_window(t_doom *doom)
 
 void render_frame(t_doom *doom)
 {
-	mdl_to_usable_data(doom);
-	printf("Cool\n");
-	exit(0);
 	flood_buffer(doom->game->buff, 0x112233);
 	double *zbuffer = get_zbuffer();
 	memset_f(zbuffer, INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
 
-	t_mesh test = load_mesh_obj("tiny-donut.obj");
-
-	//printf("load_mesh_obj succeeded\n");
-
 	double		hrz = doom->mdl->player.rot_horizontal;
-	int px = doom->mdl->player.x;
-	int py = doom->mdl->player.y;
+	int			px = doom->mdl->player.x;
+	int			py = doom->mdl->player.y;
 	t_xyz		pos = vec3(px, 0, py);
 	t_xyz		cam_dir = vec3_norm(vec3_sub(pos, vec3(0, 0, 0)));
 
@@ -59,11 +52,13 @@ void render_frame(t_doom *doom)
 	t_matrix	modelview = lookat_m(pos, vec3(0, 0, 0), vec3(0,1,0));
 	t_matrix	projection = project_pure_m();
 	t_matrix	window = window_m(0.1, 1000);
-	// modelview = multiply_m(world, modelview);
 	modelview = multiply_m(projection, modelview);
-	// modelview = multiply_m(dimensions, modelview);
 
+	t_obj		world_obj = doom->game->world_obj;
+	t_obj		mv_obj = obj_transform(modelview, world_obj);
+	return; // ----> Todo: Continue <----
 
+	t_mesh test;
 	t_mesh		mv = mesh_transform(modelview, test);
 	printf("debug start\n");
 	for (int f = 0; f < mv.faces; ++f)

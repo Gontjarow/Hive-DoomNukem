@@ -76,6 +76,8 @@ typedef struct	s_obj
 // t_vert f1v1 = object->face->       vert->       data.pos;
 // t_vert f2v2 = object->face->next-> vert->next-> data.pos;
 
+typedef struct	s_doom t_doom;
+
 # include "renderer.h"
 
 t_global_vert	*new_vert(t_global_vert *prev, t_vert v, t_global_vert *next);
@@ -93,5 +95,8 @@ t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail);
 t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof);
 
 t_obj			mdl_to_usable_data(t_doom *doom);
+
+t_actual_face	*face_transform(t_matrix m, t_actual_face *f);
+t_obj			obj_transform(t_matrix m, t_obj obj);
 
 #endif

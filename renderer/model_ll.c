@@ -1,5 +1,4 @@
 #include "renderer.h"
-#include "doom-nukem.h"
 
 static t_global_vert	*g_verts = NULL;
 
@@ -85,6 +84,8 @@ t_face_vert		*list2face(t_actual_face *list, int index)
 	return (list);
 }
 
+// Appends to, or creates a new list, then returns head.
+// Note: Might want to avoid these when appending lots of things.
 t_global_vert	*global_vert_add(t_global_vert *head, t_global_vert *node)
 {
 	t_global_vert	*last;
@@ -262,4 +263,69 @@ t_obj			mdl_to_usable_data(t_doom *doom)
 	// while (--y) room_object.vert = room_object.vert->next; assert(room_object.vert->next == NULL);
 
 	return (room_object);
+}
+
+// Todo: Rewrite the previous model.c functions for the new structure.
+
+void			recursive_vert_free(t_global_vert *vert)
+{
+	if (vert->next)
+		recursive_vert_free(vert->next);
+	free(vert);
+}
+
+void			recursive_fvert_free(t_face_vert *fvert)
+{
+	if (fvert->next)
+		recursive_fvert_free(fvert->next);
+	free(fvert);
+}
+
+void			recursive_face_free(t_actual_face *face)
+{
+	recursive_fvert_free(face->vert);
+	if (face->next)
+		recursive_face_free(face->next);
+	free(face);
+}
+
+void			free_obj(t_obj obj)
+{
+	recursive_vert_free(obj.vert);
+	recursive_face_free(obj.face);
+}
+
+// Allocates a new face (triangle) after applying the given matrix.
+t_actual_face	*face_transform(t_matrix m, t_actual_face *f)
+{
+	return (new_face(
+		apply_m(m, f->vert->data->pos),
+		apply_m(m, f->vert->next->data->pos),
+		apply_m(m, f->vert->next->next->data->pos)
+	));
+}
+
+/*
+** \brief Applies the given matrix to all faces in the mesh.
+** \return Newly allocated data, containing the transformed faces.
+*/
+t_obj			obj_transform(t_matrix m, t_obj obj)
+{
+	t_obj out;
+	t_actual_face *out_begin;
+
+	assert(obj.f_count >= 1);
+
+	out.face = face_transform(m, obj.face);
+	out_begin = out.face;
+
+	while (obj.face->next != NULL)
+	{
+		out.face->next = face_transform(m, obj.face->next);
+		obj.face = obj.face->next;
+		out.face = out.face->next;
+	}
+
+	out.face = out_begin;
+	return (out);
 }

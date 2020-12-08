@@ -168,6 +168,7 @@ typedef struct			s_game
 	struct s_doom		*parent;
 	char 				*map_path;
 	int 				map_supplied;
+	struct s_obj		world_obj;
 }						t_game;
 
 /*

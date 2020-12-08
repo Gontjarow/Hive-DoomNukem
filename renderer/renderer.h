@@ -1,9 +1,6 @@
 #ifndef RENDERER_H
 # define RENDERER_H
 
-# include "doom-nukem.h"
-# include <assert.h>
-
 # define T_DIR 0.0
 # define T_POS 1.0
 
@@ -66,8 +63,12 @@ typedef struct	s_cam
 	t_xyz	rot;
 }				t_cam;
 
+typedef struct	s_wall t_wall;
+
 # include "model.h"
 # include "model_ll.h"
+# include "doom-nukem.h"
+# include <assert.h>
 
 double			*get_zbuffer();
 
