@@ -46,8 +46,8 @@ void				edt_outward_zoom(void)
 		get_state()->zoom_factor *= 2;
 	get_state()->confine_skip = 0;
 	confine_scroll(get_state());
+	get_state()->confine_skip = 1;
 	get_state()->gui->change_zoom(get_state());
-	print_mode_info(get_state()->gui);
 }
 
 void				edt_inward_zoom(void)
@@ -57,8 +57,8 @@ void				edt_inward_zoom(void)
 		get_state()->zoom_factor /= 2;
 	get_state()->confine_skip = 0;
 	confine_scroll(get_state());
+	get_state()->confine_skip = 1;
 	get_state()->gui->change_zoom(get_state());
-	print_mode_info(get_state()->gui);
 }
 
 /* get_state returns the overall "State" of the editor. In the field state->gui,

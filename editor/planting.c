@@ -7,24 +7,81 @@ static uint32_t type_colors(int type)
 	return (t_colors[type]);
 }
 
-void 			draw_plantings_to_backbuffer(t_model *mdl)
+static t_point	relative_position(int x, int y, t_state *state)
+{
+	int relative_x;
+	int relative_y;
+
+	relative_x = state->scroll_x;
+	relative_y = state->scroll_y;
+	x /= state->zoom_factor;
+	y /= state->zoom_factor;
+	relative_x += x;
+	relative_y += y;
+		//printf("relativized position ( %d | %d ) to  ( %d | %d )\n", x, y, relative_x, relative_y);
+	return ((t_point){relative_x, relative_y});
+}
+
+static void		draw_player(t_model *mdl, t_state *state)
+{
+	int 		relative_x;
+	int 		relative_y;
+
+	if (!((mdl->player.x >= state->scroll_x) &&
+		(mdl->player.x <= state->scroll_x + (state->zoom_factor * EDT_WIN_WIDTH)) &&
+		(mdl->player.y >= state->scroll_y) &&
+		(mdl->player.y <= state->scroll_y + (state->zoom_factor * EDT_WIN_HEIGHT))))
+		return ;
+	relative_x = (int)mdl->player.x;
+	relative_y = (int)mdl->player.y;
+	relative_x -= state->scroll_x;
+	relative_y -= state->scroll_y;
+	relative_x /= state->zoom_factor;
+	relative_y /= state->zoom_factor;
+	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 10, type_colors(PLAYER));
+}
+
+static void		draw_enemy(t_enemy *enemy, t_state *state)
+{
+	int 		relative_x;
+	int 		relative_y;
+
+	if (!((enemy->x >= state->scroll_x) &&
+		  (enemy->x <= state->scroll_x + (state->zoom_factor * EDT_WIN_WIDTH)) &&
+		  (enemy->y >= state->scroll_y) &&
+		  (enemy->y <= state->scroll_y + (state->zoom_factor * EDT_WIN_HEIGHT))))
+		return ;
+	relative_x = enemy->x;
+	relative_y = enemy->y;
+	relative_x -= state->scroll_x;
+	relative_y -= state->scroll_y;
+	relative_x /= state->zoom_factor;
+	relative_y /= state->zoom_factor;
+	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 10, type_colors(ENEMY));
+}
+
+
+// TODO			BLIT BASED RENDERING IS SLOW!!!! FIX???
+//					BEFORE OPTIMIZING CODE, TRY OPTIMIZING SURFACE WITH SDL_CONVERT
+//				ALTERNATIVE SUGGESTION: DRAW DIRECTLY TO WINDOW BUFFER, SKIPPING BLIT
+void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 {
 	t_enemy		*enemy;
 	int 		ec;
 
 	editor_back_buffer()->rendering_on = 1;
 	if (mdl->player.x != -1)
-		circle_to_buffer(editor_back_buffer()->buff, (t_point){(int)mdl->player.x, (int)mdl->player.y}, 10, type_colors(PLAYER));
+		draw_player(mdl, state);
 	if (mdl->enemy_count == 0)
 		return ;
 	ec = mdl->enemy_count;
 	enemy = mdl->enemy_first;
 	while (ec--)
 	{
-		circle_to_buffer(editor_back_buffer()->buff, (t_point){enemy->x, enemy->y}, 10, type_colors(ENEMY));
+		draw_enemy(enemy, state);
 		enemy = enemy->next;
 	}
-		puts("Drawing plantings to back buffer!");
+		//puts("Drawing plantings to back buffer!");
 }
 
 t_logic 		*planting_logic(void)
@@ -51,27 +108,34 @@ void 			planting_swap_type(void)
 		planting_logic()->plant_type = PLAYER;
 }
 
+// TODO			ADD PLAYER REPLACEMENT
+
 void 			planting_plant(int x, int y)
 {
-	int 		swap_type;
+	int 		clean_up;
+	t_point		relative;
 
-	swap_type = 0;
+	clean_up = 0;
+	relative = relative_position(x, y, get_state());
 	if (planting_logic()->plant_type == PLAYER && get_model()->player.x == -1)
 	{
-		record_player((t_point) {x, y}, (t_point) {x + 10, y + 10}, get_model());
-		swap_type = 1;
+		record_player(relative, (t_point) {relative.x + 10, relative.y + 10}, get_model());
+		clean_up = 1;
 	}
 	else if (planting_logic()->plant_type == PLAYER && get_model()->player.x != -1)
 	{
-		return ;
+		record_player(relative, (t_point) {relative.x + 10, relative.y + 10}, get_model());
+		clean_up = 2;
 	}
 	else if (planting_logic()->plant_type == ENEMY)
-		record_enemy((t_point){x, y}, (t_point){x + 10, y + 10}, get_model());
+		record_enemy(relative, (t_point){relative.x + 10, relative.y + 10}, get_model());
 	planting_logic()->planted_ticks = SDL_GetTicks();
 	circle_to_buffer(editor_back_buffer()->buff, (t_point){x, y}, 10, type_colors(planting_logic()->plant_type));
 	editor_back_buffer()->rendering_on = 1;
-	if (swap_type)
+	if (clean_up == 1)
 		planting_logic()->plant_type = ENEMY;
+	if (clean_up == 2)
+		redraw_editor_to_backbuffer(COLOR_LINE);
 }
 
 void			planting_activate(t_state *state)
@@ -100,11 +164,7 @@ void			planting_deactivate(t_state *state)
 
 void			planting_change_zoom(t_state *state)
 {
-	wipe_editor_back_buffer(0xff000000);
-	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
-	print_mode_info(state->gui);
-	draw_scroll_bars_to_backbuffer(state);
-	draw_plantings_to_backbuffer(get_model());
+	redraw_editor_to_backbuffer(COLOR_LINE);
 }
 
 void 			planting_mouse_motion(int x, int y)

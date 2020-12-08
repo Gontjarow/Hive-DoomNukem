@@ -144,7 +144,7 @@ void                	print_mode_info(t_gui *mode);
 
 void					draw_scroll_bars_to_backbuffer(t_state *state);
 void					accelerate_scroll(t_state *state, SDL_Scancode direction);
-void					confine_scroll(t_state *state);
+int						confine_scroll(t_state *state);
 void	 				handle_keyboard_scrolling(t_doom *doom);
 
 /*
@@ -211,7 +211,7 @@ t_state					*get_state(void);
 /*
  * from planting.c
  * */
-void		 			draw_plantings_to_backbuffer(t_model *mdl);
+void		 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state);
 
 t_logic 				*planting_logic(void);
 void 					planting_plant(int x, int y);

@@ -97,18 +97,17 @@ static void 		restore_scroll(int *restoration_available, t_state *state)
 	}
 }
 
-void				confine_scroll(t_state *state)
+int					confine_scroll(t_state *state)
 {
 	static t_point	previous;
 	static int 		restoration_available;
 	int 			zf_mult;
 
-
 	if (state->scroll_x == previous.x && state->scroll_y == previous.y && state->confine_skip)
-		return ;
-	if ((state->confine_skip == 0 && state->zoom_factor == 4) || (state->confine_skip == 0 && state->zoom_factor == 2 && restoration_available))
+		return (0) ;
+	if ((state->confine_skip == 0 && state->zoom_factor == 4) ||
+		(state->confine_skip == 0 && state->zoom_factor == 2 && restoration_available))
 		restore_scroll(&restoration_available, state);
-	state->confine_skip = 1;
 	state->scroll_x = (state->scroll_x < 0) ? 0 : state->scroll_x;
 	state->scroll_y = (state->scroll_y < 0) ? 0 : state->scroll_y;
 	if (state->zoom_factor == 4)
@@ -125,7 +124,7 @@ void				confine_scroll(t_state *state)
 			state->scroll_y = EDT_WIN_HEIGHT * zf_mult;
 	}
 	set_point(&previous, state->scroll_x, state->scroll_y);
-	redraw_editor_to_backbuffer(0xffffffff);
+	return (1);
 }
 
 /*
@@ -135,6 +134,8 @@ void				confine_scroll(t_state *state)
  */
 void	 		handle_keyboard_scrolling(t_doom *doom)
 {
+	int do_redraw = 0;
+
 	if (doom->keystates[SDL_SCANCODE_RIGHT] && doom->keystates[SDL_SCANCODE_UP])
 	{
 		accelerate_scroll(get_state(), SDL_SCANCODE_RIGHT);
@@ -165,5 +166,6 @@ void	 		handle_keyboard_scrolling(t_doom *doom)
 		accelerate_scroll(get_state(), SDL_SCANCODE_DOWN);
 	else
 		accelerate_scroll(NULL, 0);
-	confine_scroll(get_state());
+	if ((do_redraw = confine_scroll(get_state())))
+		redraw_editor_to_backbuffer(COLOR_LINE);
 }

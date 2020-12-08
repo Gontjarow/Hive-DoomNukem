@@ -16,16 +16,12 @@ void			polydraw_deactivate(t_state *state)
 	if (polydraw_status()->phase != 0)
 		polydraw_status()->reset(polydraw_status());
 	wipe_editor_back_buffer(0xff000000);
-	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
+	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, COLOR_LINE);
 }
 
 void 			polydraw_change_zoom(t_state *state)
 {
 	if (polydraw_status()->phase != 0)
 		polydraw_status()->reset(polydraw_status());
-	wipe_editor_back_buffer(0xff000000);
-	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
-	print_mode_info(state->gui);
-	draw_scroll_bars_to_backbuffer(state);
-	draw_plantings_to_backbuffer(get_model());
+	redraw_editor_to_backbuffer(COLOR_LINE);
 }
