@@ -85,7 +85,7 @@ void	record_player(t_point location, t_point tail, t_model *mdl)
 	//TODO STRINGIFY THE RESULT ?
 	mdl->player.x = (double)location.x;
 	mdl->player.y = (double)location.y;
-	puts("Player planted!");
+		//puts("Player planted!");
 }
 
 void	record_enemy(t_point location, t_point tail, t_model *mdl)
@@ -108,7 +108,7 @@ void	record_enemy(t_point location, t_point tail, t_model *mdl)
 	mdl->enemies = new_enemy;
 	//TODO FILL FROM LEGACY CODE BASE // DONE
 	//TODO STRINGIFY THE RESULT ?
-	puts("Enemy planted!");
+		//puts("Enemy planted!");
 }
 /*
 void	record_enemy_legacy(int x, int y, t_editor *edt)
