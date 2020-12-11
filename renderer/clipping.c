@@ -8,9 +8,39 @@
 // https://www.youtube.com/watch?v=DHvXvJowalM
 // https://www.youtube.com/watch?v=ai9SwUQF74c
 
-t_vert			lerp_vert(t_vert a, t_vert b, double amount)
+int		vert_within_view(t_vert vert)
 {
-	return vec4_lerp(a, b, amount);
+	// -w \       / w
+	//     \     /
+	//      \   /
+	//     w0 .
+	return ((-vert.w <= vert.x && vert.x <= vert.w)
+		&&  (-vert.w <= vert.y && vert.y <= vert.w)
+		&&  (-vert.w <= vert.z && vert.z <= vert.w));
+}
+
+t_vert			lerp_vert(t_vert a, t_vert b)
+{
+	t_xyzw wa;
+	t_xyzw wb;
+	t_xyz t;
+
+	// Todo: Does this fail because vert_within_view() has two conditions
+	// and we don't know which one failed?
+	wa = vec4((a.w - a.x), (a.w - a.y), (a.w - a.z), a.w);
+	wb = vec4((b.w - b.x), (b.w - b.y), (b.w - b.z), b.w);
+
+	t = vec3(
+		wa.x / (wa.x - wb.x),
+		wa.y / (wa.y - wb.y),
+		wa.z / (wa.z - wb.z));
+
+	return vec4(
+		a.x + (t.x * (b.x - a.x)),
+		a.y + (t.y * (b.y - a.y)),
+		a.z + (t.z * (b.z - a.z)),
+		a.w + (      (b.w - a.w)) // note: ensure correctness
+	);
 }
 
 t_actual_face	*faceclipper(t_actual_face *face, int outcode[3])
@@ -18,25 +48,18 @@ t_actual_face	*faceclipper(t_actual_face *face, int outcode[3])
 	t_face_vert *result         = NULL;
 
 	t_face_vert	*prev           = list2fvert(face->vert, LAST);
-	double		prev_component  = prev->data->pos.x; // todo: generalize to each axis, positive and negative, should be easy
-	int			prev_inside     = (prev_component <= prev->data->pos.w);
+	int			prev_inside     = vert_within_view(prev->data->pos);
 
 	t_face_vert *curr           = face->vert;
-	double		curr_component;
 	int			curr_inside;
 
 	while (curr != NULL)
 	{
-		curr_component  = curr->data->pos.x; // todo: generalize...
-		curr_inside     = (curr_component <= curr->data->pos.w);
+		curr_inside = vert_within_view(curr->data->pos);
 
 		if (curr_inside ^ prev_inside) // One inside, one outside. Lerp.
 		{
-			double prev_diff = prev->data->pos.w - prev_component;
-			double curr_diff = prev->data->pos.w - curr_component;
-
-			double t = prev_diff / (prev_diff - curr_diff);
-			t_vert v = lerp_vert(prev->data->pos, curr->data->pos, t);
+			t_vert v = lerp_vert(prev->data->pos, curr->data->pos);
 			result = face_vert_add(result, new_vert(NULL, v, NULL));
 		}
 
@@ -46,7 +69,6 @@ t_actual_face	*faceclipper(t_actual_face *face, int outcode[3])
 		}
 
 		prev           = curr;
-		prev_component = curr_component;
 		prev_inside    = curr_inside;
 		curr           = curr->next;
 	}
@@ -143,16 +165,4 @@ t_obj			obj_clip(t_obj obj)
 
 	out.face = out_begin;
 	return (out);
-}
-
-// Probably not needed anymore, keep for now:
-int		vert_within_view(t_vert vert)
-{
-	// -w \       / w
-	//     \     /
-	//      \   /
-	//     w0 .
-	return ((-vert.w <= vert.x && vert.x <= vert.w)
-		&&  (-vert.w <= vert.y && vert.y <= vert.w)
-		&&  (-vert.w <= vert.z && vert.z <= vert.w));
 }

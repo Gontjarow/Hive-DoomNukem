@@ -111,7 +111,7 @@ t_actual_face	*face_transform(t_matrix m, t_actual_face *f);
 t_obj			obj_transform(t_matrix m, t_obj obj);
 t_obj			obj_clip(t_obj obj);
 
-t_vert			lerp_vert(t_vert a, t_vert b, double amount);
+t_vert			lerp_vert(t_vert a, t_vert b);
 t_actual_face	*faceclipper(t_actual_face *face, int outcode[3]);
 int				get_outcode(t_vert v);
 int				get_clip_type(t_actual_face *face, int outcode[3]);
