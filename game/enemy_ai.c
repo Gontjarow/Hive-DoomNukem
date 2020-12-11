@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/11 19:14:47 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 19:55:52 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,6 @@ void        enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
     bullet_speed = 1;
     did_hit = 0;
     enemy->ray_color = 0xffff0000;
-    // doom->minimap->enemy_ray_color = 0xffff0000;
     doom->minimap->enemy_ray_timeout = 15;
     enemy->shoot_cd = enemy->wep.cooldown;
     enemy->bullet_pos_x = enemy->x;
@@ -241,8 +240,7 @@ void        enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 		if (did_hit == 1)
 		{
             enemy->ray_color = 0xff00ff00;
-			// doom->minimap->enemy_ray_color = 0xff00ff00;
-			deal_damage_on_player(doom);
+			// deal_damage_on_player(doom);     // disabled until we actually need it (it's working already)
 		}
 	}
     enemy->did_shoot = 1;

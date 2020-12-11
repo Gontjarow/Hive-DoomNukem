@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/11 19:14:36 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 19:50:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ static void init_model(t_doom *doom)
 	doom->mdl->player.shoot_cd = 0;
 	doom->mdl->player.bullet_pos_x = 0.0;
 	doom->mdl->player.bullet_pos_y = 0.0;
+	doom->mdl->player.hp.cur = 100;
+	doom->mdl->player.hp.max = 100;
 	init_player_weapon(doom);
 }
 
