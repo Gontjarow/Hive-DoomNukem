@@ -359,6 +359,8 @@ void 			set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
  * from debug_console.c
  * */
 
+void 			debug_model_player(void);
+void		 	debug_model_enemies(void);
 void 			debug_model_walls(void);
 void            output_walls(int wall_count, t_wall *walls);
 void            output_rooms(int room_count, t_room *rooms);

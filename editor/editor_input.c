@@ -30,6 +30,7 @@ void			edt_mouse_down(t_doom *doom)
 void			edt_keystate_input(t_doom *doom)
 {
 	static int	lock_w = 0;
+	static int	lock_e = 0;
 	static int	lock_z = 0;
 	static int	lock_x = 0;
 	static int	lock_s = 0;
@@ -42,6 +43,15 @@ void			edt_keystate_input(t_doom *doom)
 	{
 		debug_model_walls();
 		lock_w = 1;
+	}
+
+	if (lock_e && !doom->keystates[SDL_SCANCODE_E])
+		lock_e = 0;
+	else if (doom->keystates[SDL_SCANCODE_E] && !lock_e)
+	{
+		debug_model_enemies();
+		debug_model_player();
+		lock_e = 1;
 	}
 
 	if (lock_z && !doom->keystates[SDL_SCANCODE_Z])

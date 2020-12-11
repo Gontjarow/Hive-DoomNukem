@@ -22,6 +22,7 @@ typedef struct 			s_doom t_doom;
 typedef struct			s_status t_status;
 typedef struct          s_model t_model;
 typedef struct          s_state t_state;
+typedef struct          s_enemy t_enemy;
 typedef struct 			SDL_Surface SDL_Surface;
 
 typedef void            (*gui_event)(t_state *state);
@@ -252,6 +253,6 @@ void 					polydraw_middle_click(int x, int y);
  * */
 
 void					record_player(t_point location, t_point *tail, t_model *mdl);
-void					record_enemy(t_point location, t_point *tail, t_model *mdl);
+t_enemy					*record_enemy(t_point location, t_point *tail, t_model *mdl);
 
 #endif

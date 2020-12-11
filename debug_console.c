@@ -1,6 +1,52 @@
 #include "doom-nukem.h"
 #include <stdio.h>
 
+void 	debug_model_player(void)
+{
+	t_model	*mdl;
+
+	mdl = get_model();
+	printf("Player spawn: %d %d | rot: %d | tail: %d %d\n",
+		   (int)mdl->player.x, (int)mdl->player.y, mdl->player.rot, mdl->player.tail.x, mdl->player.tail.y);
+}
+
+void 	debug_model_enemies(void)
+{
+	int		ec;
+	t_enemy	*enemy;
+
+	ec = get_model()->enemy_count;
+	if (ec == 0)
+		return (ft_putendl("Outputting no data to console for model's enemies, enemy count was 0."));
+	printf("Outputting data to console for models' %d enemies\n", ec);
+	enemy = get_model()->enemy_first;
+	while (ec--)
+	{
+		printf("Enemy id: %d | start: %d %d | rot: %d | tail: %d %d | hp: %d | wep id: %d",
+			   enemy->id, enemy->x, enemy->y, enemy->rot,
+			   enemy->tail.x, enemy->tail.y, enemy->hp.max, enemy->wep.type_id);
+		if (enemy->next == NULL)
+			printf(" | next: NULL\n");
+		else
+			printf(" | next_id: %d\n", enemy->next->id);
+		enemy = enemy->next;
+	}
+	printf("mdl->enemies: ");
+	if (get_model()->enemies == NULL)
+		printf("NULL\n");
+	else
+	{
+		enemy = get_model()->enemies;
+		printf("Enemy id: %d | start: %d %d | rot: %d | tail: %d %d | hp: %d | wep id: %d",
+			   enemy->id, enemy->x, enemy->y, enemy->rot,
+			   enemy->tail.x, enemy->tail.y, enemy->hp.max, enemy->wep.type_id);
+		if (enemy->next == NULL)
+			printf(" | next: NULL\n");
+		else
+			printf(" | next_id: %d\n", enemy->next->id);
+	}
+}
+
 void 	debug_model_walls(void)
 {
 	int		wc;

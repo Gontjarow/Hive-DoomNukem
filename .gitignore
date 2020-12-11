@@ -1,2 +1,4 @@
 .idea
 doom-nukem
+*.d
+*.o

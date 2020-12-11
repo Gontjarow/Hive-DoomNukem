@@ -35,14 +35,42 @@
 //		Stage 8: Add visual scrollbars to let user know the amount of scrolling applied // DONE
 //			Technical debt: Can be done with XPM graphics propably later, implemented with linedraws.
 
+// TODO FIX OPTIMIZATION DEBT: SDL_BLIT ON UNOPTIMIZED SDL_SURFACES
+
 // TODO BEFORE MASTER MERGE
 //		MODE TO ADD ENEMY AND PLAYER OBJECTS // IN PROGRESS
-//			RECORD POSITIONS TO MODEL // <-- YOU ARE HERE !
-//		RECORD ROOMS TO MODEL
-//		ENABLE SAVING MODELS DATA TO MAPFILE AGAIN
+//		DISPLAY TAIL LINES WHEN DRAWING OBJECTS // DONE
+//			RECORD POSITIONS TO MODEL // DONE
+//		FEATURE DEBT: SET SMALLER ENEMY/PLAYER CIRCLES WHEN ZOOMED OUT
+//		FEATURE DEBT: REPOINT TAILS WITH MIDDLE CLICK?
+//		RECORD ROOMS TO MODEL // <-- YOU ARE HERE!!
+//		ENABLE SAVING MODELS' DATA TO A MAPFILE AGAIN
 
 // TODO AFTER MASTER MERGE
 //		MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
+
+// Idea for portalization:
+// Create 2 rooms with approximate link wall between them close to each other.
+// Switch to Room Placing and click one of the rooms. Click one wall to designate as portaliziable
+// Move this room and watch the portalizable wall magnetize a nearby wall points to comply with the
+// moved rooms wallpoints, linking them.
+
+// Idea for portalization, alternative additional:
+// During wall drawing, designate portal wall by bypassing Red Impermissible drawing. Finish portal
+// by confirming 2nd portalized point, from where the wall drawing for the ongoing room continues.
+// Middle click should cancel and reset the whole ongoing room, right click should stop drawing but
+// preserve so far drewn walls and portals.
+
+// Idea for finishing up unclosed rooms:
+// Wall drawing snaps to unclosed room endpoint/startpoints, allowing expansion, tying up.
+
+// Map saving pre-check:
+// Enemy, player collision checks, inside room checks, room closedness checks. Error console (later GUI)
+// and prevent closing of editor when in errors.
+
+// Map saving advanced pre-check:
+// Check for wall intersections, and disallow. As above, error console (later GUI) and prevent
+// closing and saving, until resolved.
 
 void				init_edt(t_doom *doom)
 {
