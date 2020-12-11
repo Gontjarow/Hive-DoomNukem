@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/11 17:06:23 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 19:18:22 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,12 +256,7 @@ void		game_render(t_doom *doom)
 		doom->mdl->player.x = old_x;
 		doom->mdl->player.y = old_y;
 	}
-	// ft_putnbr(check_location(doom));
-	// ft_putstr("= [");
-	// ft_putnbr(doom->mdl->player.x);
-	// ft_putstr(",");
-	// ft_putnbr(doom->mdl->player.y);
-	// ft_putendl("] <- poly_map value.");
+
 	if (doom->mdl->player.shoot_cd > 0)
 	{
 		doom->mdl->player.shoot_cd--;
@@ -272,8 +267,7 @@ void		game_render(t_doom *doom)
 		doom->mdl->player.reload_time--;
 	}
 	
-
-	if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0)
+	if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0 && doom->mdl->player.reload_time == 0)
 	{
 		printf("Player ammo: %d/%d\n", doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max);
 	}
@@ -281,8 +275,7 @@ void		game_render(t_doom *doom)
 	{
 		printf("Out of ammo!\n");
 	}
-	
-	
+	enemy_update_cooldown(doom);
 	rotate_enemy_towards_player(doom);
 	move_enemy_towards_player(doom);
 	update_minimap(doom);

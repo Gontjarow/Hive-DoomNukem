@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/08 19:02:26 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 19:14:47 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void            move_enemy_towards_player(t_doom *doom)
                     enemy->y = old_y;
                 }
             }
-            if (distance < 70)
+            if (distance < 70 && enemy->shoot_cd == 0)
             {
                 enemy_shoot_the_player(doom, enemy);
             }
@@ -201,11 +201,27 @@ static void deal_damage_on_player(t_doom *doom)
     }
 }
 
+void        enemy_update_cooldown(t_doom *doom)
+{
+    int ec;
+    t_enemy *enemy;
+
+    ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+        if (enemy->shoot_cd > 0)
+            enemy->shoot_cd--;
+        enemy = enemy->next;
+    }
+}
+
 void        enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 {
     int         bullet_speed;
     int         did_hit;
-    int         shoot_cooldown;
     double      rad;
 
     bullet_speed = 1;
@@ -213,6 +229,7 @@ void        enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
     enemy->ray_color = 0xffff0000;
     // doom->minimap->enemy_ray_color = 0xffff0000;
     doom->minimap->enemy_ray_timeout = 15;
+    enemy->shoot_cd = enemy->wep.cooldown;
     enemy->bullet_pos_x = enemy->x;
     enemy->bullet_pos_y = enemy->y;
     while (check_location(doom, enemy->bullet_pos_x, enemy->bullet_pos_y) != -1 && did_hit == 0)

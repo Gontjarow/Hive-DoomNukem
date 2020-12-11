@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/08 18:55:57 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 19:15:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,10 +156,14 @@ int		check_hit(t_doom *doom)
 		closest_y = doom->mdl->player.y + (dot * (doom->mdl->player.bullet_pos_y - doom->mdl->player.y));
 		// is this point actually on the line segment?
 		// if so keep going, but if not, return false
+
 		on_segment = line_point(doom->mdl->player.x, doom->mdl->player.y, doom->mdl->player.bullet_pos_x,
 								doom->mdl->player.bullet_pos_y, closest_x, closest_y);
 		if (!on_segment)
-			return (-1);
+		{
+			enemy = enemy->next;
+			continue ;
+		}
 		// get distance to closest point
 		dist_x = closest_x - enemy->x;
 		dist_y = closest_y - enemy->y;

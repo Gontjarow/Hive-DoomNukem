@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/11 17:10:14 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 19:16:57 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void		deal_damage(t_doom *doom, int enemy_id)
 		// printf("enemy %d hp: %d\n", enemy->id, enemy->hp.cur);
 		if (enemy->id == enemy_id && enemy->hp.cur > 0)
 		{
-			// enemy->hp.cur -= doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
+			enemy->hp.cur -= doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
 			// printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
 			if (enemy->hp.cur <= 0)
 			{
@@ -55,11 +55,7 @@ void		deal_damage(t_doom *doom, int enemy_id)
 }
 
 /*
-	TODO: 
-	- There is a known bug that makes it really hard to shoot an enemy if there are more than 4-5 enemies placed in the world (the collision gets really innacurate the more enemies u place...
-		is this the linked list fault?
-	- Fill all the enemies shooting cooldown so that each one can shoot in their own times, probaby just like their HP's.
-	- Player magazine, reload time... This will be done once weapons have been designated so that I can balance each one. We dont want a pistol shooting like a mini gun ;-;
+	TODO:
 */
 
 int			player_shoots(t_doom *doom)

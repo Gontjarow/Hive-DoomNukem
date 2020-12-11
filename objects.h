@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/11 17:00:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 18:34:07 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ typedef struct 			s_enemy
 	int 				rot;
 	int					did_shoot;
 	int					who_shot;
+	int					shoot_cd;
 	uint32_t			ray_color;
 	double				bullet_pos_x;
 	double				bullet_pos_y;
