@@ -83,3 +83,13 @@ t_xyz	vec4_cross(t_xyzw a, t_xyzw b)
 		(a.x * b.y) - (a.y * b.x)
 	);
 }
+
+t_xyzw	vec4_lerp(t_xyzw a, t_xyzw b, double t)
+{
+	return vec4(
+		a.x + (t * (b.x - a.x)),
+		a.y + (t * (b.y - a.y)),
+		a.z + (t * (b.z - a.z)),
+		a.w + (t * (b.w - a.w))
+	);
+}

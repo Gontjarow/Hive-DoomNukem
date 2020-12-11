@@ -130,6 +130,7 @@ double			vec4_mag(t_xyzw v);
 t_xyzw			vec4_norm(t_xyzw v);
 double			vec4_dot(t_xyzw a, t_xyzw b);
 t_xyz			vec4_cross(t_xyzw a, t_xyzw b);
+t_xyzw			vec4_lerp(t_xyzw a, t_xyzw b, double t);
 
 void			mat4p(t_matrix m);
 t_matrix		identity_m();

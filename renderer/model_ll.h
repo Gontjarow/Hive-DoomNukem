@@ -5,6 +5,17 @@
 # define WORLD_SCALE_FACTOR 0.05
 # define LAST -1
 
+#define CLIP_TRIVIAL_ACCEPT 1
+#define CLIP_TRIVIAL_REJECT -1
+#define CLIP_REQUIRED 0
+
+#define OUTCODE_LEFT	0b000001
+#define OUTCODE_RIGHT	0b000010
+#define OUTCODE_UP		0b000100
+#define OUTCODE_DOWN	0b001000
+#define OUTCODE_NEAR	0b010000
+#define OUTCODE_FAR		0b100000
+
 /*
 ** Object
 **	keeps count of its Vert and Face list
@@ -98,5 +109,13 @@ t_obj			mdl_to_usable_data(t_doom *doom);
 
 t_actual_face	*face_transform(t_matrix m, t_actual_face *f);
 t_obj			obj_transform(t_matrix m, t_obj obj);
+t_obj			obj_clip(t_obj obj);
+
+t_vert			lerp_vert(t_vert a, t_vert b, double amount);
+t_actual_face	*faceclipper(t_actual_face *face, int outcode[3]);
+int				get_outcode(t_vert v);
+int				get_clip_type(t_actual_face *face, int outcode[3]);
+int				clip_face(t_actual_face *face);
+t_obj			obj_clip(t_obj obj);
 
 #endif

@@ -56,6 +56,7 @@ void render_frame(t_doom *doom)
 
 	t_obj		world_obj = doom->game->world_obj;
 	t_obj		mv_obj = obj_transform(modelview, world_obj);
+	t_obj		clipped_obj = obj_clip(mv_obj);
 	return; // ----> Todo: Continue <----
 
 	t_mesh test;
