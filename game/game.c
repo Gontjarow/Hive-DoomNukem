@@ -79,6 +79,36 @@ double deg_to_rad(int deg)
 	return (deg * M_PI / 180);
 }
 
+static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
+{
+	unsigned int	*dst;
+	unsigned int	*pixels;
+	unsigned int 	col;
+	int				x;
+	int				y;
+
+	y = 0;
+	dst = (unsigned int*)doom_ptr()->game->buff->pixels;
+	pixels = (unsigned int*)polymap->pixels;
+	while (y < EDT_WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < EDT_WIN_WIDTH)
+		{
+			col = pixels[x + (y * GAME_POLYMAP_WIDTH)];
+			if (colors != NULL)
+				col = colors[(int)col];
+			if (col != 0xffffffff)
+				dst[x + (y * GAME_WIN_WIDTH)] = col;
+			x++;
+		}
+		y++;
+	}
+	puts("Drew polymap onto game screen!");
+	SDL_UpdateWindowSurface(doom_ptr()->game->win);
+	SDL_Delay(1000);
+}
+
 void		game_render(t_doom *doom)
 {
 	// These will be the doom->game key handling, right now it only supports the minimap
@@ -96,6 +126,11 @@ void		game_render(t_doom *doom)
 	cur_y = doom->mdl->player.y;
 	old_x = cur_x;
 	old_y = cur_y;
+	if (doom->keystates[SDL_SCANCODE_P])
+	{
+		debug_show_game_polymap(doom->mdl->poly_map, get_debug_convs());
+		puts("P key pressed!\n");
+	}
 	if (doom->keystates[SDL_SCANCODE_ESCAPE])
 	{
 		// Open menu, quit game...

@@ -44,8 +44,9 @@
 //		FEATURE DEBT: SET SMALLER ENEMY/PLAYER CIRCLES WHEN ZOOMED OUT
 //		FEATURE DEBT: REPOINT TAILS WITH MIDDLE CLICK?
 //		RECORD ROOMS TO MODEL // DONE
-//		RECORD ROOMS TO POLYMAP, CHECK CORRECTNESS WITH SCROLLING AND ZOOMING <-- YOU ARE HERE!!
-//		ENABLE SAVING MODEL'S DATA TO A MAPFILE AGAIN
+//		RECORD ROOMS TO POLYMAP, CHECK CORRECTNESS WITH SCROLLING AND ZOOMING // DONE
+//		ENABLE SAVING MODEL'S DATA TO A MAPFILE AGAIN // DONE
+//		ENABLE RELOADING A MAP'S DATA TO MODEL AND EDITOR AGAIN // <-- YOU ARE HERE !!
 
 // TODO AFTER MASTER MERGE
 //		MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
@@ -73,7 +74,7 @@
 // Check for wall intersections, and disallow. As above, error console (later GUI) and prevent
 // closing and saving, until resolved.
 
-void				init_edt(t_doom *doom)
+void				init_edt(t_doom *doom, int argc, char **argv)
 {
 	doom->edt = (t_editor*)malloc(sizeof(t_editor));
 	if (!doom->edt)
@@ -88,10 +89,28 @@ void				init_edt(t_doom *doom)
 		ft_die("Fatal error: Could not retrieve buffer of Level Editor window.");
 	flood_buffer(doom->edt->buff, 0xff000000);
 	doom->edt_state = get_state();
+	// TODO ENABLE RELOADING OF EXISTING MAP
+	//		NOW, ONLY WORKING TO SAVE MAP ONTO UNEXISTING FILENAME
+	//		MUST ALSO ENABLE OVERWRITING WHEN RELOADED, MODIFIED, CLOSED A MAP
+	doom->edt->map = NULL;
+	doom->edt->map_supplied = (argc == 2) ? 1 : 0;
+	doom->edt->map_path = (argc == 2) ? argv[1] : NULL;
+	if (argc == 2)
+		doom->edt->map = init_mapfile();
 }
 
 void				destroy_edt(t_doom *doom)
 {
+	if (doom->edt->map_supplied)
+	{
+		create_strings_from_model(doom->mdl, doom->edt->map);
+		if (!write_mapfile(doom->edt->map_path, doom->edt->map))
+			ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
+		if (doom->edt->map != NULL)
+			destroy_mapfile(doom->edt->map);
+	}
+	//if (doom->edt->overwrite_map)
+	//	overwrite_mapfile(doom->edt);
 	SDL_FreeSurface(doom->edt->buff);
 	SDL_DestroyWindow(doom->edt->win);
 	doom->edt->win = NULL;

@@ -11,152 +11,156 @@
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
-/*
-void	update_player_string(t_editor *edt)
+
+t_mapfile	*init_mapfile(void)
 {
-		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Player spawn: %d %d | rot: %d | tail: %d %d\n",
-				(int)edt->player.x, (int)edt->player.y, edt->player.rot, edt->player.tail.x, edt->player.tail.y);
-		if (edt->player_string)
-			free(edt->player_string);
-		edt->player_string = ft_strnew(1);
-		edt->player_string = ft_strjoin(edt->player_string, edt->join_string);
-		free(edt->join_string);
-		edt->join_string = NULL;
+	t_mapfile		*map;
+
+	map = (t_mapfile*)malloc(sizeof(t_mapfile));
+	if (!map)
+		ft_die("Fatal error: Mallocing mapfile struct failed at init_mapfile.");
+	map->join_string = NULL;
+	map->enemy_string = NULL;
+	map->player_string = NULL;
+	map->portal_string = NULL;
+	map->wall_string = NULL;
+	map->room_string = NULL;
+	map->was_filled = 0; // Silly...
+	//map_data_initialized = 1;
+		//puts("MAPFILE INITIALIZED!");
+	return (map);
 }
 
-void	expand_enemy_string(t_editor *edt)
+void 	destroy_mapfile(t_mapfile *map)
 {
-		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Enemy id: %d | start: %d %d | rot: %d | tail: %d %d | hp: %d | wep id: %d\n",
-				edt->enemies->id, edt->enemies->x, edt->enemies->y, edt->enemies->rot,
-				edt->enemies->tail.x, edt->enemies->tail.y, edt->enemies->hp.max, edt->enemies->wep.type_id);
-		if (!edt->enemy_string)
-			edt->enemy_string = ft_strnew(1);
-		edt->enemy_string = ft_strjoin(edt->enemy_string, edt->join_string);
-		free(edt->join_string);
-		edt->join_string = NULL;
+	if (map->join_string != NULL)
+		free(map->join_string);
+	if (map->player_string != NULL)
+		free(map->player_string);
+	if (map->wall_string != NULL)
+		free(map->wall_string);
+	if (map->room_string != NULL)
+		free(map->room_string);
+	if (map->portal_string != NULL)
+		free(map->portal_string);
+	if (map->enemy_string != NULL)
+		free(map->enemy_string);
+	map->join_string = NULL;
+	map->enemy_string = NULL;
+	map->player_string = NULL;
+	map->portal_string = NULL;
+	map->wall_string = NULL;
+	map->room_string = NULL;
+	free(map);
+	map = NULL;
+	//map_data_initialized = 0;
 }
 
-void	add_wall_to_string(t_editor *edt, t_wall *wall)
+void	update_player_string(t_model *mdl, t_mapfile *map)
 {
-	edt->join_string = ft_strnew(255);
-	sprintf(edt->join_string, "Wall id: %d | start: %d %d | end: %d %d\n",
+		map->join_string = ft_strnew(255);
+		sprintf(map->join_string, "Player spawn: %d %d | rot: %d | tail: %d %d\n",
+				(int)mdl->player.x, (int)mdl->player.y, mdl->player.rot, mdl->player.tail.x, mdl->player.tail.y);
+		if (map->player_string)
+			free(map->player_string);
+		map->player_string = ft_strnew(1);
+		map->player_string = ft_strjoin(map->player_string, map->join_string);
+		free(map->join_string);
+		map->join_string = NULL;
+}
+
+void	add_enemy_to_string(t_enemy *enemy, t_mapfile *map)
+{
+		map->join_string = ft_strnew(255);
+		sprintf(map->join_string, "Enemy id: %d | start: %d %d | rot: %d | tail: %d %d | hp: %d | wep id: %d\n",
+				enemy->id, enemy->x, enemy->y, enemy->rot,
+				enemy->tail.x, enemy->tail.y, enemy->hp.max, enemy->wep.type_id);
+		if (!map->enemy_string)
+			map->enemy_string = ft_strnew(1);
+		map->enemy_string = ft_strjoin(map->enemy_string, map->join_string);
+		free(map->join_string);
+		map->join_string = NULL;
+}
+
+void	add_wall_to_string(t_wall *wall, t_mapfile *map)
+{
+	map->join_string = ft_strnew(255);
+	sprintf(map->join_string, "Wall id: %d | start: %d %d | end: %d %d\n",
 			wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
-	if (!edt->wall_string)
-		edt->wall_string = ft_strnew(1);
-	edt->wall_string = ft_strjoin(edt->wall_string, edt->join_string);
-	free(edt->join_string);
-	edt->join_string = NULL;
+	if (!map->wall_string)
+		map->wall_string = ft_strnew(1);
+	map->wall_string = ft_strjoin(map->wall_string, map->join_string);
+	free(map->join_string);
+	map->join_string = NULL;
 }
 
-void	expand_wall_string(t_editor *edt)
+void 	add_portal_to_string(t_wall *portal, t_mapfile *map)
 {
-		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Wall id: %d | start: %d %d | end: %d %d\n",
-				edt->walls->id, edt->walls->start.x, edt->walls->start.y, edt->walls->end.x, edt->walls->end.y);
-		if (!edt->wall_string)
-			edt->wall_string = ft_strnew(1);
-		edt->wall_string = ft_strjoin(edt->wall_string, edt->join_string);
-		free(edt->join_string);
-		edt->join_string = NULL;
-}
-
-void	add_room_to_string(t_editor *edt, t_room *room)
-{
-		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
-				room->id, room->first_wall_id, room->wall_count, room->floor_height, room->roof_height);
-		if (!edt->room_string)
-			edt->room_string = ft_strnew(1);
-		edt->room_string = ft_strjoin(edt->room_string, edt->join_string);
-		free(edt->join_string);
-		edt->join_string = NULL;
-}
-
-void 	expand_room_string(t_editor *edt)
-{
-		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
-				edt->rooms->id, edt->rooms->first_wall_id, edt->rooms->wall_count, edt->rooms->floor_height, edt->rooms->roof_height);
-		if (!edt->room_string)
-			edt->room_string = ft_strnew(1);
-		edt->room_string = ft_strjoin(edt->room_string, edt->join_string);
-		free(edt->join_string);
-		edt->join_string = NULL;
-}
-
-void 	add_portal_to_string(t_editor *edt, t_wall *portal)
-{
-	edt->join_string = ft_strnew(255);
-	sprintf(edt->join_string, "Portal id: %d | start: %d %d | end: %d %d\n",
+	map->join_string = ft_strnew(255);
+	sprintf(map->join_string, "Portal id: %d | start: %d %d | end: %d %d\n",
 			portal->id, portal->start.x, portal->start.y, portal->end.x, portal->end.y);
-	if (!edt->portal_string)
-		edt->portal_string = ft_strnew(1);
-	edt->portal_string = ft_strjoin(edt->portal_string, edt->join_string);
-	free(edt->join_string);
-	edt->join_string = NULL;
+	if (!map->portal_string)
+		map->portal_string = ft_strnew(1);
+	map->portal_string = ft_strjoin(map->portal_string, map->join_string);
+	free(map->join_string);
+	map->join_string = NULL;
 }
 
-void	expand_portal_string(t_editor *edt)
+void	add_room_to_string(t_room *room, t_mapfile *map)
 {
-		edt->join_string = ft_strnew(255);
-		sprintf(edt->join_string, "Portal id: %d | start: %d %d | end: %d %d\n",
-				edt->portals->id, edt->portals->start.x, edt->portals->start.y, edt->portals->end.x, edt->portals->end.y);
-		if (!edt->portal_string)
-			edt->portal_string = ft_strnew(1);
-		edt->portal_string = ft_strjoin(edt->portal_string, edt->join_string);
-		free(edt->join_string);
-		edt->join_string = NULL;
+	map->join_string = ft_strnew(255);
+	sprintf(map->join_string, "Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
+			room->id, room->first_wall_id, room->wall_count, room->floor_height, room->roof_height);
+	if (!map->room_string)
+		map->room_string = ft_strnew(1);
+	map->room_string = ft_strjoin(map->room_string, map->join_string);
+	free(map->join_string);
+	map->join_string = NULL;
 }
 
-int		write_mapfile(t_editor *edt)
+int		write_mapfile(char *map_path, t_mapfile *map)
 {
-	int opened;
-	char new_line[2];
+	t_model		*mdl;
+	int			opened;
+	char		new_line[2];
 
-	if (!edt->player_set)
-		ft_die("Fatal Error: write_mapfile failure when saving map. No player start position specified in editor.");
+	if (map->player_string == NULL)
+		ft_die("Fatal Error: write_mapfile failure when saving map. No player start position specified.");
 	new_line[0] = '\n';
 	new_line[1] = '\0';
-	if (!edt->write_maps)
-		return (0);
-	opened = open(edt->map_path, O_WRONLY | O_CREAT, 0666);
+	mdl = get_model();
+	opened = open(map_path, O_WRONLY | O_CREAT, 0666);
 	if (opened > 1)
 	{
-		if (edt->wall_count > 0)
-			write(opened, edt->wall_string, ft_strlen(edt->wall_string));
+		if (mdl->wall_count > 0)
+			write(opened, map->wall_string, ft_strlen(map->wall_string));
 		write(opened, new_line, 1);
-		if (edt->room_count > 0)
-			write(opened, edt->room_string, ft_strlen(edt->room_string));
+		if (mdl->room_count > 0)
+			write(opened, map->room_string, ft_strlen(map->room_string));
 		write(opened, new_line, 1);
-		if (edt->portal_count > 0)
-			write(opened, edt->portal_string, ft_strlen(edt->portal_string));
+		if (mdl->portal_count > 0)
+			write(opened, map->portal_string, ft_strlen(map->portal_string));
 		write(opened, new_line, 1);
-		if (edt->enemy_count > 0)
-			write(opened, edt->enemy_string, ft_strlen(edt->enemy_string));
+		if (mdl->enemy_count > 0)
+			write(opened, map->enemy_string, ft_strlen(map->enemy_string));
 		write(opened, new_line, 1);
-		write(opened, edt->player_string, ft_strlen(edt->player_string));
+		write(opened, map->player_string, ft_strlen(map->player_string));
 		ft_putstr("Hive-DoomNukem: write_mapfile saved mapdata to mapfile: ");
-		ft_putendl(edt->map_path);
+		ft_putendl(map_path);
 		close(opened);
 		return (1);
 	}
 	return (0);
 }
 
-int 	overwrite_mapfile(t_editor *edt)
+int 	overwrite_mapfile(char *map_path, t_mapfile *map)
 {
 	char *backup;
 
-	backup = ft_strjoin(edt->map_path, ".backup");
-	rename(edt->map_path, backup);
+	backup = ft_strjoin(map_path, ".backup");
+	rename(map_path, backup);
 	ft_putstr("Hive-DoomNukem: renamed earlier version of mapfile as: ");
 	ft_putendl(backup);
 	free(backup);
-	edt->write_maps = 1;
-	write_mapfile(edt);
-	edt->write_maps = 0;
-	return (1);
+	return (write_mapfile(map_path, map));
 }
-*/

@@ -244,7 +244,7 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 		SDL_MinimizeWindow(doom->win);
 		doom->buff = SDL_GetWindowSurface(doom->win);
 		if (load_model(doom))
-			init_edt(doom);
+			init_edt(doom, argc, argv);
 		else
 			ft_die("Fatal error: Could not load model when entering Editor from the main menu.");
 		doom->edt_quit = 0;

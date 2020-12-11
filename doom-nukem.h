@@ -121,7 +121,6 @@ typedef struct			s_model
 	int 				room_count;
 	int 				portal_count;
 	int 				enemy_count;
-    //TODO DELETE: uint32_t            conversion_colors[512];
 } 						t_model;
 
 /*
@@ -317,6 +316,7 @@ void			game_key_down(t_doom *doom);
 
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
 
+/* DEPRECEATED
 void			add_wall_to_string(t_editor *edt, t_wall *wall);
 void			expand_wall_string(t_editor *edt);
 void			add_room_to_string(t_editor *edt, t_room *room);
@@ -327,14 +327,30 @@ void			expand_enemy_string(t_editor *edt);
 void			update_player_string(t_editor *edt);
 int				write_mapfile(t_editor *le);
 int				overwrite_mapfile(t_editor *edt);
+*/
 
 void	 		destroy_mapdata(t_doom *doom);
 int 			load_model(t_doom *doom);
 void	 		destroy_model(t_doom *doom);
 
 /*
+ * from mapfile.c
+ * */
+
+t_mapfile		*init_mapfile(void);
+void			destroy_mapfile(t_mapfile *map);
+void			update_player_string(t_model *mdl, t_mapfile *map);
+void			add_enemy_to_string(t_enemy *enemy, t_mapfile *map);
+void			add_wall_to_string(t_wall *wall, t_mapfile *map);
+void			add_portal_to_string(t_wall *portal, t_mapfile *map);
+void			add_room_to_string(t_room *room, t_mapfile *map);
+int				write_mapfile(char *map_path, t_mapfile *map);
+int				overwrite_mapfile(char *map_path, t_mapfile *map);
+
+/*
  * from texture.c
  * */
+
 Uint32			get_exact_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface		*xpm2surface(char *path);
 SDL_Surface		*load_png(char *path);
@@ -343,6 +359,7 @@ SDL_Surface		*load_texture(t_doom *doom, char *path);
 /*
  * from line.c and line_safe.c
  * */
+
 void			render_line_safe(t_line *l);
 void 			render_line(t_line *l);
 void			careful_render_line(t_line *l);
@@ -350,6 +367,7 @@ void			careful_render_line(t_line *l);
 /*
  * from pixel.c
  * */
+
 void			flood_buffer(SDL_Surface *buff, uint32_t color);
 void			set_protected_color(uint32_t color);
 int 			set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);

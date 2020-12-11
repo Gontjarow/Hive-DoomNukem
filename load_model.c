@@ -93,6 +93,7 @@ static void expand_mdl_polygon_maps(t_model *mdl)
         if (mdl->poly_map == NULL || room == NULL || mdl->parent == NULL)
             ft_die("Fatal error: No poly_map, room or mdl_parent set at expand_mdl_polygon_maps");
         //TODO REPLACE: expand_room_polygon_map(room, mdl->parent, mdl->poly_map, &mdl->conversion_colors);
+        add_room_polymap(room, mdl->poly_map, get_conv_colors());
         //printf("Seg faults above?\n");
         room = room->next;
         ft_putendl("Expanded polygon map at mdl->poly_map");
@@ -342,9 +343,8 @@ static void parse_mapfile(t_doom *doom, t_model *mdl)
 
 static void init_mapdata(t_doom *doom)
 {
-	if (doom->map_data_initialized) {
+	if (doom->map_data_initialized)
 		destroy_mapdata(doom);
-	}
 	doom->map = (t_mapfile*)malloc(sizeof(t_mapfile));
 	if (!doom->map)
 		ft_die("Fatal error: Mallocing mapfile struct failed at init_mapdata.");

@@ -115,13 +115,16 @@ typedef struct 			s_editor
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	struct s_doom		*parent;
+	struct s_mapfile	*map;
+	char 				*map_path;
+	int 				map_supplied;
 }						t_editor;
 
 /*
  * from editor.c
  * */
 
-void 					init_edt(t_doom *doom);
+void 					init_edt(t_doom *doom, int argc, char **argv);
 void	 				destroy_edt(t_doom *doom);
 void					edt_render(t_doom *doom);
 
@@ -257,6 +260,7 @@ void 					polydraw_middle_click(int x, int y);
 void					show_editor_polymap(SDL_Surface *polymap, uint32_t *colors);
 void					record_player(t_point location, t_point *tail, t_model *mdl);
 t_enemy					*record_enemy(t_point location, t_point *tail, t_model *mdl);
+void					create_strings_from_model(t_model *mdl, t_mapfile *map);
 
 /*
  * from polymap.c
