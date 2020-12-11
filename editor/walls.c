@@ -107,6 +107,34 @@ static void			wall_to_buffer_clipped(t_wall *wall, SDL_Surface *buff, uint32_t c
 	render_line(&line);
 }
 
+t_wall				*wall_by_id(int id)
+{
+	int		wc;
+	t_wall 	*wall;
+
+	if (id < 0)
+	{
+		ft_putendl("Warning: Wall_by_id was requested to return a wall with id less than 0. Returned NULL.");
+		return (NULL);
+	}
+	if (get_model()->wall_count != 0)
+		wc = get_model()->wall_count;
+	if (wc <= id)
+	{
+		ft_putendl("Warning: Wall_by_id was requested to return a wall with id equal or less than wall_count of get_model(). Returned NULL.");
+		return (NULL);
+	}
+	wall = get_model()->wall_first;
+	while (wc--)
+	{
+		if (wall->id == id)
+			return (wall);
+		wall = wall->next;
+	}
+	ft_putendl("Warning: Wall_by_id could not find a wall with the requested id. Returned NULL.");
+	return (NULL);
+}
+
 static void			wall_to_buffer_fixed(t_wall *wall, SDL_Surface *buff, uint32_t color)
 {
 	t_line			line;

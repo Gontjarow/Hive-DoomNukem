@@ -29,42 +29,72 @@ void		create_strings_from_state(t_editor *edt)
 		wall = wall->next;
 	}
 }
+*/
 
-void	record_room(t_editor *edt)
+void			show_editor_polymap(SDL_Surface *polymap, uint32_t *colors)
+{
+	SDL_Surface		*buff;
+	unsigned int	*pixels;
+	unsigned int 	col;
+	int				x;
+	int				y;
+
+	y = 0;
+	buff = editor_back_buffer()->buff;
+	pixels = (unsigned int*)polymap->pixels;
+	while (y < EDT_WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < EDT_WIN_WIDTH)
+		{
+			col = pixels[x + (y * GAME_POLYMAP_WIDTH)];
+			if (colors != NULL)
+				col = colors[(int)col];
+			if (col != 0xffffffff)
+				set_pixel(buff, x, y, (uint32_t)col);
+			x++;
+		}
+		y++;
+	}
+		//printf("iterated (%d) times, x, y = %d, %d\n", x * y, x, y);
+	editor_back_buffer()->rendering_on = 1;
+		//puts("Drew polymap onto screen!");
+}
+
+void			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count)
 {
 	t_room	*next_room;
-	int 	wallcountofpreviousrooms;
 
-	wallcountofpreviousrooms = wall_count_of_previous_rooms(edt);
-	edt->rooms->id = edt->room_count;
-	edt->rooms->floor_height = 1000;
-	edt->rooms->roof_height = 1300;
-	edt->room_count++;
+	// Silly code, replace with data from polydraw...
+		//int 	wallcountofpreviousrooms;
+		//wallcountofpreviousrooms = wall_count_of_previous_rooms(edt);
+	mdl->rooms->id = mdl->room_count;
+	mdl->rooms->floor_height = 1000;
+	mdl->rooms->roof_height = 1300;
+	mdl->room_count++;
 	next_room = (t_room*)malloc(sizeof(t_room));
 	if (!next_room)
 		ft_die("Fatal error: Could not malloc t_room at record_room.");
-	if (edt->room_count == 1)
+	if (mdl->room_count == 1)
 	{
-		edt->rooms->first_wall = edt->wall_begin;
-		edt->rooms->wall_count = edt->wall_count;
-		edt->room_first = edt->rooms;
+		mdl->rooms->first_wall = mdl->wall_first;
+		mdl->rooms->wall_count = mdl->wall_count;
+		mdl->room_first = mdl->rooms;
 	}
 	else
 	{
-		edt->rooms->wall_count = edt->wall_count - wallcountofpreviousrooms;
-		edt->rooms->first_wall = wall_by_count(edt, wallcountofpreviousrooms);
+		mdl->rooms->wall_count = mdl->wall_count - prev_rooms_wall_count;//SILLY_wallcountofpreviousrooms;
+		mdl->rooms->first_wall = room_first_wall;//wall_by_count(mdl, SILLY_wallcountofpreviousrooms);
 	}
-	edt->rooms->first_wall_id = edt->rooms->first_wall->id;
-	//printf("Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
-	//	   edt->rooms->id, edt->rooms->first_wall_id, edt->rooms->wall_count, edt->rooms->floor_height, edt->rooms->roof_height);
-	// DEPRECEATED, NOW HANDLED CENTRALLY AT CREATE_STRINGS_FROM_STATE
-	//expand_room_string(edt);
-	expand_room_polygon_map(edt->rooms, edt->parent, edt->poly_map, edt->conversion_colors);
-	find_visual_xy(edt, edt->rooms);
-	edt->rooms->next = next_room;
-	edt->rooms = next_room;
+	mdl->rooms->first_wall_id = mdl->rooms->first_wall->id;
+	add_room_polymap(mdl->rooms, mdl->poly_map, get_conv_colors());
+		//show_editor_polymap(mdl->poly_map, get_debug_convs());
+		//puts("Added room polymap!");
+	//DEPRECEATED: expand_room_polygon_map(mdl->rooms, mdl->parent, mdl->poly_map, mdl->conversion_colors);
+	//KISS(YAGNI): find_visual_xy(mdl, mdl->rooms);
+	mdl->rooms->next = next_room;
+	mdl->rooms = next_room;
 }
-*/
 
 static int 	degree_rot(t_point location, t_point *tail)
 {

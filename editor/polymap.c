@@ -24,26 +24,61 @@ static uint32_t  convert_to_color(int room_id, uint32_t *conversion_colors)
     return (conversion_colors[room_id]);
 }
 
-void        init_conversion_colors(uint32_t conversion_colors[512])
+static void init_debug_convs(uint32_t *debug_convs)
 {
-    int i;
+	int i;
 
-    /* Visual aid for debugging
-    conversion_colors[0] = 0xffff0000;
-    conversion_colors[1] = 0xff00ff00;
-    conversion_colors[2] = 0xff0000ff;
-    conversion_colors[3] = 0xffffff00;
-    conversion_colors[4] = 0xff00ffff;
-    conversion_colors[5] = 0xffff00ff;
-    */
-	    //ft_putendl("Conversion colors initialized.");
-    i = 0;
-    while (i < 512)
-    {
-        conversion_colors[i] = (uint32_t) i;
-        i++;
-    }
+	puts("Visual aid for debugging polymaps initialized, 6 unique debug colors for room ids 0-5!");
+	debug_convs[0] = 0xffff0000;
+	debug_convs[1] = 0xff00ff00;
+	debug_convs[2] = 0xff0000ff;
+	debug_convs[3] = 0xffffff00;
+	debug_convs[4] = 0xff00ffff;
+	debug_convs[5] = 0xffff00ff;
+	i = 6;
+	while (i < 512)
+	{
+		debug_convs[i] = (uint32_t) i;
+		i++;
+	}
 }
+
+static void	init_conv_colors(uint32_t *conv_colors)
+{
+	int i;
+
+	i = 0;
+	while (i < 512)
+	{
+		conv_colors[i] = (uint32_t) i;
+		i++;
+	}
+}
+
+uint32_t 	*get_debug_convs(void)
+{
+	static uint32_t *debug_convs = NULL;
+
+	if (!debug_convs)
+	{
+		debug_convs = (uint32_t*)malloc(sizeof(uint32_t) * 512);
+		init_debug_convs(debug_convs);
+	}
+	return (debug_convs);
+}
+
+uint32_t	*get_conv_colors(void)
+{
+	static uint32_t *conv_colors = NULL;
+
+	if (!conv_colors)
+	{
+		conv_colors = (uint32_t*)malloc(sizeof(uint32_t) * 512);
+		init_conv_colors(conv_colors);
+	}
+	return (conv_colors);
+}
+
 /*
 void        create_room_polygon_map(t_editor *edt)
 {
@@ -204,38 +239,30 @@ void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
 		y++;
 	}
 }*/
-
-void        expand_room_polygon_map(t_room *room, t_doom *doom, SDL_Surface *poly_map, uint32_t *conversion_colors)
+void		add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors)
 {
-    // WORK IN PROGRESS
-    int bounding_x_upper_limit;
-    int bounding_y_upper_limit;
+    int bound_x;
+    int bound_y;
     int x_start;
     int x;
     int y;
-    //static int times = 0;
 
-    bounding_x_upper_limit = find_farthest_x(room);
-    bounding_y_upper_limit = find_farthest_y(room);
-    x_start = find_nearest_x(bounding_x_upper_limit, room);
-    y = find_nearest_y(bounding_y_upper_limit, room);
+    bound_x = find_farthest_x(room);
+    bound_y = find_farthest_y(room);
+    x_start = find_nearest_x(bound_x, room);
+    y = find_nearest_y(bound_y, room);
     x = x_start;
-    printf("erpm x = %d, y = %d | bound_x = %d, bound_y = %d\n", x, y, bounding_x_upper_limit, bounding_y_upper_limit);
-    while (y < bounding_y_upper_limit)
+    	//printf("add_room_polymap | x, y = %d, %d | bound_x, y = %d, %d\n", x, y, bound_x, bound_y);
+    while (y < bound_y)
     {
-        while (x < bounding_x_upper_limit)
+        while (x < bound_x)
         {
-            //if (times < 10)
-            //    printf("Testing inside_room at expand_room_polygon_map %d\n", times++);
             if (inside_room(x, y, room))
-            {
-                set_pixel(poly_map, x, y, conversion_colors[room->id]);
-                // printf("set_pixel(poly_map, %d, %d, %d)\n", x, y, conversion_colors[room->id]);
-                //printf("set_pixel(poly_map, x, y, conversion_colors[room->id])\n");
-            }
+				set_pixel(polymap, x, y, conv_colors[room->id]);
             x++;
         }
         x = x_start;
         y++;
     }
+		//printf("%x color from conv_colors[room->id]\n", conv_colors[room->id]);
 }

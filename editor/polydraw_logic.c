@@ -74,8 +74,13 @@ void 			polydraw_continue(t_status *status)
 	*data = (t_linedraw){data->origin_id, 1, (status->click_x * get_state()->zoom_factor) + get_state()->scroll_x,
 						 (status->click_y * get_state()->zoom_factor) + get_state()->scroll_y, 0};
 	// Invokation of the ending phase, polydraw_end, if status->thread_hit was TRUE, do polydraw_end (phase 2)
+	// This basically ONLY happens, when a Room is created properly, thus, call record_room() here.
 	if (status->phase == 2)
+	{
+		record_room(get_model(), wall_by_id(data->origin_id), data->origin_id);
+			//debug_model_rooms();
 		status->phases[status->phase](status);
+	}
 }
 
 void 			polydraw_end(t_status *status)

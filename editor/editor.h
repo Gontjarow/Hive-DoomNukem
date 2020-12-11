@@ -23,6 +23,7 @@ typedef struct			s_status t_status;
 typedef struct          s_model t_model;
 typedef struct          s_state t_state;
 typedef struct          s_enemy t_enemy;
+typedef struct 			s_wall t_wall;
 typedef struct 			SDL_Surface SDL_Surface;
 
 typedef void            (*gui_event)(t_state *state);
@@ -154,6 +155,7 @@ void	 				handle_keyboard_scrolling(t_doom *doom);
  * from walls.c
  * */
 
+t_wall					*wall_by_id(int id);
 void					wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
 void					x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
 void					relink_model_walls(t_wall *relinking_wall);
@@ -252,7 +254,16 @@ void 					polydraw_middle_click(int x, int y);
  * from record.c
  * */
 
+void					show_editor_polymap(SDL_Surface *polymap, uint32_t *colors);
 void					record_player(t_point location, t_point *tail, t_model *mdl);
 t_enemy					*record_enemy(t_point location, t_point *tail, t_model *mdl);
+
+/*
+ * from polymap.c
+ * */
+
+uint32_t				*get_debug_convs(void);
+uint32_t				*get_conv_colors(void);
+void        			add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors);
 
 #endif

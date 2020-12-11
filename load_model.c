@@ -34,7 +34,7 @@ static void init_model(t_doom *doom)
     if (!doom->mdl->poly_map)
         ft_die("Fatal error: SDL_CreateRGBSurfaceWithFormat failed to create poly_map for doom->mdl struct at init_model.");
     flood_buffer(doom->mdl->poly_map, 0xffffffff);
-    init_conversion_colors(doom->mdl->conversion_colors);
+    //TODO DELETE: init_conversion_colors(doom->mdl->conversion_colors);
 	doom->mdl->wall_first = NULL;
 	doom->mdl->room_first = NULL;
 	doom->mdl->portal_first = NULL;
@@ -92,7 +92,7 @@ static void expand_mdl_polygon_maps(t_model *mdl)
         printf("Welcome to expand_mdl_polygon_maps - now running rc-- times %d\n", times);
         if (mdl->poly_map == NULL || room == NULL || mdl->parent == NULL)
             ft_die("Fatal error: No poly_map, room or mdl_parent set at expand_mdl_polygon_maps");
-        expand_room_polygon_map(room, mdl->parent, mdl->poly_map, &mdl->conversion_colors);
+        //TODO REPLACE: expand_room_polygon_map(room, mdl->parent, mdl->poly_map, &mdl->conversion_colors);
         //printf("Seg faults above?\n");
         room = room->next;
         ft_putendl("Expanded polygon map at mdl->poly_map");
