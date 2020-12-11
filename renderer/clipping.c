@@ -13,6 +13,50 @@ t_vert			lerp_vert(t_vert a, t_vert b, double amount)
 	return vec4_lerp(a, b, amount);
 }
 
+t_actual_face	*faceclipper(t_actual_face *face, int outcode[3])
+{
+	t_face_vert *result         = NULL;
+
+	t_face_vert	*prev           = list2fvert(face->vert, LAST);
+	double		prev_component  = prev->data->pos.x; // todo: generalize to each axis, positive and negative, should be easy
+	int			prev_inside     = (prev_component <= prev->data->pos.w);
+
+	t_face_vert *curr           = face->vert;
+	double		curr_component;
+	int			curr_inside;
+
+	while (curr != NULL)
+	{
+		curr_component  = curr->data->pos.x; // todo: generalize...
+		curr_inside     = (curr_component <= curr->data->pos.w);
+
+		if (curr_inside ^ prev_inside) // One inside, one outside. Lerp.
+		{
+			double prev_diff = prev->data->pos.w - prev_component;
+			double curr_diff = prev->data->pos.w - curr_component;
+
+			double t = prev_diff / (prev_diff - curr_diff);
+			t_vert v = lerp_vert(prev->data->pos, curr->data->pos, t);
+			result = face_vert_add(result, new_vert(NULL, v, NULL));
+		}
+
+		if (curr_inside)
+		{
+			result = face_vert_add(result, curr);
+		}
+
+		prev           = curr;
+		prev_component = curr_component;
+		prev_inside    = curr_inside;
+		curr           = curr->next;
+	}
+
+	if (result == NULL)
+	{
+		return (NULL);
+	}
+}
+
 int				get_outcode(t_vert v)
 {
 	int outcode;
