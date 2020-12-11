@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/08 20:46:53 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:10:14 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void		deal_damage(t_doom *doom, int enemy_id)
 		// printf("enemy %d hp: %d\n", enemy->id, enemy->hp.cur);
 		if (enemy->id == enemy_id && enemy->hp.cur > 0)
 		{
-			enemy->hp.cur -= 50;
+			// enemy->hp.cur -= doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
 			// printf("ENEMY HIT!!! YAY DEALING DAMAGE!!! TO ENEMY: %d\n", enemy_id);
 			if (enemy->hp.cur <= 0)
 			{
@@ -75,8 +75,10 @@ int			player_shoots(t_doom *doom)
 	doom->mdl->player.bullet_pos_y = doom->mdl->player.y;
 	doom->minimap->player_ray_color = 0xffff0000;
 	doom->minimap->player_ray_timeout = 15;
-	doom->mdl->player.shoot_cd = doom->mdl->player.wep.cooldown;
-	doom->mdl->player.wep.ammo_cur--;	// stopped here :)
+
+	doom->mdl->player.shoot_cd = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].cooldown;
+	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur--;
+
 	while (check_location(doom, doom->mdl->player.bullet_pos_x, doom->mdl->player.bullet_pos_y) != -1 && enemy_who_was_hit < 0)
 	{
 		doom->mdl->player.bullet_pos_x += bullet_speed * -cos(rad);

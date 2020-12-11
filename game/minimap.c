@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/08 16:43:06 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 15:13:48 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ void		destroy_minimap(t_doom *doom)
 void		update_minimap(t_doom *doom)
 {
 	flood_buffer(doom->minimap->buff, 0xff000000);
-	if (doom->minimap->player_ray_timeout > 0)
+	if (doom->minimap->player_ray_timeout > 0 && doom->mdl->player.shoot_cd != 0)
 		print_player_ray(doom);
 	if (doom->minimap->enemy_ray_timeout > 0)
 		print_enemy_ray(doom);

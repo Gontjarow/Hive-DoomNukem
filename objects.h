@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/08 20:42:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:00:16 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,9 @@ typedef struct 			s_player
 	int					crouch_lock;
 	int					rot_speed;
 	int					shoot_cd;
+	int					reload_time;
+	int					weap_id;
+	struct s_weapon		weap_arr[3];
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;

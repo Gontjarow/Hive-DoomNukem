@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/08 20:43:30 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:06:23 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void		game_render(t_doom *doom)
 		y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
-		printf("W key pressed!\n");
+		// printf("W key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_S])
 	{
@@ -123,7 +123,7 @@ void		game_render(t_doom *doom)
 		y = doom->mdl->player.y - doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
-		printf("S key pressed!\n");
+		// printf("S key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_A])
 	{
@@ -136,7 +136,7 @@ void		game_render(t_doom *doom)
 		y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
-		printf("A key pressed!\n");
+		// printf("A key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_D])
 	{
@@ -149,33 +149,38 @@ void		game_render(t_doom *doom)
 		y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
 		doom->mdl->player.tail.x = x;
 		doom->mdl->player.tail.y = y;
-		printf("D key pressed!\n");
+		// printf("D key pressed!\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_E])
 	{
 		// Use button, open doors, talk to NPC's...
-		if (doom->mdl->player.shoot_cd == 0)
+		if (doom->mdl->player.shoot_cd == 0 && doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0 && doom->mdl->player.reload_time == 0)
 		{
 			player_shoots(doom);
 		}
-		printf("E key pressed!\n");
+		// printf("E key pressed!\n");
+	}
+	if (doom->keystates[SDL_SCANCODE_R])
+	{
+		if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur != doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max)
+		{
+			doom->mdl->player.reload_time = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].reload_time;
+			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max;
+		}
 	}
 	if (doom->keystates[SDL_SCANCODE_1])
 	{
-		doom->mdl->player.wep.type_id = 1;
-		update_player_weapon(doom);
+		doom->mdl->player.weap_id = 0;
 		printf("Switched to Weapon 1\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_2])
 	{
-		doom->mdl->player.wep.type_id = 2;
-		update_player_weapon(doom);
+		doom->mdl->player.weap_id = 1;
 		printf("Switched to Weapon 2\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_3])
 	{
-		doom->mdl->player.wep.type_id = 3;
-		update_player_weapon(doom);
+		doom->mdl->player.weap_id = 2;
 		printf("Switched to Weapon 3\n");
 	}
 	if (doom->keystates[SDL_SCANCODE_SPACE])
@@ -196,7 +201,7 @@ void		game_render(t_doom *doom)
 					doom->mdl->player.is_jumping = 0;
 			}
 		}
-		printf("Spacebar key pressed!\n");
+		// printf("Spacebar key pressed!\n");
 	}
 
 	/*
@@ -257,7 +262,27 @@ void		game_render(t_doom *doom)
 	// ft_putstr(",");
 	// ft_putnbr(doom->mdl->player.y);
 	// ft_putendl("] <- poly_map value.");
-	printf("Player ammo: %d/%d\n", doom->mdl->player.wep.ammo_cur, doom->mdl->player.wep.ammo_max);
+	if (doom->mdl->player.shoot_cd > 0)
+	{
+		doom->mdl->player.shoot_cd--;
+	}
+	if (doom->mdl->player.reload_time > 0)
+	{
+		printf("Reloading...\n");
+		doom->mdl->player.reload_time--;
+	}
+	
+
+	if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0)
+	{
+		printf("Player ammo: %d/%d\n", doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max);
+	}
+	else if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur == 0)
+	{
+		printf("Out of ammo!\n");
+	}
+	
+	
 	rotate_enemy_towards_player(doom);
 	move_enemy_towards_player(doom);
 	update_minimap(doom);

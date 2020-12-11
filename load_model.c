@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/03 20:15:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/11 17:17:04 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,12 @@ static void init_model(t_doom *doom)
 	doom->mdl->player.rot_speed = 5;
 	doom->mdl->player.run_lock = 0;
 	doom->mdl->player.crouch_lock = 0;
+	doom->mdl->player.weap_id = 0;
+	doom->mdl->player.reload_time = 0;
+	doom->mdl->player.shoot_cd = 0;
+	doom->mdl->player.bullet_pos_x = 0.0;
+	doom->mdl->player.bullet_pos_y = 0.0;
+	init_player_weapon(doom);
 }
 
 void 		destroy_model(t_doom *doom)
