@@ -43,7 +43,7 @@ t_vert			lerp_vert(t_vert a, t_vert b)
 	);
 }
 
-t_actual_face	*faceclipper(t_actual_face *face, int outcode[3])
+t_actual_face	*faceclipper(t_actual_face *face)
 {
 	t_face_vert *result         = NULL;
 
@@ -120,19 +120,23 @@ int				get_clip_type(t_actual_face *face, int outcode[3])
 	}
 }
 
-int				clip_face(t_actual_face *face)
+int				clip_face(t_actual_face **face)
 {
 	int clip_type;
-	int outcode[3];
+	int outcode[3]; // Todo: Probably not needed.
+	t_actual_face *clipped = NULL;
 
 	clip_type = get_clip_type(face, outcode);
 	if (clip_type == CLIP_TRIVIAL_ACCEPT)
 		return (CLIP_TRIVIAL_ACCEPT);
 	else if (clip_type == CLIP_TRIVIAL_REJECT)
 	{
-		face->prev->next = face->next;
-		recursive_fvert_free(face->vert);
-		free(face);
+		// Link previous to the next...
+		(*face)->prev->next = (*face)->next;
+		(*face)->next->prev = (*face)->prev;
+		// ...and delete this one from the middle.
+		recursive_fvert_free((*face)->vert);
+		free((*face));
 		return (CLIP_TRIVIAL_REJECT);
 	}
 	else
@@ -140,7 +144,16 @@ int				clip_face(t_actual_face *face)
 		// At this point, face should begin with exactly 3 verts.
 		// Should it also return only faces with exactly 3 verts?
 		// (Not if they're in order like a triagle-fan.)
-		faceclipper(face, outcode);
+		clipped = faceclipper(face);
+		// Link prev and next to this one...
+		clipped->prev = (*face)->prev;
+		(*face)->prev->next = clipped;
+		clipped->next = (*face)->next;
+		(*face)->next->prev = clipped;
+		// ... and modify input to replace old face data with the new.
+		recursive_fvert_free((*face)->vert);
+		free((*face));
+		(*face) = clipped;
 		return (CLIP_REQUIRED);
 	}
 }
@@ -153,12 +166,12 @@ t_obj			obj_clip(t_obj obj)
 
 	assert(obj.f_count >= 1);
 
-	out.face = clip_face(obj.face);
+	out.face = clip_face(&(obj.face));
 	out_begin = out.face;
 
 	while (obj.face->next != NULL)
 	{
-		out.face->next = clip_face(obj.face->next);
+		out.face->next = clip_face(&(obj.face->next));
 		obj.face = obj.face->next;
 		out.face = out.face->next;
 	}
