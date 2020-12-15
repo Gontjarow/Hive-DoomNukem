@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/11 18:34:07 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/15 16:13:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ typedef struct 			s_point
 	int 				x;
 	int 				y;
 }						t_point;
+
+typedef struct			s_coord
+{
+	double				x;
+	double				y;
+}						t_coord;
 
 typedef struct 			s_tri_sides
 {
@@ -60,8 +66,6 @@ typedef struct 			s_player
 	double				rot_vertical;
 	double 				x;
 	double 				y;
-	double				bullet_pos_x;
-	double				bullet_pos_y;
 	int 				rot;
 	int					height;
 	int					is_jumping;
@@ -76,6 +80,7 @@ typedef struct 			s_player
 	int					shoot_cd;
 	int					reload_time;
 	int					weap_id;
+	struct s_coord		bullet_pos;
 	struct s_weapon		weap_arr[3];
 	struct s_point		tail;
 	struct s_health		hp;
@@ -92,8 +97,7 @@ typedef struct 			s_enemy
 	int					who_shot;
 	int					shoot_cd;
 	uint32_t			ray_color;
-	double				bullet_pos_x;
-	double				bullet_pos_y;
+	struct s_coord		bullet_pos;
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;

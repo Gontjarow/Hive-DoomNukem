@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/11 15:13:48 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/15 16:38:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,8 @@ void		print_player_ray(t_doom *doom)
 
 	line.x1 = doom->mdl->player.x * doom->minimap->scale;
 	line.y1 = doom->mdl->player.y * doom->minimap->scale;
-	line.x2 = doom->mdl->player.bullet_pos_x * doom->minimap->scale;
-	line.y2 = doom->mdl->player.bullet_pos_y * doom->minimap->scale;
+	line.x2 = doom->mdl->player.bullet_pos.x * doom->minimap->scale;
+	line.y2 = doom->mdl->player.bullet_pos.y * doom->minimap->scale;
 	line.color = doom->minimap->player_ray_color;
 	line.buff = doom->minimap->buff;
 	render_line(&line);
@@ -178,8 +178,8 @@ void		print_enemy_ray(t_doom *doom)
 			// printf("Who shot: %d\n", doom->mdl->player.who_shot);
 			line.x1 = enemy->x * doom->minimap->scale;
 			line.y1 = enemy->y * doom->minimap->scale;
-			line.x2 = enemy->bullet_pos_x * doom->minimap->scale;
-			line.y2 = enemy->bullet_pos_y * doom->minimap->scale;
+			line.x2 = enemy->bullet_pos.x * doom->minimap->scale;
+			line.y2 = enemy->bullet_pos.y * doom->minimap->scale;
 			line.color = enemy->ray_color;
 			line.buff = doom->minimap->buff;
 			render_line(&line);
