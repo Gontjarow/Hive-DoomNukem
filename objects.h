@@ -48,6 +48,9 @@ typedef struct 			s_health
 	int 				cur;
 }						t_health;
 
+// TODO ADD PICKUPS DATA IN MDL->PICKUPS // LINKED LIST, DELETE NODE, RELINK PREVIOUS
+//  										NEXT, REDUCE COUNT IN MDL->PICKUPS_COUNT
+
 typedef struct 			s_weapon
 {
 	int 				type_id;

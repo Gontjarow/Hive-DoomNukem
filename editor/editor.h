@@ -33,11 +33,12 @@ typedef void 			(*status_action)(t_status *status);
 typedef void 			(*logic_xy)(int x, int y);
 typedef void 			(*logic_void)(void);
 
-# define EDT_WIN_WIDTH	1600
-# define EDT_WIN_HEIGHT	900
-# define COLOR_LINE		0xffffffff
-# define COLOR_PLAYER	0xff00ff00
-# define COLOR_ENEMY	0xffffff00
+# define EDT_WIN_WIDTH			1600
+# define EDT_WIN_HEIGHT			900
+# define COLOR_LINE				0xffffffff
+# define COLOR_PLAYER			0xff00ff00
+# define COLOR_ENEMY			0xffffff00
+# define COLOR_HEALTH_PICKUP	0xff00ff00
 
 typedef struct 			s_2d_layer
 {
@@ -205,6 +206,7 @@ void            		magnet_test(void* argv);
  * from mode_editor.c
  * */
 
+t_gui					*mode_pickups(void);
 t_gui					*mode_planting(void);
 t_gui					*mode_polydraw(void);
 
@@ -213,14 +215,28 @@ t_gui					*mode_polydraw(void);
  * */
 
 void 					trigger_protection(int clear);
-void		 			edt_swap_mode(t_state *state);
+void		 			edt_cycle_mode(t_state *state);
 void					edt_outward_zoom(void);
 void					edt_inward_zoom(void);
 t_state					*get_state(void);
 
 /*
+ * from pickups.c
+ * */
+
+void					pickups_change_zoom(t_state *state);
+void					pickups_activate(t_state *state);
+void					pickups_deactivate(t_state *state);
+
+void 					pickups_mouse_motion(int x, int y);
+void 					pickups_left_click(int x, int y);
+void 					pickups_right_click(int x, int y);
+void 					pickups_middle_click(int x, int y);
+
+/*
  * from planting.c
  * */
+
 void		 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state);
 
 t_logic 				*planting_logic(void);

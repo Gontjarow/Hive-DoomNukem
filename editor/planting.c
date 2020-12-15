@@ -248,6 +248,8 @@ void			planting_change_zoom(t_state *state)
 	redraw_editor_to_backbuffer(COLOR_LINE);
 }
 
+// TODO FEATURE DEBT: ADD LIVE PREVIEW TO SWEEPING TAIL
+
 void 			planting_mouse_motion(int x, int y)
 {
 	static t_point	last_preview = {-1, -1};

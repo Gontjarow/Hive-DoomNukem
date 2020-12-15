@@ -27,13 +27,15 @@ void 				trigger_protection(int clear)
 	triggers++;
 }
 
-void		 		edt_swap_mode(t_state *state)
+void		 		edt_cycle_mode(t_state *state)
 {
 	//ft_putendl("Deactivating GUI mode");
 	state->gui->deactivate(state);
 	if (state->gui == mode_polydraw())
 		state->gui = mode_planting();
 	else if (state->gui == mode_planting())
+		state->gui = mode_pickups();
+	else if (state->gui == mode_pickups())
 		state->gui = mode_polydraw();
 	//ft_putendl("Activating GUI mode");
 	state->gui->activate(state);

@@ -16,7 +16,7 @@ void			edt_mouse_down(t_doom *doom)
 	state = get_state();
 	if (doom->event.type == SDL_MOUSEWHEEL)
 	{
-		edt_swap_mode(state);
+		edt_cycle_mode(state);
 		return ;
 	}
 	if (doom->event.button.button == SDL_BUTTON_LEFT)
@@ -34,7 +34,6 @@ void			edt_keystate_input(t_doom *doom)
 	static int	lock_r = 0;
 	static int	lock_z = 0;
 	static int	lock_x = 0;
-	static int	lock_s = 0;
 
 	handle_keyboard_scrolling(doom);
 
@@ -77,14 +76,6 @@ void			edt_keystate_input(t_doom *doom)
 	{
 		edt_outward_zoom();
 		lock_x = 1;
-	}
-
-	if (lock_s && !doom->keystates[SDL_SCANCODE_S])
-		lock_s = 0;
-	else if (doom->keystates[SDL_SCANCODE_S] && !lock_s)
-	{
-		edt_swap_mode(get_state());
-		lock_s = 1;
 	}
 }
 

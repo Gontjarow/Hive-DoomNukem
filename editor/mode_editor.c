@@ -1,5 +1,27 @@
 #include "doom-nukem.h"
 
+t_gui	*mode_pickups(void)
+{
+	static t_gui	*pickups = NULL;
+
+	if (!pickups)
+	{
+		pickups = (t_gui*)malloc(sizeof(t_gui));
+		if (!pickups)
+			ft_die("Fatal error: Could not malloc t_gui at mode_pickups.");
+		pickups->activate = pickups_activate;
+		pickups->deactivate = pickups_deactivate;
+		pickups->change_zoom = pickups_change_zoom;
+		pickups->left_click = pickups_left_click;
+		pickups->right_click = pickups_right_click;
+		pickups->middle_click = pickups_middle_click;
+		pickups->motion = pickups_mouse_motion;
+		pickups->has_motion = 1;
+		set_protected_color(0xffffffff);
+	}
+	return (pickups);
+}
+
 t_gui	*mode_planting(void)
 {
 	static t_gui	*planting = NULL;

@@ -33,11 +33,14 @@ SDL_Surface			*mode_xpm(t_gui *mode)
 {
 	static SDL_Surface *polydraw_xpm = NULL;
 	static SDL_Surface *planting_xpm = NULL;
+	static SDL_Surface *pickups_xpm = NULL;
 
 	if (mode == mode_polydraw())
 		return (polydraw_xpm == NULL ? polydraw_xpm = xpm2surface("img/edt/wall_drawing.xpm") : polydraw_xpm);
-	if (mode == mode_planting())
+	else if (mode == mode_planting())
 		return (planting_xpm == NULL ? planting_xpm = xpm2surface("img/edt/planting.xpm") : planting_xpm);
+	else if (mode == mode_pickups())
+		return (pickups_xpm == NULL ? pickups_xpm = xpm2surface("img/edt/pickups.xpm") : pickups_xpm);
 	ft_die("Fatal error: Could not return mode_xpm.");
 	return (NULL);
 }

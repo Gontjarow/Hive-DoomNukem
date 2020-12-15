@@ -12,6 +12,9 @@
 
 #include "doom-nukem.h"
 
+// TODO UPGRADE TO JSON LIKE PARSING FOR MAP DATA IN AND OUT, BEFORE ADDING
+//		PICKUPS, EFFECTORS DATA TYPES, EXPANDING THE OLD DATA WITH MORE FIELDS ETC
+
 // TODO BIG NOTE TO SELF
 //  EDITOR MUST GUARANTEE CLOCKWISE ARRANGEMENT OF WALL NODES IN ROOMS
 //  https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order/
