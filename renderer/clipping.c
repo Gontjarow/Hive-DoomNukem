@@ -30,7 +30,7 @@ t_vert			lerp_vert(t_vert a, t_vert b)
 	wa = vec4((a.w - a.x), (a.w - a.y), (a.w - a.z), a.w);
 	wb = vec4((b.w - b.x), (b.w - b.y), (b.w - b.z), b.w);
 
-	t = vec3(
+	t = vec3( // [0.0 - 1.0] range
 		wa.x / (wa.x - wb.x),
 		wa.y / (wa.y - wb.y),
 		wa.z / (wa.z - wb.z));
@@ -57,10 +57,10 @@ t_actual_face	*faceclipper(t_actual_face *face, int outcode[3])
 	{
 		curr_inside = vert_within_view(curr->data->pos);
 
-		if (curr_inside ^ prev_inside) // One inside, one outside. Lerp.
+		if (curr_inside ^ prev_inside) // One inside, one outside. Lerp prev->curr.
 		{
-			t_vert v = lerp_vert(prev->data->pos, curr->data->pos);
-			result = face_vert_add(result, new_vert(NULL, v, NULL));
+			t_vert lerped = lerp_vert(prev->data->pos, curr->data->pos);
+			result = face_vert_add(result, new_vert(NULL, lerped, NULL));
 		}
 
 		if (curr_inside)
@@ -73,10 +73,9 @@ t_actual_face	*faceclipper(t_actual_face *face, int outcode[3])
 		curr           = curr->next;
 	}
 
-	if (result == NULL)
-	{
-		return (NULL);
-	}
+	// Return NULL or vertices in CCW order.
+	// Todo: If lerp_vert doesn't work, -w and w needs to be checked explicitly.
+	return (result);
 }
 
 int				get_outcode(t_vert v)
@@ -139,7 +138,8 @@ int				clip_face(t_actual_face *face)
 	else
 	{
 		// At this point, face should begin with exactly 3 verts.
-		// It should also return only faces with exactly 3 verts.
+		// Should it also return only faces with exactly 3 verts?
+		// (Not if they're in order like a triagle-fan.)
 		faceclipper(face, outcode);
 		return (CLIP_REQUIRED);
 	}
