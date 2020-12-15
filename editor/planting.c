@@ -14,11 +14,11 @@ static t_point	relative_position(int x, int y, t_state *state)
 
 	relative_x = state->scroll_x;
 	relative_y = state->scroll_y;
-	x /= state->zoom_factor;
-	y /= state->zoom_factor;
+	x *= state->zoom_factor;
+	y *= state->zoom_factor;
 	relative_x += x;
 	relative_y += y;
-		//printf("relativized position ( %d | %d ) to  ( %d | %d )\n", x, y, relative_x, relative_y);
+		//printf("relativized position to  ( %d | %d )\n", relative_x, relative_y);
 	return ((t_point){relative_x, relative_y});
 }
 
@@ -31,7 +31,7 @@ static t_point	scrolled_position(int x, int y, t_state *state)
 	relative_y = y - state->scroll_y;
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
-	printf("scrolled position ( %d | %d ) to ( %d | %d )\n", x, y, relative_x, relative_y);
+		//printf("scrolled position ( %d | %d ) to ( %d | %d )\n", x, y, relative_x, relative_y);
 	return ((t_point){relative_x, relative_y});
 }
 
@@ -211,7 +211,7 @@ void 			planting_plant(int x, int y)
 	if (!clean_up)
 		update_tail_to_buffer(editor_back_buffer()->buff, enemy, ENEMY);
 	planting_logic()->planted_ticks = SDL_GetTicks();
-	circle_to_buffer(editor_back_buffer()->buff, (t_point){x, y}, 10, type_colors(planting_logic()->plant_type));
+	circle_to_buffer(editor_back_buffer()->buff, (t_point){x, y}, 12 / get_state()->zoom_factor, type_colors(planting_logic()->plant_type));
 	editor_back_buffer()->rendering_on = 1;
 	if (clean_up == 1)
 		planting_logic()->plant_type = ENEMY;
@@ -261,10 +261,13 @@ void 			planting_mouse_motion(int x, int y)
 		sweep[0].x = x;
 		sweep[0].y = y;
 		planting_logic()->sweep_counter = 10;
-			//puts("*sweeping*");
+			//printf("sweeped to %d, %d\n", sweep[1].x, sweep[1].y);
 	}
 	else
+	{
 		planting_logic()->sweep_counter--;
+			//puts("*sweeping*");
+	}
 	if (SDL_GetTicks() - planting_logic()->planted_ticks < 20)
 	{
 		last_preview.x = -1;
@@ -272,8 +275,8 @@ void 			planting_mouse_motion(int x, int y)
 		return ;
 	}
 	if (last_preview.x != -1 && last_preview.y != -1)
-		preserving_circle_to_buffer(doom_ptr()->edt->buff, last_preview, 10, type_colors(planting_logic()->plant_type));
-	unpreserving_circle_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, 10, type_colors(planting_logic()->plant_type));
+		preserving_circle_to_buffer(doom_ptr()->edt->buff, last_preview, 12 / get_state()->zoom_factor, type_colors(planting_logic()->plant_type));
+	unpreserving_circle_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, 12 / get_state()->zoom_factor, type_colors(planting_logic()->plant_type));
 	last_preview.x = x;
 	last_preview.y = y;
 }

@@ -2,3 +2,5 @@
 doom-nukem
 *.d
 *.o
+*.xcf
+*.backup

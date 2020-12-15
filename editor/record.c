@@ -93,9 +93,6 @@ void	record_player(t_point location, t_point *tail, t_model *mdl)
 		//puts("Player planted!");
 }
 
-//TODO FILL FROM LEGACY CODE BASE // DONE
-//TODO STRINGIFY THE RESULT ?
-
 t_enemy	*record_enemy(t_point location, t_point *tail, t_model *mdl)
 {
 	t_enemy	*added_enemy;
