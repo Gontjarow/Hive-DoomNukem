@@ -3,6 +3,8 @@
 void				redraw_editor_to_backbuffer(uint32_t color)
 {
 	wipe_editor_back_buffer(0xff000000);
+	if (get_model() == NULL)
+		return ;
 	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, color);
 	print_mode_info(get_state()->gui);
 	draw_scroll_bars_to_backbuffer(get_state());
@@ -40,26 +42,58 @@ SDL_Surface			*mode_xpm(t_gui *mode)
 	return (NULL);
 }
 
+SDL_Surface 		*mousehelp_xpm(void)
+{
+	static SDL_Surface *mousehelp_xpms = NULL;
+
+	if (mousehelp_xpms == NULL)
+		mousehelp_xpms = xpm2surface("img/edt/mousehelp.xpm");
+	if (!mousehelp_xpms)
+		ft_die("Fatal error: Could not return mousehelp_xpm.");
+	return (mousehelp_xpms);
+}
+
+SDL_Surface 		*keyhelp_xpm(void)
+{
+	static SDL_Surface *keyhelp_xpms = NULL;
+
+	if (keyhelp_xpms == NULL)
+		keyhelp_xpms = xpm2surface("img/edt/keyhelp.xpm");
+	if (!keyhelp_xpms)
+		ft_die("Fatal error: Could not return keyhelp_xpm.");
+	return (keyhelp_xpms);
+}
+
 // TODO: Consider alternative to SDL_Blit / SDL_Rect ?
 void                print_mode_info(t_gui *mode)
 {
 	SDL_Surface *mode_surface;
 	SDL_Surface *zoom_surface;
+	SDL_Surface *mousehelp_surface;
+	SDL_Surface *keyhelp_surface;
 	SDL_Rect 	place;
 
 	mode_surface = mode_xpm(mode);
 	zoom_surface = zoom_xpm(get_state()->zoom_factor);
-	if (!mode_surface || !zoom_surface)
-		ft_die("Fatal error: print_mode_info failed to retrieve mode/zoom surfaces.");
-	place.w = mode_surface->w;
-	place.h = mode_surface->h;
-	place.x = zoom_surface->w + 10;
+	mousehelp_surface = mousehelp_xpm();
+	keyhelp_surface = keyhelp_xpm();
+	if (!mode_surface || !zoom_surface || !mousehelp_surface || !keyhelp_surface)
+		ft_die("Fatal error: print_mode_info failed to retrieve mode/zoom/mouse/keyhelp surfaces.");
+	place.w = keyhelp_surface->w;
+	place.h = keyhelp_surface->h;
+	place.x = zoom_surface->w + mode_surface->w + mousehelp_surface->w + 20;
 	place.y = EDT_WIN_HEIGHT - (place.h + 2) - 10;
+	SDL_BlitSurface(keyhelp_surface, NULL, editor_back_buffer()->buff, &place);
+	place.x -= keyhelp_surface->w + 5;
+	SDL_BlitSurface(mousehelp_surface, NULL, editor_back_buffer()->buff, &place);
+	place.w = mode_surface->w;
+	place.x = zoom_surface->w + 10;
 	SDL_BlitSurface(mode_surface, NULL, editor_back_buffer()->buff, &place);
 	place.w = zoom_surface->w;
 	place.h = zoom_surface->h;
 	place.x -= zoom_surface->w + 5;
 	SDL_BlitSurface(zoom_surface, NULL, editor_back_buffer()->buff, &place);
+
 	editor_back_buffer()->rendering_on = 1;
 }
 

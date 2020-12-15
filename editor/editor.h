@@ -143,6 +143,8 @@ void					edt_keystate_input(t_doom *doom);
 void					redraw_editor_to_backbuffer(uint32_t color);
 SDL_Surface				*zoom_xpm(int factor);
 SDL_Surface				*mode_xpm(t_gui *mode);
+SDL_Surface 			*mousehelp_xpm(void);
+SDL_Surface 			*keyhelp_xpm(void);
 void                	print_mode_info(t_gui *mode);
 
 /*

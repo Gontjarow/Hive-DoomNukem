@@ -162,6 +162,11 @@ void		window_and_menu_events(t_doom *doom)
 		doom->game_quit = 1;
 		destroy_game(doom);
 		destroy_model(doom);
+		if (doom->map->was_filled)
+		{
+			destroy_mapfile(doom->map);
+			doom->map_data_initialized = 0;
+		}
 		SDL_RestoreWindow(doom->win);
 		doom->buff = SDL_GetWindowSurface(doom->win);
 		doom->menu_out_of_focus = 0;
@@ -202,6 +207,34 @@ void		window_and_menu_events(t_doom *doom)
 	}
 }
 
+static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
+{
+	SDL_MinimizeWindow(doom->win);
+	doom->buff = SDL_GetWindowSurface(doom->win);
+	init_game(doom, argc, argv);
+	doom->game_quit = 0;
+	doom->menu_out_of_focus = 1;
+	load_model(doom);
+	if (DEBUG == 1)
+		init_minimap(doom);
+	SDL_UpdateWindowSurface(doom->game->win);
+	Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+}
+
+static void	start_editor_from_menu(t_doom *doom, int argc, char **argv)
+{
+	SDL_MinimizeWindow(doom->win);
+	doom->buff = SDL_GetWindowSurface(doom->win);
+	init_edt(doom, argc, argv);
+	doom->edt_quit = 0;
+	doom->menu_out_of_focus = 1;
+	if (!load_model(doom))
+		ft_die("Fatal error: Could not load model when entering Editor from the main menu.");
+	redraw_editor_to_backbuffer(0xffffffff);
+	SDL_UpdateWindowSurface(doom->edt->win);
+	Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+}
+
 void		main_menu_loop(t_doom *doom, int argc, char **argv)
 {
 	static int key_repeat_lock = 0;
@@ -226,34 +259,10 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 		Mix_PlayChannel( -1, doom->sounds->mcSteam, 0 );
 		key_repeat_lock = 8;
 	}
-	else if (doom->keystates[SDL_SCANCODE_RETURN] && doom->menu->selected == 0 && doom->game_quit && doom->edt_quit)
-	{
-		SDL_MinimizeWindow(doom->win);
-		doom->buff = SDL_GetWindowSurface(doom->win);
-		init_game(doom, argc, argv);
-		doom->game_quit = 0;
-		doom->menu_out_of_focus = 1;
-		load_model(doom);
-		if (DEBUG == 1)
-			init_minimap(doom);
-		SDL_UpdateWindowSurface(doom->game->win);
-		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
-	}
+	else if (doom->keystates[SDL_SCANCODE_RETURN] && doom->menu->selected == 0 && doom->edt_quit && doom->game_quit)
+		start_game_from_menu(doom, argc, argv);
 	else if (doom->keystates[SDL_SCANCODE_RETURN] && doom->menu->selected == 1 && doom->edt_quit && doom->game_quit)
-	{
-		SDL_MinimizeWindow(doom->win);
-		doom->buff = SDL_GetWindowSurface(doom->win);
-		if (load_model(doom))
-			init_edt(doom, argc, argv);
-		else
-			ft_die("Fatal error: Could not load model when entering Editor from the main menu.");
-		doom->edt_quit = 0;
-		doom->menu_out_of_focus = 1;
-		//if (doom->map->was_filled)
-		//	ft_putendl("Model loaded from mapfile.");
-		SDL_UpdateWindowSurface(doom->edt->win);
-		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
-	}
+		start_editor_from_menu(doom, argc, argv);
 	else if (doom->keystates[SDL_SCANCODE_RETURN] && doom->menu->selected == 2)
 	{
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );

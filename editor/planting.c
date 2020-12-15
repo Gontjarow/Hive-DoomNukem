@@ -22,6 +22,32 @@ static t_point	relative_position(int x, int y, t_state *state)
 	return ((t_point){relative_x, relative_y});
 }
 
+static t_point	scrolled_position(int x, int y, t_state *state)
+{
+	int relative_x;
+	int relative_y;
+
+	relative_x = x - state->scroll_x;
+	relative_y = y - state->scroll_y;
+	relative_x /= state->zoom_factor;
+	relative_y /= state->zoom_factor;
+	printf("scrolled position ( %d | %d ) to ( %d | %d )\n", x, y, relative_x, relative_y);
+	return ((t_point){relative_x, relative_y});
+}
+
+static int		valid_line(t_line *line)
+{
+	if (line->x1 < 0 || line->x1 >= EDT_WIN_WIDTH)
+		return (0);
+	if (line->x2 < 0 || line->x2 >= EDT_WIN_WIDTH)
+		return (0);
+	if (line->y1 < 0 || line->y1 >= EDT_WIN_HEIGHT)
+		return (0);
+	if (line->y2 < 0 || line->y2 >= EDT_WIN_HEIGHT)
+		return (0);
+	return (1);
+}
+
 static void		update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type)
 {
 	t_line 		line;
@@ -37,61 +63,36 @@ static void		update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_typ
 	{
 		player = (t_player*)obj_ptr;
 		rad = ((player->rot) * M_PI / 180);
-		player->tail.x = (int)player->x + (int)(10.0 * -cos(rad));
-		player->tail.y = (int)player->y + (int)(10.0 * -sin(rad));
-		rel_pos = relative_position((int)player->x, (int)player->y, get_state());
+		player->tail.x = (int)player->x + (int)(12.0 * -cos(rad));
+		player->tail.y = (int)player->y + (int)(12.0 * -sin(rad));
+		rel_pos = scrolled_position((int)player->x, (int)player->y, get_state());
 		line.x1 = rel_pos.x;
 		line.y1 = rel_pos.y;
-		rel_pos = relative_position(player->tail.x, player->tail.y, get_state());
+		rel_pos = scrolled_position(player->tail.x, player->tail.y, get_state());
 		line.x2 = rel_pos.x;
 		line.y2 = rel_pos.y;
-		render_line(&line);
-			//puts("Drew tail for player object");
+		if (valid_line(&line))
+			render_line(&line);
+			//puts("Drew tail for player object - aha");
 	}
 	else if (obj_type == ENEMY)
 	{
 		enemy = (t_enemy*)obj_ptr;
 		rad = ((enemy->rot) * M_PI / 180);
-		enemy->tail.x = enemy->x + (int)(10.0 * -cos(rad));
-		enemy->tail.y = enemy->y + (int)(10.0 * -sin(rad));
-		rel_pos = relative_position(enemy->x, enemy->y, get_state());
+		enemy->tail.x = enemy->x + (int)(12.0 * -cos(rad));
+		enemy->tail.y = enemy->y + (int)(12.0 * -sin(rad));
+		rel_pos = scrolled_position(enemy->x, enemy->y, get_state());
 		line.x1 = rel_pos.x;
 		line.y1 = rel_pos.y;
-		rel_pos = relative_position(enemy->tail.x, enemy->tail.y, get_state());
+		rel_pos = scrolled_position(enemy->tail.x, enemy->tail.y, get_state());
 		line.x2 = rel_pos.x;
 		line.y2 = rel_pos.y;
-		render_line(&line);
-			//puts("Drew tail for enemy object");
+		if (valid_line(&line))
+			render_line(&line);
+			//printf("rel_pos.x, rel_pos.y from tail .x (%d) .y(%d) = { %d, %d }\n", enemy->tail.x, enemy->tail.y, line.x2, line.y2);
+			//puts("Drew tail for enemy object - yup");
 	}
 }
-
-/* available in game.c
-double deg_to_rad(int deg)
-{
-	return (deg * M_PI / 180);
-}
- 	// TAIL CALCULATION
-	doom->mdl->player.rot -= doom->mdl->player.rot_speed;
-	if (doom->mdl->player.rot < 0)
-		doom->mdl->player.rot = 359;
-	rad = deg_to_rad(doom->mdl->player.rot);
-	x = doom->mdl->player.x + doom->mdl->player.mov_speed * -cos(rad);
-	y = doom->mdl->player.y + doom->mdl->player.mov_speed * -sin(rad);
-	doom->mdl->player.tail.x = x;
-	doom->mdl->player.tail.y = y;
-
- 	// TAIL DRAWING
- 	t_line	line;
-
-	line.x1 = doom->mdl->player.x * doom->minimap->scale;
-	line.y1 = doom->mdl->player.y * doom->minimap->scale;
-	line.x2 = doom->mdl->player.tail.x * doom->minimap->scale;
-	line.y2 = doom->mdl->player.tail.y * doom->minimap->scale;
-	line.color = 0xffffff00;
-	line.buff = doom->minimap->buff;
-	render_line(&line);
-
- */
 
 static void		draw_player(t_model *mdl, t_state *state)
 {
@@ -109,7 +110,7 @@ static void		draw_player(t_model *mdl, t_state *state)
 	relative_y -= state->scroll_y;
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
-	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 10, type_colors(PLAYER));
+	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(PLAYER));
 	update_tail_to_buffer(editor_back_buffer()->buff, (void*)&(mdl->player), PLAYER);
 }
 
@@ -129,7 +130,7 @@ static void		draw_enemy(t_enemy *enemy, t_state *state)
 	relative_y -= state->scroll_y;
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
-	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 10, type_colors(ENEMY));
+	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(ENEMY));
 	update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
 }
 

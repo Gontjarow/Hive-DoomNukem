@@ -83,22 +83,21 @@ static void expand_mdl_polygon_maps(t_model *mdl)
     int rc;
     t_room *room;
 
-    printf("Welcome to expand_mdl_polygon_maps\n");
+    //printf("Welcome to expand_mdl_polygon_maps\n");
     rc = mdl->room_count;
     room = mdl->room_first;
-    printf("RC is %d, first_room id  is %d\n", rc, room->id);
+    //printf("RC is %d, first_room id  is %d\n", rc, room->id);
     while (rc--)
     {
-        printf("Welcome to expand_mdl_polygon_maps - now running rc-- times %d\n", times);
+        	//printf("Welcome to expand_mdl_polygon_maps - now running rc-- times %d\n", times);
         if (mdl->poly_map == NULL || room == NULL || mdl->parent == NULL)
             ft_die("Fatal error: No poly_map, room or mdl_parent set at expand_mdl_polygon_maps");
-        //TODO REPLACE: expand_room_polygon_map(room, mdl->parent, mdl->poly_map, &mdl->conversion_colors);
         add_room_polymap(room, mdl->poly_map, get_conv_colors());
         //printf("Seg faults above?\n");
         room = room->next;
-        ft_putendl("Expanded polygon map at mdl->poly_map");
+        //ft_putendl("Expanded polygon map at mdl->poly_map");
     }
-    printf("Goodbye from expand_mdl_polygon_maps\n");
+    //printf("Goodbye from expand_mdl_polygon_maps\n");
 }
 
 static void scan_rooms(t_doom *doom, t_model *mdl)
@@ -312,15 +311,19 @@ static void parse_mapfile(t_doom *doom, t_model *mdl)
 	doom->map->was_filled = 1;
 	if (doom->map->wall_string) {
 		scan_walls(doom, mdl);
+			//ft_putendl("Scanned for walls at parse_mapfile");
 	}
 	if (doom->map->room_string) {
 		scan_rooms(doom, mdl);
+			//ft_putendl("Scanned for rooms at parse_mapfile");
 	}
 	if (doom->map->portal_string) {
 		scan_portals(doom, mdl);
+			//ft_putendl("Scanned for portals at parse_mapfile");
 	}
 	if (doom->map->enemy_string) {
 		scan_enemies(doom, mdl);
+			//ft_putendl("Scanned for enemies at parse_mapfile");
 	}
 	//printf("%s\n%s\n%s\n%s\n[BIG DEBUG DATA]\n", doom->map->wall_string, doom->map->enemy_string, doom->map->portal_string, doom->map->player_string);
 	if (!doom->map->wall_string && !doom->map->portal_string && !doom->map->enemy_string && !doom->map->player_string)
@@ -456,8 +459,8 @@ static int read_mapfile(t_doom *doom, char *map_path)
 		close(opened);
 		return (1);
 	}
-	ft_putendl("Warning: read_mapfile failed to open supplied map path:");
-	ft_putendl(map_path);
+		//ft_putendl("Warning: read_mapfile failed to open supplied map path:");
+		//ft_putendl(map_path);
 	return (0);
 }
 
@@ -513,15 +516,25 @@ int			load_model(t_doom *doom)
 	init_model(doom);
 	if (!doom->edt_quit)
 	{
-		//if (!doom->edt->load_map)
-		//	return (0);
-		//if (!read_mapfile(doom, doom->edt->map_path))
-		//	return (0);
-		//ft_putstr("Loaded mapfile data from file: ");
-		//ft_putendl(doom->edt->map_path);
-		//parse_mapfile(doom, doom->mdl);
+		//ft_putendl("Load_model initiated with the editor loading.");
+		if (!doom->edt->map_supplied)
+		{
+			//ft_putendl("Skipped load_model, no map was supplied");
+			return (1);
+		}
+		if (!read_mapfile(doom, doom->edt->map_path))
+		{
+				//ft_putendl("Warning: Failed to read mapfile, no model was loaded.");
+			return (1);
+		}
+		ft_putstr("Loaded mapfile data from file: ");
+		ft_putendl(doom->edt->map_path);
+		parse_mapfile(doom, doom->mdl);
+		link_mdl_rooms(doom->mdl);
+		expand_mdl_polygon_maps(doom->mdl);
 	}
-	else if (!doom->game_quit) {
+	else if (!doom->game_quit)
+	{
 		if (!doom->game->map_supplied)
 			return (0);
 		if (!read_mapfile(doom, doom->game->map_path))

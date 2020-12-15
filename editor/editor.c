@@ -46,7 +46,8 @@
 //		RECORD ROOMS TO MODEL // DONE
 //		RECORD ROOMS TO POLYMAP, CHECK CORRECTNESS WITH SCROLLING AND ZOOMING // DONE
 //		ENABLE SAVING MODEL'S DATA TO A MAPFILE AGAIN // DONE
-//		ENABLE RELOADING A MAP'S DATA TO MODEL AND EDITOR AGAIN // <-- YOU ARE HERE !!
+//		ENABLE RELOADING A MAP'S DATA TO MODEL AND EDITOR AGAIN // DONE
+//		FIX TAILS NOT SCALING WITH SCROLL AND ZOOM
 
 // TODO AFTER MASTER MERGE
 //		MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
@@ -89,9 +90,6 @@ void				init_edt(t_doom *doom, int argc, char **argv)
 		ft_die("Fatal error: Could not retrieve buffer of Level Editor window.");
 	flood_buffer(doom->edt->buff, 0xff000000);
 	doom->edt_state = get_state();
-	// TODO ENABLE RELOADING OF EXISTING MAP
-	//		NOW, ONLY WORKING TO SAVE MAP ONTO UNEXISTING FILENAME
-	//		MUST ALSO ENABLE OVERWRITING WHEN RELOADED, MODIFIED, CLOSED A MAP
 	doom->edt->map = NULL;
 	doom->edt->map_supplied = (argc == 2) ? 1 : 0;
 	doom->edt->map_path = (argc == 2) ? argv[1] : NULL;
@@ -104,13 +102,22 @@ void				destroy_edt(t_doom *doom)
 	if (doom->edt->map_supplied)
 	{
 		create_strings_from_model(doom->mdl, doom->edt->map);
-		if (!write_mapfile(doom->edt->map_path, doom->edt->map))
+		if (doom->mdl->player.x == -1 || doom->mdl->player.y == -1)
+			ft_putendl("Warning: Player position not supplied, did not save mapfile.");
+		else if (doom->map->was_filled && !overwrite_mapfile(doom->edt->map_path, doom->edt->map))
+			ft_putendl("Warning: Could not save mapfile, when attempted overwriting, write_mapfile failed.");
+		else if (!write_mapfile(doom->edt->map_path, doom->edt->map))
 			ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
 		if (doom->edt->map != NULL)
 			destroy_mapfile(doom->edt->map);
 	}
-	//if (doom->edt->overwrite_map)
-	//	overwrite_mapfile(doom->edt);
+	// TODO TECHNICAL DEBT, SEPARATE OUT OF THIS FUNCTION, PERHAPS INTO MENU ITEM WHICH KILLS EDITOR
+	if (doom->map->was_filled)
+	{
+		destroy_mapfile(doom->map);
+		doom->map_data_initialized = 0;
+			//ft_putendl("Destroyed mapfile!!!");
+	}
 	SDL_FreeSurface(doom->edt->buff);
 	SDL_DestroyWindow(doom->edt->win);
 	doom->edt->win = NULL;
