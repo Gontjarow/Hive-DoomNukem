@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/03 20:15:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/15 16:11:10 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,14 @@ static void init_model(t_doom *doom)
 	doom->mdl->player.rot_speed = 5;
 	doom->mdl->player.run_lock = 0;
 	doom->mdl->player.crouch_lock = 0;
+	doom->mdl->player.weap_id = 0;
+	doom->mdl->player.reload_time = 0;
+	doom->mdl->player.shoot_cd = 0;
+	doom->mdl->player.bullet_pos.x = 0.0;
+	doom->mdl->player.bullet_pos.y = 0.0;
+	doom->mdl->player.hp.cur = 100;
+	doom->mdl->player.hp.max = 100;
+	init_player_weapon(doom);
 }
 
 void 		destroy_model(t_doom *doom)
@@ -497,6 +505,23 @@ static void		assign_enemy_hps(t_model *mdl)
 	}
 }
 
+static void		assign_enemy_cd(t_model *mdl)
+{
+	t_enemy *enemy;
+	int		ec;
+
+	ec = mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = mdl->enemy_first;
+	while (ec--)
+	{
+		enemy->shoot_cd = 0;
+		enemy->wep.cooldown = 15;
+		enemy = enemy->next;
+	}
+}
+
 static void		link_mdl_rooms(t_model *mdl)
 {
     t_room *room;
@@ -546,6 +571,8 @@ int			load_model(t_doom *doom)
 		link_mdl_rooms(doom->mdl);
 		// Assign the enemy current HPs, deriving them from their max hps
 		assign_enemy_hps(doom->mdl);
+		// Initialize the enemy weapon cooldown for shooting
+		assign_enemy_cd(doom->mdl);
 		// Create polymap buffer for rooms for instant tracking of room_id where player is
 		ft_putendl("Launching game, calling expand_mdl_polygon_maps");
 		expand_mdl_polygon_maps(doom->mdl);
