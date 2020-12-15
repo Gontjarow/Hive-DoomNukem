@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 21:42:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/03 20:11:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/15 20:22:31 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define MINIMAP_H
 
 # include "doom-nukem.h"
-# define MINIMAP_WIN_WIDTH 1024
-# define MINIMAP_WIN_HEIGHT 512
+# define MWIN_WIDTH 1024
+# define MWIN_HEIGHT 512
 
 typedef struct		s_minimap
 {
@@ -28,11 +28,11 @@ typedef struct		s_minimap
 	uint32_t			player_ray_color;
 }					t_minimap;
 
-void			init_minimap(t_doom *doom);
-void			update_minimap(t_doom *doom);
-void			print_minimap_player(t_doom *doom);
-void			print_minimap_walls(t_doom *doom);
-void			destroy_minimap(t_doom *doom);
+void				init_minimap(t_doom *doom);
+void				update_minimap(t_doom *doom);
+void				print_minimap_player(t_doom *doom);
+void				print_minimap_walls(t_doom *doom);
+void				print_minimap_enemies(t_doom *doom);
+void				destroy_minimap(t_doom *doom);
 
 #endif
-
