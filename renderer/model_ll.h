@@ -91,31 +91,31 @@ typedef struct	s_doom t_doom;
 
 # include "renderer.h"
 
-t_global_vert	*new_vert(t_global_vert *prev, t_vert v, t_global_vert *next);
+t_global_vert	*new_vert(t_global_vert **list, t_vert v);
 t_face_vert		*new_fvert(t_face_vert *prev, t_global_vert *data, t_face_vert *next);
-t_actual_face	*new_face(t_vert a, t_vert b, t_vert c);
+t_actual_face	*new_face(t_global_vert **vlist, t_vert a, t_vert b, t_vert c);
 
 t_global_vert	*list2vert(t_global_vert *list, int index);
 t_face_vert		*list2fvert(t_face_vert *list, int index);
 t_face_vert		*list2face(t_actual_face *list, int index);
 
-t_global_vert	*global_vert_add(t_global_vert *head, t_global_vert *node);
+void			global_vert_add(t_global_vert **head, t_global_vert *node);
 t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail);
 t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail);
 
-t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof);
+t_actual_face	*make_wall(t_global_vert **vlist, t_wall *a, t_wall *b, int floor, int roof);
 
 t_obj			mdl_to_usable_data(t_doom *doom);
 
-t_actual_face	*face_transform(t_matrix m, t_actual_face *f);
+t_actual_face	*face_transform(t_global_vert **vlist, t_matrix m, t_actual_face *f);
 t_obj			obj_transform(t_matrix m, t_obj obj);
 t_obj			obj_clip(t_obj obj);
 
 t_vert			lerp_vert(t_vert a, t_vert b);
-t_actual_face	*faceclipper(t_actual_face *face);
+t_actual_face	*faceclipper(t_actual_face *face, t_global_vert **vlist);
 int				get_outcode(t_vert v);
 int				get_clip_type(t_actual_face *face);
-t_actual_face	*clip_face(t_actual_face *face, int clip_type);
+t_actual_face	*clip_face(t_actual_face *face, t_global_vert **vlist, int clip_type);
 t_obj			obj_clip(t_obj obj);
 
 #endif

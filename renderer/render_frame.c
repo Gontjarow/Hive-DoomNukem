@@ -44,7 +44,8 @@ void render_frame(t_doom *doom)
 	double		hrz = doom->mdl->player.rot_horizontal;
 	int			px = doom->mdl->player.x;
 	int			py = doom->mdl->player.y;
-	t_xyz		pos = vec3(px, 0, py);
+	t_xyz		pos = vec3_mul(vec3(px, 0, py), WORLD_SCALE_FACTOR);
+				pos.y = -25;
 	t_xyz		cam_dir = vec3_norm(vec3_sub(pos, vec3(0, 0, 0)));
 
 	t_matrix	world = translate_m(0, 0, 0);
@@ -55,10 +56,18 @@ void render_frame(t_doom *doom)
 	modelview = multiply_m(projection, modelview);
 
 	t_obj		world_obj = doom->game->world_obj;
-	t_obj		mv_obj = obj_transform(modelview, world_obj);
-	t_obj		clipped_obj = obj_clip(mv_obj);
+	t_obj		view_obj = obj_transform(modelview, world_obj);
+	t_obj		clipped_obj = obj_clip(view_obj);
+	printf("frame (%i %i)->(%f %f %f) \n", px, py, pos.x, pos.y, pos.z);
+	t_vert		tv1 = view_obj.face->vert->data->pos;
+	t_vert		tv2 = view_obj.face->vert->next->data->pos;
+	t_vert		tv3 = view_obj.face->vert->next->next->data->pos;
+	printf("      (%f %f %f %f) \n", tv1.x, tv1.y, tv1.z, tv1.w);
+	printf("      (%f %f %f %f) \n", tv2.x, tv2.y, tv2.z, tv2.w);
+	printf("      (%f %f %f %f) \n", tv3.x, tv3.y, tv3.z, tv3.w);
 	return; // ----> Todo: Continue <----
 
+	/*
 	t_mesh test;
 	t_mesh		mv = mesh_transform(modelview, test);
 	printf("debug start\n");
@@ -144,4 +153,5 @@ void render_frame(t_doom *doom)
 	// zbuffer_to_window(doom);
 	// free_faces(&screen_mesh);
 	free_faces(&test);
+	*/
 }

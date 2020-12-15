@@ -43,7 +43,7 @@ t_vert			lerp_vert(t_vert a, t_vert b)
 	);
 }
 
-t_actual_face	*faceclipper(t_actual_face *face)
+t_actual_face	*faceclipper(t_actual_face *face, t_global_vert **vlist)
 {
 	t_face_vert *result         = NULL;
 
@@ -60,7 +60,7 @@ t_actual_face	*faceclipper(t_actual_face *face)
 		if (curr_inside ^ prev_inside) // One inside, one outside. Lerp prev->curr.
 		{
 			t_vert lerped = lerp_vert(prev->data->pos, curr->data->pos);
-			result = face_vert_add(result, new_vert(NULL, lerped, NULL));
+			result = face_vert_add(result, new_vert(vlist, lerped));
 		}
 
 		if (curr_inside)
@@ -87,8 +87,8 @@ int				get_outcode(t_vert v)
 	outcode |= OUTCODE_RIGHT * (v.x >=  v.w);
 	outcode |= OUTCODE_UP    * (v.y <= -v.w);
 	outcode |= OUTCODE_DOWN  * (v.y >=  v.w);
-	outcode |= OUTCODE_NEAR  * (v.z <= -v.w); // note: ensure correctness
-	outcode |= OUTCODE_FAR   * (v.z >=  v.w);
+	outcode |= OUTCODE_NEAR  * (v.z <=  v.w); // note: ensure correctness
+	outcode |= OUTCODE_FAR   * (v.z >= -v.w);
 }
 
 int				get_clip_type(t_actual_face *face)
@@ -117,13 +117,13 @@ int				get_clip_type(t_actual_face *face)
 	}
 }
 
-t_actual_face	*clip_face(t_actual_face *face, int clip_type)
+t_actual_face	*clip_face(t_actual_face *face, t_global_vert **vlist, int clip_type)
 {
 	t_actual_face *clipped = NULL;
 
 	if (clip_type == CLIP_TRIVIAL_ACCEPT)
 	{
-		return (new_face( // This doesn't feel right...
+		return (new_face(vlist, // This doesn't feel right...
 			face->vert->data->pos,
 			face->vert->next->data->pos,
 			face->vert->next->next->data->pos
@@ -134,7 +134,7 @@ t_actual_face	*clip_face(t_actual_face *face, int clip_type)
 		// At this point, face should begin with exactly 3 verts.
 		// Should it also return only faces with exactly 3 verts?
 		// (Not if they're in order like a triagle-fan.)
-		clipped = faceclipper(face);
+		clipped = faceclipper(face, vlist);
 		// Link prev and next to this one...
 		clipped->prev = face->prev;
 		clipped->next = face->next;
@@ -164,7 +164,7 @@ t_obj			obj_clip(t_obj obj)
 	{
 		if ((clip_type = get_clip_type(obj.face)) != CLIP_TRIVIAL_REJECT)
 		{
-			face_list_add(out.face, clip_face(obj.face, clip_type));
+			face_list_add(out.face, clip_face(obj.face, &out.vert, clip_type));
 			out.f_count += 1;
 			out.v_count += 3;
 		}

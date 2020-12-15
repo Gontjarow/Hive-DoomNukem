@@ -1,7 +1,5 @@
 #include "renderer.h"
 
-static t_global_vert	*g_verts = NULL;
-
 // https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order/1180256#1180256
 // player radius: 10px
 // player default move speed: 10px
@@ -86,22 +84,23 @@ t_face_vert		*list2face(t_actual_face *list, int index)
 
 // Appends to, or creates a new list, then returns head.
 // Note: Might want to avoid these when appending lots of things.
-t_global_vert	*global_vert_add(t_global_vert *head, t_global_vert *node)
+void			global_vert_add(t_global_vert **vlist, t_global_vert *node)
 {
 	t_global_vert	*last;
 
-	if (head != NULL)
+	if (vlist != NULL)
 	{
-		last = list2vert(head, LAST);
-		last->next = node;
-		node->prev = last;
+		if ((*vlist) != NULL)
+		{
+			last = list2vert(*vlist, LAST);
+			last->next = node;
+			node->prev = last;
+		}
+		else
+		{
+			*vlist = node;
+		}
 	}
-	else
-	{
-		head = node;
-	}
-
-	return (head);
 }
 
 t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail)
@@ -121,6 +120,7 @@ t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail)
 	return (head);
 }
 
+// Todo: Make this **head
 t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail)
 {
 	t_actual_face	*last;
@@ -140,16 +140,16 @@ t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail)
 }
 
 // Allocates new t_global_vert node (with actual vert data) and appends it to the a global list.
-t_global_vert	*new_vert(t_global_vert *prev, t_vert v, t_global_vert *next)
+t_global_vert	*new_vert(t_global_vert **vlist, t_vert v)
 {
 	t_global_vert	*current;
 
 	assert(current = malloc(sizeof(*current)));
 
 	current->pos = v;
-	current->prev = prev;
-	current->next = next;
-	g_verts = global_vert_add(g_verts, current);
+	current->prev = NULL;
+	current->next = NULL;
+	global_vert_add(vlist, current);
 	return (current);
 }
 
@@ -167,16 +167,16 @@ t_face_vert		*new_fvert(t_face_vert *prev, t_global_vert *data, t_face_vert *nex
 }
 
 // Allocates new t_actual_face node and the appropriate sub-structs.
-t_actual_face	*new_face(t_vert a, t_vert b, t_vert c)
+t_actual_face	*new_face(t_global_vert **vlist, t_vert a, t_vert b, t_vert c)
 {
 	t_actual_face	*out;
 
 	assert(out = malloc(sizeof(*out)));
 
 	out->prev = NULL;
-	out->vert             = new_fvert(NULL,            new_vert(NULL, a, NULL), NULL);
-	out->vert->next       = new_fvert(out->vert,       new_vert(NULL, b, NULL), NULL);
-	out->vert->next->next = new_fvert(out->vert->next, new_vert(NULL, c, NULL), NULL);
+	out->vert             = new_fvert(NULL,            new_vert(vlist, a), NULL);
+	out->vert->next       = new_fvert(out->vert,       new_vert(vlist, b), NULL);
+	out->vert->next->next = new_fvert(out->vert->next, new_vert(vlist, c), NULL);
 	out->next = NULL;
 	return (out);
 }
@@ -187,7 +187,7 @@ t_actual_face	*new_face(t_vert a, t_vert b, t_vert c)
 // - The third vert will be at the opposite end of the line.
 // - A second triangle is made with the same method,
 //	only with two points at the opposite end instead.
-t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof)
+t_actual_face	*make_wall(t_global_vert **vlist, t_wall *a, t_wall *b, int floor, int roof)
 {
 	t_vert			v[4];
 	t_actual_face	*f[2];
@@ -197,8 +197,8 @@ t_actual_face	*make_wall(t_wall *a, t_wall *b, int floor, int roof)
 	v[2] = vec4_mul(vec4(b->start.x, b->start.y, roof,  T_POS), WORLD_SCALE_FACTOR);
 	v[3] = vec4_mul(vec4(b->start.x, b->start.y, floor, T_POS), WORLD_SCALE_FACTOR);
 
-	f[0] = new_face(v[0], v[1], v[2]);
-	f[1] = new_face(v[1], v[3], v[2]);
+	f[0] = new_face(vlist, v[0], v[1], v[2]);
+	f[1] = new_face(vlist, v[1], v[3], v[2]);
 
 	return (face_list_add(f[0], f[1]));
 }
@@ -214,11 +214,12 @@ t_obj			mdl_to_usable_data(t_doom *doom)
 	t_wall			*wall = NULL;
 	t_room			*room = NULL;
 
-	t_actual_face	*wall_tris = NULL;
 	t_actual_face	*single_wall = NULL;
 
 	room_object.v_count = 0;
 	room_object.f_count = 0;
+	room_object.face = NULL;
+	room_object.vert = NULL;
 
 	room_count = doom->mdl->room_count;
 	room       = doom->mdl->room_first;
@@ -240,12 +241,12 @@ t_obj			mdl_to_usable_data(t_doom *doom)
 
 			// build linked list with 2 triangles
 			if (wall->next)
-				single_wall = make_wall(wall, wall->next, floor_height, roof_height);
+				single_wall = make_wall(&room_object.vert, wall, wall->next, floor_height, roof_height);
 			else
-				single_wall = make_wall(wall, room->first_wall, floor_height, roof_height);
+				single_wall = make_wall(&room_object.vert, wall, room->first_wall, floor_height, roof_height);
 
 			// join those triangles to some bigger list
-			wall_tris = face_list_add(wall_tris, single_wall);
+			room_object.face = face_list_add(room_object.face, single_wall);
 			room_object.v_count += 6;
 			room_object.f_count += 2;
 			wall = wall->next;
@@ -253,8 +254,6 @@ t_obj			mdl_to_usable_data(t_doom *doom)
 		room = room->next;
 	}
 
-	room_object.face = wall_tris;
-	room_object.vert = g_verts;
 	printf("FINAL ROOM STATS: %d verts, %d faces, v:%p, f:%p\n", room_object.v_count, room_object.f_count, room_object.vert, room_object.face);
 
 	// Tests to make sure there are the correct amount of nodes:
@@ -296,9 +295,9 @@ void			free_obj(t_obj obj)
 }
 
 // Allocates a new face (triangle) after applying the given matrix.
-t_actual_face	*face_transform(t_matrix m, t_actual_face *f)
+t_actual_face	*face_transform(t_global_vert **vlist, t_matrix m, t_actual_face *f)
 {
-	return (new_face(
+	return (new_face(vlist,
 		apply_m(m, f->vert->data->pos),
 		apply_m(m, f->vert->next->data->pos),
 		apply_m(m, f->vert->next->next->data->pos)
@@ -312,20 +311,18 @@ t_actual_face	*face_transform(t_matrix m, t_actual_face *f)
 t_obj			obj_transform(t_matrix m, t_obj obj)
 {
 	t_obj out;
-	t_actual_face *out_begin;
+
+	out = (t_obj){obj.v_count, obj.f_count, NULL, NULL};
 
 	assert(obj.f_count >= 1);
 
-	out.face = face_transform(m, obj.face);
-	out_begin = out.face;
+	out.face = face_transform(&out.vert, m, obj.face);
 
-	while (obj.face->next != NULL)
+	while (obj.face != NULL)
 	{
-		out.face->next = face_transform(m, obj.face->next);
+		out.face = face_list_add(out.face, face_transform(&out.vert, m, obj.face));
 		obj.face = obj.face->next;
-		out.face = out.face->next;
 	}
 
-	out.face = out_begin;
 	return (out);
 }
