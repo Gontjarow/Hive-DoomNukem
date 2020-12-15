@@ -114,8 +114,8 @@ t_obj			obj_clip(t_obj obj);
 t_vert			lerp_vert(t_vert a, t_vert b);
 t_actual_face	*faceclipper(t_actual_face *face);
 int				get_outcode(t_vert v);
-int				get_clip_type(t_actual_face *face, int outcode[3]);
-int				clip_face(t_actual_face **face);
+int				get_clip_type(t_actual_face *face);
+t_actual_face	*clip_face(t_actual_face *face, int clip_type);
 t_obj			obj_clip(t_obj obj);
 
 #endif

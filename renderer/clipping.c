@@ -91,7 +91,7 @@ int				get_outcode(t_vert v)
 	outcode |= OUTCODE_FAR   * (v.z >=  v.w);
 }
 
-int				get_clip_type(t_actual_face *face, int outcode[3])
+int				get_clip_type(t_actual_face *face)
 {
 	int a;
 	int b;
@@ -113,69 +113,63 @@ int				get_clip_type(t_actual_face *face, int outcode[3])
 	}
 	else
 	{
-		outcode[0] = a;
-		outcode[1] = b;
-		outcode[2] = c;
 		return (CLIP_REQUIRED);
 	}
 }
 
-int				clip_face(t_actual_face **face)
+t_actual_face	*clip_face(t_actual_face *face, int clip_type)
 {
-	int clip_type;
-	int outcode[3]; // Todo: Probably not needed.
 	t_actual_face *clipped = NULL;
 
-	clip_type = get_clip_type(face, outcode);
 	if (clip_type == CLIP_TRIVIAL_ACCEPT)
-		return (CLIP_TRIVIAL_ACCEPT);
-	else if (clip_type == CLIP_TRIVIAL_REJECT)
 	{
-		// Link previous to the next...
-		(*face)->prev->next = (*face)->next;
-		(*face)->next->prev = (*face)->prev;
-		// ...and delete this one from the middle.
-		recursive_fvert_free((*face)->vert);
-		free((*face));
-		return (CLIP_TRIVIAL_REJECT);
+		return (new_face( // This doesn't feel right...
+			face->vert->data->pos,
+			face->vert->next->data->pos,
+			face->vert->next->next->data->pos
+		));
 	}
-	else
+	else if (clip_type == CLIP_REQUIRED)
 	{
 		// At this point, face should begin with exactly 3 verts.
 		// Should it also return only faces with exactly 3 verts?
 		// (Not if they're in order like a triagle-fan.)
 		clipped = faceclipper(face);
 		// Link prev and next to this one...
-		clipped->prev = (*face)->prev;
-		(*face)->prev->next = clipped;
-		clipped->next = (*face)->next;
-		(*face)->next->prev = clipped;
-		// ... and modify input to replace old face data with the new.
-		recursive_fvert_free((*face)->vert);
-		free((*face));
-		(*face) = clipped;
-		return (CLIP_REQUIRED);
+		clipped->prev = face->prev;
+		clipped->next = face->next;
+		face->prev->next = clipped;
+		face->next->prev = clipped;
+		return (clipped);
+	}
+	else
+	{
+		return (NULL);
 	}
 }
 
+// Go through obj and create a clipped copy of it,
+// skip faces that are rejected entirely.
+// Do NOT modify obj's contents in any way.
 t_obj			obj_clip(t_obj obj)
 {
 	t_obj out;
-	t_actual_face *out_begin;
 	int clip_type;
+
+	out = (t_obj){0, 0, NULL, NULL};
 
 	assert(obj.f_count >= 1);
 
-	out.face = clip_face(&(obj.face));
-	out_begin = out.face;
-
-	while (obj.face->next != NULL)
+	while (obj.face != NULL)
 	{
-		out.face->next = clip_face(&(obj.face->next));
+		if ((clip_type = get_clip_type(obj.face)) != CLIP_TRIVIAL_REJECT)
+		{
+			face_list_add(out.face, clip_face(obj.face, clip_type));
+			out.f_count += 1;
+			out.v_count += 3;
+		}
 		obj.face = obj.face->next;
-		out.face = out.face->next;
 	}
 
-	out.face = out_begin;
 	return (out);
 }
