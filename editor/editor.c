@@ -16,42 +16,26 @@
 //  EDITOR MUST GUARANTEE CLOCKWISE ARRANGEMENT OF WALL NODES IN ROOMS
 //  https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order/
 
-// COMPLETED
-//		EXPLORE DIFFERENT RESOLUTIONS IN EDITOR WINDOW // DONE
-//		LET USER SCROLL UP AND DOWN IN THE EDITOR WITH ARROW KEYS // DONE
-//		Stage 1: Offset_x, Offset_y, Live in same memory space as Zoom_factor // DONE
-//		Stage 2: These offsets can be between 0-(Max limit depending on Zoom-factor) both X, Y
-//		Stage 3: For Zoom Factor 1: Between 0 and 3*EDT_WINDOW_WIDTH / HEIGHT, X / Y
-//								 2: Between 0 and 2*EDT_WINDOW_WIDTH / HEIGHT, X / Y
-//								 4: Between 0 and 0, X, Y // ... DONE
-//		Stage 4: For rendering the correct space displace all walls' X&Y values by the offsets // DONE
-//		Stage 5: Test if this works as imagined // DONE
-//		Stage 6: Debug the program to detect where it is crashing and why, and fix that // TECH DEBT
-//		I think it is crashing because sometimes it infinite loops during Cohen-Sutherland when
-//		the clipped line crosses two segments? Possibly? It should be protected, aborted, modified to
-//		escape such scenario or resolve it correctly...
-//		Solution for now: Add a limit of 10 loops before autoexiting the infinite looping part. // DONE
-//		Stage 7: Adjust the sensitivity and acceleration of the keyboard control // DONE
-//		Stage 8: Add visual scrollbars to let user know the amount of scrolling applied // DONE
-//			Technical debt: Can be done with XPM graphics propably later, implemented with linedraws.
-
 // TODO FIX OPTIMIZATION DEBT: SDL_BLIT ON UNOPTIMIZED SDL_SURFACES
 
-// TODO BEFORE MASTER MERGE
-//		MODE TO ADD ENEMY AND PLAYER OBJECTS // IN PROGRESS
-//		DISPLAY TAIL LINES WHEN DRAWING OBJECTS // DONE
-//			RECORD POSITIONS TO MODEL // DONE
-//		FEATURE DEBT: SET SMALLER ENEMY/PLAYER CIRCLES WHEN ZOOMED OUT
-//		FEATURE DEBT: REPOINT TAILS WITH MIDDLE CLICK?
-//		RECORD ROOMS TO MODEL // DONE
-//		RECORD ROOMS TO POLYMAP, CHECK CORRECTNESS WITH SCROLLING AND ZOOMING // DONE
-//		ENABLE SAVING MODEL'S DATA TO A MAPFILE AGAIN // DONE
-//		ENABLE RELOADING A MAP'S DATA TO MODEL AND EDITOR AGAIN // DONE
-//		FIX TAILS NOT SCALING WITH SCROLL AND ZOOM
-
 // TODO AFTER MASTER MERGE
-//		MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT
+//		ADD HEALTH PICKUP, AMMO PICKUP, GUN PICKUP // RECTANGLES IN DIFFERENT COLORS, NUMBER IN GUN
+//			NO GUN, NO SWAP! GUN PICKUPS INITIALIZE TO 0
+//		ADD LEVEL EXITS IN EDITOR, ADD NAME OF MAP TO LOAD OR VICTORY SCREEN // TRIANGLES IN DIFFERENT COLORS
+//		MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT // CHECK BELOW FOR IDEAS
 
+// TODO FEATURE DEBT
+//		EVERYTHING SHOULD BE MOVABLE AND DELETABLE
+//		SELECTION TOOL, WALL/PORTAL POINT, WHOLE ROOM, PICKUP, EFFECTOR
+//		KEYBOARD FOR ++ MOVING, MOUSE FOR FREE MOVING, DESELECTION
+//		ADJUST ROTATION FOR ROTATABLES
+//		HOVER TO INDICATE SELECTABLE DETECTION
+
+// TODO TECH DEBT
+//		TECH DEBT Solution for now: Add a limit of 10 loops before autoexiting the infinite looping part. // DONE
+//		TECH DEBT Can be done with XPM graphics propably later, implemented with linedraws.
+
+// TODO IDEA EXPLANATIONS BELOW
 // Idea for portalization:
 // Create 2 rooms with approximate link wall between them close to each other.
 // Switch to Room Placing and click one of the rooms. Click one wall to designate as portaliziable
