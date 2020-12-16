@@ -99,7 +99,7 @@ void				destroy_edt(t_doom *doom)
 			destroy_mapfile(doom->edt->map);
 	}
 	// TODO TECHNICAL DEBT, SEPARATE OUT OF THIS FUNCTION, PERHAPS INTO MENU ITEM WHICH KILLS EDITOR
-	if (doom->map->was_filled)
+	if (doom->map_data_initialized && doom->map->was_filled)
 	{
 		destroy_mapfile(doom->map);
 		doom->map_data_initialized = 0;

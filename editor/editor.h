@@ -15,7 +15,7 @@
 
 # include "doom-nukem.h"
 # include "SDL.h"
-# include "objects.h"
+# include "commons/objects.h"
 # include <stdint.h>
 
 typedef struct 			s_doom t_doom;

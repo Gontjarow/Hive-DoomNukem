@@ -38,7 +38,7 @@ void			pickups_activate(t_state *state)
 	state->thread_permission = 0;
 	state->thread_target_id = -1;
 	pickups_change_zoom(state);
-	puts("Activating pickups");
+		//puts("Activating pickups");
 }
 
 void			pickups_deactivate(t_state *state)
@@ -50,7 +50,7 @@ void			pickups_deactivate(t_state *state)
 	state->thread_permission = 0;
 	state->thread_target_id = -1;
 	pickups_change_zoom(state);
-	puts("Deactivating pickups");
+		//puts("Deactivating pickups");
 }
 
 void			pickups_change_zoom(t_state *state)
@@ -73,7 +73,7 @@ void 			pickups_left_click(int x, int y)
 	x -= radius / 2;
 	y -= radius / 2;
 	square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, radius, COLOR_HEALTH_PICKUP);
-	puts("Pickups debug: Mock drawing a square directly to buffer!");
+		//puts("Pickups debug: Mock drawing a square directly to buffer!");
 }
 
 void 			pickups_right_click(int x, int y)
