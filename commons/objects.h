@@ -21,9 +21,6 @@
 ** *
 */
 
-# define 				TOKEN_FIELD_LIMIT 16
-# define				TOKEN_KEY_LIMIT 16
-
 struct 					MixChunk;
 
 typedef struct 			s_point
@@ -129,16 +126,5 @@ typedef struct 			s_room
 	t_point 			visual;
 	struct s_room		*next;
 }						t_room;
-
-typedef struct 			s_mapfile
-{
-	char 				*wall_string;
-	char 				*room_string;
-	char 				*portal_string;
-	char 				*enemy_string;
-	char 				*player_string;
-	char 				*join_string;
-	int 				was_filled;
-}						t_mapfile;
 
 #endif

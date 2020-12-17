@@ -6,8 +6,8 @@ void 	debug_model_player(void)
 	t_model	*mdl;
 
 	mdl = get_model();
-	printf("Player spawn: %d %d | rot: %d | tail: %d %d\n",
-		   (int)mdl->player.x, (int)mdl->player.y, mdl->player.rot, mdl->player.tail.x, mdl->player.tail.y);
+	printf("Player x: %d | y: %d | rot: %d | hp cur/max: %d/%d\n",
+		   (int)mdl->player.x, (int)mdl->player.y, mdl->player.rot, mdl->player.hp.cur, mdl->player.hp.max);
 }
 
 void 	debug_model_enemies(void)
@@ -22,9 +22,8 @@ void 	debug_model_enemies(void)
 	enemy = get_model()->enemy_first;
 	while (ec--)
 	{
-		printf("Enemy id: %d | start: %d %d | rot: %d | tail: %d %d | hp: %d | wep id: %d",
-			   enemy->id, enemy->x, enemy->y, enemy->rot,
-			   enemy->tail.x, enemy->tail.y, enemy->hp.max, enemy->wep.type_id);
+		printf("Enemy id: %d | x: %d | y: %d | rot: %d | hp cur/max: %d/%d | wep.type_id: %d",
+			   enemy->id, enemy->x, enemy->y, enemy->rot, enemy->hp.cur, enemy->hp.max, enemy->wep.type_id);
 		if (enemy->next == NULL)
 			printf(" | next: NULL\n");
 		else
@@ -37,9 +36,8 @@ void 	debug_model_enemies(void)
 	else
 	{
 		enemy = get_model()->enemies;
-		printf("Enemy id: %d | start: %d %d | rot: %d | tail: %d %d | hp: %d | wep id: %d",
-			   enemy->id, enemy->x, enemy->y, enemy->rot,
-			   enemy->tail.x, enemy->tail.y, enemy->hp.max, enemy->wep.type_id);
+		printf("Enemy id: %d | x: %d | y: %d | rot: %d | hp cur/max: %d/%d | wep.type_id: %d",
+			   enemy->id, enemy->x, enemy->y, enemy->rot, enemy->hp.cur, enemy->hp.max, enemy->wep.type_id);
 		if (enemy->next == NULL)
 			printf(" | next: NULL\n");
 		else
@@ -86,34 +84,34 @@ void 	debug_model_walls(void)
 
 void	debug_model_rooms(void)
 {
-	t_room	*room_first;
+	t_room	*rooms;
 	int		rc;
 
 	if (get_model()->room_count != 0)
 		rc = get_model()->room_count;
-	room_first = get_model()->room_first;
+	rooms = get_model()->room_first;
 	puts("Outputting data for model's rooms:");
-	output_rooms(rc, room_first);
+	while (rc--)
+	{
+		printf("Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
+			   rooms->id, rooms->first_wall_id, rooms->wall_count, rooms->floor_height, rooms->roof_height);
+		rooms = rooms->next;
+	}
 }
 
-void    output_walls(int wall_count, t_wall *walls)
+void	debug_model_portals(void)
 {
-    printf("Outputting data to console for %d walls\n", wall_count);
-    while (wall_count--)
-    {
-        printf("Wall id: %d | start: %d %d | end: %d %d\n",
-               walls->id, walls->start.x, walls->start.y, walls->end.x, walls->end.y);
-        walls = walls->next;
-    }
-}
+	t_wall	*portals;
+	int		pc;
 
-void    output_rooms(int room_count, t_room *rooms)
-{
-    printf("Outputting data to console for %d rooms\n", room_count);
-    while (room_count--)
-    {
-        printf("Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
-                rooms->id, rooms->first_wall_id, rooms->wall_count, rooms->floor_height, rooms->roof_height);
-        rooms = rooms->next;
-    }
+	if (get_model()->portal_count != 0)
+		pc = get_model()->portal_count;
+	portals = get_model()->portal_first;
+	puts("Outputting data for model's portals:");
+	while (pc--)
+	{
+		printf("Portal id: %d | start: %d %d | end: %d %d\n",
+			   portals->id, portals->start.x, portals->start.y, portals->end.x, portals->end.y);
+		portals = portals->next;
+	}
 }

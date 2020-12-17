@@ -56,68 +56,6 @@ void 	destroy_mapfile(t_mapfile *map)
 	//map_data_initialized = 0;
 }
 
-void	update_player_string(t_model *mdl, t_mapfile *map)
-{
-		map->join_string = ft_strnew(255);
-		sprintf(map->join_string, "Player spawn: %d %d | rot: %d | tail: %d %d\n",
-				(int)mdl->player.x, (int)mdl->player.y, mdl->player.rot, mdl->player.tail.x, mdl->player.tail.y);
-		if (map->player_string)
-			free(map->player_string);
-		map->player_string = ft_strnew(1);
-		map->player_string = ft_strjoin(map->player_string, map->join_string);
-		free(map->join_string);
-		map->join_string = NULL;
-}
-
-void	add_enemy_to_string(t_enemy *enemy, t_mapfile *map)
-{
-		map->join_string = ft_strnew(255);
-		sprintf(map->join_string, "Enemy id: %d | start: %d %d | rot: %d | tail: %d %d | hp: %d | wep id: %d\n",
-				enemy->id, enemy->x, enemy->y, enemy->rot,
-				enemy->tail.x, enemy->tail.y, enemy->hp.max, enemy->wep.type_id);
-		if (!map->enemy_string)
-			map->enemy_string = ft_strnew(1);
-		map->enemy_string = ft_strjoin(map->enemy_string, map->join_string);
-		free(map->join_string);
-		map->join_string = NULL;
-}
-
-void	add_wall_to_string(t_wall *wall, t_mapfile *map)
-{
-	map->join_string = ft_strnew(255);
-	sprintf(map->join_string, "Wall id: %d | start: %d %d | end: %d %d\n",
-			wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
-	if (!map->wall_string)
-		map->wall_string = ft_strnew(1);
-	map->wall_string = ft_strjoin(map->wall_string, map->join_string);
-	free(map->join_string);
-	map->join_string = NULL;
-}
-
-void 	add_portal_to_string(t_wall *portal, t_mapfile *map)
-{
-	map->join_string = ft_strnew(255);
-	sprintf(map->join_string, "Portal id: %d | start: %d %d | end: %d %d\n",
-			portal->id, portal->start.x, portal->start.y, portal->end.x, portal->end.y);
-	if (!map->portal_string)
-		map->portal_string = ft_strnew(1);
-	map->portal_string = ft_strjoin(map->portal_string, map->join_string);
-	free(map->join_string);
-	map->join_string = NULL;
-}
-
-void	add_room_to_string(t_room *room, t_mapfile *map)
-{
-	map->join_string = ft_strnew(255);
-	sprintf(map->join_string, "Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
-			room->id, room->first_wall_id, room->wall_count, room->floor_height, room->roof_height);
-	if (!map->room_string)
-		map->room_string = ft_strnew(1);
-	map->room_string = ft_strjoin(map->room_string, map->join_string);
-	free(map->join_string);
-	map->join_string = NULL;
-}
-
 int		write_mapfile(char *map_path, t_mapfile *map)
 {
 	t_model		*mdl;

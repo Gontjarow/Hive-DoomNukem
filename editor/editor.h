@@ -24,6 +24,7 @@ typedef struct          s_model t_model;
 typedef struct          s_state t_state;
 typedef struct          s_enemy t_enemy;
 typedef struct 			s_wall t_wall;
+typedef struct			s_mapfile t_mapfile;
 typedef struct 			SDL_Surface SDL_Surface;
 
 typedef void            (*gui_event)(t_state *state);

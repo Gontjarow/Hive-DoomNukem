@@ -216,6 +216,33 @@ typedef struct 			s_line
 	struct s_doom		*doom;
 }						t_line;
 
+# define 				TOKEN_FIELD_LIMIT 16
+# define				TOKEN_KEY_LIMIT 16
+
+typedef struct 			s_mapfile
+{
+	char 				*wall_string;
+	char 				*room_string;
+	char 				*portal_string;
+	char 				*enemy_string;
+	char 				*player_string;
+	char 				*join_string;
+	int 				was_filled;
+}						t_mapfile;
+
+typedef void		(*map_func)(const int *fields, t_model *mdl);
+
+typedef struct		s_token
+{
+	int 			expected;
+	char 			sur[2];
+	char 			equ;
+	char 			sep;
+	char 			**keys;
+	int 			*result_ptr;
+	map_func		map_function;
+}					t_token;
+
 /*
 ** *
 ** Keys
@@ -280,18 +307,7 @@ enum			e_key
 ** *
 */
 
-int				window_close(t_doom *p);
-int				keyboard_press(int key, t_doom *p);
-int				keyboard_release(int key, t_doom *p);
-int				movement(t_doom *p);
-int				mouse_key(int key, int x, int y, t_doom *p);
-int				mouse_move(int x, int y, t_doom *p);
-
 void			ft_die(const char *error_message);
-
-t_image			ft_new_image(int *mlx, int width, int height);
-t_image			ft_new_xpm_image(int *mlx, char *filename);
-
 void 			load_alphabet(t_menu *menu);
 void	 		destroy_alphabet(t_menu *menu);
 void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
@@ -314,21 +330,6 @@ void			game_mouse_motion(t_doom *doom);
 void 			game_mouse_down(t_doom *doom);
 void			game_key_down(t_doom *doom);
 
-void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
-
-/* DEPRECEATED
-void			add_wall_to_string(t_editor *edt, t_wall *wall);
-void			expand_wall_string(t_editor *edt);
-void			add_room_to_string(t_editor *edt, t_room *room);
-void 			expand_room_string(t_editor *edt);
-void			add_portal_to_string(t_editor *edt, t_wall *portal);
-void			expand_portal_string(t_editor *edt);
-void			expand_enemy_string(t_editor *edt);
-void			update_player_string(t_editor *edt);
-int				write_mapfile(t_editor *le);
-int				overwrite_mapfile(t_editor *edt);
-*/
-
 void	 		destroy_mapdata(t_doom *doom);
 int 			load_model(t_doom *doom);
 void	 		destroy_model(t_doom *doom);
@@ -339,13 +340,24 @@ void	 		destroy_model(t_doom *doom);
 
 t_mapfile		*init_mapfile(void);
 void			destroy_mapfile(t_mapfile *map);
+int				write_mapfile(char *map_path, t_mapfile *map);
+int				overwrite_mapfile(char *map_path, t_mapfile *map);
+
+/*
+ * from map_encode.c
+ * */
+
 void			update_player_string(t_model *mdl, t_mapfile *map);
 void			add_enemy_to_string(t_enemy *enemy, t_mapfile *map);
 void			add_wall_to_string(t_wall *wall, t_mapfile *map);
 void			add_portal_to_string(t_wall *portal, t_mapfile *map);
 void			add_room_to_string(t_room *room, t_mapfile *map);
-int				write_mapfile(char *map_path, t_mapfile *map);
-int				overwrite_mapfile(char *map_path, t_mapfile *map);
+
+/*
+ * from map_decode.c
+ */
+
+void 				map_to_model(t_mapfile *map, t_model *mdl);
 
 /*
  * from texture.c
@@ -381,14 +393,13 @@ void 			debug_model_player(void);
 void		 	debug_model_enemies(void);
 void 			debug_model_walls(void);
 void			debug_model_rooms(void);
-void            output_walls(int wall_count, t_wall *walls);
-void            output_rooms(int room_count, t_room *rooms);
+void			debug_model_portals(void);
 
 /*
  * from singleton_links.c
  * */
 
-t_doom          *set_singleton_doom_pointer(void *doom);
+t_doom			*set_doom_singleton(t_doom *doom);
 t_doom          *doom_ptr(void);
 t_model         *get_model(void);
 #endif

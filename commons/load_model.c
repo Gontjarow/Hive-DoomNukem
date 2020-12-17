@@ -107,7 +107,7 @@ static void expand_mdl_polygon_maps(t_model *mdl)
     }
     //printf("Goodbye from expand_mdl_polygon_maps\n");
 }
-
+/* DEPRECEATED ALL SCAN_X FUNCTIONS
 static void scan_rooms(t_doom *doom, t_model *mdl)
 {
 	int 	safety;
@@ -310,6 +310,7 @@ static void scan_enemies(t_doom *doom, t_model *mdl)
 	free(sub);
 }
 
+DEPRECEATED PARSE_MAPFILE
 static void parse_mapfile(t_doom *doom, t_model *mdl)
 {
 	// ULTRA WARNING!!!
@@ -351,6 +352,7 @@ static void parse_mapfile(t_doom *doom, t_model *mdl)
 	if (tokens != 5)
 		ft_die("Fatal error: parse_mapfile player tokens from mapfile did not equal to 5.");
 }
+*/
 
 static void init_mapdata(t_doom *doom)
 {
@@ -394,6 +396,87 @@ void 		destroy_mapdata(t_doom *doom)
 	doom->map_data_initialized = 0;
 }
 
+// 11th Common Spec Func
+
+static int	stringify_mapfile(t_doom *doom, char *map_path)
+{
+	int		opened;
+	char	*line;
+	char 	*join;
+
+	init_mapdata(doom);
+	opened = open(map_path, O_RDONLY);
+	line = NULL;
+	if (opened > 1)
+	{
+		while (get_next_line(opened, &line))
+		{
+			if (ft_strlen(line) < 3) {
+				free(line);
+				continue;
+			}
+			if (ft_strnstr(line, "[Wall]", 6))
+			{
+				if (doom->map->wall_string == NULL)
+					doom->map->wall_string = ft_strnew(1);
+				join = doom->map->wall_string;
+				doom->map->wall_string = ft_strjoin(doom->map->wall_string, line);
+				free(join);
+				join = doom->map->wall_string;
+				doom->map->wall_string = ft_strjoin(doom->map->wall_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Room]", 6)) {
+				if (doom->map->room_string == NULL)
+					doom->map->room_string = ft_strnew(1);
+				join = doom->map->room_string;
+				doom->map->room_string = ft_strjoin(doom->map->room_string, line);
+				free(join);
+				join = doom->map->room_string;
+				doom->map->room_string = ft_strjoin(doom->map->room_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Portal]", 8)) {
+				if (doom->map->portal_string == NULL)
+					doom->map->portal_string = ft_strnew(1);
+				join = doom->map->portal_string;
+				doom->map->portal_string = ft_strjoin(doom->map->portal_string, line);
+				free(join);
+				join = doom->map->portal_string;
+				doom->map->portal_string = ft_strjoin(doom->map->portal_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Enemy]", 7)) {
+				if (doom->map->enemy_string == NULL)
+					doom->map->enemy_string = ft_strnew(1);
+				join = doom->map->enemy_string;
+				doom->map->enemy_string = ft_strjoin(doom->map->enemy_string, line);
+				free(join);
+				join = doom->map->enemy_string;
+				doom->map->enemy_string = ft_strjoin(doom->map->enemy_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Player]", 8)){
+				if (doom->map->player_string == NULL)
+					doom->map->player_string = ft_strnew(1);
+				join = doom->map->player_string;
+				doom->map->player_string = ft_strjoin(doom->map->player_string, line);
+				free(join);
+				join = doom->map->player_string;
+				doom->map->player_string = ft_strjoin(doom->map->player_string, "\n");
+				free(join);
+			}
+			free(line);
+		}
+		close(opened);
+		return (1);
+	}
+	//ft_putendl("Warning: read_mapfile failed to open supplied map path:");
+	//ft_putendl(map_path);
+	return (0);
+}
+
+/* DEPRECEATED
 static int read_mapfile(t_doom *doom, char *map_path)
 {
 	int		opened;
@@ -471,6 +554,7 @@ static int read_mapfile(t_doom *doom, char *map_path)
 		//ft_putendl(map_path);
 	return (0);
 }
+*/
 
 static t_wall   *mdl_wall_by_id(t_model *mdl, int id)
 {
@@ -489,6 +573,7 @@ static t_wall   *mdl_wall_by_id(t_model *mdl, int id)
     return (NULL);
 }
 
+/* DEPRECEATED
 static void		assign_enemy_hps(t_model *mdl)
 {
 	t_enemy *enemy;
@@ -503,7 +588,7 @@ static void		assign_enemy_hps(t_model *mdl)
 		enemy->hp.cur = enemy->hp.max;
 		enemy = enemy->next;
 	}
-}
+} */
 
 static void		assign_enemy_cd(t_model *mdl)
 {
@@ -547,17 +632,15 @@ int			load_model(t_doom *doom)
 			//ft_putendl("Skipped load_model, no map was supplied");
 			return (1);
 		}
-		if (!read_mapfile(doom, doom->edt->map_path))
+		if (!stringify_mapfile(doom, doom->edt->map_path))
 		{
 				//ft_putendl("Warning: Failed to read mapfile, no model was loaded.");
 			return (1);
 		}
 		ft_putstr("Loaded mapfile data from file: ");
 		ft_putendl(doom->edt->map_path);
-		ft_putendl("START - DEBUG - MAP_TO_MODEL:\n\n");
 		map_to_model(doom->map, doom->mdl);
-		ft_putendl("STOP - DEBUG - MAP_TO_MODEL");
-		parse_mapfile(doom, doom->mdl);
+		//parse_mapfile(doom, doom->mdl); // DEPRECEATED
 		link_mdl_rooms(doom->mdl);
 		expand_mdl_polygon_maps(doom->mdl);
 	}
@@ -565,15 +648,16 @@ int			load_model(t_doom *doom)
 	{
 		if (!doom->game->map_supplied)
 			return (0);
-		if (!read_mapfile(doom, doom->game->map_path))
+		if (!stringify_mapfile(doom, doom->game->map_path))
 			return (0);
 		ft_putstr("Loaded mapfile data from file: ");
 		ft_putendl(doom->game->map_path);
-		parse_mapfile(doom, doom->mdl);
+		map_to_model(doom->map, doom->mdl);
+		//parse_mapfile(doom, doom->mdl); // DEPRECEATED
 		// Linking the loaded rooms data to objects to enable iteration code
 		link_mdl_rooms(doom->mdl);
-		// Assign the enemy current HPs, deriving them from their max hps
-		assign_enemy_hps(doom->mdl);
+		// Assign the enemy current HPs, deriving them from their max hps // DEPRECEATED
+		// assign_enemy_hps(doom->mdl);
 		// Initialize the enemy weapon cooldown for shooting
 		assign_enemy_cd(doom->mdl);
 		// Create polymap buffer for rooms for instant tracking of room_id where player is
