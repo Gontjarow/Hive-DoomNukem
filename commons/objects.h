@@ -21,6 +21,9 @@
 ** *
 */
 
+# define 				TOKEN_FIELD_LIMIT 16
+# define				TOKEN_KEY_LIMIT 16
+
 struct 					MixChunk;
 
 typedef struct 			s_point

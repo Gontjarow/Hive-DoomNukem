@@ -554,6 +554,9 @@ int			load_model(t_doom *doom)
 		}
 		ft_putstr("Loaded mapfile data from file: ");
 		ft_putendl(doom->edt->map_path);
+		ft_putendl("START - DEBUG - MAP_TO_MODEL:\n\n");
+		map_to_model(doom->map, doom->mdl);
+		ft_putendl("STOP - DEBUG - MAP_TO_MODEL");
 		parse_mapfile(doom, doom->mdl);
 		link_mdl_rooms(doom->mdl);
 		expand_mdl_polygon_maps(doom->mdl);
