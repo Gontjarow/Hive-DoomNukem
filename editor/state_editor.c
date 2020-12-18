@@ -7,8 +7,9 @@
  * can implement a periodic or event based check wheter overwriting happened
  * by invoking 'trigger_protection(1)'. If yes, this protection ATM (stc)
  * calls a clean slate for editor back buffer by a wipe and a walls redraw  */
-// TODO: Utilize trigger_protection to detect illegal wall draws or room draws
-//  (creation of intersection (overlapping) walls should not be possible
+// TODO CONSIDER USING PROTECTION TO CHECK FOR LINE INTERSECTIONS
+// 		POSSIBLE YAGNI, WOULD NOT BE RELIABLE, NEEDS MATHEMATICAL CHECK INSTEAD
+//		INSTEAD, CONSIDER CHECKING CONFLICTS IN EXPAND_POLYMAP, WITH A TRESHHOLD
 
 void 				trigger_protection(int clear)
 {
