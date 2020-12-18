@@ -9,77 +9,80 @@
 // index == -1   : return last element
 t_global_vert	*list2vert(t_global_vert *list, int index)
 {
+	t_global_vert *iter = list;
 	if (index > 0)
 	{
 		while (index-- > 0)
 		{
-			if (list->next != NULL)
-				list = list->next;
-			else return (list);
+			if (iter->next != NULL)
+				iter = iter->next;
+			else return (iter);
 		}
 	}
 	else if (index < 0)
 	{
-		while (list->next != NULL)
-			list = list->next;
+		while (iter->next != NULL)
+			iter = iter->next;
 		while (++index < 0)
 		{
-			if (list->prev != NULL)
-				list = list->prev;
-			else return (list);
+			if (iter->prev != NULL)
+				iter = iter->prev;
+			else return (iter);
 		}
 	}
-	return (list);
+	return (iter);
 }
 
 t_face_vert		*list2fvert(t_face_vert *list, int index)
 {
+	t_face_vert *iter = list;
 	if (index > 0)
 	{
 		while (index-- > 0)
 		{
-			if (list->next != NULL)
-				list = list->next;
-			else return (list);
+			if (iter->next != NULL)
+				iter = iter->next;
+			else return (iter);
 		}
 	}
 	else if (index < 0)
 	{
-		while (list->next != NULL)
-			list = list->next;
+		while (iter->next != NULL)
+			iter = iter->next;
 		while (++index < 0)
 		{
-			if (list->prev != NULL)
-				list = list->prev;
-			else return (list);
+			if (iter->prev != NULL)
+				iter = iter->prev;
+			else return (iter);
 		}
 	}
-	return (list);
+	return (iter);
 }
 
-t_face_vert		*list2face(t_actual_face *list, int index)
+t_actual_face	*list2face(t_actual_face *list, int index)
 {
+	t_actual_face *iter = list;
 	if (index > 0)
 	{
 		while (index-- > 0)
 		{
-			if (list->next != NULL)
-				list = list->next;
-			else return (list);
+			if (iter->next != NULL)
+				iter = iter->next;
+			else return (iter);
 		}
 	}
 	else if (index < 0)
 	{
-		while (list->next != NULL)
-			list = list->next;
+		while (iter->next != NULL)
+			iter = iter->next;
 		while (++index < 0)
 		{
-			if (list->prev != NULL)
-				list = list->prev;
-			else return (list);
+			if (iter->prev != NULL)
+				iter = iter->prev;
+			else return (iter);
 		}
 	}
-	return (list);
+	return (iter);
 }
 
 // Appends to, or creates a new list, then returns head.

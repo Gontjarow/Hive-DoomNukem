@@ -72,17 +72,17 @@ typedef struct	s_wall t_wall;
 
 double			*get_zbuffer();
 
-void			sort_tri(t_face *face);
+void			sort_tri(t_actual_face *face);
 void			swap_xyzw(t_xyzw *a, t_xyzw *b);
-t_xy			bb_min(t_face face);
-t_xy			bb_max(t_face face);
+t_xy			bb_min(t_actual_face *face);
+t_xy			bb_max(t_actual_face *face);
 double			edge(t_xy p, t_xy a, t_xy b);
-int				inside(t_xy p, t_face face);
-t_xyz			bary(t_xy p, t_face face);
+int				inside(t_xy p, t_actual_face *face);
+t_xyz			bary(t_xy p, t_actual_face *face);
 
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
-void			draw_tri(unsigned int *pixel, t_face face, int color);
-void			draw_tri_color(unsigned int *pixel, t_face face);
+void			draw_tri(unsigned int *pixel, t_actual_face *face, int color);
+void			draw_tri_color(unsigned int *pixel, t_actual_face *face);
 
 void			render_frame(t_doom *doom);
 

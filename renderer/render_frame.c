@@ -70,6 +70,52 @@ void render_frame(t_doom *doom)
 		tv1.x, tv1.y, tv1.z, tv1.w,
 		tv2.x, tv2.y, tv2.z, tv2.w,
 		tv3.x, tv3.y, tv3.z, tv3.w);
+
+	int i = 0;
+	while (i < view_obj.f_count)
+	{
+		// t_vert *vo = test.face[i].vert;
+		// t_vert *vt = screen.face[i].vert;
+		t_actual_face *face = list2face(view_obj.face, i);
+		t_vert v0 = face->vert->data->pos;
+		t_vert v1 = face->vert->next->data->pos;
+		t_vert v2 = face->vert->next->next->data->pos;
+
+		// Face-normal (counter-clockwise vertex order)
+		t_xyz normal = vec3_norm(vec4_cross(
+			vec4_sub(v1, v0),
+			vec4_sub(v2, v0)));
+
+		// How much the face aligns with the camera (backface culling)
+		// Note: The face must have the opposite direction as the camera to be seen.
+		// 📷-->   <-|
+		if (-vec3_dot(cam_dir, normal) > 0)
+		{
+			// How much the face aligns with the light
+			// Note: Normal must face in the OPPOSITE direction as the light-source to be lit.
+			// 💡-->   <-|
+			double light = -vec3_dot(cam_dir, normal);
+			// if (light > 0)
+			{
+				// Greyscale brightness; Same value used for R, G, and B
+				int color = 255 * fabs(light);
+				color = color | color << 8 | color << 16;
+
+				draw_tri(doom->game->buff->pixels, face, color);
+
+				// t_face tf = init_face(3, vt[0], vt[1], vt[2]);
+				// draw_tri(doom->game->buff->pixels, tf, color);
+				// draw_tri_color(doom->game->buff->pixels, tf);
+				// free_verts(&tf);
+				// SDL_UpdateWindowSurface(doom->game->win);
+				// SDL_Delay(10);
+			}
+		}
+		++i;
+	}
+
+
+
 	return; // ----> Todo: Continue <----
 
 	/*

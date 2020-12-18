@@ -9,42 +9,42 @@ void		swap_xyzw(t_xyzw *a, t_xyzw *b)
 }
 
 // Height-based vertex sorting, required by draw_tri.
-void		sort_tri(t_face *face)
+void		sort_tri(t_actual_face *face)
 {
-	if (face->vert[1].y < face->vert[0].y)
-		swap_xyzw(&face->vert[0], &face->vert[1]);
-	if (face->vert[2].y < face->vert[1].y)
-		swap_xyzw(&face->vert[1], &face->vert[2]);
-	if (face->vert[1].y < face->vert[0].y)
-		swap_xyzw(&face->vert[0], &face->vert[1]);
-	assert(face->vert[0].y <= face->vert[1].y && face->vert[1].y <= face->vert[2].y);
+	t_vert v0 = list2fvert(face->vert, 0)->data->pos;
+	t_vert v1 = list2fvert(face->vert, 1)->data->pos;
+	t_vert v2 = list2fvert(face->vert, 2)->data->pos;
+	if (v1.y < v0.y) swap_xyzw(&v0, &v1);
+	if (v2.y < v1.y) swap_xyzw(&v1, &v2);
+	if (v1.y < v0.y) swap_xyzw(&v0, &v1);
+	assert(v0.y <= v1.y && v1.y <= v2.y);
 }
 
 double		clamp(double n, double min, double max)
 {
 	assert(min < max);
-	if (n < min)
-		return (min);
-	else if (n > max)
-		return (max);
-	else
-		return (n);
+
+	     if (n < min) return (min);
+	else if (n > max) return (max);
+	else              return (n);
 }
 
 // Raster-space bounding box
-t_xy		bb_min(t_face face)
+t_xy		bb_min(t_actual_face *face)
 {
 	int i;
 	t_vert lowest;
 	t_vert current;
+	t_face_vert *iter = face->vert;
 
-	lowest = face.vert[0];
+	lowest = iter->data->pos;
 	i = 1;
-	while (i < face.verts)
+	while (i < iter->next != NULL)
 	{
-		current = face.vert[i];
+		current = iter->data->pos;
 		if (current.y < lowest.y) lowest.y = current.y;
 		if (current.x < lowest.x) lowest.x = current.x;
+		iter = iter->next;
 		++i;
 	}
 	return vec2(
@@ -53,19 +53,21 @@ t_xy		bb_min(t_face face)
 }
 
 // Raster-space bounding box
-t_xy		bb_max(t_face face)
+t_xy		bb_max(t_actual_face *face)
 {
 	int i;
 	t_vert highest;
 	t_vert current;
+	t_face_vert *iter = face;
 
-	highest = face.vert[0];
+	highest = iter->data->pos;
 	i = 1;
-	while (i < face.verts)
+	while (i < iter->next != NULL)
 	{
-		current = face.vert[i];
+		current = iter->data->pos;
 		if (current.y > highest.y) highest.y = current.y;
 		if (current.x > highest.x) highest.x = current.x;
+		iter = iter->next;
 		++i;
 	}
 	return vec2(
@@ -82,22 +84,22 @@ double edge(t_xy p, t_xy a, t_xy b)
 // Note: Triangles are assumed to be in CCW order as per Wavefront.
 // When this is the case, the INSIDE of the triangle
 // is on the left side of each edge. (negative space)
-int inside(t_xy p, t_face face)
+int inside(t_xy p, t_actual_face *face)
 {
-	t_xy v0 = vec42(face.vert[0]);
-	t_xy v1 = vec42(face.vert[1]);
-	t_xy v2 = vec42(face.vert[2]);
+	t_xy v0 = vec42(list2fvert(face->vert, 0)->data->pos);
+	t_xy v1 = vec42(list2fvert(face->vert, 1)->data->pos);
+	t_xy v2 = vec42(list2fvert(face->vert, 2)->data->pos);
 
 	return (edge(p, v0, v1) <= 0
 		&& (edge(p, v1, v2) <= 0)
 		&& (edge(p, v2, v0) <= 0));
 }
 
-t_xyz	bary(t_xy p, t_face face)
+t_xyz	bary(t_xy p, t_actual_face *face)
 {
-	t_xy v0 = vec42(face.vert[0]);
-	t_xy v1 = vec42(face.vert[1]);
-	t_xy v2 = vec42(face.vert[2]);
+	t_xy v0 = vec42(list2fvert(face->vert, 0)->data->pos);
+	t_xy v1 = vec42(list2fvert(face->vert, 1)->data->pos);
+	t_xy v2 = vec42(list2fvert(face->vert, 2)->data->pos);
 	t_xyz weight;
 
 	weight.x = edge(p, v0, v1);

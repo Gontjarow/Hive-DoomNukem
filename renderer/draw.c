@@ -49,16 +49,16 @@ int			zbuffer_ok(int index, double depth)
 	return (0);
 }
 
-double		face_depth(t_xyz weight, t_face face)
+double		face_depth(t_xyz weight, t_actual_face *face)
 {
-	return (weight.x * face.vert[0].z
-		+ weight.y * face.vert[1].z
-		+ weight.z * face.vert[2].z);
+	return (weight.x * list2fvert(face->vert, 0)->data->pos.z
+		  + weight.y * list2fvert(face->vert, 1)->data->pos.z
+		  + weight.z * list2fvert(face->vert, 2)->data->pos.z);
 }
 
 // Fixed, exactly 3-vert triangle.
 // Note: wavefront.obj triangles have verts in counter-clockwise order.
-void		draw_tri(unsigned int *pixel, t_face face, int color)
+void		draw_tri(unsigned int *pixel, t_actual_face *face, int color)
 {
 	t_xy min = bb_min(face);
 	t_xy max = bb_max(face);
@@ -79,11 +79,11 @@ void		draw_tri(unsigned int *pixel, t_face face, int color)
 	}
 }
 
-void		draw_tri_color(unsigned int *pixel, t_face face)
+void		draw_tri_color(unsigned int *pixel, t_actual_face *face)
 {
-	t_xy v0 = vec42(face.vert[0]);
-	t_xy v1 = vec42(face.vert[1]);
-	t_xy v2 = vec42(face.vert[2]);
+	t_xy v0 = vec42(list2fvert(face->vert, 0)->data->pos);
+	t_xy v1 = vec42(list2fvert(face->vert, 1)->data->pos);
+	t_xy v2 = vec42(list2fvert(face->vert, 2)->data->pos);
 	t_xy min = bb_min(face);
 	t_xy max = bb_max(face);
 

@@ -97,7 +97,7 @@ t_actual_face	*new_face(t_global_vert **vlist, t_vert a, t_vert b, t_vert c);
 
 t_global_vert	*list2vert(t_global_vert *list, int index);
 t_face_vert		*list2fvert(t_face_vert *list, int index);
-t_face_vert		*list2face(t_actual_face *list, int index);
+t_actual_face	*list2face(t_actual_face *list, int index);
 
 t_global_vert	*global_vert_add(t_global_vert **head, t_global_vert *node);
 t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail);
