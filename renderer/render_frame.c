@@ -45,7 +45,7 @@ void render_frame(t_doom *doom)
 	int			px = doom->mdl->player.x;
 	int			py = doom->mdl->player.y;
 	t_xyz		pos = vec3_mul(vec3(px, 0, py), WORLD_SCALE_FACTOR);
-				pos.y = -25;
+				pos.y = doom->mdl->room_first->floor_height;
 	t_xyz		cam_dir = vec3_norm(vec3_sub(pos, vec3(0, 0, 0)));
 
 	t_matrix	world = translate_m(0, 0, 0);
@@ -53,18 +53,23 @@ void render_frame(t_doom *doom)
 	t_matrix	modelview = lookat_m(pos, vec3(0, 0, 0), vec3(0,1,0));
 	t_matrix	projection = project_pure_m();
 	t_matrix	window = window_m(0.1, 1000);
-	modelview = multiply_m(projection, modelview);
+	// modelview = multiply_m(projection, modelview);
 
 	t_obj		world_obj = doom->game->world_obj;
 	t_obj		view_obj = obj_transform(modelview, world_obj);
 	t_obj		clipped_obj = obj_clip(view_obj);
-	printf("frame (%i %i)->(%f %f %f) \n", px, py, pos.x, pos.y, pos.z);
 	t_vert		tv1 = view_obj.face->vert->data->pos;
 	t_vert		tv2 = view_obj.face->vert->next->data->pos;
 	t_vert		tv3 = view_obj.face->vert->next->next->data->pos;
-	printf("      (%f %f %f %f) \n", tv1.x, tv1.y, tv1.z, tv1.w);
-	printf("      (%f %f %f %f) \n", tv2.x, tv2.y, tv2.z, tv2.w);
-	printf("      (%f %f %f %f) \n", tv3.x, tv3.y, tv3.z, tv3.w);
+	printf("\n");
+	printf(	"frame (%i %i)->(%f %f %f) \n"
+			"      (X:%f Y:%f Z:%f (W:%f)) \n"
+			"      (X:%f Y:%f Z:%f (W:%f)) \n"
+			"      (X:%f Y:%f Z:%f (W:%f)) \n",
+		px, py,	pos.x, pos.y, pos.z,
+		tv1.x, tv1.y, tv1.z, tv1.w,
+		tv2.x, tv2.y, tv2.z, tv2.w,
+		tv3.x, tv3.y, tv3.z, tv3.w);
 	return; // ----> Todo: Continue <----
 
 	/*

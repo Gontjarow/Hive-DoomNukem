@@ -83,12 +83,13 @@ int				get_outcode(t_vert v)
 	int outcode;
 
 	outcode = 0;
-	outcode |= OUTCODE_LEFT  * (v.x <= -v.w);
-	outcode |= OUTCODE_RIGHT * (v.x >=  v.w);
-	outcode |= OUTCODE_UP    * (v.y <= -v.w);
-	outcode |= OUTCODE_DOWN  * (v.y >=  v.w);
+	outcode |= OUTCODE_LEFT  * (v.x >= -v.w);
+	outcode |= OUTCODE_RIGHT * (v.x <=  v.w);
+	outcode |= OUTCODE_UP    * (v.y >= -v.w);
+	outcode |= OUTCODE_DOWN  * (v.y <=  v.w);
 	outcode |= OUTCODE_NEAR  * (v.z <=  v.w); // note: ensure correctness
 	outcode |= OUTCODE_FAR   * (v.z >= -v.w);
+	return (outcode);
 }
 
 int				get_clip_type(t_actual_face *face)
@@ -107,7 +108,8 @@ int				get_clip_type(t_actual_face *face)
 		return (CLIP_TRIVIAL_ACCEPT);
 	}
 	// all outcodes (A&B, B&C, C&A) share a region
-	if (!!(a & b) + !!(b & c) + !!(c & a) == 3)
+	// if (!!(a & b) + !!(b & c) + !!(c & a) == 3)
+	if (a & b & c)
 	{
 		return (CLIP_TRIVIAL_REJECT);
 	}
@@ -164,7 +166,7 @@ t_obj			obj_clip(t_obj obj)
 	{
 		if ((clip_type = get_clip_type(obj.face)) != CLIP_TRIVIAL_REJECT)
 		{
-			face_list_add(out.face, clip_face(obj.face, &out.vert, clip_type));
+			face_list_add(&out.face, clip_face(obj.face, &out.vert, clip_type));
 			out.f_count += 1;
 			out.v_count += 3;
 		}

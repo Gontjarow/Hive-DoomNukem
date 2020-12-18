@@ -99,9 +99,9 @@ t_global_vert	*list2vert(t_global_vert *list, int index);
 t_face_vert		*list2fvert(t_face_vert *list, int index);
 t_face_vert		*list2face(t_actual_face *list, int index);
 
-void			global_vert_add(t_global_vert **head, t_global_vert *node);
+t_global_vert	*global_vert_add(t_global_vert **head, t_global_vert *node);
 t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail);
-t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail);
+t_actual_face	*face_list_add(t_actual_face **head, t_actual_face *tail);
 
 t_actual_face	*make_wall(t_global_vert **vlist, t_wall *a, t_wall *b, int floor, int roof);
 

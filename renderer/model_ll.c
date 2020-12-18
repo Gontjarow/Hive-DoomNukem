@@ -84,7 +84,7 @@ t_face_vert		*list2face(t_actual_face *list, int index)
 
 // Appends to, or creates a new list, then returns head.
 // Note: Might want to avoid these when appending lots of things.
-void			global_vert_add(t_global_vert **vlist, t_global_vert *node)
+t_global_vert	*global_vert_add(t_global_vert **vlist, t_global_vert *tail)
 {
 	t_global_vert	*last;
 
@@ -93,14 +93,16 @@ void			global_vert_add(t_global_vert **vlist, t_global_vert *node)
 		if ((*vlist) != NULL)
 		{
 			last = list2vert(*vlist, LAST);
-			last->next = node;
-			node->prev = last;
+			last->next = tail;
+			tail->prev = last;
 		}
 		else
 		{
-			*vlist = node;
+			*vlist = tail;
 		}
+		return (*vlist);
 	}
+	return (NULL);
 }
 
 t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail)
@@ -120,23 +122,25 @@ t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail)
 	return (head);
 }
 
-// Todo: Make this **head
-t_actual_face	*face_list_add(t_actual_face *head, t_actual_face *tail)
+t_actual_face	*face_list_add(t_actual_face **head, t_actual_face *tail)
 {
 	t_actual_face	*last;
 
 	if (head != NULL)
 	{
-		last = list2face(head, LAST);
-		last->next = tail;
-		tail->prev = last;
+		if ((*head) != NULL)
+		{
+			last = list2face(*head, LAST);
+			last->next = tail;
+			tail->prev = last;
+		}
+		else
+		{
+			*head = tail;
+		}
+		return (*head);
 	}
-	else
-	{
-		head = tail;
-	}
-
-	return (head);
+	return (NULL);
 }
 
 // Allocates new t_global_vert node (with actual vert data) and appends it to the a global list.
@@ -200,7 +204,7 @@ t_actual_face	*make_wall(t_global_vert **vlist, t_wall *a, t_wall *b, int floor,
 	f[0] = new_face(vlist, v[0], v[1], v[2]);
 	f[1] = new_face(vlist, v[1], v[3], v[2]);
 
-	return (face_list_add(f[0], f[1]));
+	return (face_list_add(&f[0], f[1]));
 }
 
 t_obj			mdl_to_usable_data(t_doom *doom)
@@ -246,7 +250,7 @@ t_obj			mdl_to_usable_data(t_doom *doom)
 				single_wall = make_wall(&room_object.vert, wall, room->first_wall, floor_height, roof_height);
 
 			// join those triangles to some bigger list
-			room_object.face = face_list_add(room_object.face, single_wall);
+			face_list_add(&room_object.face, single_wall);
 			room_object.v_count += 6;
 			room_object.f_count += 2;
 			wall = wall->next;
@@ -320,7 +324,7 @@ t_obj			obj_transform(t_matrix m, t_obj obj)
 
 	while (obj.face != NULL)
 	{
-		out.face = face_list_add(out.face, face_transform(&out.vert, m, obj.face));
+		face_list_add(&out.face, face_transform(&out.vert, m, obj.face));
 		obj.face = obj.face->next;
 	}
 
