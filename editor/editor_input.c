@@ -34,6 +34,7 @@ void			edt_keystate_input(t_doom *doom)
 	static int	lock_r = 0;
 	static int	lock_z = 0;
 	static int	lock_x = 0;
+	static int	lock_p = 0;
 
 	handle_keyboard_scrolling(doom);
 
@@ -76,6 +77,14 @@ void			edt_keystate_input(t_doom *doom)
 	{
 		edt_outward_zoom();
 		lock_x = 1;
+	}
+
+	if (lock_p && !doom->keystates[SDL_SCANCODE_P])
+		lock_p = 0;
+	else if (doom->keystates[SDL_SCANCODE_P] && !lock_p)
+	{
+		debug_model_pickups();
+		lock_p = 1;
 	}
 }
 

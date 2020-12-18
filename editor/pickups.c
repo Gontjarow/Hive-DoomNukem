@@ -1,32 +1,71 @@
 #include "doom-nukem.h"
 
-static void		square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color)
+//		TODO FOR PICKUPS.C
+//			ADD HEALTH PICKUP / GREEN RECT / PLUS SIGN INSIDE
+//				MISSING PLUS SIGN / MISSING PERSISTENCE
+//				MISSING ENCODING FROM MODEL TO MAP
+//				MISSING DECODING FROM MAP TO MODEL
+//			AMMO PICKUP / YELLOW RECT / NUMBER INSIDE
+//			GUN PICKUP / GREEN RECT / NUMBER INSIDE
+
+void			pickups_plant_health(int x, int y)
 {
-	unsigned int *pixels;
-	int address;
-	int x;
-	int y;
+	int			radius;
+	t_model		*mdl;
+	t_pickup	*new_pickup;
 
-	pixels = buff->pixels;
+	radius = 12 / get_state()->zoom_factor;
+	x -= radius / 2;
+	y -= radius / 2;
+	square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, radius, COLOR_HEALTH_PICKUP);
+		//puts("Pickups debug: Mock drawing a square directly to buffer!");
+	mdl = get_model();
+	mdl->pickups->id = mdl->pickup_count;
+	mdl->pickups->flavor = PICKUP_HEALTH;
+	mdl->pickups->weapon_type_id = 0;
+	mdl->pickups->loc.x = x;
+	mdl->pickups->loc.y = y;
+	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
+	if (!new_pickup)
+		ft_die("Fatal error: Could not malloc new_pickup at pickups_plant_health!");
+	mdl->pickups->next = new_pickup;
+	mdl->pickup_count++;
+	if (mdl->pickup_count == 1)
+		mdl->pickup_first = mdl->pickups;
+		//printf("Pickup id: %d | loc.x: %d | loc.y: %d | flavor: %d | weapon_type_id: %d\n",
+		//mdl->pickups->id, mdl->pickups->loc.x, mdl->pickups->loc.y, mdl->pickups->flavor, mdl->pickups->weapon_type_id);
+	mdl->pickups = new_pickup;
+		//debug_model_pickups();
+}
 
-	y = 0;
-	while (y <= radius)
+void 			pickups_swap_type(void)
+{
+
+}
+
+t_logic 		*pickups_logic(void)
+{
+	static		t_logic *logic = NULL;
+
+	if (!logic)
 	{
-		x = 0;
-		while (x <= radius)
-		{
-			if (y == 0 || y == radius || x == 0 || x == radius)
-			{
-				address = xy.x + x + (xy.y + y) * buff->w;
-				if (address >= 0 && address < buff->h * buff->w)
-					pixels[address] = color;
-				else
-				ft_putendl("Warning: square_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
-			}
-			x++;
-		}
-		y++;
+		logic = (t_logic*)malloc(sizeof(t_logic));
+		if (!logic)
+			ft_die("Fatal error: Could not malloc logic for planting at planting_logic");
+		logic->plant_type = PICKUP_HEALTH;
+		logic->plant = pickups_plant;
+		logic->swap_type = pickups_swap_type;
+		logic->sweep_counter = 0;
+		logic->sweep[0].x = 0;
+		logic->sweep[0].y = 0;
 	}
+	return (logic);
+}
+
+void			pickups_plant(int x, int y)
+{
+	if (pickups_logic()->plant_type == PICKUP_HEALTH)
+		pickups_plant_health(x, y);
 }
 
 void			pickups_activate(t_state *state)
@@ -67,13 +106,7 @@ void 			pickups_mouse_motion(int x, int y)
 
 void 			pickups_left_click(int x, int y)
 {
-	int radius;
-
-	radius = 12 / get_state()->zoom_factor;
-	x -= radius / 2;
-	y -= radius / 2;
-	square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, radius, COLOR_HEALTH_PICKUP);
-		//puts("Pickups debug: Mock drawing a square directly to buffer!");
+	pickups_logic()->plant(x, y);
 }
 
 void 			pickups_right_click(int x, int y)

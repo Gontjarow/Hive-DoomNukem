@@ -15,6 +15,23 @@
 
 #include "doom-nukem.h"
 
+# define GAME_WIN_WIDTH 1024
+# define GAME_WIN_HEIGHT 512
+# define GAME_MIDWIDTH (GAME_WIN_WIDTH / 2)
+# define GAME_MIDHEIGHT (GAME_WIN_HEIGHT / 2)
+# define GAME_POLYMAP_WIDTH 6400
+# define GAME_POLYMAP_HEIGHT 3600
+
+typedef struct			s_game
+{
+	struct SDL_Window	*win;
+	struct SDL_Surface	*buff;
+	struct s_model		*mdl;
+	struct s_doom		*parent;
+	char 				*map_path;
+	int 				map_supplied;
+}						t_game;
+
 double          deg_to_rad(int deg);
 unsigned int    check_location(t_doom *doom, int x, int y);
 

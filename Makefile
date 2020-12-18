@@ -29,7 +29,7 @@ endif
 
 #	http://nuclear.mutantstargoat.com/articles/make/#improved-automatic-dependency-tracking
 FLAGS		:= -Wall -Wextra -MMD -g
-INCLUDES	:= -I . -I ./renderer -I ./editor -I ./commons
+INCLUDES	:= -I . -I ./renderer -I ./editor -I ./commons -I ./game
 
 FLAGS		+= $(INCLUDES) $(LIBFT) $(SDL_MAIN) $(SDL_IMAGE) $(SDL_MIXER)
 

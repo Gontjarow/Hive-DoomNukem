@@ -127,4 +127,15 @@ typedef struct 			s_room
 	struct s_room		*next;
 }						t_room;
 
+enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON };
+
+typedef struct 			s_pickup
+{
+	int 				id;
+	struct s_point		loc;
+	int 				flavor;
+	int 				weapon_type_id;
+	struct s_pickup		*next;
+}						t_pickup;
+
 #endif

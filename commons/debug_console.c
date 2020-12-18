@@ -104,8 +104,9 @@ void	debug_model_portals(void)
 	t_wall	*portals;
 	int		pc;
 
-	if (get_model()->portal_count != 0)
-		pc = get_model()->portal_count;
+	if (get_model()->portal_count == 0)
+		return (ft_putendl("Outputting no data to console for model's portals, portal count was 0."));
+	pc = get_model()->portal_count;
 	portals = get_model()->portal_first;
 	puts("Outputting data for model's portals:");
 	while (pc--)
@@ -113,5 +114,24 @@ void	debug_model_portals(void)
 		printf("Portal id: %d | start: %d %d | end: %d %d\n",
 			   portals->id, portals->start.x, portals->start.y, portals->end.x, portals->end.y);
 		portals = portals->next;
+	}
+}
+
+void	debug_model_pickups(void)
+{
+	char 		**flavors = { "PICKUP_HEALTH", "PICKUP_AMMO", "PICKUP_WEAPON" };
+	t_pickup	*pickups;
+	int			pc;
+
+	if (get_model()->pickup_count == 0)
+		return (ft_putendl("Outputting no data to console for model's pickups, pickup count was 0."));
+	pc = get_model()->pickup_count;
+	pickups = get_model()->pickup_first;
+	puts("Outputting data for model's pickups:");
+	while (pc--)
+	{
+		printf("Pickup id: %d | loc.x: %d | loc.y: %d | flavor: %s | weapon_type_id: %d\n",
+			   pickups->id, pickups->loc.x, pickups->loc.y, &flavors[pickups->flavor], pickups->weapon_type_id);
+		pickups = pickups->next;
 	}
 }

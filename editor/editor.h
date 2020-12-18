@@ -178,6 +178,12 @@ t_2d_layer      		*editor_front_buffer(void);
 SDL_Surface     		*mixing_surface();
 
 /*
+ * from square_to_buffer.c
+ * */
+
+void					square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+
+/*
  * from circle_to_buffer.c
  * */
 
@@ -224,6 +230,9 @@ t_state					*get_state(void);
 /*
  * from pickups.c
  * */
+
+void					pickups_plant_health(int x, int y);
+void 					pickups_plant(int x, int y);
 
 void					pickups_change_zoom(t_state *state);
 void					pickups_activate(t_state *state);
