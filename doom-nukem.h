@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/12/18 15:17:23 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/18 17:52:42 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include "libft.h"
 # include "objects.h"
 # include "editor.h"
-# include "game/game.h"
-# include "game/minimap.h"
+# include "game.h"
+# include "minimap.h"
 # include "renderer.h"
 
 # include "SDL.h"
