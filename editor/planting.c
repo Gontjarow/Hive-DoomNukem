@@ -7,7 +7,7 @@ static uint32_t	type_colors(int type)
 	return (t_colors[type]);
 }
 
-static t_point	relative_position(int x, int y, t_state *state)
+t_point			relative_position(int x, int y, t_state *state)
 {
 	int relative_x;
 	int relative_y;
@@ -134,7 +134,7 @@ static void		draw_enemy(t_enemy *enemy, t_state *state)
 	update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
 }
 
-static int		pickup_color(int flavor)
+static uint32_t	pickup_color(int flavor)
 {
 	if (flavor == PICKUP_HEALTH)
 		return (COLOR_HEALTH_PICKUP);
@@ -158,16 +158,16 @@ static void 	draw_pickup(t_pickup *pickup, t_state *state)
 		  (pickup->loc.y <= state->scroll_y + (state->zoom_factor * EDT_WIN_HEIGHT))))
 		return ;
 		//puts("Pickup drawing...");
+	radius = 12 / get_state()->zoom_factor;
 	relative_x = pickup->loc.x;
 	relative_y = pickup->loc.y;
 	relative_x -= state->scroll_x;
 	relative_y -= state->scroll_y;
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
-	relative_x -= radius / 2;
-	relative_y -= radius / 2;
-	radius = 12 / get_state()->zoom_factor;
 	square_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius, pickup_color(pickup->flavor));
+	if (pickup->flavor == PICKUP_HEALTH)
+		cross_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius / 2, pickup_color(pickup->flavor));
 }
 
 // TODO			BLIT BASED RENDERING IS SLOW!!!! FIX???
@@ -195,7 +195,6 @@ void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 	}
 	if (mdl->pickup_count != 0)
 	{
-		puts("Drawing plantings!");
 		count = mdl->pickup_count;
 		pickup = mdl->pickup_first;
 		while (count--)

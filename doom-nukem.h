@@ -13,6 +13,10 @@
 #ifndef DOOM_NUKEM_H
 # define DOOM_NUKEM_H
 
+# include "SDL.h"
+# include "SDL_image.h"
+# include "SDL_mixer.h"
+
 # include "libft.h"
 # include "objects.h"
 # include "data_model.h"
@@ -20,10 +24,6 @@
 # include "game.h"
 # include "minimap.h"
 # include "renderer.h"
-
-# include "SDL.h"
-# include "SDL_image.h"
-# include "SDL_mixer.h"
 
 # include <fcntl.h>
 # include <unistd.h>
