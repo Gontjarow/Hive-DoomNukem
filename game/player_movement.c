@@ -12,7 +12,7 @@
 
 #include "doom-nukem.h"
 
-static void		update_player_tail(t_doom *doom, double rad)
+void			update_player_tail(t_doom *doom, double rad)
 {
 	t_point	p;
 

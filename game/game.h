@@ -49,6 +49,7 @@ void			init_player_weapon(t_doom *doom);
 void			handle_player_movement(t_doom *doom);
 void			handle_player_action(t_doom *doom);
 
+void			update_player_tail(t_doom *doom, double rad);
 void			rotate_enemy_towards_player(t_doom *doom);
 void			move_enemy_towards_player(t_doom *doom);
 void			enemy_update_cooldown(t_doom *doom);

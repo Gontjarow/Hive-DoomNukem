@@ -134,6 +134,29 @@ static void		draw_enemy(t_enemy *enemy, t_state *state)
 	update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
 }
 
+static void 	draw_pickup(t_pickup *pickup, t_state *state)
+{
+	int 		relative_x;
+	int 		relative_y;
+
+	if (!((pickup->loc.x >= state->scroll_x) &&
+		  (pickup->loc.x <= state->scroll_x + (state->zoom_factor * EDT_WIN_WIDTH)) &&
+		  (pickup->loc.y >= state->scroll_y) &&
+		  (pickup->loc.y <= state->scroll_y + (state->zoom_factor * EDT_WIN_HEIGHT))))
+		return ;
+	relative_x = pickup->loc.x;
+	relative_y = pickup->loc.y;
+	relative_x -= state->scroll_x;
+	relative_y -= state->scroll_y;
+	relative_x /= state->zoom_factor;
+	relative_y /= state->zoom_factor;
+	// TODO FINISH THIS
+	return ;
+	//square_to_buffer(doom_ptr()->edt->buff, pickup->loc, radius, COLOR_HEALTH_PICKUP);
+	//circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(ENEMY));
+	//update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
+}
+
 // TODO			BLIT BASED RENDERING IS SLOW!!!! FIX???
 //					BEFORE OPTIMIZING CODE, TRY OPTIMIZING SURFACE WITH SDL_CONVERT
 //				ALTERNATIVE SUGGESTION: DRAW DIRECTLY TO WINDOW BUFFER, SKIPPING BLIT
@@ -141,19 +164,31 @@ static void		draw_enemy(t_enemy *enemy, t_state *state)
 void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 {
 	t_enemy		*enemy;
-	int 		ec;
+	t_pickup	*pickup;
+	int 		count;
 
 	editor_back_buffer()->rendering_on = 1;
 	if (mdl->player.x != -1)
 		draw_player(mdl, state);
-	if (mdl->enemy_count == 0)
-		return ;
-	ec = mdl->enemy_count;
-	enemy = mdl->enemy_first;
-	while (ec--)
+	if (mdl->enemy_count != 0)
 	{
-		draw_enemy(enemy, state);
-		enemy = enemy->next;
+		count = mdl->enemy_count;
+		enemy = mdl->enemy_first;
+		while (count--)
+		{
+			draw_enemy(enemy, state);
+			enemy = enemy->next;
+		}
+	}
+	if (mdl->pickup_count != 0)
+	{
+		count = mdl->pickup_count;
+		pickup = mdl->pickup_first;
+		while (count--)
+		{
+			draw_pickup(pickup, state);
+			pickup = pickup->next;
+		}
 	}
 		//puts("Drawing plantings to back buffer!");
 }
