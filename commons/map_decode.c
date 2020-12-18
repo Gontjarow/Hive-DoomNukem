@@ -1,10 +1,12 @@
 #include "doom-nukem.h"
 
+// 2x Player Spec functions
 static void			map_player_to_model(const int *fields, t_model *mdl)
 {
 	mdl->player.x = (double)fields[0];
 	mdl->player.y = (double)fields[1];
 	mdl->player.rot = fields[2];
+		//ft_putendl("Created a player to model!");
 }
 
 static t_token		*player_spec(void)
@@ -34,6 +36,8 @@ static t_token		*player_spec(void)
 	return (spec);
 }
 
+// 2x Enemy Spec functions
+
 static void			map_enemy_to_model(const int *fields, t_model *mdl)
 {
 	t_enemy *new_enemy;
@@ -54,7 +58,7 @@ static void			map_enemy_to_model(const int *fields, t_model *mdl)
 	mdl->enemies->next = new_enemy;
 	mdl->enemies = new_enemy;
 	new_enemy->next = NULL;
-	ft_putendl("Created an enemy to model!");
+		//ft_putendl("Created an enemy to model!");
 }
 
 static t_token		*enemy_spec(void)
@@ -86,7 +90,7 @@ static t_token		*enemy_spec(void)
 	return (spec);
 }
 
-// 1st Wall Func
+// 2x Wall Spec Functions
 static void			map_wall_to_model(const int *fields, t_model *mdl)
 {
 	t_wall *new_wall;
@@ -102,10 +106,9 @@ static void			map_wall_to_model(const int *fields, t_model *mdl)
 	new_wall = (t_wall*)malloc(sizeof(t_wall));
 	mdl->walls->next = new_wall;
 	mdl->walls = new_wall;
-	ft_putendl("Created a wall to model!");
+		//ft_putendl("Created a wall to model!");
 }
 
-// 2nd Wall Func
 static t_token		*wall_spec(void)
 {
 	static t_token	*spec = NULL;
@@ -134,6 +137,7 @@ static t_token		*wall_spec(void)
 	return (spec);
 }
 
+// 2x Portal Spec functions
 static void			map_portal_to_model(const int *fields, t_model *mdl)
 {
 	t_wall *new_portal;
@@ -149,10 +153,8 @@ static void			map_portal_to_model(const int *fields, t_model *mdl)
 	new_portal = (t_wall*)malloc(sizeof(t_wall));
 	mdl->portals->next = new_portal;
 	mdl->portals = new_portal;
-	ft_putendl("Created a portal to model!");
+		//ft_putendl("Created a portal to model!");
 }
-
-//[Room] id = 0 | first_wall_id = 335 | wall_count = 278 | floor_height = 389 | roof_height = 190
 
 static t_token		*portal_spec(void)
 {
@@ -182,7 +184,7 @@ static t_token		*portal_spec(void)
 	return (spec);
 }
 
-
+// 2x Room spec functions
 static void			map_room_to_model(const int *fields, t_model *mdl)
 {
 	t_room *new_room;
@@ -198,7 +200,7 @@ static void			map_room_to_model(const int *fields, t_model *mdl)
 	new_room = (t_room*)malloc(sizeof(t_room));
 	mdl->rooms->next = new_room;
 	mdl->rooms = new_room;
-	ft_putendl("Created a room to model!");
+		//ft_putendl("Created a room to model!");
 }
 
 static t_token		*room_spec(void)
@@ -300,7 +302,6 @@ static void			init_token_ints(int *collected, char *key_buffer, char *atoi_buffe
 }
 
 // 6th Spec specific Common function
-
 static void 		repeat_phase_two(int *phase, int *i_ptr, char *key_buffer, char *atoi_buffer)
 {
 	int i;
@@ -316,14 +317,7 @@ static void 		repeat_phase_two(int *phase, int *i_ptr, char *key_buffer, char *a
 		//ft_putendl("Repeated phase two");
 }
 
-// [Wall] id = 0 | start.x = 335 | start.y = 278 | end.x = 389 | end.y = 190
-
 // 7th Spec specific Common function
-
-// [Wall] id = 0 | start.x = 335 | start.y = 278 | end.x = 389 | end.y = 190
-// is the same as
-// [Wall]id=0|start.x=335|start.y=278|end.x=389|end.y=190
-
 static int			token_ints(char *str, t_token *spec, int *results)
 {
 	int		collected[TOKEN_FIELD_LIMIT];
@@ -354,23 +348,25 @@ static int			token_ints(char *str, t_token *spec, int *results)
 	return (finalize_results(assign_result(results, spec_key_index(spec, &key_buffer), ft_atoi(&atoi_buffer), &collected), &collected, spec));
 }
 
-// Common, generalized helper (8th Spec specific Common function)
+// 8th Spec specific Common function
 static int			seek_and_feed(const char *str, char **seeker, unsigned int *i, t_token *spec)
 {
 	char 			*feeder;
 	size_t			len;
 
 	len = *seeker == NULL ? ft_strlen(str) - *i : *seeker - str - *i;
+	if (len == 1)
+		return (0);
 	feeder = ft_strsub(str, *i, len);
-	printf("feeder: %s\n", feeder);
+		//printf("feeder's len: %d | mfeeder: %s\n", (int)len, feeder);
 	if (!token_ints(feeder, spec, spec->result_ptr))
 	{
 		ft_putendl("Warning: Could not parse token ints at seek_and_feed");
 		return (0);
 	}
-		//ft_putendl("Map_walls parsed token ints succesfully.");
 	free(feeder);
-	//printf("walls res [%d][%d][%d][%d][%d]\n", res[0], res[1], res[2], res[3], res[4]);
+		//ft_putendl("Map_walls parsed token ints succesfully.");
+		//printf("walls res [%d][%d][%d][%d][%d]\n", res[0], res[1], res[2], res[3], res[4]);
 	if (*seeker != NULL)
 	{
 		(*seeker)++;
@@ -380,7 +376,7 @@ static int			seek_and_feed(const char *str, char **seeker, unsigned int *i, t_to
 	return (1);
 }
 
-//9th Common Spec Func
+// 9th Common Spec Func
 static void			map_string(const char *str, t_model *mdl, t_token *spec)
 {
 	char 			*seeker;
@@ -404,6 +400,39 @@ static void			map_string(const char *str, t_model *mdl, t_token *spec)
 }
 
 // 10th Common Spec Func
+void 				map_to_model(t_mapfile *map, t_model *mdl)
+{
+	if (!map->player_string)
+		ft_die("Fatal error: map_to_model player data missing from mapfile.");
+	else
+		map_string(map->player_string, mdl, player_spec());
+	//ft_putendl("Attempting to convert player from map to model at map_to_model");
+	//debug_model_player();
+	if (map->wall_string)
+		map_string(map->wall_string, mdl, wall_spec());
+	//ft_putendl("Attempting to convert walls from map to model at map_to_model");
+	//debug_model_walls();
+	if (map->room_string)
+		map_string(map->room_string, mdl, room_spec());
+	//ft_putendl("Attempting to convert rooms from map to model at map_to_model");
+	//debug_model_rooms();
+	if (map->portal_string)
+		map_string(map->portal_string, mdl, portal_spec());
+	//ft_putendl("Attempting to convert portals from map to model at map_to_model");
+	//debug_model_portals();
+	if (map->enemy_string)
+		map_string(map->enemy_string, mdl, enemy_spec());
+	//ft_putendl("Attempting to convert enemies from map to model at map_to_model");
+	//debug_model_enemies();
+	if (!map->wall_string && !map->room_string && !map->portal_string
+		&& !map->enemy_string && !map->player_string)
+	{
+		ft_putendl("Warning: Empty map data strings at map_to_model");
+		doom_ptr()->map->was_filled = 0;
+	}
+}
+
+/* Unit tested version of map_to_model
 void 				map_to_model(t_mapfile *map, t_model *mdl)
 {
 	char *tmp;
@@ -492,3 +521,5 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 		return ;
 	}
 }
+*/
+

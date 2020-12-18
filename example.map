@@ -1,86 +1,62 @@
-Wall id: 0 | start: 335 278 | end: 389 190
-Wall id: 1 | start: 389 190 | end: 588 168
-Wall id: 2 | start: 588 168 | end: 623 196
-Wall id: 3 | start: 623 196 | end: 525 308
-Wall id: 4 | start: 525 308 | end: 412 320
-Wall id: 5 | start: 412 320 | end: 335 278
-Wall id: 6 | start: 88 164 | end: 176 44
-Wall id: 7 | start: 176 44 | end: 260 39
-Wall id: 8 | start: 260 39 | end: 296 99
-Wall id: 9 | start: 296 99 | end: 88 164
-Wall id: 10 | start: 539 86 | end: 800 57
-Wall id: 11 | start: 800 57 | end: 917 169
-Wall id: 12 | start: 917 169 | end: 882 248
-Wall id: 13 | start: 882 248 | end: 701 215
-Wall id: 14 | start: 701 215 | end: 545 126
-Wall id: 15 | start: 545 126 | end: 539 86
-Wall id: 16 | start: 616 365 | end: 541 403
-Wall id: 17 | start: 541 403 | end: 532 454
-Wall id: 18 | start: 532 454 | end: 693 481
-Wall id: 19 | start: 693 481 | end: 833 462
-Wall id: 20 | start: 833 462 | end: 899 392
-Wall id: 21 | start: 899 392 | end: 863 335
-Wall id: 22 | start: 863 335 | end: 808 309
-Wall id: 23 | start: 808 309 | end: 762 313
-Wall id: 24 | start: 762 313 | end: 787 429
-Wall id: 25 | start: 787 429 | end: 708 430
-Wall id: 26 | start: 708 430 | end: 670 418
-Wall id: 27 | start: 670 418 | end: 651 360
-Wall id: 28 | start: 651 360 | end: 616 365
-Wall id: 29 | start: 61 412 | end: 109 253
-Wall id: 30 | start: 109 253 | end: 198 219
-Wall id: 31 | start: 198 219 | end: 263 259
-Wall id: 32 | start: 263 259 | end: 309 340
-Wall id: 33 | start: 309 340 | end: 324 394
-Wall id: 34 | start: 324 394 | end: 202 351
-Wall id: 35 | start: 202 351 | end: 207 298
-Wall id: 36 | start: 207 298 | end: 177 283
-Wall id: 37 | start: 177 283 | end: 132 314
-Wall id: 38 | start: 132 314 | end: 138 400
-Wall id: 39 | start: 138 400 | end: 125 428
-Wall id: 40 | start: 125 428 | end: 61 412
-Wall id: 41 | start: 260 39 | end: 324 36
-Wall id: 42 | start: 324 36 | end: 425 44
-Wall id: 43 | start: 425 44 | end: 468 80
-Wall id: 44 | start: 468 80 | end: 445 132
-Wall id: 45 | start: 445 132 | end: 381 146
-Wall id: 46 | start: 381 146 | end: 318 141
-Wall id: 47 | start: 318 141 | end: 296 99
-Wall id: 48 | start: 800 57 | end: 845 33
-Wall id: 49 | start: 845 33 | end: 950 35
-Wall id: 50 | start: 950 35 | end: 1016 50
-Wall id: 51 | start: 1016 50 | end: 1020 126
-Wall id: 52 | start: 1020 126 | end: 1006 169
-Wall id: 53 | start: 1006 169 | end: 993 179
-Wall id: 54 | start: 993 179 | end: 941 132
-Wall id: 55 | start: 941 132 | end: 929 109
-Wall id: 56 | start: 929 109 | end: 910 121
-Wall id: 57 | start: 910 121 | end: 917 169
-Wall id: 58 | start: 309 340 | end: 405 352
-Wall id: 59 | start: 405 352 | end: 483 368
-Wall id: 60 | start: 483 368 | end: 489 441
-Wall id: 61 | start: 489 441 | end: 416 486
-Wall id: 62 | start: 416 486 | end: 377 477
-Wall id: 63 | start: 377 477 | end: 369 416
-Wall id: 64 | start: 369 416 | end: 379 398
-Wall id: 65 | start: 379 398 | end: 346 387
-Wall id: 66 | start: 346 387 | end: 324 394
+// Map specifications are t_token *spec structs - refer to map_decode.c
+// [Wall] id = 0 | start.x = 335 | start.y = 278 | end.x = 389 | end.y = 190
+// is the same as
+// [Wall]id=0|start.x=335|start.y=278|end.x=389|end.y=190
+// is the same as
+// [Wall]   id=0|start.x=335|start.y=278    |end.x   = 389|  end.y=  190
 
-Room id: 0 | first_wall_id: 0 | wall_count: 6 | floor_height: 1000 | roof_height: 1300
-Room id: 1 | first_wall_id: 6 | wall_count: 4 | floor_height: 1000 | roof_height: 1300
-Room id: 2 | first_wall_id: 10 | wall_count: 6 | floor_height: 1000 | roof_height: 1300
-Room id: 3 | first_wall_id: 16 | wall_count: 13 | floor_height: 1000 | roof_height: 1300
-Room id: 4 | first_wall_id: 29 | wall_count: 12 | floor_height: 1000 | roof_height: 1300
-Room id: 5 | first_wall_id: 41 | wall_count: 7 | floor_height: 1000 | roof_height: 1300
-Room id: 6 | first_wall_id: 48 | wall_count: 10 | floor_height: 1000 | roof_height: 1300
-Room id: 7 | first_wall_id: 58 | wall_count: 9 | floor_height: 1000 | roof_height: 1300
+[Wall] id = 0 | start.x = 400 | start.y = 592 | end.x = 621 | end.y = 480
+[Wall] id = 1 | start.x = 621 | start.y = 480 | end.x = 408 | end.y = 347
+[Wall] id = 2 | start.x = 408 | start.y = 347 | end.x = 411 | end.y = 230
+[Wall] id = 3 | start.x = 411 | start.y = 230 | end.x = 580 | end.y = 149
+[Wall] id = 4 | start.x = 580 | start.y = 149 | end.x = 642 | end.y = 314
+[Wall] id = 5 | start.x = 642 | start.y = 314 | end.x = 835 | end.y = 323
+[Wall] id = 6 | start.x = 835 | start.y = 323 | end.x = 918 | end.y = 191
+[Wall] id = 7 | start.x = 918 | start.y = 191 | end.x = 999 | end.y = 99
+[Wall] id = 8 | start.x = 999 | start.y = 99 | end.x = 1200 | end.y = 128
+[Wall] id = 9 | start.x = 1200 | start.y = 128 | end.x = 1319 | end.y = 306
+[Wall] id = 10 | start.x = 1319 | start.y = 306 | end.x = 1179 | end.y = 366
+[Wall] id = 11 | start.x = 1179 | start.y = 366 | end.x = 1101 | end.y = 221
+[Wall] id = 12 | start.x = 1101 | start.y = 221 | end.x = 956 | end.y = 358
+[Wall] id = 13 | start.x = 956 | start.y = 358 | end.x = 1031 | end.y = 442
+[Wall] id = 14 | start.x = 1031 | start.y = 442 | end.x = 1228 | end.y = 493
+[Wall] id = 15 | start.x = 1228 | start.y = 493 | end.x = 1368 | end.y = 417
+[Wall] id = 16 | start.x = 1368 | start.y = 417 | end.x = 1510 | end.y = 577
+[Wall] id = 17 | start.x = 1510 | start.y = 577 | end.x = 1377 | end.y = 654
+[Wall] id = 18 | start.x = 1377 | start.y = 654 | end.x = 1149 | end.y = 680
+[Wall] id = 19 | start.x = 1149 | start.y = 680 | end.x = 1060 | end.y = 582
+[Wall] id = 20 | start.x = 1060 | start.y = 582 | end.x = 952 | end.y = 601
+[Wall] id = 21 | start.x = 952 | start.y = 601 | end.x = 880 | end.y = 710
+[Wall] id = 22 | start.x = 880 | start.y = 710 | end.x = 854 | end.y = 770
+[Wall] id = 23 | start.x = 854 | start.y = 770 | end.x = 727 | end.y = 727
+[Wall] id = 24 | start.x = 727 | start.y = 727 | end.x = 806 | end.y = 590
+[Wall] id = 25 | start.x = 806 | start.y = 590 | end.x = 788 | end.y = 573
+[Wall] id = 26 | start.x = 788 | start.y = 573 | end.x = 683 | end.y = 625
+[Wall] id = 27 | start.x = 683 | start.y = 625 | end.x = 626 | end.y = 752
+[Wall] id = 28 | start.x = 626 | start.y = 752 | end.x = 336 | end.y = 731
+[Wall] id = 29 | start.x = 336 | start.y = 731 | end.x = 215 | end.y = 554
+[Wall] id = 30 | start.x = 215 | start.y = 554 | end.x = 302 | end.y = 424
+[Wall] id = 31 | start.x = 302 | start.y = 424 | end.x = 401 | end.y = 474
+[Wall] id = 32 | start.x = 401 | start.y = 474 | end.x = 400 | end.y = 592
+[Wall] id = 33 | start.x = 612 | start.y = 54 | end.x = 687 | end.y = 276
+[Wall] id = 34 | start.x = 687 | start.y = 276 | end.x = 799 | end.y = 281
+[Wall] id = 35 | start.x = 799 | start.y = 281 | end.x = 884 | end.y = 141
+[Wall] id = 36 | start.x = 884 | start.y = 141 | end.x = 717 | end.y = 54
+[Wall] id = 37 | start.x = 717 | start.y = 54 | end.x = 612 | end.y = 54
 
-Portal id: 0 | start: 260 39 | end: 296 99
-Portal id: 1 | start: 800 57 | end: 917 169
-Portal id: 2 | start: 309 340 | end: 324 394
+[Room] id = 0 | first_wall_id = 0 | wall_count = 33 | floor_height = 1000 | roof_height = 1300
+[Room] id = 1 | first_wall_id = 33 | wall_count = 5 | floor_height = 1000 | roof_height = 1300
 
-Enemy id: 0 | start: 571 198 | rot: 7 | tail: 556 196 | hp: 100 | wep id: 0
-Enemy id: 1 | start: 320 55 | rot: 248 | tail: 325 68 | hp: 100 | wep id: 0
-Enemy id: 2 | start: 839 170 | rot: 345 | tail: 824 174 | hp: 100 | wep id: 0
 
-Player spawn: 427 281 | rot: 82 | tail: 425 266
+[Enemy] id = 0 | x = 909 | y = 518 | rot = 21 | hp = 100 | wep.type_id = 0
+[Enemy] id = 1 | x = 1091 | y = 560 | rot = 22 | hp = 100 | wep.type_id = 0
+[Enemy] id = 2 | x = 1294 | y = 567 | rot = 341 | hp = 100 | wep.type_id = 0
+[Enemy] id = 3 | x = 1322 | y = 534 | rot = 311 | hp = 100 | wep.type_id = 0
+[Enemy] id = 4 | x = 1091 | y = 502 | rot = 189 | hp = 100 | wep.type_id = 0
+[Enemy] id = 5 | x = 939 | y = 380 | rot = 257 | hp = 100 | wep.type_id = 0
+[Enemy] id = 6 | x = 950 | y = 251 | rot = 330 | hp = 100 | wep.type_id = 0
+[Enemy] id = 7 | x = 1061 | y = 168 | rot = 342 | hp = 100 | wep.type_id = 0
+[Enemy] id = 8 | x = 663 | y = 534 | rot = 97 | hp = 100 | wep.type_id = 0
+[Enemy] id = 9 | x = 481 | y = 653 | rot = 143 | hp = 100 | wep.type_id = 0
+
+[Player] spawn.x = 661 | spawn.y = 422 | rot = 126
