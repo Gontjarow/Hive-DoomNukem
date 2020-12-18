@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   doom_nukem.c                                       :+:      :+:    :+:   */
+/*   doom-nukem.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/25 13:34:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/18 15:19:34 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,7 @@ static void run_loops(t_doom *doom, int argc, char **argv)
 	if (!doom->edt_quit)
 		edt_render(doom);
 	if (!doom->game_quit)
-	{
-		game_loop(doom);
 		game_render(doom);
-	}
 }
 
 int			main(int argc, char **argv)
