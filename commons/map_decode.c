@@ -406,11 +406,7 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 	if (!map->player_string)
 		ft_die("Fatal error: map_to_model player data missing from mapfile.");
 	else
-	{
-		printf("PREASSINGNING x %f | %f\n", mdl->player.x, mdl->player.y);
 		map_string(map->player_string, mdl, player_spec());
-		printf("POSTASSIGNING x %f | %f\n", mdl->player.x, mdl->player.y);
-	}
 
 	//ft_putendl("Attempting to convert player from map to model at map_to_model");
 	//debug_model_player();

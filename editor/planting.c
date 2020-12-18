@@ -134,27 +134,40 @@ static void		draw_enemy(t_enemy *enemy, t_state *state)
 	update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
 }
 
+static int		pickup_color(int flavor)
+{
+	if (flavor == PICKUP_HEALTH)
+		return (COLOR_HEALTH_PICKUP);
+	if (flavor == PICKUP_AMMO)
+		return (COLOR_AMMO_PICKUP);
+	if (flavor == PICKUP_WEAPON)
+		return (COLOR_WEAPON_PICKUP);
+	ft_putendl("Warning: Could not match pickup flavor to a color at pickup_color.");
+	return (COLOR_LINE);
+}
+
 static void 	draw_pickup(t_pickup *pickup, t_state *state)
 {
 	int 		relative_x;
 	int 		relative_y;
+	int 		radius;
 
 	if (!((pickup->loc.x >= state->scroll_x) &&
 		  (pickup->loc.x <= state->scroll_x + (state->zoom_factor * EDT_WIN_WIDTH)) &&
 		  (pickup->loc.y >= state->scroll_y) &&
 		  (pickup->loc.y <= state->scroll_y + (state->zoom_factor * EDT_WIN_HEIGHT))))
 		return ;
+		//puts("Pickup drawing...");
 	relative_x = pickup->loc.x;
 	relative_y = pickup->loc.y;
 	relative_x -= state->scroll_x;
 	relative_y -= state->scroll_y;
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
-	// TODO FINISH THIS
-	return ;
-	//square_to_buffer(doom_ptr()->edt->buff, pickup->loc, radius, COLOR_HEALTH_PICKUP);
-	//circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(ENEMY));
-	//update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
+	relative_x -= radius / 2;
+	relative_y -= radius / 2;
+	radius = 12 / get_state()->zoom_factor;
+	square_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius, pickup_color(pickup->flavor));
 }
 
 // TODO			BLIT BASED RENDERING IS SLOW!!!! FIX???
@@ -182,6 +195,7 @@ void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 	}
 	if (mdl->pickup_count != 0)
 	{
+		puts("Drawing plantings!");
 		count = mdl->pickup_count;
 		pickup = mdl->pickup_first;
 		while (count--)

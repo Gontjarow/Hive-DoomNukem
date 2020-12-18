@@ -40,6 +40,8 @@ typedef void 			(*logic_void)(void);
 # define COLOR_PLAYER			0xff00ff00
 # define COLOR_ENEMY			0xffffff00
 # define COLOR_HEALTH_PICKUP	0xff00ff00
+# define COLOR_AMMO_PICKUP		0xffffff00
+# define COLOR_WEAPON_PICKUP	0xff00ff00
 
 typedef struct 			s_2d_layer
 {
