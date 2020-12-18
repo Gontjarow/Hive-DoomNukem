@@ -13,6 +13,12 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define 				WAV_SWORD "wav/sword.wav"
 # define				WAV_THUNDER "wav/thunder.wav"
 # define 				IMG_THUNDER0 "img/thunder/0.png"
+# define				WAV_PISTOLRLD "wav/pistolreload.wav" 
+# define				WAV_ASSAULTRLD "wav/assaultreload.wav"
+# define				WAV_SMGRLD "wav/smgreload.wav"
+# define				WAV_PISTOLSHOT "wav/pistolshot.wav"
+# define				WAV_WALKING "wav/walking.wav"
+# define				WAV_RUNNING "wav/running.wav"
 
 /*
 ** *
@@ -93,6 +99,13 @@ typedef struct 			s_sounds
 	struct Mix_Chunk 	*mcSteam;
 	struct Mix_Chunk	*mcPlop;
 	struct Mix_Chunk	*mcSword;
+	struct Mix_Chunk	*mcPistolRld;
+	struct Mix_Chunk	*mcAssaultRld;
+	struct Mix_Chunk	*mcSmgRld;
+	struct Mix_Chunk	*mcPistolShot;
+	struct Mix_Chunk	*mcWalking;
+	struct Mix_Chunk	*mcRunning;
+	int					footstep_delay;
 }						t_sounds;
 
 typedef struct			s_menu

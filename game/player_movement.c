@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/18 16:30:03 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/18 20:47:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ void			update_player_tail(t_doom *doom, double rad)
 
 static void		moving_up_down(t_doom *doom, int signal, double rad)
 {
+	if (doom->mdl->player.is_running && doom->sounds->footstep_delay == 0)
+		Mix_PlayChannel(-1, doom->sounds->mcRunning, 0);
+	else if (!doom->mdl->player.is_running && doom->sounds->footstep_delay == 0)
+		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
+	if (doom->sounds->footstep_delay == 0)
+		doom->sounds->footstep_delay = 8;
 	doom->mdl->player.x = doom->mdl->player.x + (signal *
 	((double)doom->mdl->player.mov_speed)) * -cos(rad);
 	doom->mdl->player.y = doom->mdl->player.y + (signal *
@@ -64,6 +70,8 @@ void			handle_player_movement(t_doom *doom)
 	old.x = doom->mdl->player.x;
 	old.y = doom->mdl->player.y;
 	rad = deg_to_rad(doom->mdl->player.rot);
+	if (doom->sounds->footstep_delay > 0)
+		doom->sounds->footstep_delay--;
 	if (doom->keystates[SDL_SCANCODE_W])
 		moving_up_down(doom, 1, rad);
 	if (doom->keystates[SDL_SCANCODE_S])
