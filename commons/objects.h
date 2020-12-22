@@ -13,15 +13,18 @@
 #ifndef OBJECTS_H
 # define OBJECTS_H
 
-# include <stdint.h>
+#include "doom-nukem.h"
 
-/*
-** *
-** Bit and bob structs to construct the game data for the Model etc.
-** *
-*/
+# define 				WAV_PLOP "wav/plop.wav"
+# define 				WAV_STEAM0 "wav/steam/0.wav"
+# define 				WAV_SWORD "wav/sword.wav"
+# define				WAV_THUNDER "wav/thunder.wav"
+# define 				IMG_THUNDER0 "img/thunder/0.png"
 
-struct 					MixChunk;
+typedef struct 			s_doom t_doom;
+enum					e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON };
+
+//struct 					MixChunk;
 
 typedef struct 			s_point
 {
@@ -124,8 +127,6 @@ typedef struct 			s_room
 	struct s_room		*next;
 }						t_room;
 
-enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON };
-
 typedef struct 			s_pickup
 {
 	int 				id;
@@ -134,6 +135,96 @@ typedef struct 			s_pickup
 	int 				weapon_type_id;
 	struct s_pickup		*next;
 }						t_pickup;
+
+typedef struct 			s_sounds
+{
+	struct Mix_Chunk 	*mcThunder;
+	struct Mix_Chunk 	*mcSteam;
+	struct Mix_Chunk	*mcPlop;
+	struct Mix_Chunk	*mcSword;
+}						t_sounds;
+
+typedef struct			s_animation
+{
+	SDL_Surface 		**surfaces;
+	int 				frames;
+	int 				current;
+}						t_animation;
+
+typedef struct			s_menu
+{
+	int 				selected;
+	struct s_animation	ani_thunder;
+	int 				esc_lock;
+	struct SDL_Surface	*alphabet[128];
+	int 				alphabet_scale;
+	SDL_Surface			*thunder;
+	struct s_doom		*parent;
+}						t_menu;
+
+typedef struct 			s_line
+{
+	int					x1;
+	int 				x2;
+	int 				y1;
+	int 				y2;
+	int 				fx;
+	int 				fy;
+	int 				px;
+	int 				py;
+	uint32_t 			color;
+	uint32_t 			avoid[3];
+	struct SDL_Surface 	*buff;
+	struct s_doom		*doom;
+}						t_line;
+
+typedef struct			s_image
+{
+	void				*ptr;
+	int					*data;
+	int					width;
+	int					height;
+	int					bpp;
+	int					line;
+	int					endian;
+}						t_image;
+
+/*
+ * from debug_console.c
+ * */
+
+void 					debug_model_player(void);
+void		 			debug_model_enemies(void);
+void 					debug_model_walls(void);
+void					debug_model_rooms(void);
+void					debug_model_portals(void);
+void					debug_model_pickups(void);
+
+/*
+ * from texture.c
+ * */
+
+uint32_t 				get_exact_pixel(SDL_Surface *surface, int x, int y);
+SDL_Surface				*xpm2surface(char *path);
+SDL_Surface				*load_png(char *path);
+SDL_Surface				*load_texture(t_doom *doom, char *path);
+
+/*
+ * from line.c and line_safe.c
+ * */
+
+void					render_line_safe(t_line *l);
+void 					render_line(t_line *l);
+void					careful_render_line(t_line *l);
+
+/*
+ * from pixel.c
+ * */
+
+void					flood_buffer(SDL_Surface *buff, uint32_t color);
+void					set_protected_color(uint32_t color);
+int 					set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
+void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 
 // TODO Note to self (idea how to work with s_pickup struct
 /*

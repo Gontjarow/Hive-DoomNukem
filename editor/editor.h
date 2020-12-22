@@ -243,11 +243,28 @@ void 					pickups_right_click(int x, int y);
 void 					pickups_middle_click(int x, int y);
 
 /*
- * from planting.c
+ * from positions.c
  * */
 
 t_point					relative_position(int x, int y, t_state *state);
-void		 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state);
+t_point					scrolled_position(int x, int y, t_state *state);
+uint32_t				type_colors(int type);
+uint32_t				pickup_color(int flavor);
+int						valid_line(t_line *line);
+
+/*
+ * from draw_entities.c
+ * */
+
+void					draw_player(t_model *mdl, t_state *state);
+void					draw_enemy(t_enemy *enemy, t_state *state);
+void	 				draw_pickup(t_pickup *pickup, t_state *state);
+void					update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type);
+void 					draw_plantings_to_backbuffer(t_model *mdl, t_state *state);
+
+/*
+ * from planting_logic, planting.c, planting_input.c
+ * */
 
 t_logic 				*planting_logic(void);
 void 					planting_plant(int x, int y);
