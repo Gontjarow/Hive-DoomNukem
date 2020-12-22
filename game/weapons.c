@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/22 16:44:30 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 17:05:16 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	player_shoot_reload(t_doom *doom)
 			[doom->mdl->player.weap_id].ammo_cur > 0 &&
 				doom->mdl->player.reload_time == 0)
 		{
-			Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
+			Mix_PlayChannel(0, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
 			player_shoots(doom);
 		}
 	}
@@ -64,7 +64,7 @@ static void	player_shoot_reload(t_doom *doom)
 		if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur !=
 			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max)
 		{
-			Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].reload_sound, 0);
+			Mix_PlayChannel(0, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].reload_sound, 0);
 			doom->mdl->player.reload_time = doom->mdl->player.weap_arr
 				[doom->mdl->player.weap_id].reload_time;
 			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur =

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/22 16:53:46 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 17:07:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ static void	init_doom(t_doom *doom)
 	doom->mdl = NULL;
 	doom->app_start = SDL_GetTicks();
 	doom->map_data_initialized = 0;
-	printf("MS_DEBUG: PERFECT INIT!\n");
 }
 
 static int	destroy_and_quit(t_doom *doom)
