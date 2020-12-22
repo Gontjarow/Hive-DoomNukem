@@ -83,12 +83,12 @@ int				get_outcode(t_vert v)
 	int outcode;
 
 	outcode = 0;
-	outcode |= OUTCODE_LEFT  * (v.x >= -v.w);
-	outcode |= OUTCODE_RIGHT * (v.x <=  v.w);
-	outcode |= OUTCODE_UP    * (v.y >= -v.w);
-	outcode |= OUTCODE_DOWN  * (v.y <=  v.w);
-	outcode |= OUTCODE_NEAR  * (v.z <=  v.w); // note: ensure correctness
-	outcode |= OUTCODE_FAR   * (v.z >= -v.w);
+	outcode |= OUTCODE_LEFT  * (v.x < -v.w);
+	outcode |= OUTCODE_RIGHT * (v.x >  v.w);
+	outcode |= OUTCODE_UP    * (v.y < -v.w);
+	outcode |= OUTCODE_DOWN  * (v.y >  v.w);
+	outcode |= OUTCODE_NEAR  * (v.z < -v.w); // note: ensure correctness
+	outcode |= OUTCODE_FAR   * (v.z >  v.w);
 	return (outcode);
 }
 
