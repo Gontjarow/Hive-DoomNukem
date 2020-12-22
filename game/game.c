@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/18 17:35:22 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 16:58:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ void		game_render(t_doom *doom)
 	enemy_update_cooldown(doom);
 	rotate_enemy_towards_player(doom);
 	move_enemy_towards_player(doom);
-	update_minimap(doom);
+	if (DEBUG == 1)
+		update_minimap(doom);
 	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
 }
