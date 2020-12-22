@@ -2,10 +2,14 @@
 
 //		TODO FOR PICKUPS.C
 //			ADD HEALTH PICKUP / GREEN RECT / PLUS SIGN INSIDE
-//				MISSING PERSISTENCE
-//				MISSING PLUS SIGN
-//				MISSING ENCODING FROM MODEL TO MAP
-//				MISSING DECODING FROM MAP TO MODEL
+//				MISSING PERSISTENCE // DONE
+//					CORRECT FOR PLANTING X, Y WITH SCROLL && ZOOMING // DONE
+//					SYNC PLANTING X, Y WITH DRAWING X, Y // DONE
+//				MISSING PLUS SIGN // DONE
+//				MISSING ENCODING FROM MODEL TO MAP // DONE
+//				MISSING DECODING FROM MAP TO MODEL // DONE
+//				REORGANIZE PLANTING.C FILE // <-- YOU ARE HERE!!!!!
+//				SEPARATE MODEL AND COMMONS FROM COMMONS TO DATA_MODEL AND COMMONS
 //			AMMO PICKUP / YELLOW RECT / NUMBER INSIDE
 //			GUN PICKUP / GREEN RECT / NUMBER INSIDE
 
@@ -14,18 +18,19 @@ void			pickups_plant_health(int x, int y)
 	int			radius;
 	t_model		*mdl;
 	t_pickup	*new_pickup;
+	t_point		relative;
 
 	radius = 12 / get_state()->zoom_factor;
-	x -= radius / 2;
-	y -= radius / 2;
+	relative = relative_position(x, y, get_state());
 	square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, radius, COLOR_HEALTH_PICKUP);
+	cross_to_buffer(doom_ptr()->edt->buff, (t_point) {x, y}, radius / 2, COLOR_HEALTH_PICKUP);
 		//puts("Pickups debug: Mock drawing a square directly to buffer!");
 	mdl = get_model();
 	mdl->pickups->id = mdl->pickup_count;
 	mdl->pickups->flavor = PICKUP_HEALTH;
 	mdl->pickups->weapon_type_id = 0;
-	mdl->pickups->loc.x = x;
-	mdl->pickups->loc.y = y;
+	mdl->pickups->loc.x = relative.x;
+	mdl->pickups->loc.y = relative.y;
 	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
 	if (!new_pickup)
 		ft_die("Fatal error: Could not malloc new_pickup at pickups_plant_health!");

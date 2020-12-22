@@ -14,9 +14,6 @@
 # define EDITOR_H
 
 # include "doom-nukem.h"
-# include "SDL.h"
-# include "commons/objects.h"
-# include <stdint.h>
 
 typedef struct 			s_doom t_doom;
 typedef struct			s_status t_status;
@@ -25,7 +22,6 @@ typedef struct          s_state t_state;
 typedef struct          s_enemy t_enemy;
 typedef struct 			s_wall t_wall;
 typedef struct			s_mapfile t_mapfile;
-typedef struct 			SDL_Surface SDL_Surface;
 
 typedef void            (*gui_event)(t_state *state);
 typedef void 			(*gui_click)(int x, int y);
@@ -40,6 +36,8 @@ typedef void 			(*logic_void)(void);
 # define COLOR_PLAYER			0xff00ff00
 # define COLOR_ENEMY			0xffffff00
 # define COLOR_HEALTH_PICKUP	0xff00ff00
+# define COLOR_AMMO_PICKUP		0xffffff00
+# define COLOR_WEAPON_PICKUP	0xff00ff00
 
 typedef struct 			s_2d_layer
 {
@@ -182,6 +180,7 @@ SDL_Surface     		*mixing_surface();
  * */
 
 void					square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void					cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 
 /*
  * from circle_to_buffer.c
@@ -247,6 +246,7 @@ void 					pickups_middle_click(int x, int y);
  * from planting.c
  * */
 
+t_point					relative_position(int x, int y, t_state *state);
 void		 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state);
 
 t_logic 				*planting_logic(void);

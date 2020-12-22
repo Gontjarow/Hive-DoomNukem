@@ -294,6 +294,7 @@ static void init_mapdata(t_doom *doom)
 	doom->map->portal_string = NULL;
 	doom->map->wall_string = NULL;
 	doom->map->room_string = NULL;
+	doom->map->pickup_string = NULL;
 	doom->map->was_filled = 0;
 	doom->map_data_initialized = 1;
 }
@@ -318,6 +319,7 @@ void 		destroy_mapdata(t_doom *doom)
 	doom->map->portal_string = NULL;
 	doom->map->wall_string = NULL;
 	doom->map->room_string = NULL;
+	doom->map->pickup_string = NULL;
 	free(doom->map);
 	doom->map = NULL;
 	doom->map_data_initialized = 0;
@@ -381,6 +383,16 @@ static int	stringify_mapfile(t_doom *doom, char *map_path)
 				free(join);
 				join = doom->map->enemy_string;
 				doom->map->enemy_string = ft_strjoin(doom->map->enemy_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Pickup]", 8)) {
+				if (doom->map->pickup_string == NULL)
+					doom->map->pickup_string = ft_strnew(1);
+				join = doom->map->pickup_string;
+				doom->map->pickup_string = ft_strjoin(doom->map->pickup_string, line);
+				free(join);
+				join = doom->map->pickup_string;
+				doom->map->pickup_string = ft_strjoin(doom->map->pickup_string, "\n");
 				free(join);
 			}
 			else if (ft_strnstr(line, "[Player]", 8)){

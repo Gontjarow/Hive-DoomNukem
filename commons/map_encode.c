@@ -46,6 +46,18 @@ void	add_wall_to_string(t_wall *wall, t_mapfile *map)
 	map->join_string = NULL;
 }
 
+void	add_pickup_to_string(t_pickup *pickup, t_mapfile *map)
+{
+	map->join_string = ft_strnew(255);
+	sprintf(map->join_string, "[Pickup] id = %d | loc.x = %d | loc.y = %d | flavor = %d | weapon_type_id = %d\n",
+			pickup->id, pickup->loc.x, pickup->loc.y, pickup->flavor, pickup->weapon_type_id);
+	if (!map->pickup_string)
+		map->pickup_string = ft_strnew(1);
+	map->pickup_string = ft_strjoin(map->pickup_string, map->join_string);
+	free(map->join_string);
+	map->join_string = NULL;
+}
+
 void 	add_portal_to_string(t_wall *portal, t_mapfile *map)
 {
 	map->join_string = ft_strnew(255);

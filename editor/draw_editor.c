@@ -67,7 +67,7 @@ SDL_Surface 		*keyhelp_xpm(void)
 	return (keyhelp_xpms);
 }
 
-// TODO: Consider alternative to SDL_Blit / SDL_Rect ?
+// TODO ALTERNATIVE TO SDL_BLIT (POSSIBLE YAGNI?)
 void                print_mode_info(t_gui *mode)
 {
 	SDL_Surface *mode_surface;

@@ -7,7 +7,7 @@ static uint32_t	type_colors(int type)
 	return (t_colors[type]);
 }
 
-static t_point	relative_position(int x, int y, t_state *state)
+t_point			relative_position(int x, int y, t_state *state)
 {
 	int relative_x;
 	int relative_y;
@@ -134,32 +134,45 @@ static void		draw_enemy(t_enemy *enemy, t_state *state)
 	update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
 }
 
+static uint32_t	pickup_color(int flavor)
+{
+	if (flavor == PICKUP_HEALTH)
+		return (COLOR_HEALTH_PICKUP);
+	if (flavor == PICKUP_AMMO)
+		return (COLOR_AMMO_PICKUP);
+	if (flavor == PICKUP_WEAPON)
+		return (COLOR_WEAPON_PICKUP);
+	ft_putendl("Warning: Could not match pickup flavor to a color at pickup_color.");
+	return (COLOR_LINE);
+}
+
 static void 	draw_pickup(t_pickup *pickup, t_state *state)
 {
 	int 		relative_x;
 	int 		relative_y;
+	int 		radius;
 
 	if (!((pickup->loc.x >= state->scroll_x) &&
 		  (pickup->loc.x <= state->scroll_x + (state->zoom_factor * EDT_WIN_WIDTH)) &&
 		  (pickup->loc.y >= state->scroll_y) &&
 		  (pickup->loc.y <= state->scroll_y + (state->zoom_factor * EDT_WIN_HEIGHT))))
 		return ;
+		//puts("Pickup drawing...");
+	radius = 12 / get_state()->zoom_factor;
 	relative_x = pickup->loc.x;
 	relative_y = pickup->loc.y;
 	relative_x -= state->scroll_x;
 	relative_y -= state->scroll_y;
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
-	// TODO FINISH THIS
-	return ;
-	//square_to_buffer(doom_ptr()->edt->buff, pickup->loc, radius, COLOR_HEALTH_PICKUP);
-	//circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(ENEMY));
-	//update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
+	square_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius, pickup_color(pickup->flavor));
+	if (pickup->flavor == PICKUP_HEALTH)
+		cross_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius / 2, pickup_color(pickup->flavor));
 }
 
 // TODO			BLIT BASED RENDERING IS SLOW!!!! FIX???
-//					BEFORE OPTIMIZING CODE, TRY OPTIMIZING SURFACE WITH SDL_CONVERT
-//				ALTERNATIVE SUGGESTION: DRAW DIRECTLY TO WINDOW BUFFER, SKIPPING BLIT
+//					BEFORE ABANDONING SDL_BLIT CODE, TRY OPTIMIZING SDL_SURFACE WITH SDL_CONVERT
+//				ALTERNATIVELY: DRAW DIRECTLY TO INTENDED PIXELBUFFER, SKIPPING BLIT
 
 void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 {

@@ -48,9 +48,6 @@ typedef struct 			s_health
 	int 				cur;
 }						t_health;
 
-// TODO ADD PICKUPS DATA IN MDL->PICKUPS // LINKED LIST, DELETE NODE, RELINK PREVIOUS
-//  										NEXT, REDUCE COUNT IN MDL->PICKUPS_COUNT
-
 typedef struct 			s_weapon
 {
 	int 				type_id;
@@ -137,5 +134,22 @@ typedef struct 			s_pickup
 	int 				weapon_type_id;
 	struct s_pickup		*next;
 }						t_pickup;
+
+// TODO Note to self (idea how to work with s_pickup struct
+/*
+handle_pickup(t_pickup *pickup)
+	-> handle_health_pickup(pickup)
+	-> handle_ammo_pickup(pickup)
+	-> handle_weapon_pickup(pickup)
+
+if (pickup->flavor == PICKUP_HEALTH )
+	handle_health_pickup();
+
+//linked lists
+	//t_model:
+//struct s_pickup		*pickups;
+
+	delete a pickup, fix linked list connections, update the count
+*/
 
 #endif
