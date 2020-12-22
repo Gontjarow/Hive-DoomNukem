@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 20:03:18 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/15 20:29:26 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 16:12:54 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void			print_minimap_enemies(t_doom *doom)
 		line.y1 = enemy->y * doom->minimap->scale;
 		line.x2 = enemy->tail.x * doom->minimap->scale;
 		line.y2 = enemy->tail.y * doom->minimap->scale;
-		if (enemy->hp.cur == 0)
+		if (enemy->hp.cur <= 0)
 			color = 0xffff0000;
 		else
 			color = 0xff00ff00;

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/18 20:03:58 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 16:44:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[1].cooldown = 5;
 	doom->mdl->player.weap_arr[1].dmg = 25;
 	doom->mdl->player.weap_arr[1].reload_time = 25;
-	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcPistolShot;
+	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcSmgShot;
 	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcSmgRld;
 	doom->mdl->player.weap_arr[2].ammo_cur = 40;
 	doom->mdl->player.weap_arr[2].ammo_max = 40;
 	doom->mdl->player.weap_arr[2].cooldown = 2;
 	doom->mdl->player.weap_arr[2].dmg = 30;
 	doom->mdl->player.weap_arr[2].reload_time = 35;
-	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcPistolShot;
+	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcAssaultShot;
 	doom->mdl->player.weap_arr[2].reload_sound = doom->sounds->mcAssaultRld;
 }
 

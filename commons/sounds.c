@@ -6,13 +6,11 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/18 20:52:33 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 16:45:01 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
-
-// MS TODO: Crouching sound already cropped at crouching.wav | enemy dying sound | 
 
 void	load_sounds(t_doom *doom)
 {
@@ -38,6 +36,14 @@ void	load_sounds(t_doom *doom)
 		ft_die("Fatal error: SDL_mixer failed to load WAV_WALKING!");
 	if (!(doom->sounds->mcRunning = Mix_LoadWAV(WAV_RUNNING)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_RUNNING!");
+	if (!(doom->sounds->mcCrouching = Mix_LoadWAV(WAV_CROUCHING)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_CROUCHING!");
+	if (!(doom->sounds->mcEnemyDeath = Mix_LoadWAV(WAV_ENEMYDEATH)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_ENEMYDEATH!");
+	if (!(doom->sounds->mcAssaultShot = Mix_LoadWAV(WAV_ASSAULTSHOT)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_ASSAULTSHOT!");
+	if (!(doom->sounds->mcSmgShot = Mix_LoadWAV(WAV_SMGSHOT)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGSHOT!");
 	doom->sounds->footstep_delay = 0;
 }
 
@@ -53,6 +59,9 @@ void	destroy_sounds(t_doom *doom)
 	Mix_FreeChunk(doom->sounds->mcSmgRld);
 	Mix_FreeChunk(doom->sounds->mcWalking);
 	Mix_FreeChunk(doom->sounds->mcRunning);
+	Mix_FreeChunk(doom->sounds->mcCrouching);
+	Mix_FreeChunk(doom->sounds->mcEnemyDeath);
+	Mix_FreeChunk(doom->sounds->mcAssaultShot);
 	doom->sounds->mcThunder = NULL;
 	doom->sounds->mcSteam = NULL;
 	doom->sounds->mcPlop = NULL;

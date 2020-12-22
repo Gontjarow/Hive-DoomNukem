@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2020/12/18 17:52:42 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 16:50:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
 
-# define DEBUG 1
+# define DEBUG 0
 
 typedef struct			s_doom
 {
