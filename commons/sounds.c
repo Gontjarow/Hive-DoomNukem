@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/22 16:45:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 19:55:39 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void	load_sounds(t_doom *doom)
 	if (!(doom->sounds->mcAssaultShot = Mix_LoadWAV(WAV_ASSAULTSHOT)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_ASSAULTSHOT!");
 	if (!(doom->sounds->mcSmgShot = Mix_LoadWAV(WAV_SMGSHOT)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGSHOT!");
+	if (!(doom->sounds->mcHealthPickup = Mix_LoadWAV(WAV_HEALTHPICKUP)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGSHOT!");
 	doom->sounds->footstep_delay = 0;
 }

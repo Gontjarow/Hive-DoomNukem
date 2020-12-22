@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/22 17:05:40 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 19:17:12 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 		Mix_PlayChannel(2, doom->sounds->mcCrouching, 0);
 	else if (doom->mdl->player.is_running && doom->sounds->footstep_delay == 0)
 		Mix_PlayChannel(2, doom->sounds->mcRunning, 0);
-	else if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching && doom->sounds->footstep_delay == 0)
+	else if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching
+			&& doom->sounds->footstep_delay == 0)
 		Mix_PlayChannel(2, doom->sounds->mcWalking, 0);
 	if (doom->sounds->footstep_delay == 0)
 		doom->sounds->footstep_delay = 8;
@@ -37,6 +38,7 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 	doom->mdl->player.y = doom->mdl->player.y + (signal *
 	((double)doom->mdl->player.mov_speed)) * -sin(rad);
 	update_player_tail(doom, rad);
+	handle_pickup(doom);
 }
 
 static void		rotating_left_right(t_doom *doom, int signal)

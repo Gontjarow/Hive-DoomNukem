@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/15 20:27:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/22 18:33:35 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void		update_minimap(t_doom *doom)
 	print_minimap_walls(doom);
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);
+	print_minimap_pickups(doom);
 	SDL_UpdateWindowSurface(doom->minimap->win);
 }
 
