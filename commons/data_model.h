@@ -51,6 +51,7 @@ typedef struct 			s_mapfile
 	char 				*room_string;
 	char 				*portal_string;
 	char 				*enemy_string;
+	char 				*pickup_string;
 	char 				*player_string;
 	char 				*join_string;
 	int 				was_filled;
@@ -173,6 +174,7 @@ void					add_enemy_to_string(t_enemy *enemy, t_mapfile *map);
 void					add_wall_to_string(t_wall *wall, t_mapfile *map);
 void					add_portal_to_string(t_wall *portal, t_mapfile *map);
 void					add_room_to_string(t_room *room, t_mapfile *map);
+void					add_pickup_to_string(t_pickup *pickup, t_mapfile *map);
 
 /*
  * from map_decode.c

@@ -22,8 +22,8 @@ void	square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color)
 				address = xy.x + x + (xy.y + y) * buff->w;
 				if (address >= 0 && address < buff->h * buff->w)
 					pixels[address] = color;
-				else
-					ft_putendl("Warning: square_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
+				//else
+					//ft_putendl("Warning: square_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
 			}
 			x++;
 		}

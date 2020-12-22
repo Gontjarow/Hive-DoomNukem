@@ -119,10 +119,11 @@ t_enemy	*record_enemy(t_point location, t_point *tail, t_model *mdl)
 
 void		create_strings_from_model(t_model *mdl, t_mapfile *map)
 {
-	int		count;
-	t_room	*room;
-	t_wall	*wall_or_portal;
-	t_enemy	*enemy;
+	int			count;
+	t_enemy		*enemy;
+	t_room		*room;
+	t_wall		*wall_or_portal;
+	t_pickup	*pickup;
 
 	update_player_string(mdl, map);
 	count = mdl->enemy_count;
@@ -152,6 +153,13 @@ void		create_strings_from_model(t_model *mdl, t_mapfile *map)
 	{
 		add_portal_to_string(wall_or_portal, map);
 		wall_or_portal = wall_or_portal->next;
+	}
+	count = mdl->pickup_count;
+	pickup = mdl->pickup_first;
+	while (count--)
+	{
+		add_pickup_to_string(pickup, map);
+		pickup = pickup->next;
 	}
 }
 

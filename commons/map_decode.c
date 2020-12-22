@@ -1,5 +1,52 @@
 #include "doom-nukem.h"
 
+// 2x Pickup spec functions
+static void			map_pickup_to_model(const int *fields, t_model *mdl)
+{
+	t_pickup *new_pickup;
+
+	mdl->pickups->id = fields[0];
+	mdl->pickups->loc.x = fields[1];
+	mdl->pickups->loc.y = fields[2];
+	mdl->pickups->flavor = fields[3];
+	mdl->pickups->weapon_type_id = fields[4];
+	mdl->pickup_count++;
+	if (mdl->pickup_count == 1)
+		mdl->pickup_first = mdl->pickups;
+	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
+	mdl->pickups->next = new_pickup;
+	mdl->pickups = new_pickup;
+		//ft_putendl("Created a pickup to model!");
+}
+
+static t_token		*pickup_spec(void)
+{
+	static t_token	*spec = NULL;
+	int 			i;
+
+	if (!spec)
+	{
+		i = 0;
+		spec = (t_token *) malloc(sizeof(t_token));
+		spec->expected = 5;
+		spec->sur[0] = '[';
+		spec->sur[1] = ']';
+		spec->equ = '=';
+		spec->sep = '|';
+		spec->keys = (char**)malloc(sizeof(char*) * spec->expected);
+		while (i < spec->expected)
+			spec->keys[i++] = (char*)malloc(sizeof(char) * TOKEN_KEY_LIMIT);
+		ft_strcpy(spec->keys[0],"id");
+		ft_strcpy(spec->keys[1], "loc.x");
+		ft_strcpy(spec->keys[2], "loc.y");
+		ft_strcpy(spec->keys[3], "flavor");
+		ft_strcpy(spec->keys[4], "weapon_type_id");
+		spec->result_ptr = NULL;
+		spec->map_function = map_pickup_to_model;
+	}
+	return (spec);
+}
+
 // 2x Player Spec functions
 static void			map_player_to_model(const int *fields, t_model *mdl)
 {
@@ -426,8 +473,10 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 		map_string(map->enemy_string, mdl, enemy_spec());
 	//ft_putendl("Attempting to convert enemies from map to model at map_to_model");
 	//debug_model_enemies();
+	if (map->pickup_string)
+		map_string(map->pickup_string, mdl, pickup_spec());
 	if (!map->wall_string && !map->room_string && !map->portal_string
-		&& !map->enemy_string && !map->player_string)
+		&& !map->enemy_string && !map->player_string && !map->pickup_string)
 	{
 		ft_putendl("Warning: Empty map data strings at map_to_model");
 		doom_ptr()->map->was_filled = 0;
