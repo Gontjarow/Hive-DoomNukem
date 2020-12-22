@@ -10,17 +10,27 @@
 //				REORGANIZE PLANTING.C FILE // DONE
 //				SEPARATE MODEL AND COMMONS FROM COMMONS TO DATA_MODEL AND COMMONS // DONE
 
-//		TODO FOR PICKUPS.C - AMMO PICKUPS
+//		TODO FOR PICKUPS.C - AMMO PICKUPS AND WEAPON PICKUPS
 //			AMMO PICKUP / YELLOW RECT / NUMBER INSIDE // DONE
 //			GUN PICKUP / GREEN RECT / NUMBER INSIDE // DONE
 //				MISSING PERSISTENCE // DONE
 //					CORRECT FOR PLANTING X, Y WITH SCROLL && ZOOMING // DONE
 //					SYNC PLANTING X, Y WITH DRAWING X, Y // DONE
-//				MISSING NUMBER INSIDE // IMPLEMENT A CUSTOM NUMBER PRINTER WITH TWO SIZES // DONE
-//				MISSING SELECTION OF WEAPON TYPE // IMPLEMENT AT GET_STATE() LEVEL WITH KEYS 1..9
-//				MISSING INDICATOR OF CURRENT PLANT TYPE // IMPLEMENT WITH PREVIEW
-//				MISSING INDICATOR OF CURRENT WEAPON TYPE // IMPLEMENT WITH PREVIEW
+//				MISSING NUMBER INSIDE // DONE
+//					IMPLEMENT A CUSTOM NUMBER PRINTER WITH TWO SIZES // DONE
+//				MISSING SELECTION OF WEAPON TYPE // DONE
+//					IMPLEMENT AT GET_STATE() LEVEL WITH KEYS 1..9 // DONE
+//				MISSING INDICATOR OF CURRENT PLANT TYPE
+//				MISSING INDICATOR OF CURRENT WEAPON TYPE
+//					IMPLEMENT WITH PREVIEW // <-- YOU ARE HERE!!
 //				MISSING BOX TO INFORM THE EDITOR OF WEAPON CHOICE KEYS 1..X
+//				GRID SYSTEM ON TOP OF EVERYTHING ELSE
+//					MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR
+//					DRAW VERY LAST ON SCREEN AREA EXCLUDING INFO BOXES, BUT ONLY ON BLACK, STRAIGHT TO BUFFER
+//					TOGGLE WITH G, VARY STEPPING WITH AN OPTION
+//					DECOUPLED FROM EVERYTHING SO ITS AN EXTRA BONUS FEATURE WITHOUT COMPLEXITY OVERHEAD
+//				PICKUPS DOUBLE CLICK DELETE
+//				ROOMS SELECTION DEL KEY DELETE
 
 void			pickups_plant_health(int x, int y)
 {
@@ -31,8 +41,9 @@ void			pickups_plant_health(int x, int y)
 
 	radius = PICKUP_RADIUS / get_state()->zoom_factor;
 	relative = relative_position(x, y, get_state());
-	square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, radius, COLOR_HEALTH_PICKUP);
-	cross_to_buffer(doom_ptr()->edt->buff, (t_point) {x, y}, radius / 2, COLOR_HEALTH_PICKUP);
+	editor_back_buffer()->rendering_on = 1;
+	square_to_buffer(editor_back_buffer()->buff, (t_point){x, y}, radius, COLOR_HEALTH_PICKUP);
+	cross_to_buffer(editor_back_buffer()->buff, (t_point) {x, y}, radius / 2, COLOR_HEALTH_PICKUP);
 		//puts("Pickups debug: Mock drawing a square directly to buffer!");
 	mdl = get_model();
 	mdl->pickups->id = mdl->pickup_count;
@@ -62,13 +73,14 @@ void			pickups_plant_ammo(int x, int y)
 
 	radius = PICKUP_RADIUS / get_state()->zoom_factor;
 	relative = relative_position(x, y, get_state());
-	square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, radius, COLOR_AMMO_PICKUP);
-	digit_to_buffer(doom_ptr()->edt->buff, (t_point) {x, y}, radius == PICKUP_RADIUS ? 70 : 7, COLOR_AMMO_PICKUP);//TODO Instead of '1' use get_state()->weapon_selected
+	editor_back_buffer()->rendering_on = 1;
+	square_to_buffer(editor_back_buffer()->buff, (t_point){x, y}, radius, COLOR_AMMO_PICKUP);
+	digit_to_buffer(editor_back_buffer()->buff, (t_point) {x, y}, radius == PICKUP_RADIUS ? get_state()->selected_weapon_type * 10 : get_state()->selected_weapon_type, COLOR_AMMO_PICKUP);
 		//puts("Pickups debug: Mock drawing a square directly to buffer!");
 	mdl = get_model();
 	mdl->pickups->id = mdl->pickup_count;
 	mdl->pickups->flavor = PICKUP_AMMO;
-	mdl->pickups->weapon_type_id = 0;//TODO get_state()->weapon_selected; instead of '0'
+	mdl->pickups->weapon_type_id = get_state()->selected_weapon_type;
 	mdl->pickups->loc.x = relative.x;
 	mdl->pickups->loc.y = relative.y;
 	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
@@ -93,13 +105,14 @@ void			pickups_plant_weapon(int x, int y)
 
 	radius = PICKUP_RADIUS / get_state()->zoom_factor;
 	relative = relative_position(x, y, get_state());
-	square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, radius, COLOR_WEAPON_PICKUP);
-	digit_to_buffer(doom_ptr()->edt->buff, (t_point) {x, y}, radius == PICKUP_RADIUS ? 70 : 7, COLOR_WEAPON_PICKUP);//TODO Instead of '1' use get_state()->weapon_selected
+	editor_back_buffer()->rendering_on = 1;
+	square_to_buffer(editor_back_buffer()->buff, (t_point){x, y}, radius, COLOR_WEAPON_PICKUP);
+	digit_to_buffer(editor_back_buffer()->buff, (t_point) {x, y}, radius == PICKUP_RADIUS ? get_state()->selected_weapon_type * 10 : get_state()->selected_weapon_type, COLOR_WEAPON_PICKUP);
 		//puts("Pickups debug: Mock drawing a square directly to buffer!");
 	mdl = get_model();
 	mdl->pickups->id = mdl->pickup_count;
 	mdl->pickups->flavor = PICKUP_WEAPON;
-	mdl->pickups->weapon_type_id = 0;//TODO get_state()->weapon_selected(); instead of '0'
+	mdl->pickups->weapon_type_id = get_state()->selected_weapon_type;
 	mdl->pickups->loc.x = relative.x;
 	mdl->pickups->loc.y = relative.y;
 	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
@@ -113,6 +126,13 @@ void			pickups_plant_weapon(int x, int y)
 	//mdl->pickups->id, mdl->pickups->loc.x, mdl->pickups->loc.y, mdl->pickups->flavor, mdl->pickups->weapon_type_id);
 	mdl->pickups = new_pickup;
 	//debug_model_pickups();
+}
+
+uint32_t		pickups_colors(int type)
+{
+	static uint32_t colors[3] = { COLOR_HEALTH_PICKUP, COLOR_AMMO_PICKUP, COLOR_WEAPON_PICKUP };
+
+	return (colors[type]);
 }
 
 t_logic 		*pickups_logic(void)
@@ -130,6 +150,7 @@ t_logic 		*pickups_logic(void)
 		logic->sweep_counter = 0;
 		logic->sweep[0].x = 0;
 		logic->sweep[0].y = 0;
+		logic->colors = pickups_colors;
 	}
 	return (logic);
 }
@@ -185,9 +206,13 @@ void			pickups_change_zoom(t_state *state)
 
 void 			pickups_mouse_motion(int x, int y)
 {
-	if (x == 12345678)
-		y = 1;
-	//puts("Pickups mouse motion!");
+	static t_point	last_preview = {-1, -1};
+
+	if (last_preview.x != -1 && last_preview.y != -1)
+		preserving_square_to_buffer(doom_ptr()->edt->buff, last_preview, PICKUP_RADIUS / get_state()->zoom_factor, pickups_logic()->colors(pickups_logic()->plant_type));
+	unpreserving_square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, PICKUP_RADIUS / get_state()->zoom_factor, pickups_logic()->colors(pickups_logic()->plant_type));
+	last_preview.x = x;
+	last_preview.y = y;
 }
 
 void 			pickups_left_click(int x, int y)

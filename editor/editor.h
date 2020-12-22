@@ -29,6 +29,7 @@ typedef void 			(*gui_motion)(int x, int y);
 typedef void 			(*status_action)(t_status *status);
 typedef void 			(*logic_xy)(int x, int y);
 typedef void 			(*logic_void)(void);
+typedef uint32_t 		(*logic_colors)(int type);
 
 # define EDT_WIN_WIDTH			1600
 # define EDT_WIN_HEIGHT			900
@@ -66,6 +67,7 @@ typedef struct 			s_logic
 	int 				planted_ticks;
 	t_point				sweep[2];
 	int 				sweep_counter;
+	logic_colors		colors;
 }						t_logic;
 
 typedef struct 			s_status
@@ -109,6 +111,7 @@ typedef struct 			s_state
     int					scroll_x;
     int 				scroll_y;
     int 				confine_skip;
+    int 				selected_weapon_type;
 }						t_state;
 
 typedef struct 			s_editor
@@ -180,6 +183,8 @@ SDL_Surface     		*mixing_surface();
  * from square_to_buffer.c
  * */
 
+void					preserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
+void					unpreserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					digit_to_buffer(SDL_Surface *buff, t_point xy, int digit, uint32_t color);

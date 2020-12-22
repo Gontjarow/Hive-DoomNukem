@@ -1,5 +1,72 @@
 #include "doom-nukem.h"
 
+void			preserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask)
+{
+	unsigned int *pixels;
+	unsigned int *com_pixels;
+	int address;
+	int x;
+	int y;
+
+	pixels = buff->pixels;
+	com_pixels = editor_back_buffer()->buff->pixels;
+	xy.x -= radius / 2;
+	xy.y -= radius / 2;
+	y = 0;
+	while (y <= radius)
+	{
+		x = 0;
+		while (x <= radius)
+		{
+				if (y == 0 || y == radius || x == 0 || x == radius)
+				{
+					address = xy.x + x + (xy.y + y) * buff->w;
+					if (address >= 0 && address < buff->h * buff->w)
+					{
+						if (pixels[address] != mask - 1)
+							if (com_pixels[address] == 0xff000000)
+								pixels[address] = 0xff000000;
+					}
+					//else
+					//ft_putendl("preserving_square_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
+				}
+			x++;
+		}
+		y++;
+	}
+}
+
+void			unpreserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color)
+{
+	unsigned int *pixels;
+	int address;
+	int x;
+	int y;
+
+	pixels = buff->pixels;
+	xy.x -= radius / 2;
+	xy.y -= radius / 2;
+	y = 0;
+	while (y <= radius)
+	{
+		x = 0;
+		while (x <= radius)
+		{
+				if (y == 0 || y == radius || x == 0 || x == radius)
+				{
+					address = xy.x + x + (xy.y + y) * buff->w;
+					if (address >= 0 && address < buff->h * buff->w)
+						if (pixels[address] == 0xff000000)
+							pixels[address] = color;
+					//else
+					//ft_putendl("Warning: unpreserving_square_to_buffer tried to draw outside buffer memory area. Operation was blocked.");
+				}
+			x++;
+		}
+		y++;
+	}
+}
+
 void	square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color)
 {
 	unsigned int *pixels;

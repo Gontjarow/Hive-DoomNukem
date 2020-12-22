@@ -64,9 +64,7 @@ void	 	draw_pickup(t_pickup *pickup, t_state *state)
 	if (pickup->flavor == PICKUP_HEALTH)
 		cross_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius / 2, pickup_color(pickup->flavor));
 	else
-		digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius == PICKUP_RADIUS ? 70 : 7, pickup_color(pickup->flavor));//TODO CHANGE TO DYNAMIC INSTEAD OF STATIC VALUE
-	// TODO if (pickup->flavor == PICKUP_HEALTH || PICKUP_AMMO)
-	//		number_to_buffer(...);
+		digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius == PICKUP_RADIUS ? pickup->weapon_type_id * 10 : pickup->weapon_type_id, pickup_color(pickup->flavor));
 }
 
 void			update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type)

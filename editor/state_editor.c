@@ -85,6 +85,7 @@ t_state				*get_state(void)
 		state->scroll_x = 0;
 		state->scroll_y = 0;
 		state->confine_skip = 1;
+		state->selected_weapon_type = 1;
 		state->gui->activate(state);
 		//print_mode_info(state->gui);
 		//draw_scroll_bars_to_backbuffer(state);

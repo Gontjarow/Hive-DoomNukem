@@ -35,6 +35,9 @@ void			edt_keystate_input(t_doom *doom)
 	static int	lock_z = 0;
 	static int	lock_x = 0;
 	static int	lock_p = 0;
+	static int	scancodes[8] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
+	SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
+	SDL_SCANCODE_8, SDL_SCANCODE_9};
 
 	handle_keyboard_scrolling(doom);
 
@@ -85,6 +88,17 @@ void			edt_keystate_input(t_doom *doom)
 	{
 		debug_model_pickups();
 		lock_p = 1;
+	}
+
+	int i = -1;
+	while (i++ < 8)
+	{
+		if (doom->keystates[scancodes[i]])
+		{
+			get_state()->selected_weapon_type = (i + 1);
+				//printf("Set weapon slot %d\n", i + 1);
+			break ;
+		}
 	}
 }
 
