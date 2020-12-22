@@ -309,8 +309,8 @@ void			free_obj(t_obj obj)
 t_actual_face	*face_transform(t_global_vert **vlist, t_matrix m, t_actual_face *f)
 {
 	return (new_face(vlist,
-		apply_m(m, f->vert->data->pos),
-		apply_m(m, f->vert->next->data->pos),
+		apply_m(m, f->vert->            data->pos),
+		apply_m(m, f->vert->next->      data->pos),
 		apply_m(m, f->vert->next->next->data->pos)
 	));
 }
@@ -329,12 +329,10 @@ t_obj			obj_transform(t_matrix m, t_obj obj)
 
 	out.face = face_transform(&out.vert, m, obj.face);
 	obj.face = obj.face->next;
-	// ++out.f_count;
 
 	while (obj.face != NULL)
 	{
 		face_list_add(&out.face, face_transform(&out.vert, m, obj.face));
-		// ++out.f_count;
 		obj.face = obj.face->next;
 	}
 
@@ -361,16 +359,16 @@ t_obj			screenspace(t_obj obj)
 	assert(obj.f_count >= 1);
 
 	out.face = new_face(&out.vert,
-		vert2screen(obj.face->vert->data->pos),
-		vert2screen(obj.face->vert->next->data->pos),
+		vert2screen(obj.face->vert->            data->pos),
+		vert2screen(obj.face->vert->next->      data->pos),
 		vert2screen(obj.face->vert->next->next->data->pos));
 	obj.face = obj.face->next;
 
 	while (obj.face != NULL)
 	{
 		face_list_add(&out.face, new_face(&out.vert,
-			vert2screen(obj.face->vert->data->pos),
-			vert2screen(obj.face->vert->next->data->pos),
+			vert2screen(obj.face->vert->            data->pos),
+			vert2screen(obj.face->vert->next->      data->pos),
 			vert2screen(obj.face->vert->next->next->data->pos)));
 		obj.face = obj.face->next;
 	}
