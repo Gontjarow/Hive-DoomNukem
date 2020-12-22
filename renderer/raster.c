@@ -58,7 +58,7 @@ t_xy		bb_max(t_actual_face *face)
 	int i;
 	t_vert highest;
 	t_vert current;
-	t_face_vert *iter = face;
+	t_face_vert *iter = face->vert;
 
 	highest = iter->data->pos;
 	i = 1;

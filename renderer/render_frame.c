@@ -45,7 +45,7 @@ void render_frame(t_doom *doom)
 	int			px = doom->mdl->player.x;
 	int			py = doom->mdl->player.y;
 	t_xyz		pos = vec3_mul(vec3(px, 0, py), WORLD_SCALE_FACTOR);
-				pos.y = doom->mdl->room_first->floor_height;
+				// pos.y = doom->mdl->room_first->floor_height;
 	t_xyz		cam_dir = vec3_norm(vec3_sub(pos, vec3(0, 0, 0)));
 
 	t_matrix	world = translate_m(0, 0, 0);
@@ -53,30 +53,39 @@ void render_frame(t_doom *doom)
 	t_matrix	modelview = lookat_m(pos, vec3(0, 0, 0), vec3(0,1,0));
 	t_matrix	projection = project_pure_m();
 	t_matrix	window = window_m(0.1, 1000);
-	// modelview = multiply_m(projection, modelview);
+	modelview = multiply_m(projection, modelview);
 
 	t_obj		world_obj = doom->game->world_obj;
 	t_obj		view_obj = obj_transform(modelview, world_obj);
 	t_obj		clipped_obj = obj_clip(view_obj);
-	t_vert		tv1 = view_obj.face->vert->data->pos;
-	t_vert		tv2 = view_obj.face->vert->next->data->pos;
-	t_vert		tv3 = view_obj.face->vert->next->next->data->pos;
-	printf("\n");
-	printf(	"frame (%i %i)->(%f %f %f) \n"
+	t_obj		screen_obj;
+
+	if (clipped_obj.f_count != 0)
+	{
+		screen_obj = screenspace(clipped_obj);
+		t_vert tv1, tv2, tv3;
+		tv1 = screen_obj.face->vert->data->pos;
+		tv2 = screen_obj.face->vert->next->data->pos;
+		tv3 = screen_obj.face->vert->next->next->data->pos;
+		printf("\n");
+		printf(
+			"frame (%i %i)->(%f %f %f) \n"
 			"      (X:%f Y:%f Z:%f (W:%f)) \n"
 			"      (X:%f Y:%f Z:%f (W:%f)) \n"
 			"      (X:%f Y:%f Z:%f (W:%f)) \n",
-		px, py,	pos.x, pos.y, pos.z,
-		tv1.x, tv1.y, tv1.z, tv1.w,
-		tv2.x, tv2.y, tv2.z, tv2.w,
-		tv3.x, tv3.y, tv3.z, tv3.w);
+			px, py,	pos.x, pos.y, pos.z,
+			tv1.x, tv1.y, tv1.z, tv1.w,
+			tv2.x, tv2.y, tv2.z, tv2.w,
+			tv3.x, tv3.y, tv3.z, tv3.w);
+	}
+	else return;
 
 	int i = 0;
-	while (i < view_obj.f_count)
+	while (i < screen_obj.f_count)
 	{
 		// t_vert *vo = test.face[i].vert;
 		// t_vert *vt = screen.face[i].vert;
-		t_actual_face *face = list2face(view_obj.face, i);
+		t_actual_face *face = list2face(screen_obj.face, i);
 		t_vert v0 = face->vert->data->pos;
 		t_vert v1 = face->vert->next->data->pos;
 		t_vert v2 = face->vert->next->next->data->pos;
@@ -89,7 +98,7 @@ void render_frame(t_doom *doom)
 		// How much the face aligns with the camera (backface culling)
 		// Note: The face must have the opposite direction as the camera to be seen.
 		// 📷-->   <-|
-		if (-vec3_dot(cam_dir, normal) > 0)
+		// if (-vec3_dot(cam_dir, normal) > 0)
 		{
 			// How much the face aligns with the light
 			// Note: Normal must face in the OPPOSITE direction as the light-source to be lit.

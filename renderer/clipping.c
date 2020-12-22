@@ -65,7 +65,7 @@ t_actual_face	*faceclipper(t_actual_face *face, t_global_vert **vlist)
 
 		if (curr_inside)
 		{
-			result = face_vert_add(result, curr);
+			result = face_vert_add(result, new_vert(vlist, curr->data->pos));
 		}
 
 		prev           = curr;
@@ -121,8 +121,6 @@ int				get_clip_type(t_actual_face *face)
 
 t_actual_face	*clip_face(t_actual_face *face, t_global_vert **vlist, int clip_type)
 {
-	t_actual_face *clipped = NULL;
-
 	if (clip_type == CLIP_TRIVIAL_ACCEPT)
 	{
 		return (new_face(vlist, // This doesn't feel right...
@@ -136,13 +134,7 @@ t_actual_face	*clip_face(t_actual_face *face, t_global_vert **vlist, int clip_ty
 		// At this point, face should begin with exactly 3 verts.
 		// Should it also return only faces with exactly 3 verts?
 		// (Not if they're in order like a triagle-fan.)
-		clipped = faceclipper(face, vlist);
-		// Link prev and next to this one...
-		clipped->prev = face->prev;
-		clipped->next = face->next;
-		face->prev->next = clipped;
-		face->next->prev = clipped;
-		return (clipped);
+		return (faceclipper(face, vlist));
 	}
 	else
 	{
@@ -166,9 +158,18 @@ t_obj			obj_clip(t_obj obj)
 	{
 		if ((clip_type = get_clip_type(obj.face)) != CLIP_TRIVIAL_REJECT)
 		{
-			face_list_add(&out.face, clip_face(obj.face, &out.vert, clip_type));
-			out.f_count += 1;
-			out.v_count += 3;
+			t_actual_face *clips = clip_face(obj.face, &out.vert, clip_type);
+			if (clips)
+			{
+				face_list_add(&out.face, clips);
+				t_actual_face *count = clips;
+				while (count)
+				{
+					out.f_count += 1;
+					out.v_count += 3;
+					count = count->next;
+				}
+			}
 		}
 		obj.face = obj.face->next;
 	}

@@ -108,21 +108,25 @@ t_global_vert	*global_vert_add(t_global_vert **vlist, t_global_vert *tail)
 	return (NULL);
 }
 
-t_face_vert		*face_vert_add(t_face_vert *head, t_face_vert *tail)
+t_face_vert		*face_vert_add(t_face_vert **head, t_face_vert *tail)
 {
 	t_face_vert	*last;
 
 	if (head != NULL)
 	{
-		last = list2fvert(head, LAST);
-		last->next = tail;
-		tail->prev = last;
+		if ((*head) != NULL)
+		{
+			last = list2fvert(*head, LAST);
+			last->next = tail;
+			tail->prev = last;
+		}
+		else
+		{
+			*head = tail;
+		}
+		return (*head);
 	}
-	else
-	{
-		head = tail;
-	}
-	return (head);
+	return (NULL);
 }
 
 t_actual_face	*face_list_add(t_actual_face **head, t_actual_face *tail)
@@ -324,10 +328,50 @@ t_obj			obj_transform(t_matrix m, t_obj obj)
 	assert(obj.f_count >= 1);
 
 	out.face = face_transform(&out.vert, m, obj.face);
+	obj.face = obj.face->next;
+	// ++out.f_count;
 
 	while (obj.face != NULL)
 	{
 		face_list_add(&out.face, face_transform(&out.vert, m, obj.face));
+		// ++out.f_count;
+		obj.face = obj.face->next;
+	}
+
+	return (out);
+}
+
+t_vert			vert2screen(t_vert v)
+{
+	return vec4(
+		((v.x / v.w) + 1) * GAME_WIN_WIDTH * 0.5,
+		((v.y / v.w) + 1) * GAME_WIN_HEIGHT * 0.5,
+		0,
+		0
+	);
+}
+
+t_obj			screenspace(t_obj obj)
+{
+	t_obj out;
+	t_vert v[3];
+
+	out = (t_obj){obj.v_count, obj.f_count, NULL, NULL};
+
+	assert(obj.f_count >= 1);
+
+	out.face = new_face(&out.vert,
+		vert2screen(obj.face->vert->data->pos),
+		vert2screen(obj.face->vert->next->data->pos),
+		vert2screen(obj.face->vert->next->next->data->pos));
+	obj.face = obj.face->next;
+
+	while (obj.face != NULL)
+	{
+		face_list_add(&out.face, new_face(&out.vert,
+			vert2screen(obj.face->vert->data->pos),
+			vert2screen(obj.face->vert->next->data->pos),
+			vert2screen(obj.face->vert->next->next->data->pos)));
 		obj.face = obj.face->next;
 	}
 
