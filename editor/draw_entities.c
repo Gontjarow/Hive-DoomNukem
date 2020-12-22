@@ -53,7 +53,7 @@ void	 	draw_pickup(t_pickup *pickup, t_state *state)
 		  (pickup->loc.y <= state->scroll_y + (state->zoom_factor * EDT_WIN_HEIGHT))))
 		return ;
 	//puts("Pickup drawing...");
-	radius = 12 / get_state()->zoom_factor;
+	radius = PICKUP_RADIUS / get_state()->zoom_factor;
 	relative_x = pickup->loc.x;
 	relative_y = pickup->loc.y;
 	relative_x -= state->scroll_x;
@@ -63,6 +63,10 @@ void	 	draw_pickup(t_pickup *pickup, t_state *state)
 	square_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius, pickup_color(pickup->flavor));
 	if (pickup->flavor == PICKUP_HEALTH)
 		cross_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius / 2, pickup_color(pickup->flavor));
+	else
+		digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y}, radius == PICKUP_RADIUS ? 70 : 7, pickup_color(pickup->flavor));//TODO CHANGE TO DYNAMIC INSTEAD OF STATIC VALUE
+	// TODO if (pickup->flavor == PICKUP_HEALTH || PICKUP_AMMO)
+	//		number_to_buffer(...);
 }
 
 void			update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type)

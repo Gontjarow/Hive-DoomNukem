@@ -37,7 +37,8 @@ typedef void 			(*logic_void)(void);
 # define COLOR_ENEMY			0xffffff00
 # define COLOR_HEALTH_PICKUP	0xff00ff00
 # define COLOR_AMMO_PICKUP		0xffffff00
-# define COLOR_WEAPON_PICKUP	0xff00ff00
+# define COLOR_WEAPON_PICKUP	0xffffffff
+# define PICKUP_RADIUS			16
 
 typedef struct 			s_2d_layer
 {
@@ -181,6 +182,7 @@ SDL_Surface     		*mixing_surface();
 
 void					square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void					digit_to_buffer(SDL_Surface *buff, t_point xy, int digit, uint32_t color);
 
 /*
  * from circle_to_buffer.c
@@ -230,6 +232,8 @@ t_state					*get_state(void);
  * from pickups.c
  * */
 
+t_logic		 			*pickups_logic(void);
+void 					pickups_swap_type(void);
 void					pickups_plant_health(int x, int y);
 void 					pickups_plant(int x, int y);
 
