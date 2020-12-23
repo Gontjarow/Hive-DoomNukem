@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/22 20:53:18 by msuarez-         ###   ########.fr       */
+/*   Updated: 2020/12/23 04:46:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,40 @@ static int		player_collision_with_pickup(t_doom *doom, t_pickup *pickup)
 	return (0);
 }
 
-static t_pickup	*delete_head(t_doom *doom, t_pickup *current)
-{
-	current = current->next;
-	return (current);
-}
-
-static int		delete_tail(t_doom *doom, t_pickup *pickup)
-{
-	t_pickup	*current;
-	t_pickup	*prev;
-
-	return (1);
-}
-
 // STILL WORK IN PROGRESS -> HANDLE DELETION OF A CERTAIN PICKUP ON THE LINKED LIST!!!
+
+t_pickup		*delete_first(t_doom *doom)
+{
+	t_pickup	*head;
+	t_pickup	*temp;
+
+	head = doom->mdl->pickup_first;
+	if (head == NULL)
+		return (NULL);
+	// Move the head pointer to the next node
+	temp = head;
+	head = head->next;
+    free(temp);
+	return (head);
+}
+
+t_pickup		*delete_node(t_pickup *current, t_pickup *prev, t_pickup *pickup)
+{
+	while (current != NULL && current->id != pickup->id)
+	{
+		prev = current;
+		current = current->next;
+	}
+    prev->next = current->next;
+	free(current);
+	pickup = prev;
+	return (pickup);
+}
+
+// DELETION OF THE HEALTH PICKUPS: YOU CAN PICKUP ALL OF THE NODES AFTER THE HEAD
+// AND IF YOU GET THE HEAD AS LAST, IT WORKS PERFECTLY. BUT IF YOU PICKUP THE
+// HEAD FIRST OR IF YOU PICKUP SOMETHING FIRST AND THEN THE HEAD
+// IT SEGFAULTS! FIX IT! :)
 
 static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 {
@@ -50,37 +69,24 @@ static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 	int			pc;
 
 	printf("Pickup ID that u touched: %d\n", pickup->id);
-	current = doom->mdl->pickup_first;
-	if (pickup->id == 0)
-	{
-		current = current->next;
-		pickup = current;
-		return ;
-	}
-	else if (pickup->id == doom->mdl->pickup_count - 1)
-	{
-
-	}
 	pc = doom->mdl->pickup_count;
-    while (pc--)
-    {
-		if (pickup->id == 0)
-		{															//HEAD
-			pickup = delete_head(doom, current);
-			break;
-		}
-		else if (current->id == doom->mdl->pickup_count - 1)		//TAIL
-			pickup = delete_tail(doom, current);
-		if (current->id == pickup->id)
-			break ;
-		prev = current;
-		current = current->next;
-    }
-    prev->next = current->next;
-	pickup = prev;
+	current = doom->mdl->pickup_first;
+	printf("before if\n");
+	if (current->id == pickup->id)
+	{
+		printf("Inside if\n");
+		pickup = delete_first(doom);
+		printf("after delete_first\n");
+	}
+	else
+	{
+		printf("Inside else\n");
+		pickup = delete_node(current, prev, pickup);
+		printf("after delete_node\n");
+	}
 	Mix_PlayChannel(3, doom->sounds->mcHealthPickup, 0);
 	doom->mdl->pickup_count--;
-	doom->mdl->player.hp.cur += 50;
+	doom->mdl->player.hp.cur += 1;
 	if (doom->mdl->player.hp.cur > 100)
 		doom->mdl->player.hp.cur = 100;
 	printf("you touched a pickup!\n");
@@ -108,10 +114,12 @@ void			handle_pickup(t_doom *doom)
 	while (pc--)
 	{
 		// THIS PART IS COMMENTED OUT BECAUSE HANDLE_HEALTH_PICKUP IS INCOMPLETE!!! by: msuarez-
-	
-		// if (pickup->flavor == PICKUP_HEALTH && player_collision_with_pickup
-		// 	(doom, pickup) == -1 && doom->mdl->player.hp.cur < 100)
-		// 	handle_health_pickup(doom, pickup);
+		printf("Checking all pickups\n");
+		if (pickup->flavor == PICKUP_HEALTH && player_collision_with_pickup
+			(doom, pickup) == -1 && doom->mdl->player.hp.cur < 100)
+		{
+			handle_health_pickup(doom, pickup);
+		}
 
 		// if (pickup->flavor == PICKUP_AMMO)
 		// 	handle_ammo_pickup(doom, pickup);
@@ -119,4 +127,5 @@ void			handle_pickup(t_doom *doom)
 		// 	handle_weapon_pickup(doom, pickup);
 		pickup = pickup->next;
 	}
+	printf("\n\n");
 }
