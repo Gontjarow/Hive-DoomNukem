@@ -1,7 +1,7 @@
 #ifndef DATA_MODEL_H
 # define DATA_MODEL_H
 
-#include "doom-nukem.h"
+#include "../doom-nukem.h"
 
 typedef	struct 			s_doom t_doom;
 typedef struct 			SDL_Surface SDL_Surface;
@@ -82,72 +82,6 @@ typedef struct			s_token
 	map_func			map_function;
 }						t_token;
 
-typedef struct			s_animation
-{
-	SDL_Surface 		**surfaces;
-	int 				frames;
-	int 				current;
-}						t_animation;
-
-typedef struct			s_image
-{
-	void				*ptr;
-	int					*data;
-	int					width;
-	int					height;
-	int					bpp;
-	int					line;
-	int					endian;
-}						t_image;
-
-typedef struct 			s_sounds
-{
-	struct Mix_Chunk 	*mcThunder;
-	struct Mix_Chunk 	*mcSteam;
-	struct Mix_Chunk	*mcPlop;
-	struct Mix_Chunk	*mcSword;
-	struct Mix_Chunk	*mcPistolRld;
-	struct Mix_Chunk	*mcAssaultRld;
-	struct Mix_Chunk	*mcSmgRld;
-	struct Mix_Chunk	*mcSmgShot;
-	struct Mix_Chunk	*mcPistolShot;
-	struct Mix_Chunk	*mcAssaultShot;
-	struct Mix_Chunk	*mcWalking;
-	struct Mix_Chunk	*mcRunning;
-	struct Mix_Chunk	*mcCrouching;
-	struct Mix_Chunk	*mcEnemyDeath;
-	struct Mix_Chunk	*mcHealthPickup;
-	struct Mix_Chunk	*mcAmmoPickup;
-	int					footstep_delay;
-}						t_sounds;
-
-typedef struct			s_menu
-{
-	int 				selected;
-	struct s_animation	ani_thunder;
-	int 				esc_lock;
-	struct SDL_Surface	*alphabet[128];
-	int 				alphabet_scale;
-	SDL_Surface			*thunder;
-	struct s_doom		*parent;
-}						t_menu;
-
-typedef struct 			s_line
-{
-	int					x1;
-	int 				x2;
-	int 				y1;
-	int 				y2;
-	int 				fx;
-	int 				fy;
-	int 				px;
-	int 				py;
-	uint32_t 			color;
-	uint32_t 			avoid[3];
-	struct SDL_Surface 	*buff;
-	struct s_doom		*doom;
-}						t_line;
-
 /*
  * from data_model.c
  * */
@@ -161,17 +95,6 @@ void	 				destroy_model(t_doom *doom);
 
 void	 				destroy_mapdata(t_doom *doom);
 int 					load_model(t_doom *doom);
-
-/*
- * from debug_console.c
- * */
-
-void 					debug_model_player(void);
-void		 			debug_model_enemies(void);
-void 					debug_model_walls(void);
-void					debug_model_rooms(void);
-void					debug_model_portals(void);
-void					debug_model_pickups(void);
 
 /*
  * from singleton_links.c
@@ -206,31 +129,5 @@ void					add_pickup_to_string(t_pickup *pickup, t_mapfile *map);
  */
 
 void 					map_to_model(t_mapfile *map, t_model *mdl);
-
-/*
- * from texture.c
- * */
-
-uint32_t 				get_exact_pixel(SDL_Surface *surface, int x, int y);
-SDL_Surface				*xpm2surface(char *path);
-SDL_Surface				*load_png(char *path);
-SDL_Surface				*load_texture(t_doom *doom, char *path);
-
-/*
- * from line.c and line_safe.c
- * */
-
-void					render_line_safe(t_line *l);
-void 					render_line(t_line *l);
-void					careful_render_line(t_line *l);
-
-/*
- * from pixel.c
- * */
-
-void					flood_buffer(SDL_Surface *buff, uint32_t color);
-void					set_protected_color(uint32_t color);
-int 					set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
-void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 
 #endif

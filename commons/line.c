@@ -113,29 +113,79 @@ static void		line_care_draw(t_line *l, int delta_x, int delta_y)
 	}
 }
 
-static void		line_draw(t_line *l, int delta_x, int delta_y)
+static void		line_unpreserve_draw(t_line *l, int delta_x, int delta_y)
 {
-	int	abs_deltas[2];
-	int kx;
+	int			abs_deltas[2];
+	int 		kx;
+	int			loc;
+	int			line_width;
+	uint32_t	col;
+	uint32_t	*pixels;
 
+	pixels = l->buff->pixels;
+	line_width = l->buff->w;
+	col = l->color;
 	abs_deltas[0] = abs(delta_x);
 	abs_deltas[1] = abs(delta_y);
 	kx = 2 * abs_deltas[1] - abs_deltas[0];
-	set_pixel(l->buff, l->fx, l->fy, l->color);
+	loc = l->fx + (l->fy * line_width);
+	if (pixels[loc] == 0xff000000)
+		pixels[loc] = col;
 	while (l->fx < l->px)
 	{
+		loc++;
 		l->fx++;
 		if (kx < 0)
 			kx += 2 * abs_deltas[1];
 		else
 		{
 			if ((delta_x < 0 && delta_y < 0) || (delta_x > 0 && delta_y > 0))
-				l->fy++;
+				loc += line_width;//l->fy++;
 			else
-				l->fy--;
+				loc -= line_width;//l->fy--;
 			kx += 2 * (abs_deltas[1] - abs_deltas[0]);
 		}
-		set_pixel(l->buff, l->fx, l->fy, l->color);
+		if (pixels[loc] == 0xff000000)
+			pixels[loc] = col;
+	}
+}
+
+static void		line_preserve_draw(t_line *l, int delta_x, int delta_y)
+{
+	int			abs_deltas[2];
+	int 		kx;
+	int			loc;
+	int			line_width;
+	uint32_t	col;
+	uint32_t	*pixels;
+	uint32_t 	*com_pixels;
+
+	pixels = l->buff->pixels;
+	com_pixels = editor_back_buffer()->buff->pixels;
+	line_width = l->buff->w;
+	col = l->color;
+	abs_deltas[0] = abs(delta_x);
+	abs_deltas[1] = abs(delta_y);
+	kx = 2 * abs_deltas[1] - abs_deltas[0];
+	loc = l->fx + (l->fy * line_width);
+	if (com_pixels[loc] == 0xff000000)
+		pixels[loc] = col;
+	while (l->fx < l->px)
+	{
+		loc++;
+		l->fx++;
+		if (kx < 0)
+			kx += 2 * abs_deltas[1];
+		else
+		{
+			if ((delta_x < 0 && delta_y < 0) || (delta_x > 0 && delta_y > 0))
+				loc += line_width;//l->fy++;
+			else
+				loc -= line_width;//l->fy--;
+			kx += 2 * (abs_deltas[1] - abs_deltas[0]);
+		}
+		if (com_pixels[loc] == 0xff000000)
+			pixels[loc] = col;
 	}
 }
 
@@ -218,29 +268,79 @@ static void 	line_care_mirror(t_line *l, int delta_x, int delta_y)
 	}
 }
 
-static void		line_mirror(t_line *l, int delta_x, int delta_y)
+static void		line_preserve_mirror(t_line *l, int delta_x, int delta_y)
 {
-	int abs_deltas[2];
-	int ky;
+	int 		abs_deltas[2];
+	int 		ky;
+	int			loc;
+	int			line_width;
+	uint32_t	col;
+	uint32_t	*pixels;
+	uint32_t 	*com_pixels;
 
+	pixels = l->buff->pixels;
+	com_pixels = editor_back_buffer()->buff->pixels;
+	line_width = l->buff->w;
+	col = l->color;
 	abs_deltas[0] = abs(delta_x);
 	abs_deltas[1] = abs(delta_y);
 	ky = 2 * abs_deltas[0] - abs_deltas[1];
-	set_pixel(l->buff, l->fx, l->fy, l->color);
+	loc = l->fx + (l->fy * line_width);
+	if (com_pixels[loc] == 0xff000000)
+		pixels[loc] = col;
 	while (l->fy < l->py)
 	{
+		loc += line_width;
 		l->fy++;
 		if (ky <= 0)
 			ky += 2 * abs_deltas[0];
 		else
 		{
 			if ((delta_x < 0 && delta_y < 0) || (delta_x > 0 && delta_y > 0))
-				l->fx++;
+				loc ++;
 			else
-				l->fx--;
+				loc --;
 			ky += 2 * (abs_deltas[0] - abs_deltas[1]);
 		}
-		set_pixel(l->buff, l->fx, l->fy, l->color);
+		if (com_pixels[loc] == 0xff000000)
+			pixels[loc] = col;
+	}
+}
+
+static void		line_unpreserve_mirror(t_line *l, int delta_x, int delta_y)
+{
+	int 		abs_deltas[2];
+	int 		ky;
+	int			loc;
+	int			line_width;
+	uint32_t	col;
+	uint32_t	*pixels;
+
+	pixels = l->buff->pixels;
+	line_width = l->buff->w;
+	col = l->color;
+	abs_deltas[0] = abs(delta_x);
+	abs_deltas[1] = abs(delta_y);
+	ky = 2 * abs_deltas[0] - abs_deltas[1];
+	loc = l->fx + (l->fy * line_width);
+	if (pixels[loc] == 0xff000000)
+		pixels[loc] = col;
+	while (l->fy < l->py)
+	{
+		loc += line_width;
+		l->fy++;
+		if (ky <= 0)
+			ky += 2 * abs_deltas[0];
+		else
+		{
+			if ((delta_x < 0 && delta_y < 0) || (delta_x > 0 && delta_y > 0))
+				loc ++;
+			else
+				loc --;
+			ky += 2 * (abs_deltas[0] - abs_deltas[1]);
+		}
+		if (pixels[loc] == 0xff000000)
+			pixels[loc] = col;
 	}
 }
 
@@ -294,5 +394,55 @@ void			careful_render_line(t_line *l)
 		else
 			l = quad(3, l);
 		line_care_mirror(l, delta_x, delta_y);
+	}
+}
+
+void			preserve_render_line(t_line *l)
+{
+	int delta_x;
+	int	delta_y;
+
+	delta_x = l->x2 - l->x1;
+	delta_y = l->y2 - l->y1;
+	if (abs(delta_y) <= abs(delta_x))
+	{
+		if (delta_x >= 0)
+			l = quad(0, l);
+		else
+			l = quad(1, l);
+		line_preserve_draw(l, delta_x, delta_y);
+	}
+	else
+	{
+		if (delta_y >= 0)
+			l = quad(2, l);
+		else
+			l = quad(3, l);
+		line_preserve_mirror(l, delta_x, delta_y);
+	}
+}
+
+void			unpreserve_render_line(t_line *l)
+{
+	int delta_x;
+	int	delta_y;
+
+	delta_x = l->x2 - l->x1;
+	delta_y = l->y2 - l->y1;
+	if (abs(delta_y) <= abs(delta_x))
+	{
+		if (delta_x >= 0)
+			l = quad(0, l);
+		else
+			l = quad(1, l);
+		line_unpreserve_draw(l, delta_x, delta_y);
+	}
+	else
+	{
+		if (delta_y >= 0)
+			l = quad(2, l);
+		else
+			l = quad(3, l);
+		line_unpreserve_mirror(l, delta_x, delta_y);
 	}
 }

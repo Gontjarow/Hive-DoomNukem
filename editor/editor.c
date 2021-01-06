@@ -15,15 +15,14 @@
 // TODO BIG NOTE TO SELF
 //  EDITOR COULD GUARANTEE CLOCKWISE ARRANGEMENT OF WALL NODES IN ROOMS
 
-// TODO BEFORE MASTER MERGE
-//		ADD HEALTH PICKUP / GREEN RECT / PLUS SIGN INSIDE
-//		AMMO PICKUP / YELLOW RECT / NUMBER INSIDE
-//		GUN PICKUP / GREEN RECT / NUMBER INSIDE
-//		GAMEPLAY: WITHOUT A GUN PICKED UP, NO SWAP ALLOWED! INITIALIZE GUN PICKUPS TO 0
-
 // TODO AFTER MASTER MERGE
 //		MODE TO PORTALIZE A WALL AND EXTEND A NEW ROOM FROM IT // CHECK BELOW FOR IDEAS
 //		ADD LEVEL EXITS IN EDITOR, ADD NAME OF MAP TO LOAD OR VICTORY SCREEN // TRIANGLES IN DIFFERENT COLORS
+
+//	TODO FOR EDITOR IN GENERAL, DELETION OPTIONS
+//		PICKUPS DOUBLE CLICK DELETE
+//		ENEMIES DOUBLE CLICK DELETE
+//		ROOMS SELECTION DEL KEY DELETE
 
 // TODO FEATURE DEBT
 //		EVERYTHING SHOULD BE MOVABLE AND DELETABLE
@@ -118,6 +117,54 @@ void				destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
+//		TODO FOR EDITOR IN GENERAL, GRID VISUALS
+//			GRID SYSTEM ON TOP OF EVERYTHING ELSE
+//				MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR // NOT DIVIDED BY ZOOM FACTOR YET
+//				DRAW VERY LAST ON SCREEN AREA EXCLUDING INFO BOXES, BUT ONLY ON BLACK, STRAIGHT TO BUFFER // DONE
+//				TOGGLE WITH G, VARY STEPPING WITH AN OPTION // TOGGLE DONE
+//				DECOUPLED FROM EVERYTHING SO ITS AN EXTRA BONUS FEATURE WITHOUT COMPLEXITY OVERHEAD // DECOUPLED
+
+// edt_gridify, DOT grid style. Needs to be added to avoid[x] colors for cleanliness
+
+static void 		edt_gridify(void)
+{
+	int 		y;
+	int			loc;
+	int 		end;
+	int 		grid_sz;
+	int 		sx_mod;
+	int 		sy_mod;
+	uint32_t	col;
+	uint32_t	*pixels;
+
+		return ;
+	if (!get_state()->grid_on)
+		return ;
+	loc = 0;
+	col = COLOR_GRID_LINE;
+	end = (EDT_WIN_HEIGHT * EDT_WIN_WIDTH) - 1;
+	pixels = doom_ptr()->edt->buff->pixels;
+	grid_sz = get_state()->grid_size;
+	sx_mod = grid_sz - get_state()->scroll_x % grid_sz;
+	if (sx_mod == grid_sz)
+		sx_mod = 0;
+	sy_mod = grid_sz - get_state()->scroll_y % grid_sz;
+	if (sy_mod == grid_sz)
+		sy_mod = 0;
+	while (loc < end)
+	{
+		if ((loc % grid_sz == sx_mod)&& (y % grid_sz == sy_mod))
+			if (pixels[loc] == 0xff000000)
+				pixels[loc] = col;
+		if (loc % EDT_WIN_WIDTH == 0)
+			y++;
+		/*if (y % grid_sz == sy_mod)
+			if (pixels[loc] == 0xff000000)
+				pixels[loc] = col;*/
+		loc++;
+	}
+}
+
 void				edt_render(t_doom *doom)
 {
 	edt_keystate_input(doom);
@@ -130,12 +177,14 @@ void				edt_render(t_doom *doom)
         SDL_BlitSurface(mixing_surface(), NULL, doom->edt->buff, NULL);
         editor_front_buffer()->rendering_on = 0;
         editor_back_buffer()->rendering_on = 0;
+        edt_gridify();
     }
     else if (editor_back_buffer()->rendering_on)
     {
         flood_buffer(doom->edt->buff, 0xff000000);
         SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
         editor_back_buffer()->rendering_on = 0;
+		edt_gridify();
     }
 	SDL_UpdateWindowSurface(doom->edt->win);
 }

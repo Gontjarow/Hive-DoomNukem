@@ -19,7 +19,7 @@
 
 # include "libft.h"
 # include "objects.h"
-# include "data_model.h"
+# include "data_model/data_model.h"
 # include "editor.h"
 # include "game.h"
 # include "minimap.h"

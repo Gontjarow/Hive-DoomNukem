@@ -29,15 +29,18 @@ typedef void 			(*gui_motion)(int x, int y);
 typedef void 			(*status_action)(t_status *status);
 typedef void 			(*logic_xy)(int x, int y);
 typedef void 			(*logic_void)(void);
+typedef uint32_t 		(*logic_colors)(int type);
 
 # define EDT_WIN_WIDTH			1600
 # define EDT_WIN_HEIGHT			900
 # define COLOR_LINE				0xffffffff
+# define COLOR_GRID_LINE		0xff888888
 # define COLOR_PLAYER			0xff00ff00
 # define COLOR_ENEMY			0xffffff00
 # define COLOR_HEALTH_PICKUP	0xff00ff00
 # define COLOR_AMMO_PICKUP		0xffffff00
-# define COLOR_WEAPON_PICKUP	0xff00ff00
+# define COLOR_WEAPON_PICKUP	0xffffffff
+# define PICKUP_RADIUS			16
 
 typedef struct 			s_2d_layer
 {
@@ -65,6 +68,7 @@ typedef struct 			s_logic
 	int 				planted_ticks;
 	t_point				sweep[2];
 	int 				sweep_counter;
+	logic_colors		colors;
 }						t_logic;
 
 typedef struct 			s_status
@@ -108,6 +112,9 @@ typedef struct 			s_state
     int					scroll_x;
     int 				scroll_y;
     int 				confine_skip;
+    int 				selected_weapon_type;
+    int 				grid_on;
+    int 				grid_size;
 }						t_state;
 
 typedef struct 			s_editor
@@ -179,8 +186,14 @@ SDL_Surface     		*mixing_surface();
  * from square_to_buffer.c
  * */
 
+void					preserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
+void					unpreserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void				 	preserving_cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void 					unpreserving_cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void					digit_to_buffer(SDL_Surface *buff, t_point xy, int digit, uint32_t color);
+void					digit_to_buffer_ptr(SDL_Surface *buff, t_point xy, int digit, uint32_t color, void (*render_fun)(t_line *line));
 
 /*
  * from circle_to_buffer.c
@@ -230,6 +243,9 @@ t_state					*get_state(void);
  * from pickups.c
  * */
 
+t_logic		 			*pickups_logic(void);
+void 					pickups_swap_type(void);
+void					pickups_refresh_preview(void);
 void					pickups_plant_health(int x, int y);
 void 					pickups_plant(int x, int y);
 
@@ -243,11 +259,28 @@ void 					pickups_right_click(int x, int y);
 void 					pickups_middle_click(int x, int y);
 
 /*
- * from planting.c
+ * from positions.c
  * */
 
 t_point					relative_position(int x, int y, t_state *state);
-void		 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state);
+t_point					scrolled_position(int x, int y, t_state *state);
+uint32_t				type_colors(int type);
+uint32_t				pickup_color(int flavor);
+int						valid_line(t_line *line);
+
+/*
+ * from draw_entities.c
+ * */
+
+void					draw_player(t_model *mdl, t_state *state);
+void					draw_enemy(t_enemy *enemy, t_state *state);
+void	 				draw_pickup(t_pickup *pickup, t_state *state);
+void					update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type);
+void 					draw_plantings_to_backbuffer(t_model *mdl, t_state *state);
+
+/*
+ * from planting_logic, planting.c, planting_input.c
+ * */
 
 t_logic 				*planting_logic(void);
 void 					planting_plant(int x, int y);

@@ -8,25 +8,6 @@ void	init_linedraw_data(void *data_ptr)
 	*data = (t_linedraw){0};
 }
 
-/* Depreceated.
- *
- *
-void	linedraw_to_buffer_safe(t_linedraw *data, SDL_Surface *buff, uint32_t color)
-{
-	t_line	line;
-
-	line.doom = doom_ptr();
-	line.buff = buff;
-	line.color = color;
-	line.x1 = data->draw_from_x;
-	line.y1 = data->draw_from_y;
-	line.x2 = data->draw_to_x;
-	line.y2 = data->draw_to_y;
-	render_line_safe(&line);
-}
- *
- */
-
 static void	careful_linedraw_to_buffer_fixed(t_linedraw *data, SDL_Surface *buff, uint32_t color, uint32_t *avoid)
 {
 	t_line	line;
@@ -72,7 +53,7 @@ void	linedraw_to_buffer_fixed(t_linedraw *data, SDL_Surface *buff, uint32_t colo
 	line.y2 = data->draw_to_y;
 	render_line(&line);
 }
-
+/* Possibly depreceated
 void	linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color)
 {
 	t_linedraw		zoomed_line;
@@ -86,7 +67,7 @@ void	linedraw_to_buffer(t_linedraw *data, SDL_Surface *buff, uint32_t color)
 	zoomed_line.draw_to_y = data->draw_to_y;
 	zoomed_line.draw_to_x = data->draw_to_x;
 	linedraw_to_buffer_fixed(&zoomed_line, buff, color);
-}
+}*/
 
 t_wall	*linedraw_to_wall(t_linedraw *data)
 {
