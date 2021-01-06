@@ -208,6 +208,12 @@ t_actual_face	*make_wall(t_global_vert **vlist, t_wall *a, t_wall *b, int floor,
 	v[2] = vec4_mul(vec4(b->start.x, b->start.y, roof,  T_POS), WORLD_SCALE_FACTOR);
 	v[3] = vec4_mul(vec4(b->start.x, b->start.y, floor, T_POS), WORLD_SCALE_FACTOR);
 
+	// Note: T_POS was actually scaled by WORLD_SCALE_FACTOR, not good!
+	v[0].w = T_POS;
+	v[1].w = T_POS;
+	v[2].w = T_POS;
+	v[3].w = T_POS;
+
 	f[0] = new_face(vlist, v[0], v[1], v[2]);
 	f[1] = new_face(vlist, v[1], v[3], v[2]);
 
@@ -251,7 +257,7 @@ t_obj			mdl_to_usable_data(t_doom *doom)
 			// note: CCW corners should work too
 
 			// build linked list with 2 triangles
-			if (wall->next)
+			if (wall_count)
 				single_wall = make_wall(&room_object.vert, wall, wall->next, floor_height, roof_height);
 			else
 				single_wall = make_wall(&room_object.vert, wall, room->first_wall, floor_height, roof_height);
@@ -325,7 +331,11 @@ t_obj			obj_transform(t_matrix m, t_obj obj)
 
 	out = (t_obj){obj.v_count, obj.f_count, NULL, NULL};
 
-	assert(obj.f_count >= 1);
+	// assert(obj.f_count >= 1);
+	if (obj.f_count < 1)
+	{
+		return (t_obj){0, 0, NULL, NULL};
+	}
 
 	out.face = face_transform(&out.vert, m, obj.face);
 	obj.face = obj.face->next;
@@ -344,8 +354,8 @@ t_vert			vert2screen(t_vert v)
 	return vec4(
 		((v.x / v.w) + 1) * GAME_WIN_WIDTH * 0.5,
 		((v.y / v.w) + 1) * GAME_WIN_HEIGHT * 0.5,
-		0,
-		0
+		v.z,
+		T_POS
 	);
 }
 

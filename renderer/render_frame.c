@@ -56,15 +56,23 @@ void render_frame(t_doom *doom)
 
 	t_matrix	world = translate_m(0, 0, 0);
 	t_matrix	dimensions = scale_m(GAME_MIDWIDTH/2, GAME_MIDHEIGHT/2, 1);
-	t_matrix	modelview = lookat_m(pos, vec3_add(pos, vec3(cos(rad), 0, sin(rad))), vec3(0,1,0));
+	t_matrix	view = lookat_m(pos, vec3_add(pos, vec3(cos(rad), 0, sin(rad))), vec3(0,1,0));
 	t_matrix	projection = project_pure_m();
 	t_matrix	perspective = project_m(90, GAME_WIN_ASPECT, 0.1, 1000);
 	t_matrix	window = window_m(0.1, 1000);
-	modelview = multiply_m(projection, modelview);
 
-	t_obj		world_obj = doom->game->world_obj;
-	t_obj		view_obj = obj_transform(modelview, world_obj);
+																	// start with model coordinates
+																	// apply model matrix (identity, no change)
+	t_obj		world_obj = doom->game->world_obj;					// -> world coordinates
+
+																	// apply view matrix
+	t_obj		view_obj = obj_transform(view, world_obj);			// -> camera coordinates
+
+																	// apply projection matrix
+				view_obj = obj_transform(projection, view_obj);		// -> homogenous coordinates (w!=1)
+
 	t_obj		clipped_obj = obj_clip(view_obj);
+	// t_obj		clipped_obj = view_obj;
 	t_obj		screen_obj;
 
 	if (clipped_obj.f_count != 0)
@@ -74,16 +82,28 @@ void render_frame(t_doom *doom)
 		tv1 = screen_obj.face->vert->data->pos;
 		tv2 = screen_obj.face->vert->next->data->pos;
 		tv3 = screen_obj.face->vert->next->next->data->pos;
+		// printf("\n");
+		// printf(
+		// 	"frame (%i %i)->(%f %f %f) \n"
+		// 	"      (X:%f Y:%f Z:%f (W:%f)) \n"
+		// 	"      (X:%f Y:%f Z:%f (W:%f)) \n"
+		// 	"      (X:%f Y:%f Z:%f (W:%f)) \n",
+		// 	px, py,	pos.x, pos.y, pos.z,
+		// 	tv1.x, tv1.y, tv1.z, tv1.w,
+		// 	tv2.x, tv2.y, tv2.z, tv2.w,
+		// 	tv3.x, tv3.y, tv3.z, tv3.w);
 		printf("\n");
-		printf(
-			"frame (%i %i)->(%f %f %f) \n"
-			"      (X:%f Y:%f Z:%f (W:%f)) \n"
-			"      (X:%f Y:%f Z:%f (W:%f)) \n"
-			"      (X:%f Y:%f Z:%f (W:%f)) \n",
-			px, py,	pos.x, pos.y, pos.z,
-			tv1.x, tv1.y, tv1.z, tv1.w,
-			tv2.x, tv2.y, tv2.z, tv2.w,
-			tv3.x, tv3.y, tv3.z, tv3.w);
+		for(int i = 0; i < clipped_obj.f_count; ++i)
+		{
+			for(int v = 0; v < 3; ++v)
+			{
+				t_actual_face *face = list2face(clipped_obj.face, i);
+				t_face_vert *vrt = list2fvert(face->vert, v);
+				t_vert vp = vrt->data->pos;
+				printf("tri %i vert %i (%8.4f, %8.4f, %8.4f, %8.4f)\n", i, v, vp.x, vp.y, vp.z, vp.w);
+			}
+			printf("\n");
+		}
 	}
 	else return;
 
@@ -119,6 +139,9 @@ void render_frame(t_doom *doom)
 				color = color | color << 8 | color << 16;
 
 				draw_tri(doom->game->buff->pixels, screen_face, color);
+				printf("drew tri %i\n", i);
+				// SDL_UpdateWindowSurface(doom->game->win);
+				// SDL_Delay(40);
 			}
 		}
 		++i;

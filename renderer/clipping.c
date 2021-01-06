@@ -5,9 +5,11 @@
 
 
 // https://www.youtube.com/watch?v=VMD7fsCYO9o
+// http://www.cburch.com/cs/490/sched/02-15/clipping.html
 // https://www.youtube.com/watch?v=DHvXvJowalM
 // https://www.youtube.com/watch?v=ai9SwUQF74c
 
+// This function assumes W is NOT normalized.
 int		vert_within_view(t_vert vert)
 {
 	// -w \       / w
@@ -19,6 +21,8 @@ int		vert_within_view(t_vert vert)
 		&&  (-vert.w <= vert.z && vert.z <= vert.w));
 }
 
+// This function assumes verts ARE normalized.
+// Not useful right now.
 t_vert			lerp_vert(t_vert a, t_vert b)
 {
 	t_xyzw wa;
@@ -30,7 +34,7 @@ t_vert			lerp_vert(t_vert a, t_vert b)
 	wa = vec4((a.w - a.x), (a.w - a.y), (a.w - a.z), a.w);
 	wb = vec4((b.w - b.x), (b.w - b.y), (b.w - b.z), b.w);
 
-	t = vec3( // [0.0 - 1.0] range
+	t = vec3( // Results are in [0.0 - 1.0] range.
 		wa.x / (wa.x - wb.x),
 		wa.y / (wa.y - wb.y),
 		wa.z / (wa.z - wb.z));
@@ -39,9 +43,40 @@ t_vert			lerp_vert(t_vert a, t_vert b)
 		a.x + (t.x * (b.x - a.x)),
 		a.y + (t.y * (b.y - a.y)),
 		a.z + (t.z * (b.z - a.z)),
-		a.w + (      (b.w - a.w)) // note: ensure correctness
+		T_POS
 	);
 }
+
+// https://fabiensanglard.net/polygon_codec/
+// This function assumes verts are NOT normalized.
+t_vert			lerp_vert2(t_vert prev, t_vert curr)
+{
+	static const w_clip = 0.1;
+	double f;
+	t_vert out;
+
+	// W axis
+	f = (w_clip - prev.w) / (prev.w - curr.w);
+	out = vec4_sub(curr, prev);
+	out = vec4_mul(out, f);
+	out = vec4_add(out, prev);
+
+	// XYZ axis
+	f = (prev.w - prev.x) / ((prev.w - prev.x) - (curr.w - curr.x));
+	out = vec4_sub(curr, prev);
+	out = vec4_mul(out, f);
+	out = vec4_add(out, prev);
+	f = (prev.w - prev.y) / ((prev.w - prev.y) - (curr.w - curr.y));
+	out = vec4_sub(curr, prev);
+	out = vec4_mul(out, f);
+	out = vec4_add(out, prev);
+	f = (prev.w - prev.z) / ((prev.w - prev.z) - (curr.w - curr.z));
+	out = vec4_sub(curr, prev);
+	out = vec4_mul(out, f);
+	out = vec4_add(out, prev);
+	return (out);
+}
+
 
 t_actual_face	*faceclipper(t_actual_face *face, t_global_vert **vlist)
 {
@@ -59,7 +94,7 @@ t_actual_face	*faceclipper(t_actual_face *face, t_global_vert **vlist)
 
 		if (curr_inside ^ prev_inside) // One inside, one outside. Lerp prev->curr.
 		{
-			t_vert lerped = lerp_vert(prev->data->pos, curr->data->pos);
+			t_vert lerped = lerp_vert2(prev->data->pos, curr->data->pos);
 			result = face_vert_add(result, new_vert(vlist, lerped));
 		}
 
@@ -78,6 +113,7 @@ t_actual_face	*faceclipper(t_actual_face *face, t_global_vert **vlist)
 	return (result);
 }
 
+// This function assumes W is NOT normalized.
 int				get_outcode(t_vert v)
 {
 	int outcode;
@@ -152,7 +188,11 @@ t_obj			obj_clip(t_obj obj)
 
 	out = (t_obj){0, 0, NULL, NULL};
 
-	assert(obj.f_count >= 1);
+	// assert(obj.f_count >= 1);
+	if (obj.f_count < 1)
+	{
+		return (t_obj){0, 0, NULL, NULL};
+	}
 
 	while (obj.face != NULL)
 	{

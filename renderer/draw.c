@@ -71,10 +71,15 @@ void		draw_tri(unsigned int *pixel, t_actual_face *face, int color)
 			double depth = face_depth(bary(vec2(x, y), face), face);
 			if (zbuffer_ok(x + y * GAME_WIN_WIDTH, depth))
 				pixel[x + y * GAME_WIN_WIDTH] = color;
+			else
+			{
+				pixel[x + y * GAME_WIN_WIDTH] = 0x008FFF;
+		}
+
 		}
 		else
 		{
-			// pixel[x + y * GAME_WIN_WIDTH] = 0xFF0000;
+			// pixel[x + y * GAME_WIN_WIDTH] = 0xFFF800;
 		}
 	}
 }
