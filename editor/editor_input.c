@@ -36,6 +36,8 @@ void			edt_keystate_input(t_doom *doom)
 	static int	lock_x = 0;
 	static int	lock_p = 0;
 	static int	lock_g = 0;
+	static int 	lock_t = 0;
+	static int 	lock_b = 0;
 	static int	scancodes[8] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
 	SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
 	SDL_SCANCODE_8, SDL_SCANCODE_9};
@@ -99,6 +101,28 @@ void			edt_keystate_input(t_doom *doom)
 			//printf("get_state->grid_on is %d\n", get_state()->grid_on);
 		get_state()->gui->change_zoom(get_state());
 		lock_g = 1;
+	}
+
+	if (lock_t && !doom->keystates[SDL_SCANCODE_T])
+		lock_t = 0;
+	else if (doom->keystates[SDL_SCANCODE_T] && !lock_t)
+	{
+		if (get_state()->grid_size < 64)
+			get_state()->grid_size *= 2;
+			//printf("get_state->grid_size is %d\n", get_state()->grid_size);
+		get_state()->gui->change_zoom(get_state());
+		lock_t = 1;
+	}
+
+	if (lock_b && !doom->keystates[SDL_SCANCODE_B])
+		lock_b = 0;
+	else if (doom->keystates[SDL_SCANCODE_B] && !lock_b)
+	{
+		if (get_state()->grid_size > 16)
+			get_state()->grid_size /= 2;
+			//printf("get_state->grid_size is %d\n", get_state()->grid_size);
+		get_state()->gui->change_zoom(get_state());
+		lock_b = 1;
 	}
 
 	int i = -1;

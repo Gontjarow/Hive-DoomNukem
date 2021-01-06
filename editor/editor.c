@@ -12,6 +12,17 @@
 
 #include "doom-nukem.h"
 
+//		COMPLETED FOR EDITOR IN GENERAL, GRID VISUALS
+//			GRID SYSTEM ON TOP OF EVERYTHING ELSE // DONE
+//				MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR // DONE
+//				DRAW VERY LAST ON SCREEN AREA // DONE
+//				ONLY ON BLACK PIXELS STRAIGHT TO BUFFER // DONE
+//				TOGGLE WITH G // DONE
+//				ADD TO AVOID[X] COLORS THE COLOR_GRID_LINE VALUE // DONE
+//				DECOUPLED FROM EVERYTHING EXCEPT EDITOR BACK BUFFER // DONE
+//				VARY STEPPING WITH KEYS T AND B // DONE
+//				EXCLUDE INFO BOXES AND SCROLL BAR AREAS FROM DRAWING // DONE
+
 // TODO BIG NOTE TO SELF
 //  EDITOR COULD GUARANTEE CLOCKWISE ARRANGEMENT OF WALL NODES IN ROOMS
 
@@ -117,17 +128,6 @@ void				destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
-//		TODO FOR EDITOR IN GENERAL, GRID VISUALS
-//			GRID SYSTEM ON TOP OF EVERYTHING ELSE // DONE
-//				MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR // DONE
-//				DRAW VERY LAST ON SCREEN AREA // DONE
-//				ONLY ON BLACK PIXELS STRAIGHT TO BUFFER // DONE
-//				TOGGLE WITH G // DONE
-//				ADD TO AVOID[X] COLORS THE COLOR_GRID_LINE VALUE // DONE
-//				DECOUPLED FROM EVERYTHING EXCEPT EDITOR BACK BUFFER // DONE
-//				VARY STEPPING WITH AN OPTION
-//				EXCLUDING INFO BOXES AND SCROLL BAR AREAS
-
 static void 		edt_gridify(void)
 {
 	int 		y;
@@ -156,15 +156,18 @@ static void 		edt_gridify(void)
 		sy_mod = 0;
 	while (loc < end)
 	{
-		if ((loc % grid_sz == sx_mod) && (y % grid_sz == sy_mod))
+		if ((loc % grid_sz == sx_mod) && (y % grid_sz == sy_mod) && EDT_WIN_HEIGHT - y > 10)
 			if (pixels[loc] == 0xff000000)
 			{
 				pixels[loc] = col;
 				if (ebbp[loc] == 0xff000000)
 					ebbp[loc] = col;
 			}
-		if (loc % EDT_WIN_WIDTH == 0)
+		if (loc % EDT_WIN_WIDTH == EDT_WIN_WIDTH - 10)
+		{
 			y++;
+			loc += 10;
+		}
 		/*if (y % grid_sz == sy_mod)
 			if (pixels[loc] == 0xff000000)
 				pixels[loc] = col;*/
