@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/06 18:19:35 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/06 20:37:58 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,12 +114,13 @@ void		player_update_weapons(t_doom *doom)
 		printf("Reloading...\n");
 		doom->mdl->player.reload_time--;
 	}
-	if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0
-		&& doom->mdl->player.reload_time == 0)
-		printf("Player ammo: %d/%d\n", doom->mdl->player.weap_arr
-		[doom->mdl->player.weap_id].ammo_cur, doom->mdl->player.
-		weap_arr[doom->mdl->player.weap_id].ammo_res);
-	else if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].
-			ammo_cur == 0)
-		printf("Out of ammo!\n");
+	// if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0
+	// 	&& doom->mdl->player.reload_time == 0)
+	// 	printf("Player ammo: %d/%d\n", doom->mdl->player.weap_arr
+	// 	[doom->mdl->player.weap_id].ammo_cur, doom->mdl->player.
+	// 	weap_arr[doom->mdl->player.weap_id].ammo_res);
+	// else if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].
+	// 		ammo_cur == 0)
+	// 	printf("Out of ammo!\n");
+	// printf("Player HP: %d\n", doom->mdl->player.hp.cur);
 }

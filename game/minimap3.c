@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 20:07:38 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/22 18:57:08 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/06 20:04:55 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,227 @@ static void		pickup_cross(t_doom *doom, SDL_Surface *buff, t_point xy, int radiu
 	render_line(&vert_line);
 }
 
+// an idea to save all this lines -> add an argument on the original function to say when to use the minimap scale
+// and when to use the editor scale so we dont need to recopy these functions just to add a line to the x.y coords
+// by MS
+
+static void		pickup_digit(t_doom *doom, SDL_Surface *buff, t_point xy, int digit, uint32_t color)
+{
+	t_line 		vert_line;
+	t_line 		horz_line;
+	int 		factor;
+
+	vert_line.buff = buff;
+	horz_line.buff = buff;
+	vert_line.color = color;
+	horz_line.color = color;
+	factor = (digit / 10 > 0) ? 2 : 1;
+	if (digit / 10 > 0)
+		digit /= 10;
+	if (digit == 1)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale;
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale;
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+	}
+	else if (digit == 2)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&vert_line);
+		vert_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale;
+		vert_line.x2 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale - (2 * factor);
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale;
+		horz_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&horz_line);
+	}
+	else if (digit == 3)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&vert_line);
+		vert_line.y1 = xy.y * doom->minimap->scale;
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale - (2 * factor);
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale;
+		horz_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&horz_line);
+	}
+	else if (digit == 4)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&vert_line);
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&vert_line);
+		vert_line.y1 = xy.y * doom->minimap->scale;
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale;
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&horz_line);
+	}
+	else if (digit == 5)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&vert_line);
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale;
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale;
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale - (2 * factor);
+		render_line(&horz_line);
+	}
+	else if (digit == 6)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&vert_line);
+		vert_line.y1 = xy.y * doom->minimap->scale;
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale;
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale;
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale - (2 * factor);
+		render_line(&horz_line);
+	}
+	else if (digit == 7)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale - (2 * factor);
+		render_line(&horz_line);
+	}
+	else if (digit == 8)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		vert_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale - (2 * factor);
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale;
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale - (2 * factor);
+		render_line(&horz_line);
+	}
+	else if (digit == 9)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		vert_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale;
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale;
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale - (2 * factor);
+		render_line(&horz_line);
+	}
+	else if (digit == 0 || digit == 10)
+	{
+		vert_line.x1 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		vert_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&vert_line);
+		vert_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		vert_line.x2 = xy.x * doom->minimap->scale - (2 * factor);
+		render_line(&vert_line);
+		horz_line.x1 = xy.x * doom->minimap->scale - (2 * factor);
+		horz_line.x2 = xy.x * doom->minimap->scale + (2 * factor);
+		horz_line.y1 = xy.y * doom->minimap->scale + (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale + (2 * factor);
+		render_line(&horz_line);
+		horz_line.y1 = xy.y * doom->minimap->scale - (2 * factor);
+		horz_line.y2 = xy.y * doom->minimap->scale - (2 * factor);
+		render_line(&horz_line);
+	}
+	else
+		return ;
+}
+
 void			print_minimap_pickups(t_doom *doom)
 {
 	int			pc;
@@ -111,10 +332,27 @@ void			print_minimap_pickups(t_doom *doom)
 	pickup = doom->mdl->pickup_first;
 	while (pc--)
 	{
-		pickup_square(doom, doom->minimap->buff, (t_point){pickup->loc.x,
-		pickup->loc.y}, PICKING_RADIUS, COLOR_HEALTH_PICKUP);
-		pickup_cross(doom, doom->minimap->buff, (t_point){pickup->loc.x,
-		pickup->loc.y}, PICKING_RADIUS / 2, COLOR_HEALTH_PICKUP);
+		if (pickup->flavor == PICKUP_HEALTH)
+		{
+			pickup_square(doom, doom->minimap->buff, (t_point){pickup->loc.x,
+			pickup->loc.y}, PICKING_RADIUS, COLOR_HEALTH_PICKUP);
+			pickup_cross(doom, doom->minimap->buff, (t_point){pickup->loc.x,
+			pickup->loc.y}, PICKING_RADIUS / 2, COLOR_HEALTH_PICKUP);
+		}
+		if (pickup->flavor == PICKUP_AMMO)
+		{
+			pickup_square(doom, doom->minimap->buff, (t_point){pickup->loc.x,
+			pickup->loc.y}, PICKING_RADIUS, COLOR_AMMO_PICKUP);
+			pickup_digit(doom, doom->minimap->buff, (t_point){pickup->loc.x,
+			pickup->loc.y}, pickup->weapon_type_id, COLOR_AMMO_PICKUP);
+		}
+		if (pickup->flavor == PICKUP_WEAPON)
+		{
+			pickup_square(doom, doom->minimap->buff, (t_point){pickup->loc.x,
+			pickup->loc.y}, PICKING_RADIUS, COLOR_WEAPON_PICKUP);
+			pickup_digit(doom, doom->minimap->buff, (t_point){pickup->loc.x,
+			pickup->loc.y}, pickup->weapon_type_id, COLOR_WEAPON_PICKUP);
+		}
 		pickup = pickup->next;
 	}
 }

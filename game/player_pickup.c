@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/06 16:21:18 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/06 20:54:07 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 	int			pc;
 
 	// printf("Pickup ID that u touched: %d\n", pickup->id);
+	doom->mdl->player.hp.cur += 50;
+	if (doom->mdl->player.hp.cur > 100)
+		doom->mdl->player.hp.cur = 100;
 	pc = doom->mdl->pickup_count;
 	current = doom->mdl->pickup_first;
 	if (current->id == pickup->id)
@@ -70,9 +73,6 @@ static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 		pickup = delete_node(current, prev, pickup);
 	Mix_PlayChannel(3, doom->sounds->mcHealthPickup, 0);
 	doom->mdl->pickup_count--;
-	doom->mdl->player.hp.cur += 50;
-	if (doom->mdl->player.hp.cur > 100)
-		doom->mdl->player.hp.cur = 100;
 }
 
 void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
@@ -81,6 +81,9 @@ void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 	t_pickup	*prev;
 	int			pc;
 
+	doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res += 50;
+	if (doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res > 9999)
+		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res = 9999;
 	pc = doom->mdl->pickup_count;
 	current = doom->mdl->pickup_first;
 	if (current->id == pickup->id)
@@ -89,7 +92,6 @@ void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 		pickup = delete_node(current, prev, pickup);
 	Mix_PlayChannel(3, doom->sounds->mcAmmoPickup, 0);
 	doom->mdl->pickup_count--;
-	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max;
 }
 
 void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
@@ -123,18 +125,22 @@ void			handle_pickup(t_doom *doom)
 	while (pc--)
 	{
 		// printf("Checking all pickups\n");
+		// printf("pickup id: %d\n", pickup->id);
+		printf("Player HP: %d\n", doom->mdl->player.hp.cur);
 		if (pickup->flavor == PICKUP_HEALTH && player_collision_with_pickup
 			(doom, pickup) == -1 && doom->mdl->player.hp.cur < 100)
+		{
 			handle_health_pickup(doom, pickup);
-		
-		// Waiting for editor additional pickups
-
-		// if (pickup->flavor == PICKUP_AMMO && player_collision_with_pickup
-		// 	(doom, pickup) == -1)
-		// 	handle_ammo_pickup(doom, pickup);
+		}
+		else if (pickup->flavor == PICKUP_AMMO && player_collision_with_pickup
+			(doom, pickup) == -1)
+		{
+			handle_ammo_pickup(doom, pickup);
+		}
 		// if (pickup->flavor == PICKUP_WEAPON && player_collision_with_pickup
 		// 	(doom, pickup) == -1)
 		// 	handle_weapon_pickup(doom, pickup);
 		pickup = pickup->next;
 	}
+	// printf("\n");
 }
