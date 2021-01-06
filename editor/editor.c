@@ -118,13 +118,15 @@ void				destroy_edt(t_doom *doom)
 }
 
 //		TODO FOR EDITOR IN GENERAL, GRID VISUALS
-//			GRID SYSTEM ON TOP OF EVERYTHING ELSE
-//				MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR // NOT DIVIDED BY ZOOM FACTOR YET
-//				DRAW VERY LAST ON SCREEN AREA EXCLUDING INFO BOXES, BUT ONLY ON BLACK, STRAIGHT TO BUFFER // DONE
-//				TOGGLE WITH G, VARY STEPPING WITH AN OPTION // TOGGLE DONE
-//				DECOUPLED FROM EVERYTHING SO ITS AN EXTRA BONUS FEATURE WITHOUT COMPLEXITY OVERHEAD // DECOUPLED
-
-// edt_gridify, DOT grid style. Needs to be added to avoid[x] colors for cleanliness
+//			GRID SYSTEM ON TOP OF EVERYTHING ELSE // DONE
+//				MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR // DONE
+//				DRAW VERY LAST ON SCREEN AREA // DONE
+//				ONLY ON BLACK PIXELS STRAIGHT TO BUFFER // DONE
+//				TOGGLE WITH G // DONE
+//				DECOUPLED FROM EVERYTHING SO ITS AN EXTRA BONUS FEATURE WITHOUT COMPLEXITY OVERHEAD // DONE
+//				ADD TO AVOID[X] COLORS THE COLOR_GRID_LINE VALUE // <-- YOU ARE HERE!!
+//				VARY STEPPING WITH AN OPTION
+//				EXCLUDING INFO BOXES AND SCROLL BAR AREAS
 
 static void 		edt_gridify(void)
 {
@@ -137,14 +139,13 @@ static void 		edt_gridify(void)
 	uint32_t	col;
 	uint32_t	*pixels;
 
-		return ;
 	if (!get_state()->grid_on)
 		return ;
 	loc = 0;
 	col = COLOR_GRID_LINE;
 	end = (EDT_WIN_HEIGHT * EDT_WIN_WIDTH) - 1;
 	pixels = doom_ptr()->edt->buff->pixels;
-	grid_sz = get_state()->grid_size;
+	grid_sz = get_state()->grid_size / get_state()->zoom_factor;
 	sx_mod = grid_sz - get_state()->scroll_x % grid_sz;
 	if (sx_mod == grid_sz)
 		sx_mod = 0;
@@ -153,7 +154,7 @@ static void 		edt_gridify(void)
 		sy_mod = 0;
 	while (loc < end)
 	{
-		if ((loc % grid_sz == sx_mod)&& (y % grid_sz == sy_mod))
+		if ((loc % grid_sz == sx_mod) && (y % grid_sz == sy_mod))
 			if (pixels[loc] == 0xff000000)
 				pixels[loc] = col;
 		if (loc % EDT_WIN_WIDTH == 0)

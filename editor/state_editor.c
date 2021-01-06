@@ -87,7 +87,7 @@ t_state				*get_state(void)
 		state->confine_skip = 1;
 		state->selected_weapon_type = 1;
 		state->grid_on = 1;
-		state->grid_size = 50;
+		state->grid_size = 32;
 		state->gui->activate(state);
 		//print_mode_info(state->gui);
 		//draw_scroll_bars_to_backbuffer(state);
