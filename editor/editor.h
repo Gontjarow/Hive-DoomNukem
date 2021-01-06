@@ -34,6 +34,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define EDT_WIN_WIDTH			1600
 # define EDT_WIN_HEIGHT			900
 # define COLOR_LINE				0xffffffff
+# define COLOR_GRID_LINE		0xff888888
 # define COLOR_PLAYER			0xff00ff00
 # define COLOR_ENEMY			0xffffff00
 # define COLOR_HEALTH_PICKUP	0xff00ff00
@@ -112,6 +113,8 @@ typedef struct 			s_state
     int 				scroll_y;
     int 				confine_skip;
     int 				selected_weapon_type;
+    int 				grid_on;
+    int 				grid_size;
 }						t_state;
 
 typedef struct 			s_editor
