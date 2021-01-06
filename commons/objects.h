@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/22 18:57:46 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/06 16:36:47 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct 			s_weapon
 	int 				type_id;
 	int 				dmg;
 	int 				ammo_cur;
+	int					ammo_res;
 	int 				ammo_max;
 	int 				cooldown;
 	int 				reload_time;

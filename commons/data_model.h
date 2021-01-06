@@ -24,6 +24,7 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define				WAV_ASSAULTSHOT "wav/assaultshot.wav"
 # define				WAV_SMGSHOT "wav/smgshot.wav"
 # define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
+# define				WAV_AMMOPICKUP "wav/ammopickup.wav"
 
 /*
 ** *
@@ -116,6 +117,7 @@ typedef struct 			s_sounds
 	struct Mix_Chunk	*mcCrouching;
 	struct Mix_Chunk	*mcEnemyDeath;
 	struct Mix_Chunk	*mcHealthPickup;
+	struct Mix_Chunk	*mcAmmoPickup;
 	int					footstep_delay;
 }						t_sounds;
 

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/22 19:55:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/06 17:09:39 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ void	load_sounds(t_doom *doom)
 	if (!(doom->sounds->mcSmgShot = Mix_LoadWAV(WAV_SMGSHOT)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGSHOT!");
 	if (!(doom->sounds->mcHealthPickup = Mix_LoadWAV(WAV_HEALTHPICKUP)))
-		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGSHOT!");
+		ft_die("Fatal error: SDL_mixer failed to load WAV_HEALTHPICKUP!");
+	if (!(doom->sounds->mcAmmoPickup = Mix_LoadWAV(WAV_AMMOPICKUP)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_AMMOPICKUP!");
 	doom->sounds->footstep_delay = 0;
 }
 
@@ -55,15 +57,20 @@ void	destroy_sounds(t_doom *doom)
 	Mix_FreeChunk(doom->sounds->mcSteam);
 	Mix_FreeChunk(doom->sounds->mcSword);
 	Mix_FreeChunk(doom->sounds->mcPlop);
-	Mix_FreeChunk(doom->sounds->mcPistolRld);
-	Mix_FreeChunk(doom->sounds->mcPistolShot);
-	Mix_FreeChunk(doom->sounds->mcAssaultRld);
-	Mix_FreeChunk(doom->sounds->mcSmgRld);
-	Mix_FreeChunk(doom->sounds->mcWalking);
-	Mix_FreeChunk(doom->sounds->mcRunning);
-	Mix_FreeChunk(doom->sounds->mcCrouching);
-	Mix_FreeChunk(doom->sounds->mcEnemyDeath);
-	Mix_FreeChunk(doom->sounds->mcAssaultShot);
+	// commented out because of segfault when pressing ESC on main menu
+	// Mix_FreeChunk(doom->sounds->mcPistolRld);
+	// Mix_FreeChunk(doom->sounds->mcPistolShot);
+	// Mix_FreeChunk(doom->sounds->mcAssaultRld);
+	// Mix_FreeChunk(doom->sounds->mcAssaultShot);
+	// Mix_FreeChunk(doom->sounds->mcSmgRld);
+	// Mix_FreeChunk(doom->sounds->mcSmgShot);
+	// Mix_FreeChunk(doom->sounds->mcWalking);
+	// Mix_FreeChunk(doom->sounds->mcRunning);
+	// Mix_FreeChunk(doom->sounds->mcCrouching);
+	// Mix_FreeChunk(doom->sounds->mcEnemyDeath);
+	// Mix_FreeChunk(doom->sounds->mcAssaultShot);
+	// Mix_FreeChunk(doom->sounds->mcHealthPickup);
+	// Mix_FreeChunk(doom->sounds->mcAmmoPickup);
 	doom->sounds->mcThunder = NULL;
 	doom->sounds->mcSteam = NULL;
 	doom->sounds->mcPlop = NULL;
