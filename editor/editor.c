@@ -137,6 +137,7 @@ static void 		edt_gridify(void)
 	uint32_t	col;
 	uint32_t	*pixels;
 
+		return ;
 	if (!get_state()->grid_on)
 		return ;
 	loc = 0;
