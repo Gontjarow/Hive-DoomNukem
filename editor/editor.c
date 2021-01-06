@@ -123,8 +123,8 @@ void				destroy_edt(t_doom *doom)
 //				DRAW VERY LAST ON SCREEN AREA // DONE
 //				ONLY ON BLACK PIXELS STRAIGHT TO BUFFER // DONE
 //				TOGGLE WITH G // DONE
-//				DECOUPLED FROM EVERYTHING SO ITS AN EXTRA BONUS FEATURE WITHOUT COMPLEXITY OVERHEAD // DONE
-//				ADD TO AVOID[X] COLORS THE COLOR_GRID_LINE VALUE // <-- YOU ARE HERE!!
+//				ADD TO AVOID[X] COLORS THE COLOR_GRID_LINE VALUE // DONE
+//				DECOUPLED FROM EVERYTHING EXCEPT EDITOR BACK BUFFER // DONE
 //				VARY STEPPING WITH AN OPTION
 //				EXCLUDING INFO BOXES AND SCROLL BAR AREAS
 
@@ -138,6 +138,7 @@ static void 		edt_gridify(void)
 	int 		sy_mod;
 	uint32_t	col;
 	uint32_t	*pixels;
+	uint32_t 	*ebbp;
 
 	if (!get_state()->grid_on)
 		return ;
@@ -145,6 +146,7 @@ static void 		edt_gridify(void)
 	col = COLOR_GRID_LINE;
 	end = (EDT_WIN_HEIGHT * EDT_WIN_WIDTH) - 1;
 	pixels = doom_ptr()->edt->buff->pixels;
+	ebbp = editor_back_buffer()->buff->pixels;
 	grid_sz = get_state()->grid_size / get_state()->zoom_factor;
 	sx_mod = grid_sz - get_state()->scroll_x % grid_sz;
 	if (sx_mod == grid_sz)
@@ -156,7 +158,11 @@ static void 		edt_gridify(void)
 	{
 		if ((loc % grid_sz == sx_mod) && (y % grid_sz == sy_mod))
 			if (pixels[loc] == 0xff000000)
+			{
 				pixels[loc] = col;
+				if (ebbp[loc] == 0xff000000)
+					ebbp[loc] = col;
+			}
 		if (loc % EDT_WIN_WIDTH == 0)
 			y++;
 		/*if (y % grid_sz == sy_mod)

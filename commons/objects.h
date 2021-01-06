@@ -173,7 +173,7 @@ typedef struct 			s_line
 	int 				px;
 	int 				py;
 	uint32_t 			color;
-	uint32_t 			avoid[3];
+	uint32_t 			avoid[4];
 	struct SDL_Surface 	*buff;
 	struct s_doom		*doom;
 }						t_line;

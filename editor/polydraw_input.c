@@ -14,7 +14,7 @@ void 		polydraw_mouse_motion(int x, int y)
 	t_linedraw          *data;
 	static t_linedraw	previous_data = { 0 };
 	static uint32_t 	masked_color = 0;
-	static uint32_t 	avoid[3] = { COLOR_LINE, COLOR_PLAYER, COLOR_ENEMY };
+	static uint32_t 	avoid[4] = { COLOR_LINE, COLOR_PLAYER, COLOR_ENEMY, COLOR_GRID_LINE };
 	static pthread_t    magnet_thread;
 	static int          updated_magnet_hover = 0;
 	int					tmp_scroll_x;

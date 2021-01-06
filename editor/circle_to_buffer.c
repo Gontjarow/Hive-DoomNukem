@@ -103,7 +103,7 @@ void             unmasked_circle_to_buffer(SDL_Surface *buff, t_point xy, int ra
 	}
 }
 
-void             masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t avoid)
+void             masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t *avoid)
 {
 	unsigned int *pixels;
 	int address;
@@ -122,7 +122,7 @@ void             masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radi
 				address = xy.x + x + (xy.y + y) * buff->w;
 				if (address >= 0 && address < buff->h * buff->w)
 				{
-					if (pixels[address] == avoid)
+					if (pixels[address] == avoid[0] || pixels[address] == avoid[1] || pixels[address] == avoid[2] || pixels[address] == avoid[3])
 						pixels[address] = color - 1;
 					else
 						pixels[address] = color;

@@ -202,7 +202,7 @@ void					digit_to_buffer_ptr(SDL_Surface *buff, t_point xy, int digit, uint32_t 
 void					preserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
 void					unpreserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					unmasked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t mask);
-void					masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t avoid);
+void					masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t *avoid);
 void            		circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 
 /*
