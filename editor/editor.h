@@ -186,8 +186,11 @@ SDL_Surface     		*mixing_surface();
 void					preserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
 void					unpreserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void				 	preserving_cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void 					unpreserving_cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					digit_to_buffer(SDL_Surface *buff, t_point xy, int digit, uint32_t color);
+void					digit_to_buffer_ptr(SDL_Surface *buff, t_point xy, int digit, uint32_t color, void (*render_fun)(t_line *line));
 
 /*
  * from circle_to_buffer.c
@@ -239,6 +242,7 @@ t_state					*get_state(void);
 
 t_logic		 			*pickups_logic(void);
 void 					pickups_swap_type(void);
+void					pickups_refresh_preview(void);
 void					pickups_plant_health(int x, int y);
 void 					pickups_plant(int x, int y);
 

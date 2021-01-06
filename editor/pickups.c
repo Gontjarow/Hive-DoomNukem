@@ -1,5 +1,15 @@
 #include "doom-nukem.h"
 
+//		TODO FOR EDITOR IN GENERAL, GRID VISUALS AND DELETION OPTIONS
+//				GRID SYSTEM ON TOP OF EVERYTHING ELSE
+//					MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR
+//					DRAW VERY LAST ON SCREEN AREA EXCLUDING INFO BOXES, BUT ONLY ON BLACK, STRAIGHT TO BUFFER
+//					TOGGLE WITH G, VARY STEPPING WITH AN OPTION
+//					DECOUPLED FROM EVERYTHING SO ITS AN EXTRA BONUS FEATURE WITHOUT COMPLEXITY OVERHEAD
+//				PICKUPS DOUBLE CLICK DELETE
+//				ENEMIES DOUBLE CLICK DELETE
+//				ROOMS SELECTION DEL KEY DELETE
+
 //			COMPLETED PICKUPS.C ADD HEALTH PICKUP / GREEN RECT / PLUS SIGN INSIDE // DONE
 //				MISSING PERSISTENCE // DONE
 //					CORRECT FOR PLANTING X, Y WITH SCROLL && ZOOMING // DONE
@@ -10,27 +20,23 @@
 //				REORGANIZE PLANTING.C FILE // DONE
 //				SEPARATE MODEL AND COMMONS FROM COMMONS TO DATA_MODEL AND COMMONS // DONE
 
-//		TODO FOR PICKUPS.C - AMMO PICKUPS AND WEAPON PICKUPS
-//			AMMO PICKUP / YELLOW RECT / NUMBER INSIDE // DONE
-//			GUN PICKUP / GREEN RECT / NUMBER INSIDE // DONE
+//			COMPLETED PICKUPS.C - AMMO PICKUPS AND WEAPON PICKUPS
+//				AMMO PICKUP / YELLOW RECT / NUMBER INSIDE // DONE
+//				GUN PICKUP / GREEN RECT / NUMBER INSIDE // DONE
 //				MISSING PERSISTENCE // DONE
 //					CORRECT FOR PLANTING X, Y WITH SCROLL && ZOOMING // DONE
 //					SYNC PLANTING X, Y WITH DRAWING X, Y // DONE
-//				MISSING NUMBER INSIDE // DONE
+// 				MISSING NUMBER INSIDE // DONE
 //					IMPLEMENT A CUSTOM NUMBER PRINTER WITH TWO SIZES // DONE
 //				MISSING SELECTION OF WEAPON TYPE // DONE
 //					IMPLEMENT AT GET_STATE() LEVEL WITH KEYS 1..9 // DONE
-//				MISSING INDICATOR OF CURRENT PLANT TYPE
-//				MISSING INDICATOR OF CURRENT WEAPON TYPE
-//					IMPLEMENT WITH PREVIEW // <-- YOU ARE HERE!!
-//				MISSING BOX TO INFORM THE EDITOR OF WEAPON CHOICE KEYS 1..X
-//				GRID SYSTEM ON TOP OF EVERYTHING ELSE
-//					MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR
-//					DRAW VERY LAST ON SCREEN AREA EXCLUDING INFO BOXES, BUT ONLY ON BLACK, STRAIGHT TO BUFFER
-//					TOGGLE WITH G, VARY STEPPING WITH AN OPTION
-//					DECOUPLED FROM EVERYTHING SO ITS AN EXTRA BONUS FEATURE WITHOUT COMPLEXITY OVERHEAD
-//				PICKUPS DOUBLE CLICK DELETE
-//				ROOMS SELECTION DEL KEY DELETE
+
+//			COMPLETED FOR PICKUPS.C - AMMO PICKUPS AND WEAPON PICKUPS
+//					MISSING INDICATOR OF CURRENT PLANT TYPE
+//					MISSING INDICATOR OF CURRENT WEAPON TYPE
+//						IMPLEMENT WITH PREVIEW // DONE
+//						DRAW ALSO A NUMBER WITH THE PREVIEWING // DONE
+//						IMPLEMENT ALSO A PRESERVING/UNPRESERVING SQUARE/DIGIT // DONE
 
 void			pickups_plant_health(int x, int y)
 {
@@ -163,6 +169,20 @@ void 			pickups_swap_type(void)
 		pickups_logic()->plant_type = PICKUP_WEAPON;
 	else if (pickups_logic()->plant_type == PICKUP_WEAPON)
 		pickups_logic()->plant_type = PICKUP_HEALTH;
+	pickups_refresh_preview();
+}
+
+void 			pickups_refresh_preview(void)
+{
+	int x;
+	int y;
+
+	SDL_GetMouseState(&x, &y);
+	if (x > 0 && y > 0 && x < EDT_WIN_WIDTH && y < EDT_WIN_HEIGHT)
+	{
+		pickups_mouse_motion(x, y);
+			//puts("Updated pickups weapon type preview after swapping weapon type in editor!");
+	}
 }
 
 void			pickups_plant(int x, int y)
@@ -209,8 +229,21 @@ void 			pickups_mouse_motion(int x, int y)
 	static t_point	last_preview = {-1, -1};
 
 	if (last_preview.x != -1 && last_preview.y != -1)
-		preserving_square_to_buffer(doom_ptr()->edt->buff, last_preview, PICKUP_RADIUS / get_state()->zoom_factor, pickups_logic()->colors(pickups_logic()->plant_type));
+	{
+		preserving_square_to_buffer(doom_ptr()->edt->buff, last_preview, PICKUP_RADIUS / get_state()->zoom_factor,
+									pickups_logic()->colors(pickups_logic()->plant_type));
+		// Here, check if its better to do "preserving" variations of cross_to_buffer and digit_to_buffer
+		if (pickups_logic()->plant_type == PICKUP_HEALTH)
+			preserving_cross_to_buffer(doom_ptr()->edt->buff, last_preview, PICKUP_RADIUS / get_state()->zoom_factor / 2, 0xff000000);
+		else
+			digit_to_buffer_ptr(doom_ptr()->edt->buff, last_preview, get_state()->selected_weapon_type * 10, 0xff000000, preserve_render_line);
+	}
+	// Here, check if its better to do "unpreserving" variations of cross_to_buffer and digit_to_buffer
 	unpreserving_square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, PICKUP_RADIUS / get_state()->zoom_factor, pickups_logic()->colors(pickups_logic()->plant_type));
+	if (pickups_logic()->plant_type == PICKUP_HEALTH)
+		unpreserving_cross_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, PICKUP_RADIUS / get_state()->zoom_factor / 2, pickups_logic()->colors(PICKUP_HEALTH));
+	else
+		digit_to_buffer_ptr(doom_ptr()->edt->buff, (t_point){x, y}, get_state()->selected_weapon_type * 10, pickups_logic()->colors(pickups_logic()->plant_type), unpreserve_render_line);
 	last_preview.x = x;
 	last_preview.y = y;
 }

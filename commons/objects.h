@@ -216,6 +216,8 @@ SDL_Surface				*load_texture(t_doom *doom, char *path);
 void					render_line_safe(t_line *l);
 void 					render_line(t_line *l);
 void					careful_render_line(t_line *l);
+void					preserve_render_line(t_line *l);
+void					unpreserve_render_line(t_line *l);
 
 /*
  * from pixel.c

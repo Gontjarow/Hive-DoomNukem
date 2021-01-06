@@ -96,7 +96,8 @@ void			edt_keystate_input(t_doom *doom)
 		if (doom->keystates[scancodes[i]])
 		{
 			get_state()->selected_weapon_type = (i + 1);
-				//printf("Set weapon slot %d\n", i + 1);
+			if (get_state()->gui == mode_pickups())
+				pickups_refresh_preview();
 			break ;
 		}
 	}
