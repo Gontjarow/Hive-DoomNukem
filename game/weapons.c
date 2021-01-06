@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/06 18:12:55 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/06 18:19:35 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,6 @@ static void	handle_ammo_calc(t_doom *doom)
 
 static void	player_shoot_reload(t_doom *doom)
 {
-	int	dif;
-	int rest;
-
 	if (doom->keystates[SDL_SCANCODE_E])
 	{
 		if (doom->mdl->player.shoot_cd == 0 && doom->mdl->player.weap_arr
