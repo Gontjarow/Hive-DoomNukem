@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/06 19:12:29 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/08 15:11:16 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct 			s_weapon
 	int 				ammo_cur;
 	int					ammo_res;
 	int 				ammo_max;
+	int					do_own;
 	int 				cooldown;
 	int 				reload_time;
 	struct Mix_Chunk 	*fire_sound;

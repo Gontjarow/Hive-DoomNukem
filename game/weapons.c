@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/06 20:37:58 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/08 15:21:02 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[0].reload_time = 20;
 	doom->mdl->player.weap_arr[0].fire_sound = doom->sounds->mcPistolShot;
 	doom->mdl->player.weap_arr[0].reload_sound = doom->sounds->mcPistolRld;
+	doom->mdl->player.weap_arr[0].do_own = 1;
 	doom->mdl->player.weap_arr[1].ammo_cur = 30;
 	doom->mdl->player.weap_arr[1].ammo_res = 250;
 	doom->mdl->player.weap_arr[1].ammo_max = 30;
@@ -30,6 +31,7 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[1].reload_time = 25;
 	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcSmgShot;
 	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcSmgRld;
+	doom->mdl->player.weap_arr[1].do_own = 0;
 	doom->mdl->player.weap_arr[2].ammo_cur = 40;
 	doom->mdl->player.weap_arr[2].ammo_res = 200;
 	doom->mdl->player.weap_arr[2].ammo_max = 40;
@@ -38,15 +40,19 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[2].reload_time = 35;
 	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcAssaultShot;
 	doom->mdl->player.weap_arr[2].reload_sound = doom->sounds->mcAssaultRld;
+	doom->mdl->player.weap_arr[2].do_own = 0;
 }
 
 static void	player_swap_weapons(t_doom *doom)
 {
-	if (doom->keystates[SDL_SCANCODE_1])
+	if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr
+		[0].do_own == 1)
 		doom->mdl->player.weap_id = 0;
-	if (doom->keystates[SDL_SCANCODE_2])
+	if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr
+		[1].do_own == 1)
 		doom->mdl->player.weap_id = 1;
-	if (doom->keystates[SDL_SCANCODE_3])
+	if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr
+		[2].do_own == 1)
 		doom->mdl->player.weap_id = 2;
 }
 
@@ -114,13 +120,13 @@ void		player_update_weapons(t_doom *doom)
 		printf("Reloading...\n");
 		doom->mdl->player.reload_time--;
 	}
-	// if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0
-	// 	&& doom->mdl->player.reload_time == 0)
-	// 	printf("Player ammo: %d/%d\n", doom->mdl->player.weap_arr
-	// 	[doom->mdl->player.weap_id].ammo_cur, doom->mdl->player.
-	// 	weap_arr[doom->mdl->player.weap_id].ammo_res);
-	// else if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].
-	// 		ammo_cur == 0)
-	// 	printf("Out of ammo!\n");
+	if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0
+		&& doom->mdl->player.reload_time == 0)
+		printf("Player ammo: %d/%d\n", doom->mdl->player.weap_arr
+		[doom->mdl->player.weap_id].ammo_cur, doom->mdl->player.
+		weap_arr[doom->mdl->player.weap_id].ammo_res);
+	else if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].
+			ammo_cur == 0)
+		printf("Out of ammo!\n");
 	// printf("Player HP: %d\n", doom->mdl->player.hp.cur);
 }

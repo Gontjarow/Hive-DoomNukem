@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/06 20:54:07 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/08 15:23:52 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 	t_pickup	*prev;
 	int			pc;
 
+	doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].do_own = 1;
 	pc = doom->mdl->pickup_count;
 	current = doom->mdl->pickup_first;
 	if (current->id == pickup->id)
@@ -108,9 +109,6 @@ void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 		pickup = delete_node(current, prev, pickup);
 	// Mix_PlayChannel(3, doom->sounds->mcHealthPickup, 0);		// need to add weapon pickup sound
 	doom->mdl->pickup_count--;
-	/*
-		Placeholder for weapon addition handling
-	*/
 }
 
 void			handle_pickup(t_doom *doom)
@@ -126,7 +124,7 @@ void			handle_pickup(t_doom *doom)
 	{
 		// printf("Checking all pickups\n");
 		// printf("pickup id: %d\n", pickup->id);
-		printf("Player HP: %d\n", doom->mdl->player.hp.cur);
+		// printf("Player HP: %d\n", doom->mdl->player.hp.cur);
 		if (pickup->flavor == PICKUP_HEALTH && player_collision_with_pickup
 			(doom, pickup) == -1 && doom->mdl->player.hp.cur < 100)
 		{
@@ -137,9 +135,11 @@ void			handle_pickup(t_doom *doom)
 		{
 			handle_ammo_pickup(doom, pickup);
 		}
-		// if (pickup->flavor == PICKUP_WEAPON && player_collision_with_pickup
-		// 	(doom, pickup) == -1)
-		// 	handle_weapon_pickup(doom, pickup);
+		else if (pickup->flavor == PICKUP_WEAPON && player_collision_with_pickup
+			(doom, pickup) == -1 && doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].do_own == 0)
+		{
+			handle_weapon_pickup(doom, pickup);
+		}
 		pickup = pickup->next;
 	}
 	// printf("\n");
