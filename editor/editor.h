@@ -34,6 +34,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define EDT_WIN_WIDTH			1600
 # define EDT_WIN_HEIGHT			900
 # define COLOR_LINE				0xffffffff
+# define COLOR_SELECTION_LINE	0xffffff00
 # define COLOR_GRID_LINE		0xff888888
 # define COLOR_PLAYER			0xff00ff00
 # define COLOR_ENEMY			0xffffff00
@@ -70,6 +71,11 @@ typedef struct 			s_logic
 	int 				sweep_counter;
 	logic_colors		colors;
 }						t_logic;
+
+typedef struct 			s_select
+{
+	int 				selected_room_id;
+}						t_select;
 
 typedef struct 			s_status
 {
@@ -169,6 +175,8 @@ void	 				handle_keyboard_scrolling(t_doom *doom);
 
 t_wall					*wall_by_id(int id);
 void					wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
+t_room					*room_by_id(int id);
+void 					room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color);
 void					x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
 void					relink_model_walls(t_wall *relinking_wall);
 
@@ -225,6 +233,7 @@ void            		magnet_test(void* argv);
  * from mode_editor.c
  * */
 
+t_gui					*mode_select(void);
 t_gui					*mode_pickups(void);
 t_gui					*mode_planting(void);
 t_gui					*mode_polydraw(void);
@@ -259,6 +268,19 @@ void 					pickups_right_click(int x, int y);
 void 					pickups_middle_click(int x, int y);
 
 /*
+ * from select.c
+ * */
+
+t_select 				*select_logic(void);
+void					select_activate(t_state *state);
+void					select_deactivate(t_state *state);
+void					select_change_zoom(t_state *state);
+void		 			select_mouse_motion(int x, int y);
+void 					select_left_click(int x, int y);
+void 					select_right_click(int x, int y);
+void 					select_middle_click(int x, int y);
+
+/*
  * from positions.c
  * */
 
@@ -276,6 +298,7 @@ void					draw_player(t_model *mdl, t_state *state);
 void					draw_enemy(t_enemy *enemy, t_state *state);
 void	 				draw_pickup(t_pickup *pickup, t_state *state);
 void					update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type);
+void		 			draw_selection_to_backbuffer(t_state *state);
 void 					draw_plantings_to_backbuffer(t_model *mdl, t_state *state);
 
 /*
@@ -327,8 +350,15 @@ void					create_strings_from_model(t_model *mdl, t_mapfile *map);
  * from polymap.c
  * */
 
+int						room_id_from_polymap(SDL_Surface *polymap, int x, int y);
 uint32_t				*get_debug_convs(void);
 uint32_t				*get_conv_colors(void);
 void        			add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors);
+
+/*
+ * from find_visual.c
+ * */
+
+void					find_visual_xy(t_room *room);
 
 #endif

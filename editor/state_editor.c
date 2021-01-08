@@ -33,6 +33,8 @@ void		 		edt_cycle_mode(t_state *state)
 	//ft_putendl("Deactivating GUI mode");
 	state->gui->deactivate(state);
 	if (state->gui == mode_polydraw())
+		state->gui = mode_select();
+	else if (state->gui == mode_select())
 		state->gui = mode_planting();
 	else if (state->gui == mode_planting())
 		state->gui = mode_pickups();

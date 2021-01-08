@@ -14,7 +14,7 @@ static void		preview_tail(int x, int y, int unpreview, t_point *sweep)
 	{
 		line.color = 0xff000000;
 		preserve_render_line(&line);
-		puts("Unpreviewing sweeping tail line!");
+			//puts("Unpreviewing sweeping tail line!");
 		return ;
 	}
 	rot = tail_degree_rot((t_point){x, y}, &sweep[1]);
@@ -28,7 +28,7 @@ static void		preview_tail(int x, int y, int unpreview, t_point *sweep)
 	line.x2 = tx;
 	line.y2 = ty;
 	preserve_render_line(&line);
-	puts("Previewing sweeping tail line!");
+		//puts("Previewing sweeping tail line!");
 }
 
 void 			planting_mouse_motion(int x, int y)
@@ -68,11 +68,108 @@ void 			planting_mouse_motion(int x, int y)
 	last_preview.y = y;
 }
 
+static int		which_overlapping_planting(int x, int y)
+{
+	t_enemy		*enemy;
+	int 		ec;
+
+	if (abs((int)get_model()->player.x - x) < 24 && abs((int)get_model()->player.y - y) < 24)
+		return (-2);
+	enemy = get_model()->enemy_first;
+	ec = get_model()->enemy_count;
+	while (ec--)
+	{
+		if (abs(x - enemy->x) < 24 && abs(y - enemy->y) < 24)
+			return (enemy->id);
+		enemy = enemy->next;
+	}
+	return (-1);
+}
+
+static void 	recalc_enemy_ids(void)
+{
+	t_enemy		*enemy;
+	int 		ec;
+	int 		i;
+
+	i = 0;
+	enemy = get_model()->enemy_first;
+	ec = get_model()->enemy_count;
+	while (ec--)
+	{
+		enemy->id = i++;
+		enemy = enemy->next;
+	}
+}
+
+static void 	link_enemy_by_id(int id, t_enemy *linking_enemy)
+{
+	t_enemy	*enemy;
+	int		ec;
+
+	if (id < 0)
+		ft_die("Fatal error: Tried to link with invalid id at link_enemy_by_id");
+	enemy = get_model()->enemy_first;
+	ec = get_model()->enemy_count;
+	while (ec--)
+	{
+		if (enemy->id == id)
+		{
+			enemy->next = linking_enemy;
+			return ;
+		}
+		enemy = enemy->next;
+	}
+	ft_putendl("Warning: Could not link enemy by id, id did not match with an enemy at link_enemy_by_id!");
+}
+
+static void 	remove_enemy(int id)
+{
+	t_enemy		*enemy;
+	int 		ec;
+
+		//puts("Removing a planting! Double click detected!");
+	enemy = get_model()->enemy_first;
+	ec = get_model()->enemy_count;
+	while (ec--)
+	{
+		if (enemy->id == id)
+		{
+			if (id == 0)
+				get_model()->enemy_first = enemy->next;
+			else
+				link_enemy_by_id(id - 1, enemy->next);
+			get_model()->enemy_count--;
+			free(enemy);
+			recalc_enemy_ids();
+			break ;
+		}
+		enemy = enemy->next;
+	}
+}
+
 void 			planting_left_click(int x, int y)
 {
-	planting_logic()->plant(x, y);
+	static int	last_id = -1;
+	int 		curr_id;
 
+	curr_id = which_overlapping_planting(x, y);
 
+	if (curr_id == -2)
+	{
+		last_id = -1;
+		return ;
+	}
+	else if (curr_id == -1)
+		planting_logic()->plant(x, y);
+	else if (curr_id == last_id)
+	{
+		remove_enemy(curr_id);
+		planting_change_zoom(get_state());
+		last_id = -1;
+	}
+	else
+		last_id = curr_id;
 }
 
 void 			planting_right_click(int x, int y)

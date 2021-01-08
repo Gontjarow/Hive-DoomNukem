@@ -1,17 +1,17 @@
 #include "doom-nukem.h"
 
-int				room_id_from_pixel(SDL_Surface *buff, int x, int y)
+int				room_id_from_polymap(SDL_Surface *polymap, int x, int y)
 {
 	unsigned int	*pixels;
 	int 			location;
 	int 			limit;
 
-	location = x + buff->w * y;
-	limit = buff->w * buff->h;
-	pixels = buff->pixels;
+	location = x + polymap->w * y;
+	limit = polymap->w * polymap->h;
+	pixels = polymap->pixels;
 	if (location >= limit || location < 0)
 	{
-		printf("Warning: room_id_from_pixel tried to get pixel at %d, %d which is outside buffer memory area. Operation was blocked.\n", x, y);
+		printf("Warning: room_id_from_polymap tried to get room id at location %d, %d which is outside buffer memory area. Operation was blocked.\n", x, y);
 		return (-1);
 	}
 	if (pixels[location] == 0xffffffff)

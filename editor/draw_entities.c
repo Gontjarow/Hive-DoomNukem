@@ -115,7 +115,22 @@ void			update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type)
 // TODO			BLIT BASED RENDERING IS SLOW!!!! FIX???
 //					BEFORE ABANDONING SDL_BLIT CODE, TRY OPTIMIZING SDL_SURFACE WITH SDL_CONVERT
 //				ALTERNATIVELY: DRAW DIRECTLY TO INTENDED PIXELBUFFER, SKIPPING BLIT
+void 			draw_selection_to_backbuffer(t_state *state)
+{
+	t_room		*room;
+	t_point		adjusted;
 
+	if (state->gui != mode_select())
+		return ;
+	if (select_logic()->selected_room_id == -1)
+		return ;
+	room = room_by_id(select_logic()->selected_room_id);
+	room_walls_to_buffer(room, editor_back_buffer()->buff, COLOR_SELECTION_LINE);
+	if (room->visual.x == -1 && room->visual.y == -1)
+		find_visual_xy(room);
+	adjusted = scrolled_position(room->visual.x, room->visual.y, get_state());
+	square_to_buffer(editor_back_buffer()->buff, adjusted, 10, 0xffffff00);
+}
 void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 {
 	t_enemy		*enemy;

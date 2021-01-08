@@ -151,7 +151,7 @@ static void			wall_to_buffer_fixed(t_wall *wall, SDL_Surface *buff, uint32_t col
 		&& (line.x2 >= 0 && line.x2 < buff->w) && (line.y2 >= 0 && line.y2 < buff->h))
 		render_line(&line);
 	else if (clip_wall_to_buff(&clipped_wall, wall, buff))
-		wall_to_buffer_clipped(&clipped_wall, buff, 0xffffffff);
+		wall_to_buffer_clipped(&clipped_wall, buff, color);
 }
 
 void 				wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color)
@@ -173,15 +173,42 @@ void 				wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color)
 	return (wall_to_buffer_fixed(&adjusted_wall, buff, color));
 }
 
+t_room				*room_by_id(int id)
+{
+	t_room			*room;
+	int				rc;
+
+	rc = get_model()->room_count;
+	room = get_model()->room_first;
+	while (rc--)
+	{
+		if (room->id == id)
+			return (room);
+		room = room->next;
+	}
+	return (NULL);
+}
+
+void 				room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color)
+{
+	t_wall	*wall;
+	int 	wc;
+
+	wall = room->first_wall;
+	wc = room->wall_count;
+	while (wc--)
+	{
+		wall_to_buffer(wall, buff, color);
+		wall = wall->next;
+	}
+}
+
 void				x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color)
 {
-	t_wall *iter;
-
-	iter = wall;
 	while (x--)
 	{
-		wall_to_buffer(iter, buff, color);
-		iter = iter->next;
+		wall_to_buffer(wall, buff, color);
+		wall = wall->next;
 	}
 }
 

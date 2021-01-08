@@ -47,6 +47,8 @@ void			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_co
 	mdl->rooms->id = mdl->room_count;
 	mdl->rooms->floor_height = 1000;
 	mdl->rooms->roof_height = 1300;
+	mdl->rooms->visual.x = -1;
+	mdl->rooms->visual.y = -1;
 	mdl->room_count++;
 	next_room = (t_room*)malloc(sizeof(t_room));
 	if (!next_room)

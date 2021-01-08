@@ -1,5 +1,28 @@
 #include "doom-nukem.h"
 
+t_gui	*mode_select(void)
+{
+	static t_gui	*select = NULL;
+
+	if (!select)
+	{
+		select = (t_gui*)malloc(sizeof(t_gui));
+		if (!select)
+			ft_die("Fatal error: Could not malloc t_gui at mode_select.");
+		// TODO FLESH OUT
+		select->activate = select_activate;
+		select->deactivate = select_deactivate;
+		select->change_zoom = select_change_zoom;
+		select->left_click = select_left_click;
+		select->right_click = select_right_click;
+		select->middle_click = select_middle_click;
+		select->motion = select_mouse_motion;
+		select->has_motion = 1;
+		set_protected_color(0xffffffff);
+	}
+	return (select);
+}
+
 t_gui	*mode_pickups(void)
 {
 	static t_gui	*pickups = NULL;

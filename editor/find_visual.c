@@ -1,5 +1,18 @@
 #include "doom-nukem.h"
-/*
+
+static void debug_triangle_line(t_line *line, t_point *s, t_point *e)
+{
+	// Disable or enable debugging visuals by enabling return.
+	return ;
+	line->x1 = s->x;
+	line->y1 = s->y;
+	line->x2 = e->x;
+	line->y2 = e->y;
+	line->color = 0xffff00ff;
+	line->buff = doom_ptr()->edt->buff;
+	render_line(line);
+}
+
 static t_tri_sides room_first_triangle(t_room *room)
 {
 	t_point		*s;
@@ -52,20 +65,7 @@ static t_tri_sides room_second_triangle(t_room *room)
 	return ((t_tri_sides){distance_a, distance_b, distance_c});
 }
 
-static void debug_triangle_line(t_line *line, t_point *s, t_point *e, t_editor *edt)
-{
-	// Disable or enable debugging visuals by enabling return.
-	return ;
-	line->x1 = s->x;
-	line->y1 = s->y;
-	line->x2 = e->x;
-	line->y2 = e->y;
-	line->color = 0xffff00ff;
-	line->buff = edt->buff;
-	render_line(line);
-}
-
-static t_tri_sides room_n_triangle(t_room *room, int n, t_editor *edt)
+static t_tri_sides room_n_triangle(t_room *room, int n)
 {
 	t_line		line;
 	t_wall 		*n_wall;
@@ -78,17 +78,17 @@ static t_tri_sides room_n_triangle(t_room *room, int n, t_editor *edt)
 		n_wall = n_wall->next;
 	s = &room->first_wall->start;
 	e = &n_wall->end;
-	debug_triangle_line(&line, s, e, edt);
+	//debug_triangle_line(&line, s, e);
 	distance_abc[0] = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
 	distance_abc[0] = sqrt(distance_abc[0]);
 	s = &n_wall->end;
 	e = &n_wall->next->end;
-	debug_triangle_line(&line, s, e, edt);
+	//debug_triangle_line(&line, s, e);
 	distance_abc[1] = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
 	distance_abc[1] = sqrt(distance_abc[1]);
 	s = &n_wall->next->end;
 	e = &room->first_wall->start;
-	debug_triangle_line(&line, s, e, edt);
+	//debug_triangle_line(&line, s, e);
 	distance_abc[2] = ((e->x - s->x) * (e->x - s->x)) + ((e->y - s->y) * (e->y - s->y));
 	distance_abc[2] = sqrt(distance_abc[2]);
 	return ((t_tri_sides){distance_abc[0], distance_abc[1], distance_abc[2]});
@@ -111,7 +111,7 @@ static double	triangle_area(t_tri_sides tri)
 
 }
 
-static t_point barycentric_xy(t_editor *edt, t_room *room)
+static t_point barycentric_xy(t_room *room)
 {
 	t_point		v1;
 	t_point 	v2;
@@ -128,7 +128,7 @@ static t_point barycentric_xy(t_editor *edt, t_room *room)
 	return ((t_point){(v1.x + v2.x + v3.x) / 3, (v1.y + v2.y + v3.y) / 3});
 }
 
-static t_point second_barycentric_xy(t_editor *edt, t_room *room)
+static t_point second_barycentric_xy(t_room *room)
 {
 	t_point		v1;
 	t_point 	v2;
@@ -162,7 +162,7 @@ static t_point n_visual_xy(t_room *room, int n)
 	return ((t_point){(v1.x + v2.x + v3.x) / 3, (v1.y + v2.y + v3.y) / 3});
 }
 
-static t_point split_barycentric_xy(t_editor *edt, t_room *room)
+static t_point split_barycentric_xy(t_room *room)
 {
 	double 		area1;
 	double 		area2;
@@ -174,8 +174,8 @@ static t_point split_barycentric_xy(t_editor *edt, t_room *room)
 	area2 = 0;
 	area1 = triangle_area(room_first_triangle(room));
 	area2 = triangle_area(room_second_triangle(room));
-	visual1 = barycentric_xy(edt, room);
-	visual2 = second_barycentric_xy(edt, room);
+	visual1 = barycentric_xy(room);
+	visual2 = second_barycentric_xy(room);
 	result.x = ((visual1.x * (int)area1) + (visual2.x * (int)area2)) / (int)(area1 + area2);
 	result.y = ((visual1.y * (int)area1) + (visual2.y * (int)area2)) / (int)(area1 + area2);
 	//printf("Calculated triangle areas: [%f | %f]\n", area1, area2);
@@ -184,7 +184,7 @@ static t_point split_barycentric_xy(t_editor *edt, t_room *room)
 	return (result);
 }
 
-static t_point n_barycentric_xy(t_editor *edt, t_room *room, int n)
+static t_point n_barycentric_xy(t_room *room, int n)
 {
 	double	*areas;
 	t_point	*visuals;
@@ -198,7 +198,7 @@ static t_point n_barycentric_xy(t_editor *edt, t_room *room, int n)
 	if (!areas || !visuals)
 		ft_die("Fatal error: Mallocing areas, visuals failed at n_barycentric_xy.");
 	areas[i] = triangle_area(room_first_triangle(room)) / 100;
-	visuals[i] = barycentric_xy(edt, room);
+	visuals[i] = barycentric_xy(room);
 	//circle_visual(edt->parent, &visuals[i]);
 	weighted_result.x = ((int)areas[i] * visuals[i].x);
 	weighted_result.y = ((int)areas[i] * visuals[i].y);
@@ -206,7 +206,7 @@ static t_point n_barycentric_xy(t_editor *edt, t_room *room, int n)
 	//printf("Weighted result x = %d, y = %d, total_weight = %d\n", weighted_result.x, weighted_result.y, weight);
 	while(++i < n - 2)
 	{
-		areas[i] = triangle_area(room_n_triangle(room, i, edt)) / 100;
+		areas[i] = triangle_area(room_n_triangle(room, i)) / 100;
 		weight += (int)areas[i];
 		visuals[i] = n_visual_xy(room, i);
 		//circle_visual(edt->parent, &visuals[i]);
@@ -223,77 +223,18 @@ static t_point n_barycentric_xy(t_editor *edt, t_room *room, int n)
 	return (weighted_result);
 }
 
-static int room_portals(t_editor *edt, t_room *room)
-{
-	t_wall *wall;
-	t_wall *portal;
-	int pc;
-	int wc;
-	int included_portals_in_room;
-	int flagged_for_inclusion;
-
-	pc = edt->portal_count;
-	if (pc == 0)
-	{
-		//ft_putendl("Skipping room_portals, portal_count was zero.");
-		return (0);
-	}
-	portal = edt->portal_begin;
-	included_portals_in_room = 0;
-	while (pc--)
-	{
-		flagged_for_inclusion = 0;
-		//ft_putendl("Room_portals checking against a portal for hits.");
-		wc = room->wall_count;
-		wall = room->first_wall;
-		while (wc--)
-		{
-			if ((wall->start.x == portal->end.x && wall->start.y == portal->end.y) ||
-				(wall->start.x == portal->start.x && wall->start.y == portal->start.y) ||
-				(wall->end.x == portal->end.x && wall->end.y == portal->end.y) ||
-				(wall->end.x == portal->start.x && wall->end.y == portal->start.y))
-			{
-				flagged_for_inclusion++;
-				//ft_putendl("Found a portal for including into a room in room_portals.");
-			}
-			wall = wall->next;
-		}
-		if (flagged_for_inclusion)
-			included_portals_in_room++;
-		portal = portal->next;
-	}
-	return (included_portals_in_room);
-}
-
-void	find_visual_xy(t_editor *edt, t_room *room)
+void	find_visual_xy(t_room *room)
 {
 	t_point	visual_xy;
 
-	//ft_putendl("Finding weighted centroid of convex polygon.");
+		//ft_putendl("Finding weighted centroid of convex polygon.");
 	if (room->wall_count == 3)
-	{
-		//ft_putendl("Barycentric visual can be found from the triangle.");
-		visual_xy = barycentric_xy(edt, room);
-		//printf("Visual located to: %d, %d\n", visual_xy.x, visual_xy.y);
-		room->visual = visual_xy;
-		circle_room(edt->parent, room);
-	}
+		visual_xy = barycentric_xy(room);
 	else if (room->wall_count == 4)
-	{
-		visual_xy = split_barycentric_xy(edt, room);
-		//printf("Visual located to: %d, %d\n", visual_xy.x, visual_xy.y);
-		room->visual = visual_xy;
-		circle_room(edt->parent, room);
-	}
+		visual_xy = split_barycentric_xy(room);
 	else if (room->wall_count > 4)
-	{
-		visual_xy = n_barycentric_xy(edt, room, room->wall_count);
-		room->visual = visual_xy;
-		circle_room(edt->parent, room);
-		//ft_putendl("Polygon can be triangulated into ");
-		//ft_putnbr(room->wall_count - 2);
-		//ft_putendl(" triangles, which can be measured for area, and calculated for their barycentric center.");
-	}
+		visual_xy = n_barycentric_xy(room, room->wall_count);
+	else
+		return ;
+	room->visual = visual_xy;
 }
-
-*/

@@ -139,7 +139,7 @@ t_logic 		*pickups_logic(void)
 	{
 		logic = (t_logic*)malloc(sizeof(t_logic));
 		if (!logic)
-			ft_die("Fatal error: Could not malloc logic for planting at planting_logic");
+			ft_die("Fatal error: Could not malloc logic for planting at pickups_logic");
 		logic->plant_type = PICKUP_HEALTH;
 		logic->plant = pickups_plant;
 		logic->swap_type = pickups_swap_type;
@@ -238,9 +238,108 @@ void 			pickups_mouse_motion(int x, int y)
 	last_preview.y = y;
 }
 
+static void 	link_pickup_by_id(int id, t_pickup *linking_pickup)
+{
+	t_pickup	*pickup;
+	int			pc;
+
+	if (id < 0)
+		ft_die("Fatal error: Tried to link with invalid id at link_pickup_by_id");
+	pickup = get_model()->pickup_first;
+	pc = get_model()->pickup_count;
+	while (pc--)
+	{
+		if (pickup->id == id)
+		{
+			pickup->next = linking_pickup;
+			return ;
+		}
+		pickup = pickup->next;
+	}
+	ft_putendl("Warning: Could not link pickup by id, id did not match with an enemy at link_pickup_by_id!");
+}
+
+static void 	recalc_pickup_ids(void)
+{
+	t_pickup	*pickup;
+	int 		pc;
+	int 		i;
+
+	i = 0;
+	pickup = get_model()->pickup_first;
+	pc = get_model()->pickup_count;
+	while (pc--)
+	{
+		pickup->id = i++;
+		pickup = pickup->next;
+	}
+}
+
+static int 		remove_pickup(int id)
+{
+	t_pickup	*pickup;
+	int 		pc;
+
+	puts("Removing a pickup! Double click detected!");
+	pickup = get_model()->pickup_first;
+	pc = get_model()->pickup_count;
+	while (pc--)
+	{
+		if (pickup->id == id)
+		{
+			if (id == 0)
+				get_model()->pickup_first = pickup->next;
+			else
+				link_pickup_by_id(id - 1, pickup->next);
+			get_model()->pickup_count--;
+			free(pickup);
+			recalc_pickup_ids();
+			break ;
+		}
+		pickup = pickup->next;
+	}
+}
+
+static int		which_overlapping_pickups(int x, int y)
+{
+	t_pickup	*pickup;
+	int 		pc;
+
+	if (abs((int)get_model()->player.x - x) < 24 && abs((int)get_model()->player.y - y) < 24)
+		return (-2);
+	pickup = get_model()->pickup_first;
+	pc = get_model()->pickup_count;
+	while (pc--)
+	{
+		if (abs(x - pickup->loc.x) < 24 && abs(y - pickup->loc.y) < 24)
+			return (pickup->id);
+		pickup = pickup->next;
+	}
+	return (-1);
+}
+
 void 			pickups_left_click(int x, int y)
 {
-	pickups_logic()->plant(x, y);
+	static int	last_id = -1;
+	int 		curr_id;
+
+	curr_id = which_overlapping_pickups(x, y);
+
+	if (curr_id == -2)
+	{
+		last_id = -1;
+		return ;
+	}
+	else if (curr_id == -1)
+		pickups_logic()->plant(x, y);
+	else if (curr_id == last_id)
+	{
+		remove_pickup(curr_id);
+		pickups_change_zoom(get_state());
+		last_id = -1;
+	}
+	else
+		last_id = curr_id;
 }
 
 void 			pickups_right_click(int x, int y)

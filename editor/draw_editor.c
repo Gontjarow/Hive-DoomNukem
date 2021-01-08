@@ -9,6 +9,7 @@ void				redraw_editor_to_backbuffer(uint32_t color)
 	print_mode_info(get_state()->gui);
 	draw_scroll_bars_to_backbuffer(get_state());
 	draw_plantings_to_backbuffer(get_model(), get_state());
+	draw_selection_to_backbuffer(get_state());
 }
 
 SDL_Surface			*zoom_xpm(int factor)
@@ -32,11 +33,14 @@ SDL_Surface			*zoom_xpm(int factor)
 SDL_Surface			*mode_xpm(t_gui *mode)
 {
 	static SDL_Surface *polydraw_xpm = NULL;
+	static SDL_Surface *select_xpm = NULL;
 	static SDL_Surface *planting_xpm = NULL;
 	static SDL_Surface *pickups_xpm = NULL;
 
 	if (mode == mode_polydraw())
 		return (polydraw_xpm == NULL ? polydraw_xpm = xpm2surface("img/edt/wall_drawing.xpm") : polydraw_xpm);
+	else if (mode == mode_select())
+		return (select_xpm == NULL ? select_xpm = xpm2surface("img/edt/select.xpm") : select_xpm);
 	else if (mode == mode_planting())
 		return (planting_xpm == NULL ? planting_xpm = xpm2surface("img/edt/planting.xpm") : planting_xpm);
 	else if (mode == mode_pickups())
