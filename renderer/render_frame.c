@@ -50,15 +50,16 @@ void render_frame(t_doom *doom)
 
 	int			px = doom->mdl->player.x;
 	int			py = doom->mdl->player.y;
-	t_xyz		pos = vec3_mul(vec3(px, 0, py), WORLD_SCALE_FACTOR);
-				// pos.y = doom->mdl->room_first->floor_height;
-	t_xyz		cam_dir = vec3_norm(vec3_sub(pos, vec3(0, 0, 0)));
+	t_xyz		pos = vec3_mul(	vec3(px, 0, py), WORLD_SCALE_FACTOR);
+	t_xyz		plr_dir = vec3(cos(rad), 0, sin(rad));
+	t_xyz		world_up = vec3(0, 1, 0);
+	t_xyz		cam_dir = vec3_norm(plr_dir);
 
 	t_matrix	world = translate_m(0, 0, 0);
-	t_matrix	dimensions = scale_m(GAME_MIDWIDTH/2, GAME_MIDHEIGHT/2, 1);
-	t_matrix	view = lookat_m(pos, vec3_add(pos, vec3(cos(rad), 0, sin(rad))), vec3(0,1,0));
+	// t_matrix	dimensions = scale_m(GAME_MIDWIDTH/2, GAME_MIDHEIGHT/2, 1);
+	t_matrix	view = lookat_m(pos, vec3_add(pos, plr_dir), world_up);
 	t_matrix	projection = project_pure_m();
-	t_matrix	perspective = project_m(90, GAME_WIN_ASPECT, 0.1, 1000);
+	// t_matrix	perspective = project_m(90, GAME_WIN_ASPECT, 0.1, 1000);
 	t_matrix	window = window_m(0.1, 1000);
 
 																	// start with model coordinates
@@ -108,6 +109,7 @@ void render_frame(t_doom *doom)
 	else return;
 
 	int i = 0;
+	SDL_UpdateWindowSurface(doom->game->win);
 	while (i < screen_obj.f_count)
 	{
 		// t_vert *vo = test.face[i].vert;
@@ -139,6 +141,7 @@ void render_frame(t_doom *doom)
 				color = color | color << 8 | color << 16;
 
 				draw_tri(doom->game->buff->pixels, screen_face, color);
+				SDL_UpdateWindowSurface(get_doom(NULL)->game->win);
 				printf("drew tri %i\n", i);
 				// SDL_UpdateWindowSurface(doom->game->win);
 				// SDL_Delay(40);

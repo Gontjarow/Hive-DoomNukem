@@ -24,6 +24,8 @@ void 		init_game(t_doom *doom, int argc, char **argv)
 	if (!doom->game->win)
 		ft_die("Fatal error: SDL_CreateWindow failed at init_game.");
 	doom->game->buff = SDL_GetWindowSurface(doom->game->win);
+	get_pbuffer(doom->game->buff);
+	get_doom(doom);
 	flood_buffer(doom->game->buff, 0xff000000);
 	if (!doom->game->win)
 		ft_die("Fatal error: SDL_GetWindowSurface failed at init_game.");
@@ -239,8 +241,8 @@ void		game_render(t_doom *doom)
 	location_id = check_location(doom);
 	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT)
 	{
-		doom->mdl->player.x = old_x;
-		doom->mdl->player.y = old_y;
+		// doom->mdl->player.x = old_x;
+		// doom->mdl->player.y = old_y;
 	}
 	// ft_putnbr(check_location(doom));
 	// ft_putstr("= [");
@@ -251,5 +253,5 @@ void		game_render(t_doom *doom)
 	update_minimap(doom);
 	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
-	
+
 }

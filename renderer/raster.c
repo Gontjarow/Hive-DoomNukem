@@ -32,20 +32,17 @@ double		clamp(double n, double min, double max)
 // Raster-space bounding box
 t_xy		bb_min(t_actual_face *face)
 {
-	int i;
 	t_vert lowest;
 	t_vert current;
 	t_face_vert *iter = face->vert;
 
 	lowest = iter->data->pos;
-	i = 1;
-	while (i < iter->next != NULL)
+	while (iter != NULL)
 	{
 		current = iter->data->pos;
 		if (current.y < lowest.y) lowest.y = current.y;
 		if (current.x < lowest.x) lowest.x = current.x;
 		iter = iter->next;
-		++i;
 	}
 	return vec2(
 		clamp(lowest.x, 0, GAME_WIN_WIDTH),
@@ -55,20 +52,17 @@ t_xy		bb_min(t_actual_face *face)
 // Raster-space bounding box
 t_xy		bb_max(t_actual_face *face)
 {
-	int i;
 	t_vert highest;
 	t_vert current;
 	t_face_vert *iter = face->vert;
 
 	highest = iter->data->pos;
-	i = 1;
-	while (i < iter->next != NULL)
+	while (iter != NULL)
 	{
 		current = iter->data->pos;
 		if (current.y > highest.y) highest.y = current.y;
 		if (current.x > highest.x) highest.x = current.x;
 		iter = iter->next;
-		++i;
 	}
 	return vec2(
 		clamp(highest.x, 0, GAME_WIN_WIDTH),
@@ -78,6 +72,21 @@ t_xy		bb_max(t_actual_face *face)
 // Note: left < 0, edge == 0, right > 0
 double edge(t_xy p, t_xy a, t_xy b)
 {
+	t_line l;
+	l.buff = get_pbuffer(NULL);
+	l.color = 0xFFFFFF;
+	l.x1 = a.x;
+	l.y1 = a.y;
+	l.x2 = b.x;
+	l.y2 = b.y;
+	render_line(&l);
+	l.color = 0xFF0000;
+	l.x1 = p.x;
+	l.y1 = p.y;
+	l.x2 = p.x+1;
+	l.y2 = p.y+1;
+	// render_line(&l);
+
 	return ((p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x));
 }
 

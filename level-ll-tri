@@ -1,0 +1,11 @@
+Wall id: 0 | start: 0 0 | end: 200 0
+Wall id: 1 | start: 200 0 | end: 100 400
+Wall id: 2 | start: 100 400 | end: 0 0
+
+Room id: 0 | first_wall_id: 0 | wall_count: 3 | floor_height: 1000 | roof_height: 1300
+
+
+Enemy id: 0 | start: 186 360 | rot: 82 | tail: 184 345 | hp: 100 | wep id: 0
+Enemy id: 1 | start: 404 159 | rot: 352 | tail: 389 161 | hp: 100 | wep id: 0
+
+Player spawn: 19 19 | rot: 219 | tail: 30 28

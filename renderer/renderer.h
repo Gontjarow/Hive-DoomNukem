@@ -70,7 +70,9 @@ typedef struct	s_wall t_wall;
 # include "doom-nukem.h"
 # include <assert.h>
 
+t_doom			*get_doom(t_doom *doom);
 double			*get_zbuffer();
+SDL_Surface		*get_pbuffer(SDL_Surface *p);
 
 void			sort_tri(t_actual_face *face);
 void			swap_xyzw(t_xyzw *a, t_xyzw *b);
