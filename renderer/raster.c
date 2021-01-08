@@ -72,21 +72,6 @@ t_xy		bb_max(t_actual_face *face)
 // Note: left < 0, edge == 0, right > 0
 double edge(t_xy p, t_xy a, t_xy b)
 {
-	t_line l;
-	l.buff = get_pbuffer(NULL);
-	l.color = 0xFFFFFF;
-	l.x1 = a.x;
-	l.y1 = a.y;
-	l.x2 = b.x;
-	l.y2 = b.y;
-	render_line(&l);
-	l.color = 0xFF0000;
-	l.x1 = p.x;
-	l.y1 = p.y;
-	l.x2 = p.x+1;
-	l.y2 = p.y+1;
-	// render_line(&l);
-
 	return ((p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x));
 }
 

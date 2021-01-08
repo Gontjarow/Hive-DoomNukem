@@ -319,6 +319,7 @@ void 			game_mouse_down(t_doom *doom);
 void			game_key_down(t_doom *doom);
 
 void			modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end);
+void			render_line_simple(uint32_t c, t_xy a, t_xy b);
 void 			render_line(t_line *l);
 
 void			flood_buffer(SDL_Surface *buff, uint32_t color);

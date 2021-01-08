@@ -77,21 +77,11 @@ static			render_box(t_xy c1, t_xy c2) // bounding box rainbow debug
 {
 	static unsigned int i = 0;
 
-	t_line l;
-	l.buff = get_pbuffer(NULL);
-	l.color = ((i%3 == 0) ? 0xFF : (i%3 == 1) ? 0xFF00 : 0xFF0000); // modulo-shift wasn't working??
-	l.x1 = c1.x; l.y1 = c1.y;
-	l.x2 = c2.x; l.y2 = c1.y;
-	render_line(&l);
-	l.x1 = c1.x; l.y1 = c1.y;
-	l.x2 = c1.x; l.y2 = c2.y;
-	render_line(&l);
-	l.x1 = c2.x; l.y1 = c2.y;
-	l.x2 = c1.x; l.y2 = c2.y;
-	render_line(&l);
-	l.x1 = c2.x; l.y1 = c2.y;
-	l.x2 = c2.x; l.y2 = c1.y;
-	render_line(&l);
+	uint32_t c = ((i%3 == 0) ? 0xFF : (i%3 == 1) ? 0xFF00 : 0xFF0000); // modulo-shift wasn't working??
+	render_line_simple(c, vec2(c1.x, c1.y), vec2(c2.x, c1.y));
+	render_line_simple(c, vec2(c1.x, c1.y), vec2(c1.x, c2.y));
+	render_line_simple(c, vec2(c2.x, c2.y), vec2(c1.x, c2.y));
+	render_line_simple(c, vec2(c2.x, c2.y), vec2(c2.x, c1.y));
 	++i;
 }
 
@@ -103,6 +93,9 @@ void			draw_tri(unsigned int *pixel, t_actual_face *face, int color)
 	t_xy max = bb_max(face);
 	render_box(min, max);
 
+	render_line_simple(0x90E39A, vec42(face->vert->data->pos), vec42(face->vert->next->data->pos));
+	render_line_simple(0x90E39A, vec42(face->vert->data->pos), vec42(face->vert->next->next->data->pos));
+	render_line_simple(0x90E39A, vec42(face->vert->next->data->pos), vec42(face->vert->next->next->data->pos));
 	// compare (<=) to ensure zero-width triangles get drawn for clarity.
 	for (int y = min.y; y <= max.y; ++y)
 	for (int x = min.x; x <= max.x; ++x)

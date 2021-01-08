@@ -109,7 +109,7 @@ void render_frame(t_doom *doom)
 	else return;
 
 	int i = 0;
-	SDL_UpdateWindowSurface(doom->game->win);
+	// SDL_UpdateWindowSurface(doom->game->win);
 	while (i < screen_obj.f_count)
 	{
 		// t_vert *vo = test.face[i].vert;
@@ -141,7 +141,7 @@ void render_frame(t_doom *doom)
 				color = color | color << 8 | color << 16;
 
 				draw_tri(doom->game->buff->pixels, screen_face, color);
-				SDL_UpdateWindowSurface(get_doom(NULL)->game->win);
+				// SDL_UpdateWindowSurface(get_doom(NULL)->game->win);
 				printf("drew tri %i\n", i);
 				// SDL_UpdateWindowSurface(doom->game->win);
 				// SDL_Delay(40);

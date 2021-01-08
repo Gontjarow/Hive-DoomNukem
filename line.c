@@ -92,8 +92,16 @@ static void		line_mirror(t_line *l, int delta_x, int delta_y)
 	}
 }
 
-/* Line algorithm, Bresenham.
- */
+/* Line algorithm, Bresenham. */
+void			render_line_simple(uint32_t c, t_xy a, t_xy b)
+{
+	t_line l;
+	l.buff = get_pbuffer(NULL);
+	l.color = c;
+	l.x1 = a.x; l.y1 = a.y;
+	l.x2 = b.x; l.y2 = b.y;
+	render_line(&l);
+}
 
 void			render_line(t_line *l)
 {
