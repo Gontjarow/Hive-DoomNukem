@@ -6,11 +6,44 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 20:03:18 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/22 16:12:54 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/08 19:47:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
+
+void			print_minimap_weapons(t_doom *doom)
+{
+	unsigned int	*pixels;
+	unsigned int	*ref;
+	SDL_Surface		*weap_img;
+	int				x;
+	int				y;
+	int				k;
+	int				cut;
+
+	if (!(weap_img = (SDL_Surface*)malloc(sizeof(SDL_Surface))))
+		ft_die("Error allocating weap_img!\n");
+	if (doom->mdl->player.weap_id == 0)
+		weap_img = load_png("img/weapons/colt.png");
+	else if (doom->mdl->player.weap_id == 1)
+		weap_img = load_png("img/weapons/mp5.png");
+	else if (doom->mdl->player.weap_id == 2)
+		weap_img = load_png("img/weapons/ak47.png");
+	pixels = doom->minimap->buff->pixels;
+	ref = weap_img->pixels;
+	cut = 15 * WIN_WIDTH;
+	y = (WIN_WIDTH - weap_img->w) + ((WIN_HEIGHT - weap_img->h) * WIN_WIDTH) - cut;
+	y += cut;
+	x = 0;
+	k = 0;
+	while (k < ((weap_img->w * weap_img->h)))
+	{
+		y = x == weap_img->w ? y + WIN_WIDTH : y;
+		x = x == weap_img->w ? 0 : x;
+		pixels[x++ + y] = ref[k++];
+	}
+}
 
 static void		mcircle_enemy(t_doom *doom, t_enemy *enemy, unsigned int color)
 {

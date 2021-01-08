@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/08 15:23:52 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/08 19:10:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,19 +127,13 @@ void			handle_pickup(t_doom *doom)
 		// printf("Player HP: %d\n", doom->mdl->player.hp.cur);
 		if (pickup->flavor == PICKUP_HEALTH && player_collision_with_pickup
 			(doom, pickup) == -1 && doom->mdl->player.hp.cur < 100)
-		{
 			handle_health_pickup(doom, pickup);
-		}
 		else if (pickup->flavor == PICKUP_AMMO && player_collision_with_pickup
 			(doom, pickup) == -1)
-		{
 			handle_ammo_pickup(doom, pickup);
-		}
 		else if (pickup->flavor == PICKUP_WEAPON && player_collision_with_pickup
 			(doom, pickup) == -1 && doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].do_own == 0)
-		{
 			handle_weapon_pickup(doom, pickup);
-		}
 		pickup = pickup->next;
 	}
 	// printf("\n");
