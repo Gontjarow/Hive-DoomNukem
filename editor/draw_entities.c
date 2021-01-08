@@ -77,7 +77,6 @@ void			update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type)
 
 	line.color = type_colors(obj_type);
 	line.buff = buff;
-	line.doom = doom_ptr();
 	if (obj_type == PLAYER)
 	{
 		player = (t_player*)obj_ptr;
@@ -129,7 +128,11 @@ void 			draw_selection_to_backbuffer(t_state *state)
 	if (room->visual.x == -1 && room->visual.y == -1)
 		find_visual_xy(room);
 	adjusted = scrolled_position(room->visual.x, room->visual.y, get_state());
-	square_to_buffer(editor_back_buffer()->buff, adjusted, 10, 0xffffff00);
+	square_to_buffer(editor_back_buffer()->buff, adjusted, 10, COLOR_SELECTION_LINE);
+	adjusted.y -= 20;
+	number_to_buffer(editor_back_buffer()->buff, adjusted, room->roof_height, COLOR_SELECTION_LINE);
+	adjusted.y += 40;
+	number_to_buffer(editor_back_buffer()->buff, adjusted, room->floor_height, COLOR_SELECTION_LINE);
 }
 void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 {

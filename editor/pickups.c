@@ -302,16 +302,18 @@ static int 		remove_pickup(int id)
 
 static int		which_overlapping_pickups(int x, int y)
 {
+	t_point		rel;
 	t_pickup	*pickup;
 	int 		pc;
 
-	if (abs((int)get_model()->player.x - x) < 24 && abs((int)get_model()->player.y - y) < 24)
+	rel = relative_position(x, y, get_state());
+	if (abs((int)get_model()->player.x - rel.x) < 24 && abs((int)get_model()->player.y - rel.y) < 24)
 		return (-2);
 	pickup = get_model()->pickup_first;
 	pc = get_model()->pickup_count;
 	while (pc--)
 	{
-		if (abs(x - pickup->loc.x) < 24 && abs(y - pickup->loc.y) < 24)
+		if (abs(rel.x - pickup->loc.x) < 24 && abs(rel.y - pickup->loc.y) < 24)
 			return (pickup->id);
 		pickup = pickup->next;
 	}

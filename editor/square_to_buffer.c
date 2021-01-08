@@ -160,7 +160,53 @@ void	cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color)
 	render_line(&horz_line);
 	render_line(&vert_line);
 }
-// Function pointerize as parameter
+
+static int rolling_offset(int number)
+{
+	int 	small_count;
+	int 	big_count;
+
+	big_count = 0;
+	small_count = 0;
+	while (number > 9)
+	{
+		if (number % 10 != 1)
+			big_count++;
+		else
+			small_count++;
+		number /= 10;
+	}
+	if (number % 10 != 1)
+		big_count++;
+	else
+		small_count++;
+	return (((11 * big_count) + (5 * small_count)) / 2) - 7;
+}
+
+void	number_to_buffer(SDL_Surface *buff, t_point loc, int number, uint32_t color)
+{
+	t_point	rolling;
+	int 	digit;
+	int 	small_count;
+	int 	big_count;
+
+	rolling.x = loc.x + rolling_offset(number);
+		//printf("Rolling offset was %d\n", rolling_offset(number));
+	rolling.y = loc.y;
+	while (number > 9)
+	{
+		digit = number % 10;
+		digit = (digit == 0) ? 100 : digit * 10;
+		rolling.x = (digit == 10) ? rolling.x + 4 : rolling.x;
+		digit_to_buffer(buff, rolling, digit, color);
+		rolling.x = (digit == 10) ? rolling.x - 7 : rolling.x - 11;
+		number /= 10;
+	}
+	digit = number;
+	digit = (digit == 0) ? 100 : digit * 10;
+	rolling.x = (digit == 10) ? rolling.x + 4 : rolling.x;
+	digit_to_buffer(buff, rolling, digit, color);
+}
 
 void	digit_to_buffer(SDL_Surface *buff, t_point xy, int digit, uint32_t color)
 {

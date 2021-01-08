@@ -42,6 +42,14 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define COLOR_AMMO_PICKUP		0xffffff00
 # define COLOR_WEAPON_PICKUP	0xffffffff
 # define PICKUP_RADIUS			16
+# define HEIGHT_STEPPING		10
+# define FLOOR_MIN				0
+# define FLOOR_MAX				2000
+# define ROOF_MIN				0
+# define ROOF_MAX				2000
+# define FLOOR_ROOF_DIFF_LIMIT	50
+# define GRID_START_SIZE		32
+# define DOUBLE_CLICK_COOLDOWN	24
 
 typedef struct 			s_2d_layer
 {
@@ -75,6 +83,8 @@ typedef struct 			s_logic
 typedef struct 			s_select
 {
 	int 				selected_room_id;
+	int 				last_floor;
+	int 				last_roof;
 }						t_select;
 
 typedef struct 			s_status
@@ -121,6 +131,7 @@ typedef struct 			s_state
     int 				selected_weapon_type;
     int 				grid_on;
     int 				grid_size;
+    int 				cooldown;
 }						t_state;
 
 typedef struct 			s_editor
@@ -200,6 +211,7 @@ void					square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t co
 void				 	preserving_cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void 					unpreserving_cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+void					number_to_buffer(SDL_Surface *buff, t_point loc, int number, uint32_t color);
 void					digit_to_buffer(SDL_Surface *buff, t_point xy, int digit, uint32_t color);
 void					digit_to_buffer_ptr(SDL_Surface *buff, t_point xy, int digit, uint32_t color, void (*render_fun)(t_line *line));
 
@@ -272,6 +284,8 @@ void 					pickups_middle_click(int x, int y);
  * */
 
 t_select 				*select_logic(void);
+void		 			select_roof(int dir);
+void 					select_floor(int dir);
 void					select_activate(t_state *state);
 void					select_deactivate(t_state *state);
 void					select_change_zoom(t_state *state);

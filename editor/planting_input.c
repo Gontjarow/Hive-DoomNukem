@@ -70,16 +70,18 @@ void 			planting_mouse_motion(int x, int y)
 
 static int		which_overlapping_planting(int x, int y)
 {
+	t_point		rel;
 	t_enemy		*enemy;
 	int 		ec;
 
-	if (abs((int)get_model()->player.x - x) < 24 && abs((int)get_model()->player.y - y) < 24)
+	rel = relative_position(x, y, get_state());
+	if (abs((int)get_model()->player.x - rel.x) < 24 && abs((int)get_model()->player.y - rel.y) < 24)
 		return (-2);
 	enemy = get_model()->enemy_first;
 	ec = get_model()->enemy_count;
 	while (ec--)
 	{
-		if (abs(x - enemy->x) < 24 && abs(y - enemy->y) < 24)
+		if (abs(rel.x - enemy->x) < 24 && abs(rel.y - enemy->y) < 24)
 			return (enemy->id);
 		enemy = enemy->next;
 	}
@@ -148,6 +150,55 @@ static void 	remove_enemy(int id)
 	}
 }
 
+static t_enemy	*enemy_by_id(int id)
+{
+	t_enemy *enemy;
+	int 	ec;
+
+	ec = get_model()->enemy_count;
+	enemy = get_model()->enemy_first;
+	while (ec--)
+	{
+		if (enemy->id == id)
+			return (enemy);
+		enemy = enemy->next;
+	}
+	ft_die("Fatal error: Could not find enemy from model at enemy_by_id.");
+	return (NULL);
+}
+
+static void 	rotate_enemy(int id, int x, int y)
+{
+	t_enemy *enemy;
+	t_point	rel;
+	t_point tail;
+
+	enemy = enemy_by_id(id);
+	rel = scrolled_position(enemy->x, enemy->y, get_state());
+	tail.x = x;
+	tail.y = y;
+	enemy->rot = tail_degree_rot(rel, &tail);
+}
+
+static void 	temp_highlight_enemy(t_enemy *enemy)
+{
+	t_line 		line;
+	t_point		rel_pos;
+
+	line.color = COLOR_GRID_LINE;
+	line.buff = doom_ptr()->edt->buff;
+	rel_pos = scrolled_position(enemy->x, enemy->y, get_state());
+	circle_to_buffer(line.buff, rel_pos, 12 / get_state()->zoom_factor, COLOR_GRID_LINE);
+	line.x1 = rel_pos.x;
+	line.y1 = rel_pos.y;
+	rel_pos = scrolled_position(enemy->tail.x, enemy->tail.y, get_state());
+	line.x2 = rel_pos.x;
+	line.y2 = rel_pos.y;
+	if (valid_line(&line))
+		render_line(&line);
+	get_state()->cooldown = DOUBLE_CLICK_COOLDOWN;
+}
+
 void 			planting_left_click(int x, int y)
 {
 	static int	last_id = -1;
@@ -162,14 +213,23 @@ void 			planting_left_click(int x, int y)
 	}
 	else if (curr_id == -1)
 		planting_logic()->plant(x, y);
-	else if (curr_id == last_id)
+	else if (curr_id == last_id && get_state()->cooldown)
 	{
 		remove_enemy(curr_id);
 		planting_change_zoom(get_state());
 		last_id = -1;
 	}
+	else if (curr_id == last_id)
+	{
+		rotate_enemy(curr_id, x, y);
+		planting_change_zoom(get_state());
+		last_id = -1;
+	}
 	else
+	{
 		last_id = curr_id;
+		temp_highlight_enemy(enemy_by_id(curr_id));
+	}
 }
 
 void 			planting_right_click(int x, int y)

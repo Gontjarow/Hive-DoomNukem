@@ -10,6 +10,8 @@ t_select 		*select_logic(void)
 		if (!logic)
 			ft_die("Fatal error: Could not malloc logic for planting at select_logic");
 		logic->selected_room_id = -1;
+		logic->last_floor = 1000;
+		logic->last_roof = 1300;
 	}
 	return (logic);
 }
@@ -48,6 +50,48 @@ void 			select_mouse_motion(int x, int y)
 {
 	if (x < 0 && y < 0)
 		puts("Select mouse motion..!");
+}
+
+void 			select_roof(int dir)
+{
+	t_room		*room;
+
+	if (get_state()->gui != mode_select())
+		return ;
+	if (select_logic()->selected_room_id == -1)
+		return ;
+	room = room_by_id(select_logic()->selected_room_id);
+	room->roof_height += dir * HEIGHT_STEPPING;
+	if (room->roof_height < ROOF_MIN)
+		room->roof_height = ROOF_MIN;
+	if (room->roof_height > ROOF_MAX)
+		room->roof_height = ROOF_MAX;
+	if (room->roof_height - room->floor_height < FLOOR_ROOF_DIFF_LIMIT)
+		room->roof_height = room->floor_height + FLOOR_ROOF_DIFF_LIMIT;
+	select_logic()->last_floor = room->floor_height;
+	select_logic()->last_roof = room->roof_height;
+	select_change_zoom(get_state());
+}
+
+void 			select_floor(int dir)
+{
+	t_room		*room;
+
+	if (get_state()->gui != mode_select())
+		return ;
+	if (select_logic()->selected_room_id == -1)
+		return ;
+	room = room_by_id(select_logic()->selected_room_id);
+	room->floor_height += dir * HEIGHT_STEPPING;
+	if (room->floor_height < FLOOR_MIN)
+		room->floor_height = FLOOR_MIN;
+	if (room->floor_height > FLOOR_MAX)
+		room->floor_height = FLOOR_MAX;
+	if (room->roof_height - room->floor_height < FLOOR_ROOF_DIFF_LIMIT)
+		room->floor_height = room->roof_height - FLOOR_ROOF_DIFF_LIMIT;
+	select_logic()->last_floor = room->floor_height;
+	select_logic()->last_roof = room->roof_height;
+	select_change_zoom(get_state());
 }
 
 static void 	select_room(int x, int y)

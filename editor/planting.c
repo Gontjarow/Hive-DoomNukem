@@ -20,6 +20,7 @@ void			planting_deactivate(t_state *state)
 	state->thread_color = 0xffff0000;
 	state->thread_permission = 0;
 	state->thread_target_id = -1;
+	get_state()->cooldown = 0;
 	planting_change_zoom(state);
 		//puts("Deactivating planting");
 }
