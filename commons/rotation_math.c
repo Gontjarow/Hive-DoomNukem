@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec2d.c                                            :+:      :+:    :+:   */
+/*   rotation_math.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,25 +12,15 @@
 
 #include "doom-nukem.h"
 
-void	modify_line_length(int len_mod, t_point *start, t_point *end, t_point *new_end)
+int 			tail_degree_rot(t_point location, t_point *tail)
 {
-	double dx;
-	double dy;
-	double length;
+	double	result;
+	int		x;
+	int 	y;
 
-	dx = end->x - start->x;
-	dy = end->y - start->y;
-	length = 0.0;
-	if (!(dx == 0 && dy == 0))
-		length = sqrt((dx * dx) + (dy * dy));
-	if (length != 0)
-	{
-		dx = dx / length;
-		dy = dy / length;
-	}
-	dx *= len_mod;
-	dy *= len_mod;
-	new_end->x = start->x + dx;
-	new_end->y = start->y + dy;
+	x = tail->x - location.x;
+	y = tail->y - location.y;
+	result = atan2(y, x) * 180.0 / M_PI;;
+	result += 180.0;
+	return ((int)result);
 }
-

@@ -24,8 +24,6 @@
 typedef struct 			s_doom t_doom;
 enum					e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON };
 
-//struct 					MixChunk;
-
 typedef struct 			s_point
 {
 	int 				x;
@@ -228,21 +226,10 @@ void					set_protected_color(uint32_t color);
 int 					set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
 void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 
-// TODO Note to self (idea how to work with s_pickup struct
 /*
-handle_pickup(t_pickup *pickup)
-	-> handle_health_pickup(pickup)
-	-> handle_ammo_pickup(pickup)
-	-> handle_weapon_pickup(pickup)
+ * from rotation_math.c
+ */
 
-if (pickup->flavor == PICKUP_HEALTH )
-	handle_health_pickup();
-
-//linked lists
-	//t_model:
-//struct s_pickup		*pickups;
-
-	delete a pickup, fix linked list connections, update the count
-*/
+int			 			tail_degree_rot(t_point location, t_point *tail);
 
 #endif
