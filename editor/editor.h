@@ -184,12 +184,9 @@ void	 				handle_keyboard_scrolling(t_doom *doom);
  * from walls.c
  * */
 
-t_wall					*wall_by_id(int id);
 void					wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
-t_room					*room_by_id(int id);
 void 					room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color);
 void					x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
-void					relink_model_walls(t_wall *relinking_wall);
 
 /*
  * from editor_buffers.c
@@ -286,6 +283,7 @@ void 					pickups_middle_click(int x, int y);
 t_select 				*select_logic(void);
 void		 			select_roof(int dir);
 void 					select_floor(int dir);
+void		 			select_delete_room(void);
 void					select_activate(t_state *state);
 void					select_deactivate(t_state *state);
 void					select_change_zoom(t_state *state);
@@ -368,11 +366,18 @@ int						room_id_from_polymap(SDL_Surface *polymap, int x, int y);
 uint32_t				*get_debug_convs(void);
 uint32_t				*get_conv_colors(void);
 void        			add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors);
+void 					repaint_polymap(t_model *mdl);
 
 /*
  * from find_visual.c
  * */
 
 void					find_visual_xy(t_room *room);
+
+/*
+ * from rooms.c
+ * */
+
+void					delete_room(t_room *room, t_model *mdl);
 
 #endif

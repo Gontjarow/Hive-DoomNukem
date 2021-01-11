@@ -109,8 +109,23 @@ void					add_pickup_to_string(t_pickup *pickup, t_mapfile *map);
 
 /*
  * from map_decode.c
- */
+ * */
 
 void 					map_to_model(t_mapfile *map, t_model *mdl);
+
+/*
+ * from recalc.c
+ * */
+
+void			 		recalc_wall_ids(t_model *mdl);
+void					recalc_room_ids(t_model *mdl);
+void 					relink_model_walls(t_wall *relinking_wall);
+
+/*
+ * from get_by_id.c
+ * */
+
+t_room					*room_by_id(int id);
+t_wall					*wall_by_id(int id);
 
 #endif

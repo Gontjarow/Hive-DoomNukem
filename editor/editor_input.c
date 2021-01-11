@@ -40,6 +40,7 @@ void			edt_keystate_input(t_doom *doom)
 	static int	lock_g = 0;
 	static int 	lock_t = 0;
 	static int 	lock_b = 0;
+	static int	lock_del = 0;
 	static int	scancodes[8] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
 	SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
 	SDL_SCANCODE_8, SDL_SCANCODE_9};
@@ -155,6 +156,18 @@ void			edt_keystate_input(t_doom *doom)
 				pickups_refresh_preview();
 			break ;
 		}
+	}
+
+	if (lock_del && !doom->keystates[SDL_SCANCODE_DELETE])
+		lock_del = 0;
+	else if (doom->keystates[SDL_SCANCODE_DELETE] && !lock_del)
+	{
+		if (get_state()->gui == mode_select())
+		{
+				//puts("Select Room mode, DEL key pressed!");
+			select_delete_room();
+		}
+		lock_del = 1;
 	}
 }
 

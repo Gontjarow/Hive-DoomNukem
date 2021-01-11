@@ -94,6 +94,15 @@ void 			select_floor(int dir)
 	select_change_zoom(get_state());
 }
 
+void 			select_delete_room(void)
+{
+	if (select_logic()->selected_room_id == -1)
+		return;
+	delete_room(room_by_id(select_logic()->selected_room_id), get_model());
+	select_logic()->selected_room_id = -1;
+	select_change_zoom(get_state());
+}
+
 static void 	select_room(int x, int y)
 {
 	select_logic()->selected_room_id = room_id_from_polymap(get_model()->poly_map, x, y);

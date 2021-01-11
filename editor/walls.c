@@ -107,34 +107,6 @@ static void			wall_to_buffer_clipped(t_wall *wall, SDL_Surface *buff, uint32_t c
 	render_line(&line);
 }
 
-t_wall				*wall_by_id(int id)
-{
-	int		wc;
-	t_wall 	*wall;
-
-	if (id < 0)
-	{
-		ft_putendl("Warning: Wall_by_id was requested to return a wall with id less than 0. Returned NULL.");
-		return (NULL);
-	}
-	if (get_model()->wall_count != 0)
-		wc = get_model()->wall_count;
-	if (wc <= id)
-	{
-		ft_putendl("Warning: Wall_by_id was requested to return a wall with id equal or less than wall_count of get_model(). Returned NULL.");
-		return (NULL);
-	}
-	wall = get_model()->wall_first;
-	while (wc--)
-	{
-		if (wall->id == id)
-			return (wall);
-		wall = wall->next;
-	}
-	ft_putendl("Warning: Wall_by_id could not find a wall with the requested id. Returned NULL.");
-	return (NULL);
-}
-
 static void			wall_to_buffer_fixed(t_wall *wall, SDL_Surface *buff, uint32_t color)
 {
 	t_line			line;
@@ -173,21 +145,7 @@ void 				wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color)
 	return (wall_to_buffer_fixed(&adjusted_wall, buff, color));
 }
 
-t_room				*room_by_id(int id)
-{
-	t_room			*room;
-	int				rc;
 
-	rc = get_model()->room_count;
-	room = get_model()->room_first;
-	while (rc--)
-	{
-		if (room->id == id)
-			return (room);
-		room = room->next;
-	}
-	return (NULL);
-}
 
 void 				room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color)
 {
@@ -210,22 +168,4 @@ void				x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color
 		wall_to_buffer(wall, buff, color);
 		wall = wall->next;
 	}
-}
-
-void 				relink_model_walls(t_wall *relinking_wall)
-{
-	int				wc;
-	t_wall			*wall;
-
-	wc = get_model()->wall_count;
-	if (wc == 0)
-	{
-		get_model()->walls = relinking_wall;
-		return ;
-	}
-	wall = get_model()->wall_first;
-	while (wc-- > 1)
-		wall = wall->next;
-	wall->next = relinking_wall;
-	get_model()->walls = wall->next;
 }

@@ -239,6 +239,9 @@ void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
 		y++;
 	}
 }*/
+
+// TODO OPTIMIZE AWAY FROM SET_PIXEL
+
 void		add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors)
 {
     int bound_x;
@@ -265,4 +268,20 @@ void		add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors
         y++;
     }
 		//printf("%x color from conv_colors[room->id]\n", conv_colors[room->id]);
+}
+
+void 		repaint_polymap(t_model *mdl)
+{
+	t_room	*room;
+	int 	rc;
+
+	room = mdl->room_first;
+	rc = mdl->room_count;
+	flood_buffer(mdl->poly_map, 0xffffffff);
+	while (rc--)
+	{
+		add_room_polymap(room, mdl->poly_map, get_conv_colors());
+		room = room->next;
+	}
+		//puts("Repainted polymap succesfully!");
 }
