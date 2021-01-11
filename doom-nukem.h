@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/01/11 15:55:15 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 17:22:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ typedef struct			s_doom
 
 void			ft_die(const char *error_message);
 void 			load_alphabet(t_menu *menu);
-void			load_numbers(t_menu *menu);
+void			load_numbers(t_doom *doom);
 void	 		destroy_alphabet(t_menu *menu);
-void			destroy_numbers(t_menu *menu);
+void			destroy_numbers(t_doom *doom);
 void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
 
 void			load_sounds(t_doom *doom);

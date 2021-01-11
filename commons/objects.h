@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/11 15:26:57 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 18:22:10 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct 			s_weapon
 	int					do_own;
 	int 				cooldown;
 	int 				reload_time;
+	struct SDL_Surface	*weap_img;
 	struct Mix_Chunk 	*fire_sound;
 	struct Mix_Chunk	*reload_sound;
 }						t_weapon;
@@ -82,8 +83,9 @@ typedef struct 			s_player
 	int					shoot_cd;
 	int					reload_time;
 	int					weap_id;
+	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
-	struct s_weapon		weap_arr[3];
+	struct s_weapon		weap_arr[10];
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;
@@ -172,7 +174,6 @@ typedef struct			s_menu
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
-	struct SDL_Surface	*hud_num[9];
 	int 				alphabet_scale;
 	SDL_Surface			*thunder;
 	struct s_doom		*parent;
