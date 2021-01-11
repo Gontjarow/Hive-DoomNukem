@@ -23,6 +23,29 @@ t_gui	*mode_select(void)
 	return (select);
 }
 
+t_gui	*mode_effect(void)
+{
+	static t_gui	*effect = NULL;
+
+	if (!effect)
+	{
+		effect = (t_gui*)malloc(sizeof(t_gui));
+		if (!effect)
+			ft_die("Fatal error: Could not malloc t_gui at mode_effect.");
+		// TODO FLESH OUT
+		effect->activate = effect_activate;
+		effect->deactivate = effect_deactivate;
+		effect->change_zoom = effect_change_zoom;
+		effect->left_click = effect_left_click;
+		effect->right_click = effect_right_click;
+		effect->middle_click = effect_middle_click;
+		effect->motion = effect_mouse_motion;
+		effect->has_motion = 1;
+		set_protected_color(0xffffffff);
+	}
+	return (effect);
+}
+
 t_gui	*mode_pickups(void)
 {
 	static t_gui	*pickups = NULL;

@@ -150,6 +150,7 @@ typedef struct 			s_editor
 
 void 					init_edt(t_doom *doom, int argc, char **argv);
 void	 				destroy_edt(t_doom *doom);
+void					edt_gridify(void);
 void					edt_render(t_doom *doom);
 
 /*
@@ -243,6 +244,7 @@ void            		magnet_test(void* argv);
  * */
 
 t_gui					*mode_select(void);
+t_gui					*mode_effect(void);
 t_gui					*mode_pickups(void);
 t_gui					*mode_planting(void);
 t_gui					*mode_polydraw(void);
@@ -291,6 +293,18 @@ void		 			select_mouse_motion(int x, int y);
 void 					select_left_click(int x, int y);
 void 					select_right_click(int x, int y);
 void 					select_middle_click(int x, int y);
+
+/*
+ * from effect.c
+ * */
+
+void					effect_activate(t_state *state);
+void					effect_deactivate(t_state *state);
+void					effect_change_zoom(t_state *state);
+void 					effect_mouse_motion(int x, int y);
+void 					effect_left_click(int x, int y);
+void 					effect_right_click(int x, int y);
+void 					effect_middle_click(int x, int y);
 
 /*
  * from positions.c

@@ -20,6 +20,18 @@
 # define 				WAV_SWORD "wav/sword.wav"
 # define				WAV_THUNDER "wav/thunder.wav"
 # define 				IMG_THUNDER0 "img/thunder/0.png"
+# define				WAV_PISTOLRLD "wav/pistolreload.wav"
+# define				WAV_ASSAULTRLD "wav/assaultreload.wav"
+# define				WAV_SMGRLD "wav/smgreload.wav"
+# define				WAV_PISTOLSHOT "wav/pistolshot.wav"
+# define				WAV_WALKING "wav/walking.wav"
+# define				WAV_RUNNING "wav/running.wav"
+# define				WAV_CROUCHING "wav/crouching.wav"
+# define				WAV_ENEMYDEATH "wav/enemy_dead.wav"
+# define				WAV_ASSAULTSHOT "wav/assaultshot.wav"
+# define				WAV_SMGSHOT "wav/smgshot.wav"
+# define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
+# define				WAV_AMMOPICKUP "wav/ammopickup.wav"
 
 typedef struct 			s_doom t_doom;
 
@@ -205,6 +217,13 @@ typedef struct			s_image
 	int					endian;
 }						t_image;
 
+
+/*
+ * from alphabet.c
+ * */
+
+void 					print_glyph_str(const char *str, SDL_Surface *buff, int x, int y);
+
 /*
  * from debug_console.c
  * */
@@ -222,7 +241,6 @@ void					debug_model_pickups(void);
 
 uint32_t 				get_exact_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface				*xpm2surface(char *path);
-SDL_Surface				*load_png(char *path);
 SDL_Surface				*load_texture(t_doom *doom, char *path);
 
 /*

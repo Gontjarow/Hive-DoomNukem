@@ -25,11 +25,11 @@ void			print_minimap_weapons(t_doom *doom)
 	if (!(weap_img = (SDL_Surface*)malloc(sizeof(SDL_Surface))))
 		ft_die("Error allocating weap_img!\n");
 	if (doom->mdl->player.weap_id == 0)
-		weap_img = load_png("img/weapons/colt.png");
+		weap_img = load_texture(doom, "img/weapons/colt.png");
 	else if (doom->mdl->player.weap_id == 1)
-		weap_img = load_png("img/weapons/mp5.png");
+		weap_img = load_texture(doom, "img/weapons/mp5.png");
 	else if (doom->mdl->player.weap_id == 2)
-		weap_img = load_png("img/weapons/ak47.png");
+		weap_img = load_texture(doom, "img/weapons/ak47.png");
 	pixels = doom->minimap->buff->pixels;
 	ref = weap_img->pixels;
 	cut = 15 * WIN_WIDTH;

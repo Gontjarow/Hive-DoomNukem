@@ -51,10 +51,8 @@ SDL_Surface		*load_texture(t_doom *doom, char *path)
 {
 	SDL_Surface	*free_s;
 	SDL_Surface *ret_s;
-	int img_flags;
 
-	img_flags = IMG_INIT_PNG;
-	if (!(IMG_Init(img_flags) & img_flags))
+	if (!(IMG_Init(IMG_INIT_PNG)))
 		ft_die("Fatal error: IMG_INIT_PNG failure.");
 	free_s = IMG_Load(path);
 	if (free_s)
@@ -73,7 +71,7 @@ SDL_Surface		*load_texture(t_doom *doom, char *path)
 /*
 ** A more simple loading function for PNG format only
 */
-
+/*
 SDL_Surface		*load_png(char *path)
 {
 	SDL_Surface		*pic_surface;
@@ -90,3 +88,4 @@ SDL_Surface		*load_png(char *path)
 	}
 	return (pic_surface);
 }
+*/

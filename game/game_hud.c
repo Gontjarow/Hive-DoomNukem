@@ -49,7 +49,7 @@ void 		destroy_numbers(t_menu *menu)
 	c = '0';
 	while (c <= '9')
 	{
-		SDL_FreeSurface(menu->alphabet[(int)c]);
+		SDL_FreeSurface(menu->hud_num[(int)c]);
 		c++;
 	}
 }
