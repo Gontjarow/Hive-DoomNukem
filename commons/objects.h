@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/15 16:13:21 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 15:26:57 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # define 				IMG_THUNDER0 "img/thunder/0.png"
 
 typedef struct 			s_doom t_doom;
-enum					e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON };
 
 typedef struct 			s_point
 {
@@ -54,7 +53,9 @@ typedef struct 			s_weapon
 	int 				type_id;
 	int 				dmg;
 	int 				ammo_cur;
+	int					ammo_res;
 	int 				ammo_max;
+	int					do_own;
 	int 				cooldown;
 	int 				reload_time;
 	struct Mix_Chunk 	*fire_sound;
@@ -125,6 +126,9 @@ typedef struct 			s_room
 	struct s_room		*next;
 }						t_room;
 
+enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON };
+# define PICKING_RADIUS 10
+
 typedef struct 			s_pickup
 {
 	int 				id;
@@ -140,6 +144,19 @@ typedef struct 			s_sounds
 	struct Mix_Chunk 	*mcSteam;
 	struct Mix_Chunk	*mcPlop;
 	struct Mix_Chunk	*mcSword;
+	struct Mix_Chunk	*mcPistolRld;
+	struct Mix_Chunk	*mcAssaultRld;
+	struct Mix_Chunk	*mcSmgRld;
+	struct Mix_Chunk	*mcSmgShot;
+	struct Mix_Chunk	*mcPistolShot;
+	struct Mix_Chunk	*mcAssaultShot;
+	struct Mix_Chunk	*mcWalking;
+	struct Mix_Chunk	*mcRunning;
+	struct Mix_Chunk	*mcCrouching;
+	struct Mix_Chunk	*mcEnemyDeath;
+	struct Mix_Chunk	*mcHealthPickup;
+	struct Mix_Chunk	*mcAmmoPickup;
+	int					footstep_delay;
 }						t_sounds;
 
 typedef struct			s_animation
@@ -155,6 +172,7 @@ typedef struct			s_menu
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
+	struct SDL_Surface	*hud_num[9];
 	int 				alphabet_scale;
 	SDL_Surface			*thunder;
 	struct s_doom		*parent;

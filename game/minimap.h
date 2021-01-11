@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 21:42:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/15 20:22:31 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 16:16:32 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void				update_minimap(t_doom *doom);
 void				print_minimap_player(t_doom *doom);
 void				print_minimap_walls(t_doom *doom);
 void				print_minimap_enemies(t_doom *doom);
+void				print_minimap_pickups(t_doom *doom);
+void				print_minimap_weapons(t_doom *doom);
 void				destroy_minimap(t_doom *doom);
 
 #endif

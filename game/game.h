@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/18 16:46:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 15:33:20 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ void			player_update_weapons(t_doom *doom);
 void			init_player_weapon(t_doom *doom);
 void			handle_player_movement(t_doom *doom);
 void			handle_player_action(t_doom *doom);
+void			handle_pickup(t_doom *doom);
+void			game_print_alphabet(const char *str, t_doom *doom, int x, int y);
+void			game_print_numbers(const char *str, t_doom *doom, int x, int y);
 
 void			update_player_tail(t_doom *doom, double rad);
 void			rotate_enemy_towards_player(t_doom *doom);

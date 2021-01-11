@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/15 20:27:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 16:17:39 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,18 @@ void		update_minimap(t_doom *doom)
 	print_minimap_walls(doom);
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);
+	print_minimap_pickups(doom);
+	/* 
+		This is a test for the game HUD - by MS
+	*/
+	// print_minimap_weapons(doom);
+	// game_print_alphabet("hp", doom, WIN_WIDTH - 300, 50);
+	// game_print_numbers(ft_itoa(doom->mdl->player.hp.cur), doom, WIN_WIDTH - 200, 50);
+	// if (doom->mdl->player.reload_time == 0)
+	// 	game_print_numbers(ft_itoa(doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur), doom, WIN_WIDTH - 100, WIN_HEIGHT / 2);
+	/*
+		End of test
+	*/
 	SDL_UpdateWindowSurface(doom->minimap->win);
 }
 

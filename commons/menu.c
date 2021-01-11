@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:44:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/25 13:44:18 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 15:55:20 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void 		init_menu(t_doom *doom)
 	else
 		ft_die("Fatal error: Texture loading failure at init_menu.");
 	load_alphabet(doom->menu);
+	load_numbers(doom->menu);
 	load_animation(doom->menu);
 	Mix_PlayChannel( -1, doom->sounds->mcThunder, 0);
 }
@@ -64,6 +65,7 @@ void 		destroy_menu(t_doom *doom)
 	doom->menu->ani_thunder.surfaces = NULL;
 	SDL_FreeSurface(doom->menu->thunder);
 	destroy_alphabet(doom->menu);
+	destroy_numbers(doom->menu);
 	free(doom->menu);
 	doom->menu = NULL;
 }
