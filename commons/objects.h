@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/08 15:11:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 15:26:57 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,7 @@ typedef struct			s_menu
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
+	struct SDL_Surface	*hud_num[9];
 	int 				alphabet_scale;
 	SDL_Surface			*thunder;
 	struct s_doom		*parent;
