@@ -9,7 +9,7 @@ void			effect_activate(t_state *state)
 	state->thread_permission = 0;
 	state->thread_target_id = -1;
 	select_change_zoom(state);
-		puts("Activating effect");
+		//puts("Activating effect");
 }
 
 void			effect_deactivate(t_state *state)
@@ -21,7 +21,7 @@ void			effect_deactivate(t_state *state)
 	state->thread_permission = 0;
 	state->thread_target_id = -1;
 	select_change_zoom(state);
-		puts("Deactivating effect");
+		//puts("Deactivating effect");
 }
 
 void			effect_change_zoom(t_state *state)

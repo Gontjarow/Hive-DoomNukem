@@ -27,13 +27,28 @@ void			edt_mouse_down(t_doom *doom)
 		state->gui->right_click(doom->event.button.x, doom->event.button.y);
 }
 
-static void 	draw_input(void)
+static void 	draw_input(t_doom *doom)
 {
 	get_state()->gui->change_zoom(get_state());
-	flood_buffer(doom_ptr()->edt->buff, 0xff000000);
-	SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom_ptr()->edt->buff, NULL);
+	flood_buffer(doom->edt->buff, 0xff000000);
+	SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
 	editor_back_buffer()->rendering_on = 0;
 	edt_gridify();
+	print_glyph_str(STRING_ENTER_MAPFILE, doom->edt->buff, 80, 50);
+	print_glyph_str(STRING_VALID_CHAR_INFO, doom->edt->buff, 90, 90);
+}
+
+static void 	draw_confirmation(char *input, t_doom *doom)
+{
+	get_state()->gui->change_zoom(get_state());
+	flood_buffer(doom->edt->buff, 0xff000000);
+	SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+	editor_back_buffer()->rendering_on = 0;
+	edt_gridify();
+	print_glyph_str("set to chain to ", doom->edt->buff, 480, 860);
+	print_glyph_str(input, doom->edt->buff, 922, 860);
+	print_glyph_str("set to chain to ", editor_back_buffer()->buff, 480, 860);
+	print_glyph_str(input,editor_back_buffer()->buff, 922, 860);
 }
 
 static void 	read_keystate_input(char *arr, int *i, t_doom *doom)
@@ -53,12 +68,12 @@ static void 	read_keystate_input(char *arr, int *i, t_doom *doom)
 
 	if (doom->keystates[SDL_SCANCODE_BACKSPACE] && *i > 0)
 	{
-		ft_putchar('\n');
+		//ft_putchar('\n');
 		arr[(*i) - 1] = '\0';
 		(*i)--;
-		ft_putstr(arr);
-		draw_input();
-		print_glyph_str(arr, doom->edt->buff, 100, 100);
+		//ft_putstr(arr);
+		draw_input(doom);
+		print_glyph_str(arr, doom->edt->buff, 100, 130);
 		return ;
 	}
 	x = 0;
@@ -70,9 +85,8 @@ static void 	read_keystate_input(char *arr, int *i, t_doom *doom)
 		{
 			arr[*i] = chars[x];
 			(*i)++;
-			ft_putchar(chars[x]);
-			draw_input();
-			print_glyph_str(arr, doom->edt->buff, 100, 100);
+			draw_input(doom);
+			print_glyph_str(arr, doom->edt->buff, 100, 130);
 		}
 		x++;
 	}
@@ -86,7 +100,7 @@ void 			edt_handle_next_input_loop(t_doom *doom)
 	char 		input[255];
 
 	//puts("Listening for input:\n");
-	print_glyph_str("type in filename for the next map", doom->edt->buff, 100, 100);
+	draw_input(doom);
 	finished = 0;
 	while (finished < 255)
 		input[finished++] = '\0';
@@ -105,7 +119,7 @@ void 			edt_handle_next_input_loop(t_doom *doom)
 		input_ticks = SDL_GetTicks();
 		SDL_UpdateWindowSurface(doom_ptr()->edt->win);
 	}
-	get_state()->gui->change_zoom(get_state());
+	draw_confirmation(&input, doom);
 }
 
 void			edt_keystate_input(t_doom *doom)

@@ -165,7 +165,7 @@ void 	print_glyph_str(const char *str, SDL_Surface *buff, int x, int y)
 	while (*str)
 	{
 		render_glyph(*str, buff, x, y);
-		x += doom_ptr()->menu->alphabet[(int)*str]->w + 4;
+		x += doom_ptr()->menu->alphabet[(int)*str]->w + 2;
 		str++;
 	}
 }
