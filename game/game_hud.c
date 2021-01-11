@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/11 17:53:22 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 20:08:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	game_print_alphabet(const char *str, t_doom *doom, int x, int y)
 	while (*str)
 	{
 		render_character(*str, doom, x, y);
-		x += 28 * doom->minimap->scale;
+		x += 50 * doom->minimap->scale;
 		str++;
 	}
 }

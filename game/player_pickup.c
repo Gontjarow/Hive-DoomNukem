@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/08 19:10:08 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 19:56:02 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 		pickup = delete_first(doom);
 	else
 		pickup = delete_node(current, prev, pickup);
-	// Mix_PlayChannel(3, doom->sounds->mcHealthPickup, 0);		// need to add weapon pickup sound
+	Mix_PlayChannel(3, doom->sounds->mcWeaponPickup, 0);
 	doom->mdl->pickup_count--;
 }
 

@@ -25,6 +25,7 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define				WAV_SMGSHOT "wav/smgshot.wav"
 # define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
 # define				WAV_AMMOPICKUP "wav/ammopickup.wav"
+# define				WAV_WEAPONPICKUP "wav/weaponpickup.wav"
 
 /*
 ** *

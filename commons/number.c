@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 17:07:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/11 18:28:18 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 19:18:14 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	game_print_numbers(const char *str, t_doom *doom, int x, int y)
 	while (*str)
 	{
 		render_number(*str, doom, x, y);
-		x += 75 * doom->minimap->scale;
+		x += 40 * doom->minimap->scale;
 		str++;
 	}
 }

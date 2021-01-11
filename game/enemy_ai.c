@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/06 15:18:58 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 19:59:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,5 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 	}
 	enemy->did_shoot = 1;
 	enemy->who_shot = enemy->id;
+	Mix_PlayChannel(4, doom->sounds->mcPistolShot, 0);
 }
