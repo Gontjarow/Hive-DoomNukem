@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:34:32 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/15 19:24:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/13 18:12:20 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ int			calc_dist(t_enemy *enemy, t_doom *doom, t_point old)
 	int		distance;
 
 	distance = dist_please(enemy, doom);
-	if (distance >= 70 && distance <= 200)
+	if ((distance >= 70 && distance <= 200) || enemy->aggro == 1)
 	{
+		enemy->aggro = 1;
 		enemy->x += 5 * -cos(deg_to_rad(enemy->rot));
 		enemy->y += 5 * -sin(deg_to_rad(enemy->rot));
 		p.x = enemy->x + 5 * -cos(deg_to_rad(enemy->rot));

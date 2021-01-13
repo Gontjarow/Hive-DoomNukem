@@ -41,7 +41,7 @@ void			edt_keystate_input(t_doom *doom)
 	static int 	lock_t = 0;
 	static int 	lock_b = 0;
 	static int	lock_del = 0;
-	static int	scancodes[8] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
+	static int	scancodes[9] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
 	SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
 	SDL_SCANCODE_8, SDL_SCANCODE_9};
 
@@ -147,7 +147,7 @@ void			edt_keystate_input(t_doom *doom)
 	}
 
 	int i = -1;
-	while (i++ < 8)
+	while (++i < 9)
 	{
 		if (doom->keystates[scancodes[i]])
 		{
