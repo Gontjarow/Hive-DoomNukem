@@ -117,6 +117,6 @@ void		game_render(t_doom *doom)
 	move_enemy_towards_player(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
-	render_frame(doom);
+	wire_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
 }

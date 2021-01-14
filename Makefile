@@ -2,7 +2,7 @@
 NAME		:=	doom-nukem
 
 #	http://nuclear.mutantstargoat.com/articles/make/#multiple-source-directories
-SOURCES		:=	$(wildcard *.c) $(wildcard renderer/*.c) $(wildcard editor/*.c) $(wildcard game/*.c) $(wildcard data_model/*.c) $(wildcard commons/*.c)
+SOURCES		:=	$(wildcard *.c) $(wildcard renderer/*.c) $(wildcard editor/*.c) $(wildcard game/*.c) $(wildcard data_model/*.c) $(wildcard commons/*.c) $(wildcard wireframe/*.c)
 OBJECTS		:=	$(SOURCES:.c=.o)
 
 #	http://nuclear.mutantstargoat.com/articles/make/#automatic-include-dependency-tracking
@@ -29,7 +29,7 @@ endif
 
 #	http://nuclear.mutantstargoat.com/articles/make/#improved-automatic-dependency-tracking
 FLAGS		:= -Wall -Wextra -MMD -g
-INCLUDES	:= -I . -I ./renderer -I ./editor -I ./commons -I ./game -I ./data_model
+INCLUDES	:= -I . -I ./renderer -I ./editor -I ./commons -I ./game -I ./data_model -I ./wireframe
 
 FLAGS		+= $(INCLUDES) $(LIBFT) $(SDL_MAIN) $(SDL_IMAGE) $(SDL_MIXER)
 
