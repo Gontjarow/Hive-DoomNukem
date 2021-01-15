@@ -64,11 +64,6 @@ void		game_mouse_down(t_doom *doom)
 		doom->game_quit = 0;
 }
 
-void		game_key_down(t_doom *doom)
-{
-	return ;
-}
-
 double		deg_to_rad(int deg)
 {
 	return (deg * M_PI / 180);
@@ -106,8 +101,8 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 
 void		game_render(t_doom *doom)
 {
-	if (doom->keystates[SDL_SCANCODE_ESCAPE])
-		printf("ESC key pressed!\n");
+	//if (doom->keystates[SDL_SCANCODE_ESCAPE])
+	//	printf("ESC key pressed!\n");
 	// printf("Player Health: %d\n", doom->mdl->player.hp.cur);
 	handle_player_movement(doom);
 	handle_player_action(doom);

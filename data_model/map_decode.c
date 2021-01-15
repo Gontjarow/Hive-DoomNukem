@@ -242,6 +242,8 @@ static void			map_room_to_model(const int *fields, t_model *mdl)
 	mdl->rooms->wall_count = fields[2];
 	mdl->rooms->floor_height = fields[3];
 	mdl->rooms->roof_height = fields[4];
+	mdl->rooms->visual.x = -1;
+	mdl->rooms->visual.y = -1;
 	mdl->room_count++;
 	if (mdl->room_count == 1)
 		mdl->room_first = mdl->rooms;

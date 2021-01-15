@@ -109,6 +109,9 @@ void		init_minimap(t_doom *doom)
 		ft_die("Fatal error: Failed init of SDL_Surface from minimap");
 	doom->minimap->scale = 1.0;
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
-	SDL_SetWindowPosition(doom->minimap->win, win_x + WIN_WIDTH, win_y);
+	SDL_SetWindowPosition(doom->minimap->win, win_x - MWIN_WIDTH, win_y);
+	SDL_GetWindowPosition(doom->minimap->win, &win_x, &win_y);
+	SDL_SetWindowPosition(doom->game->win, win_x + GAME_WIN_WIDTH, win_y);
+	SDL_RaiseWindow(doom->game->win);
 	update_minimap(doom);
 }
