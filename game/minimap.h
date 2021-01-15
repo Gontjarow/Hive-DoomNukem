@@ -14,8 +14,8 @@
 # define MINIMAP_H
 
 # include "doom-nukem.h"
-# define MWIN_WIDTH 1024
-# define MWIN_HEIGHT 512
+# define MWIN_WIDTH 384
+# define MWIN_HEIGHT 384
 
 typedef struct		s_minimap
 {
