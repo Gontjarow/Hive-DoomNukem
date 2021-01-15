@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/11 17:14:23 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:37:54 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ void		game_render(t_doom *doom)
 {
 	if (doom->keystates[SDL_SCANCODE_ESCAPE])
 		printf("ESC key pressed!\n");
-	// printf("Player Health: %d\n", doom->mdl->player.hp.cur);
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);
