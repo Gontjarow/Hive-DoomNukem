@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:18:34 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/15 14:48:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/15 18:49:50 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,9 @@ void			move_enemy_towards_player(t_doom *doom)
 		old.y = enemy->y;
 		if (check_location(doom, enemy->x, enemy->y) != -1 && enemy->hp.cur > 0)
 		{
-			distance = calc_dist(enemy, doom, old);
-			if (distance < 70 && enemy->shoot_cd == 0)
-				enemy_shoot_the_player(doom, enemy);
+			// Enemy movement speed will be different according to its AI!
+			handle_enemy_movement(enemy, doom, old);
+			// Here should come the check of the distance of the actual enemy according to its ai.type_id
 		}
 		enemy = enemy->next;
 	}

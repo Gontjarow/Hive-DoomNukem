@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/15 15:24:17 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/15 18:55:55 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,11 @@ void			rotate_enemy_towards_player(t_doom *doom);
 void			move_enemy_towards_player(t_doom *doom);
 void			enemy_update_cooldown(t_doom *doom);
 void			enemy_shoot_the_player(t_doom *doom, t_enemy *enemy);
+void			handle_enemy_ai(t_doom *doom);
+void			handle_enemy_shooting(t_doom *doom);
+void			handle_enemy_movement(t_enemy *enemy, t_doom *doom, t_point old);
 int				check_hit_on_player(t_doom *doom, t_enemy *enemy);
-int				calc_dist(t_enemy *enemy, t_doom *doom, t_point old);
 int				enemy_collision(t_doom *doom, t_enemy *enemy);
+int				calc_distance(t_enemy *enemy, t_doom *doom);
 
 #endif

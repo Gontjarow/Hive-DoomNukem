@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:34:32 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/15 15:48:53 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/15 18:48:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-int			dist_please(t_enemy *enemy, t_doom *doom)
+int			calc_distance(t_enemy *enemy, t_doom *doom)
 {
 	t_coord	dist;
 	int		distance;
@@ -23,7 +23,7 @@ int			dist_please(t_enemy *enemy, t_doom *doom)
 	return (distance);
 }
 
-static void	move_enemy(t_doom *doom, t_enemy *enemy, t_point old)
+static void	moving_enemy(t_doom *doom, t_enemy *enemy, t_point old)
 {
 	t_coord p;
 
@@ -42,17 +42,16 @@ static void	move_enemy(t_doom *doom, t_enemy *enemy, t_point old)
 	}
 }
 
-int			calc_dist(t_enemy *enemy, t_doom *doom, t_point old)
+void		handle_enemy_movement(t_enemy *enemy, t_doom *doom, t_point old)
 {
 	int		distance;
 
-	distance = dist_please(enemy, doom);
+	distance = calc_distance(enemy, doom);
 	if (distance > 70 && enemy->aggro == 1)
-		move_enemy(doom, enemy, old);
+		moving_enemy(doom, enemy, old);
 	else if ((distance >= 70 && distance <= 200))
 	{
 		enemy->aggro = 1;
-		move_enemy(doom, enemy, old);
+		moving_enemy(doom, enemy, old);
 	}
-	return (distance);
 }

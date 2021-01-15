@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/11 19:59:25 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/15 18:56:38 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,26 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 	enemy->did_shoot = 1;
 	enemy->who_shot = enemy->id;
 	Mix_PlayChannel(4, doom->sounds->mcPistolShot, 0);
+}
+
+void		handle_enemy_shooting(t_doom *doom)
+{
+	/*
+		Check if distance fits according to its AI and call shoot/dmg the player
+	*/
+	t_enemy	*enemy;
+	int		ec;
+	int		distance;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		distance = calc_distance(enemy, doom);
+		if (distance < 70 && enemy->shoot_cd == 0)
+			enemy_shoot_the_player(doom, enemy);
+		enemy = enemy->next;
+	}
 }
