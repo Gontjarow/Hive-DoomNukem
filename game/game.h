@@ -22,11 +22,13 @@
 # define GAME_POLYMAP_WIDTH 6400
 # define GAME_POLYMAP_HEIGHT 3600
 
+typedef	struct			s_world t_world;
 typedef struct			s_game
 {
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	struct s_model		*mdl;
+	struct s_world		*world;
 	struct s_doom		*parent;
 	char 				*map_path;
 	int 				map_supplied;

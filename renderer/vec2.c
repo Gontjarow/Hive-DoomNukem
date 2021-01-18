@@ -68,3 +68,40 @@ t_xy	vec2_clamp(t_xy v, double min, double max)
 	v.y = (v.y < max) ? v.y : max;
 	return (v);
 }
+
+/*
+** 2D rotation matrix
+** [ sin  | -cos ]
+** [ cos  |  sin ]
+*/
+
+t_xy	vec2_rot(t_xy v, double cos, double sin)
+{
+	return ((t_xy){
+		v.x * sin - v.y * cos,
+		v.x * cos + v.y * sin
+	});
+}
+
+/*
+** wtf
+*/
+
+t_xy	vec2_intersect(t_xy v1, t_xy v2, t_xy near, t_xy far)
+{
+	t_xy cross;
+	t_xy wall_length;
+	t_xy view_length;
+
+	cross.x = vec2_cross(v1, v2);
+	cross.y = vec2_cross(near, far);
+	wall_length = vec2_sub(v1, v2);
+	view_length = vec2_sub(near, far);
+	double determinant = vec2_cross(wall_length, view_length);
+
+	// Are we sure cross.x doesn't need a temp variable instead?
+	cross.x = vec2_cross(vec2(cross.x, wall_length.x), vec2(cross.y, view_length.x)) / determinant;
+	cross.y = vec2_cross(vec2(cross.x, wall_length.y), vec2(cross.y, view_length.y)) / determinant;
+
+	return (cross);
+}

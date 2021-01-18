@@ -217,6 +217,7 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
 	doom->game_quit = 0;
 	doom->menu_out_of_focus = 1;
 	load_model(doom);
+	doom->game->world = load_world(get_world());
 	// PLAYER X, Y IN MODEL IS -1 AND -1, CAUSING MINIMAP LINE OFF BUFFER?
 	printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
 	if (DEBUG == 1)
