@@ -9,6 +9,7 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define 				TOKEN_FIELD_LIMIT 16
 # define				TOKEN_KEY_LIMIT 16
 
+enum e_singleton_types { SINGLETON_MDL };
 /*
 ** *
 ** Model struct (>Model<-View-Controller) - Game (Controller) modifies this with the input, logic code
@@ -86,6 +87,7 @@ int 					load_model(t_doom *doom);
 t_doom					*set_doom_singleton(t_doom *doom);
 t_doom      		    *doom_ptr(void);
 t_model					*get_model(void);
+int 					singleton_manager(void **ptr, int type, int clear);
 
 /*
  * from mapfile.c
