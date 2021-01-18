@@ -144,6 +144,7 @@ static void 	remove_enemy(int id)
 			get_model()->enemy_count--;
 			free(enemy);
 			recalc_enemy_ids();
+			get_state()->saving_choice = 0;
 			break ;
 		}
 		enemy = enemy->next;

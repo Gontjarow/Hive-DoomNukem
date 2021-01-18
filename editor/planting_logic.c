@@ -59,4 +59,5 @@ void 			planting_plant(int x, int y)
 		planting_logic()->plant_type = ENEMY;
 	if (clean_up == 2)
 		redraw_editor_to_backbuffer(COLOR_LINE);
+	get_state()->saving_choice = 0;
 }

@@ -64,7 +64,6 @@ typedef struct			s_doom
 	struct s_menu		*menu;
 	struct s_minimap    *minimap;
 	struct s_editor		*edt;
-	struct s_state      *edt_state;
 	struct s_model		*mdl;
 	struct s_game		*game;
 }						t_doom;

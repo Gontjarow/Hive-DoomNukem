@@ -109,6 +109,10 @@ static int 	confirm_save(t_doom *doom)
 {
 	int 			finished;
 
+	get_state()->gui->deactivate(get_state());
+	get_state()->job_abort = 1;
+	if (get_state()->saving_choice == 1)
+		return (1);
 		//puts("Listening for confirm_save input:\n");
 	finished = 0;
 	while (!finished)

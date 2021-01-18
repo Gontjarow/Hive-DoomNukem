@@ -78,6 +78,7 @@ void 			polydraw_continue(t_status *status)
 	if (status->phase == 2)
 	{
 		record_room(get_model(), wall_by_id(data->origin_id), data->origin_id);
+		get_state()->saving_choice = 0;
 			//debug_model_rooms();
 		status->phases[status->phase](status);
 	}

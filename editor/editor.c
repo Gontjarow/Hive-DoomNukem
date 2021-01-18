@@ -159,7 +159,8 @@ void				init_edt(t_doom *doom, int argc, char **argv)
 	if (!doom->edt->buff)
 		ft_die("Fatal error: Could not retrieve buffer of Level Editor window.");
 	flood_buffer(doom->edt->buff, 0xff000000);
-	doom->edt_state = get_state();
+	//doom->edt_state = get_state();
+	get_state()->gui->activate(get_state());
 	doom->edt->map = NULL;
 	doom->edt->map_supplied = (argc == 2) ? 1 : 0;
 	doom->edt->map_path = (argc == 2) ? argv[1] : NULL;
