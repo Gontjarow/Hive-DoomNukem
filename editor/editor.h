@@ -52,6 +52,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define DOUBLE_CLICK_COOLDOWN	24
 # define STRING_ENTER_MAPFILE	"input mapfile name with a..z and ."
 # define STRING_VALID_CHAR_INFO	"save and confirm next map with enter"
+# define STRING_CONFIRM_SAVING	"do you want to save changes to map"
 
 typedef struct 			s_2d_layer
 {
@@ -134,6 +135,7 @@ typedef struct 			s_state
     int 				grid_on;
     int 				grid_size;
     int 				cooldown;
+    int 				saving_choice;
 }						t_state;
 
 typedef struct 			s_editor
@@ -162,6 +164,7 @@ void					edt_render(t_doom *doom);
 void					edt_mouse_motion(t_doom *doom);
 void					edt_mouse_down(t_doom *doom);
 void					edt_keystate_input(t_doom *doom);
+int 					edt_handle_confirm_save(t_doom *doom);
 
 /*
  * from draw_editor.c

@@ -482,7 +482,9 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 	{
 		ft_putendl("Warning: Empty map data strings at map_to_model");
 		doom_ptr()->map->was_filled = 0;
+		return ;
 	}
+	doom_ptr()->map->was_filled = 1;
 }
 
 /* Unit tested version of map_to_model

@@ -27,6 +27,18 @@ void			edt_mouse_down(t_doom *doom)
 		state->gui->right_click(doom->event.button.x, doom->event.button.y);
 }
 
+static void 	draw_save(t_doom *doom)
+{
+	get_state()->gui->change_zoom(get_state());
+	flood_buffer(doom->edt->buff, 0xff000000);
+	SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+	editor_back_buffer()->rendering_on = 0;
+	edt_gridify();
+	print_glyph_str(STRING_CONFIRM_SAVING, doom->edt->buff, 80, 50);
+	if (get_state()->saving_choice == 0)
+		print_glyph_str("yes or no y..n", doom->edt->buff, 90, 90);
+}
+
 static void 	draw_input(t_doom *doom)
 {
 	get_state()->gui->change_zoom(get_state());
@@ -90,6 +102,31 @@ static void 	read_keystate_input(char *arr, int *i, t_doom *doom)
 		}
 		x++;
 	}
+}
+
+
+static int 	confirm_save(t_doom *doom)
+{
+	int 			finished;
+
+		//puts("Listening for confirm_save input:\n");
+	finished = 0;
+	while (!finished)
+	{
+		draw_save(doom);
+		SDL_UpdateWindowSurface(doom_ptr()->edt->win);
+		SDL_PumpEvents();
+		doom->keystates = SDL_GetKeyboardState(NULL);
+		if (doom->keystates[SDL_SCANCODE_Y] || doom->keystates[SDL_SCANCODE_N])
+			finished = 1;
+		get_state()->saving_choice = doom->keystates[SDL_SCANCODE_Y] - doom->keystates[SDL_SCANCODE_N];
+	}
+	return (get_state()->saving_choice);
+}
+
+int 			edt_handle_confirm_save(t_doom *doom)
+{
+	return (confirm_save(doom));
 }
 
 void 			edt_handle_next_input_loop(t_doom *doom)

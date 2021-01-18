@@ -94,6 +94,7 @@ t_state				*get_state(void)
 		state->grid_size = GRID_START_SIZE;
 		state->gui->activate(state);
 		state->cooldown = 0;
+		state->saving_choice = 0;
 		//print_mode_info(state->gui);
 		//draw_scroll_bars_to_backbuffer(state);
 	}
