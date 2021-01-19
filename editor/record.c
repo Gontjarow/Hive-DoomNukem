@@ -123,11 +123,11 @@ t_enemy	*record_enemy(t_point location, t_point *tail, t_model *mdl)
 	mdl->enemies->id = mdl->enemy_count;
 	mdl->enemies->x = location.x;
 	mdl->enemies->y = location.y;
-	mdl->enemies->wep.type_id = 0;
+	mdl->enemies->wep.type_id = get_state()->selected_weapon_type;
 	mdl->enemies->hp.max = 100;
 	mdl->enemies->rot = degree_rot((t_point){location.x, location.y}, tail);
 		//printf("Enemy rot value is %d\n", mdl->enemies->rot);
-	mdl->enemies->ai.type_id = 0;
+	mdl->enemies->ai.type_id = get_state()->selected_ai_type;
 	new_enemy = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!new_enemy)
 		ft_die("Fatal error: Could not malloc t_enemy at record_enemy");

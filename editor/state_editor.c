@@ -90,6 +90,7 @@ t_state				*get_state(void)
 		state->scroll_y = 0;
 		state->confine_skip = 1;
 		state->selected_weapon_type = 1;
+		state->selected_ai_type = 1;
 		state->grid_on = 1;
 		state->grid_size = GRID_START_SIZE;
 		state->gui->activate(state);

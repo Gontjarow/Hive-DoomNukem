@@ -37,6 +37,8 @@ void		draw_enemy(t_enemy *enemy, t_state *state)
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
 	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(ENEMY));
+	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y - 4}, enemy->wep.type_id * 10, type_colors(ENEMY));
+	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y + 4}, enemy->ai.type_id, type_colors(ENEMY));
 	update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
 }
 

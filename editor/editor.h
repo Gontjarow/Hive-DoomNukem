@@ -45,9 +45,9 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define PICKUP_RADIUS			16
 # define HEIGHT_STEPPING		10
 # define FLOOR_MIN				0
-# define FLOOR_MAX				2000
+# define FLOOR_MAX				390
 # define ROOF_MIN				0
-# define ROOF_MAX				2000
+# define ROOF_MAX				400
 # define FLOOR_ROOF_DIFF_LIMIT	50
 # define GRID_START_SIZE		32
 # define DOUBLE_CLICK_COOLDOWN	24
@@ -140,6 +140,7 @@ typedef struct 			s_state
     int 				scroll_y;
     int 				confine_skip;
     int 				selected_weapon_type;
+    int 				selected_ai_type;
     int 				grid_on;
     int 				grid_size;
     int 				cooldown;

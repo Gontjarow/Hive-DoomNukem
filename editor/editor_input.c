@@ -177,6 +177,9 @@ void			edt_keystate_input(t_doom *doom)
 	static int 	lock_t = 0;
 	static int 	lock_b = 0;
 	static int	lock_n = 0;
+	static int lock_j = 0;
+	static int lock_k = 0;
+	static int lock_l = 0;
 	static int	lock_del = 0;
 	static int	scancodes[9] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
 	SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
@@ -290,12 +293,37 @@ void			edt_keystate_input(t_doom *doom)
 		lock_b = 1;
 	}
 
+	if (lock_j && !doom->keystates[SDL_SCANCODE_J])
+		lock_j = 0;
+	else if (doom->keystates[SDL_SCANCODE_J] && !lock_j)
+	{
+		get_state()->selected_ai_type = 0;
+		puts("Pressed J: Selected AI type ranged (0)");
+	}
+
+	if (lock_k && !doom->keystates[SDL_SCANCODE_K])
+		lock_k = 0;
+	else if (doom->keystates[SDL_SCANCODE_K] && !lock_k)
+	{
+		get_state()->selected_ai_type = 1;
+		puts("Pressed K: Selected AI type melee (1)");
+	}
+
+	if (lock_l && !doom->keystates[SDL_SCANCODE_L])
+		lock_l = 0;
+	else if (doom->keystates[SDL_SCANCODE_L] && !lock_l)
+	{
+		get_state()->selected_ai_type = 2;
+		puts("Pressed L: Selected AI type boss (2)");
+	}
+
 	int i = 0;
 	while (i < 9)
 	{
 		if (doom->keystates[scancodes[i++]])
 		{
 			get_state()->selected_weapon_type = (i);
+			printf("Selected weapon type %d\n", get_state()->selected_weapon_type);
 			if (get_state()->gui == mode_pickups())
 				pickups_refresh_preview();
 			break ;
