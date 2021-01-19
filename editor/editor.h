@@ -34,6 +34,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define EDT_WIN_WIDTH			1600
 # define EDT_WIN_HEIGHT			900
 # define COLOR_LINE				0xffffffff
+# define COLOR_PORTAL			0xff00ffff
 # define COLOR_SELECTION_LINE	0xffffff00
 # define COLOR_GRID_LINE		0xff888888
 # define COLOR_PLAYER			0xff00ff00
@@ -68,6 +69,13 @@ typedef struct 			s_linedraw
     int                 draw_from_y;
     int                 draw_to_x;
     int                 draw_to_y;
+    int 				portalizing;
+    int 				portalizing_to_a;
+	int 				portalizing_to_b;
+    int 				portal_option_a;
+    int 				portal_option_b;
+    t_point				portal_a_loc;
+    t_point				portal_b_loc;
 }						t_linedraw;
 
 enum 					e_logic_type {PLAYER, ENEMY};
@@ -240,7 +248,7 @@ t_wall					*linedraw_to_wall(t_linedraw *data);
 /*
  * from magnets.c
  * */
-
+t_point			 		detect_wall_point(int x, int y, t_model *mdl, t_state *state);
 void            		check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state);
 void            		magnet_test(void* argv);
 
@@ -375,6 +383,8 @@ void 					polydraw_middle_click(int x, int y);
 void					show_editor_polymap(SDL_Surface *polymap, uint32_t *colors);
 void					record_player(t_point location, t_point *tail, t_model *mdl);
 t_enemy					*record_enemy(t_point location, t_point *tail, t_model *mdl);
+void		 			record_portal(t_model *mdl, t_wall *wall);
+void					record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count);
 void					create_strings_from_model(t_model *mdl, t_mapfile *map);
 
 /*

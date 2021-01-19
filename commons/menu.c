@@ -209,8 +209,32 @@ void		window_and_menu_events(t_doom *doom)
 	}
 }
 
+static int ms_since(double milliseconds, double *compared_to)
+{
+	double	now;
+
+	now = SDL_GetTicks();
+	if (now - *compared_to > milliseconds)
+	{
+		*compared_to = now;
+		return (1);
+	}
+	return (0);
+}
+
 static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
 {
+	static double 	spam_lock = 0;
+
+	if (argc != 2)
+	{
+		if (ms_since(200, &spam_lock))
+		{
+			ft_putendl("No level specified as argument!");
+			Mix_PlayChannel(-1, doom->sounds->mcSteam, 0);
+		}
+		return ;
+	}
 	SDL_MinimizeWindow(doom->win);
 	doom->buff = SDL_GetWindowSurface(doom->win);
 	init_game(doom, argc, argv);
