@@ -108,7 +108,7 @@ double			vec2_slope(t_xy a, t_xy b);
 double			vec2_invslope(t_xy a, t_xy b);
 t_xy			vec2_clamp(t_xy v, double min, double max);
 t_xy			vec2_rot(t_xy v, double cos, double sin);
-t_xy			vec2_intersect(t_xy v1, t_xy v2, t_xy near, t_xy far);
+t_xy			vec2_intersect(t_xy p, t_xy n, t_xy a, t_xy b);
 
 void			vec3p(t_xyz v);
 t_xyz			vec3(double x, double y, double z);

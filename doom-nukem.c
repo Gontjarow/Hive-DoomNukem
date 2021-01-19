@@ -18,6 +18,15 @@ void		ft_die(const char *error_message)
 	exit(0);
 }
 
+void		ft_assert(int eval, const char *error_message)
+{
+	if (eval == 0)
+	{
+		ft_putendl(error_message);
+		exit(0);
+	}
+}
+
 static void	init_doom(t_doom *doom)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)

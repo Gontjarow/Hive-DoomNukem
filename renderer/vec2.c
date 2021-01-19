@@ -44,6 +44,11 @@ t_xy	vec2_div(t_xy v, double divisor)
 	return vec2_mul(v, 1 / divisor);
 }
 
+double	vec2_dot(t_xy a, t_xy b)
+{
+	return ((a.x * b.x) + (a.y * b.y));
+}
+
 double	vec2_cross(t_xy a, t_xy b)
 {
 	return ((a.x * b.y) - (a.y * b.x));
@@ -84,24 +89,26 @@ t_xy	vec2_rot(t_xy v, double cos, double sin)
 }
 
 /*
-** wtf
+** Liang-Barsky
 */
 
-t_xy	vec2_intersect(t_xy v1, t_xy v2, t_xy near, t_xy far)
+t_xy	vec2_intersect(t_xy p, t_xy n, t_xy a, t_xy b)
 {
-	t_xy cross;
-	t_xy wall_length;
-	t_xy view_length;
+	double dota = vec2_dot(vec2_sub(a, p), n);
+	double dotb = vec2_dot(vec2_sub(b, p), n);
+	ft_assert(!(dota < 0 && dotb < 0), "Both outside");
+	ft_assert(!(dota >= 0 && dotb >= 0), "Both inside");
 
-	cross.x = vec2_cross(v1, v2);
-	cross.y = vec2_cross(near, far);
-	wall_length = vec2_sub(v1, v2);
-	view_length = vec2_sub(near, far);
-	double determinant = vec2_cross(wall_length, view_length);
+	double dotd = dota - dotb;
+	double t = dota / dotd;
+	if (dota < 0)
+		return (vec2_add(a, vec2_mul(vec2_sub(b,a), t)));
+	else
+		return (vec2_add(b, vec2_mul(vec2_sub(b,a), t)));
 
-	// Are we sure cross.x doesn't need a temp variable instead?
-	cross.x = vec2_cross(vec2(cross.x, wall_length.x), vec2(cross.y, view_length.x)) / determinant;
-	cross.y = vec2_cross(vec2(cross.x, wall_length.y), vec2(cross.y, view_length.y)) / determinant;
-
-	return (cross);
+	// 0 <= t <= 1
+	return (vec2(
+		a.x + t * (b.x - a.x),
+		a.y + t * (b.y - a.y)
+	));
 }

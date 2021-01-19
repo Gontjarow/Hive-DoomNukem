@@ -33,7 +33,8 @@
 # define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
 # define				WAV_AMMOPICKUP "wav/ammopickup.wav"
 
-typedef struct 			s_doom t_doom;
+typedef struct			s_doom t_doom;
+typedef struct			s_xy t_xy;
 
 typedef struct 			s_point
 {
@@ -252,6 +253,7 @@ void 					render_line(t_line *l);
 void					careful_render_line(t_line *l);
 void					preserve_render_line(t_line *l);
 void					unpreserve_render_line(t_line *l);
+void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
 
 /*
  * from pixel.c
