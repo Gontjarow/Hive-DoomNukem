@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/11 20:08:17 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 15:21:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void		init_hud(t_doom *doom)
 	n = 0;
 	while (n <= 9)
 	{
-		if (!(doom->mdl->player.weap_arr[n].weap_img = (SDL_Surface*)malloc(sizeof(SDL_Surface))))
+		if (!(doom->mdl->player.weap_arr[n].weap_img = (SDL_Surface*)malloc
+			(sizeof(SDL_Surface))))
 			ft_die("Error allocating weap_img!\n");
 		n++;
 	}
@@ -42,7 +43,8 @@ static void render_character(char c, t_doom *doom, int x, int y)
 	{
 		reference = doom->menu->alphabet[(int)c]->pixels;
 		j = x + (WIN_WIDTH * y);
-		while (k < (doom->menu->alphabet[(int)c]->w * doom->menu->alphabet[(int)c]->h))
+		while (k < (doom->menu->alphabet[(int)c]->w * doom->menu->alphabet
+			[(int)c]->h))
 		{
 			j = i == doom->menu->alphabet[(int)c]->w ? j + WIN_WIDTH : j;
 			i = i == doom->menu->alphabet[(int)c]->w ? 0 : i;

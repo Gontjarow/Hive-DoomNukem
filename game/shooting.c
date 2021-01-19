@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/13 17:50:35 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 16:14:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void				deal_damage(t_doom *doom, int enemy_id)
 	{
 		if (enemy->id == enemy_id && enemy->hp.cur > 0)
 		{
-			enemy->aggro = 1;
+			enemy->ai.aggro = 1;
 			enemy->hp.cur -=
 			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
 			if (enemy->hp.cur <= 0)

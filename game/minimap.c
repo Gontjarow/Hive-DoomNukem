@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/11 20:31:32 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 17:45:03 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,4 +119,5 @@ void		init_minimap(t_doom *doom)
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
 	SDL_SetWindowPosition(doom->minimap->win, win_x + WIN_WIDTH, win_y);
 	update_minimap(doom);
+	ai_assignment(doom);	// this wont be here in the future
 }

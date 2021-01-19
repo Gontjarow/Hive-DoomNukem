@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:34:32 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/15 18:48:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 17:50:11 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ static void	moving_enemy(t_doom *doom, t_enemy *enemy, t_point old)
 {
 	t_coord p;
 
-	enemy->x += 5 * -cos(deg_to_rad(enemy->rot));
-	enemy->y += 5 * -sin(deg_to_rad(enemy->rot));
-	p.x = enemy->x + 5 * -cos(deg_to_rad(enemy->rot));
-	p.y = enemy->y + 5 * -sin(deg_to_rad(enemy->rot));
+	enemy->x += enemy->ai.mov_speed * -cos(deg_to_rad(enemy->rot));
+	enemy->y += enemy->ai.mov_speed * -sin(deg_to_rad(enemy->rot));
+	p.x = enemy->x + enemy->ai.mov_speed * -cos(deg_to_rad(enemy->rot));
+	p.y = enemy->y + enemy->ai.mov_speed * -sin(deg_to_rad(enemy->rot));
 	enemy->tail.x = p.x;
 	enemy->tail.y = p.y;
 	if (check_location(doom, enemy->x, enemy->y) == -1 ||
@@ -47,11 +47,13 @@ void		handle_enemy_movement(t_enemy *enemy, t_doom *doom, t_point old)
 	int		distance;
 
 	distance = calc_distance(enemy, doom);
-	if (distance > 70 && enemy->aggro == 1)
+	if (check_location(doom, enemy->x, enemy->y) != check_location(doom, doom->mdl->player.x, doom->mdl->player.y))
+		enemy->ai.aggro = 0;
+	if (distance > enemy->ai.min_dis && enemy->ai.aggro == 1)
 		moving_enemy(doom, enemy, old);
-	else if ((distance >= 70 && distance <= 200))
+	else if ((distance >= enemy->ai.min_dis && distance <= enemy->ai.max_dis))
 	{
-		enemy->aggro = 1;
+		enemy->ai.aggro = 1;
 		moving_enemy(doom, enemy, old);
 	}
 }

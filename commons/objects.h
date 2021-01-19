@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/13 17:35:14 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 17:29:33 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,16 @@ typedef struct 			s_player
 	struct s_weapon		wep;
 }						t_player;
 
+typedef struct			s_ai
+{
+	int					type_id;
+	int					min_dis;
+	int					max_dis;
+	int					aggro;
+	int					mov_speed;
+	int					dmg;
+}						t_ai;
+
 typedef struct 			s_enemy
 {
 	int 				id;
@@ -100,8 +110,8 @@ typedef struct 			s_enemy
 	int					did_shoot;
 	int					who_shot;
 	int					shoot_cd;
-	int					aggro;
 	uint32_t			ray_color;
+	struct s_ai			ai;
 	struct s_coord		bullet_pos;
 	struct s_point		tail;
 	struct s_health		hp;
