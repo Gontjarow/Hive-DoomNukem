@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/01/19 15:07:04 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 20:27:43 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@
 
 # include "libft.h"
 # include "objects.h"
-# include "data_model/data_model.h"
+# include "data_model.h"
 # include "editor.h"
 # include "game.h"
 # include "minimap.h"
 # include "renderer.h"
+# include "wireframe.h"
 
 # include <fcntl.h>
 # include <unistd.h>
@@ -39,7 +40,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 60
+# define FPS 20
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 1
@@ -63,7 +64,6 @@ typedef struct			s_doom
 	struct s_menu		*menu;
 	struct s_minimap    *minimap;
 	struct s_editor		*edt;
-	struct s_state      *edt_state;
 	struct s_model		*mdl;
 	struct s_game		*game;
 }						t_doom;

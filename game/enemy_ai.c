@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 17:31:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 20:18:00 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void		enemy_update_cooldown(t_doom *doom)
 	while (ec--)
 	{
 		// printf("Enemy ID: %d | AI.TYPE_ID: %d | AI.MIN_DIS: %d | AI.MAX_DIS: %d | AI.DMG: %d | AI.MS: %d | AI.HP.CUR: %d\n", enemy->id, enemy->ai.type_id, enemy->ai.min_dis, enemy->ai.max_dis, enemy->ai.dmg, enemy->ai.mov_speed, enemy->hp.cur);
-		printf("Enemy ID: %d | Enemy CD: %d\n", enemy->id, enemy->shoot_cd);
+		// printf("Enemy ID: %d | Enemy CD: %d\n", enemy->id, enemy->shoot_cd);
 		if (enemy->shoot_cd > 0)
 			enemy->shoot_cd--;
 		enemy = enemy->next;

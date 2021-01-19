@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 17:45:03 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 19:07:57 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,17 @@ void		update_minimap(t_doom *doom)
 		This is a test for the game HUD - by MS
 	*/
 	print_minimap_weapons(doom);
-	game_print_alphabet("hp", doom, WIN_WIDTH - 160, 50);
-	game_print_numbers(ft_itoa(doom->mdl->player.hp.cur), doom, WIN_WIDTH - 100, 50);
+	game_print_alphabet("hp", doom, MWIN_WIDTH - 160, 50);
+	game_print_numbers(ft_itoa(doom->mdl->player.hp.cur), doom, MWIN_WIDTH - 100, 50);
 	if (doom->mdl->player.reload_time == 0)
 	{
-		game_print_numbers(ft_itoa(doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur), doom, WIN_WIDTH - 180, 356);
-		game_print_alphabet("/", doom, WIN_WIDTH - 130, 356);
-		game_print_numbers(ft_itoa(doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res), doom, WIN_WIDTH - 100, 356);
+		game_print_numbers(ft_itoa(doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur), doom, MWIN_WIDTH - 180, 356);
+		game_print_alphabet("/", doom, MWIN_WIDTH - 130, 356);
+		game_print_numbers(ft_itoa(doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res), doom, MWIN_WIDTH - 100, 356);
 	}
 	else
 	{
-		game_print_alphabet("reloading", doom, WIN_WIDTH - 270, 356);
+		game_print_alphabet("reloading", doom, MWIN_WIDTH - 270, 356);
 	}
 	/*
 		End of test
@@ -117,7 +117,7 @@ void		init_minimap(t_doom *doom)
 		ft_die("Fatal error: Failed init of SDL_Surface from minimap");
 	doom->minimap->scale = 1.0;
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
-	SDL_SetWindowPosition(doom->minimap->win, win_x + WIN_WIDTH, win_y);
+	SDL_SetWindowPosition(doom->minimap->win, win_x + MWIN_WIDTH, win_y);
 	update_minimap(doom);
 	ai_assignment(doom);	// this wont be here in the future
 }

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 17:40:37 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 20:15:34 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void		ai_ranged(t_doom *doom, t_enemy *enemy)
 		- Once distance < 70, start shooting player, dealing 5dmg per sec?
 		- HP normal
 	*/
-	enemy->ai.min_dis = 70;
-	enemy->ai.max_dis = 200;
+	enemy->ai.min_dis = 200;
+	enemy->ai.max_dis = 400;
 	enemy->ai.mov_speed = 10;
 	enemy->hp.cur = 100;
 	enemy->ai.aggro = 0;
-	enemy->ai.dmg = 20;
+	enemy->ai.dmg = 10;
 }
 
 void		ai_melee(t_doom *doom, t_enemy *enemy)
@@ -44,7 +44,7 @@ void		ai_melee(t_doom *doom, t_enemy *enemy)
 	enemy->ai.mov_speed = 15;
 	enemy->hp.cur = 50;
 	enemy->ai.aggro = 0;
-	enemy->ai.dmg = 30;
+	enemy->ai.dmg = 20;
 }
 
 void		ai_boss(t_doom *doom, t_enemy *enemy)
@@ -62,7 +62,7 @@ void		ai_boss(t_doom *doom, t_enemy *enemy)
 	enemy->ai.mov_speed = 5;
 	enemy->hp.cur = 1000;
 	enemy->ai.aggro = 0;
-	enemy->ai.dmg = 10;
+	enemy->ai.dmg = 5;
 }
 
 void		ai_assignment(t_doom *doom)			// this must be done before or after load model?

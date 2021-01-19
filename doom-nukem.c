@@ -68,7 +68,8 @@ static int	destroy_and_quit(t_doom *doom)
 
 static void distribute_inputs(t_doom *doom)
 {
-	while (SDL_PollEvent(&doom->event) != 0) {
+	while (SDL_PollEvent(&doom->event) != 0)
+	{
 		if (doom->event.type == SDL_MOUSEMOTION && !doom->edt_quit &&
 			doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
 			edt_mouse_motion(doom);
@@ -81,9 +82,6 @@ static void distribute_inputs(t_doom *doom)
 		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->game_quit &&
 				 doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
 			game_mouse_down(doom);
-		else if (doom->event.type == SDL_KEYDOWN && !doom->game_quit &&
-				doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
-			game_key_down(doom);
 		else
 			window_and_menu_events(doom);
 	}
@@ -98,7 +96,7 @@ static void run_loops(t_doom *doom, int argc, char **argv)
 		game_render(doom);
 }
 
-int			main(int argc, char **argv)
+int			main(int argc, char *argv[])
 {
 	t_doom			doom;
 	uint32_t		frame_ticks;

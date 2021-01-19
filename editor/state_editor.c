@@ -39,6 +39,8 @@ void		 		edt_cycle_mode(t_state *state)
 	else if (state->gui == mode_planting())
 		state->gui = mode_pickups();
 	else if (state->gui == mode_pickups())
+		state->gui = mode_effect();
+	else if (state->gui == mode_effect())
 		state->gui = mode_polydraw();
 	//ft_putendl("Activating GUI mode");
 	state->gui->activate(state);
@@ -92,6 +94,7 @@ t_state				*get_state(void)
 		state->grid_size = GRID_START_SIZE;
 		state->gui->activate(state);
 		state->cooldown = 0;
+		state->saving_choice = 1;
 		//print_mode_info(state->gui);
 		//draw_scroll_bars_to_backbuffer(state);
 	}

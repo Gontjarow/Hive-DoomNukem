@@ -61,7 +61,21 @@
 //	TODO BIG NOTE TO SELF - CHECK IF TRUE!
 //  	EDITOR COULD GUARANTEE CLOCKWISE ARRANGEMENT OF WALL NODES IN ROOMS
 
-//	TODO FOR EDITOR
+//	TODO FOR EFFECTORS
+//		MODE_EFFECT // DONE
+//		MODE_EFFECT GRAPHICS AND CYCLING // DONE
+//		EFFECT.C FUNCTION STUBS // DONE
+//		EDITOR_INPUT HANDLING OF TEXT INPUT PROTOTYPE // DONE
+//		HANDLE CHAINING MAP FILE TOKEN AS [CHAIN_TO_MAPFILE] FILENAME = "example.map" STYLE TOKEN
+//		ADD CHAIN PROP TO MODEL, MAP STRINGS
+//		EDIT STRINGIFY FUNCTION IN LOAD_MODEL
+//		EDIT MAP_TO_MODEL IN MAP_DECODE
+//		ADD FUNCTION UPDATE_CHAIN_STRING TO MAP_ENCODE
+//		EFFECTORS WILL BE [EFFECT] TOKEN TYPE AND FOUND IN MDL->EFFECT
+//		MAP_DECODE AND MAP_ENCODE ADDITIONS FOR [EFFECT] TYPE
+//		EFFECT WILL HAVE A ID, TYPE [ENUMERATED INTEGER], LOC(ATION).X, LOC(ATION).Y, TARGET(LOCATION).X, TARGET(LOCATION).Y, TARGET_ID
+//		EXAMPLE DATA ROW
+//		[EFFECT] ID = 0 | TYPE = 0 | LOC.X = 0 | LOC.Y = 0 | TARGET.X = 0 | TARGET.Y = 0 | TARGET_ID = 0
 // 		EFFECTORS WILL BE TRIANGLES IN DIFFERENT COLORS IN THE EDITOR VIEW
 //			EFFECTOR TRIANGLE WILL BE POINTING UP FOR ORIGIN AND DOWN FOR DESTINATION OR TARGET
 //			EFFECTOR TRIANGLE WILL BE NOTED AND MATCHED WITH ID DIGITS BELOW TRIANGLE AND LIMITED TO 99
@@ -74,8 +88,12 @@
 //			SUPPORT TEXT INPUT AND PRINTING TEXT TO EDITOR GUI
 //			A SINGLE FILENAME PARAMETER FOR CHAINING A MAP TO ANOTHER MAP
 //				IF BLANK, IT WILL MEAN END OF CAMPAIGN FROM THE LEVEL EXIT
+
+//		TODO FOR ALLOWING 2.5D RENDERING TO HAPPEN
 //		PORTALIZATION
-//			PORTAL WINDOW AND PORTAL DOOR TYPES VIA SELECTION MODE
+//			PORTAL VIRTUAL, PORTAL WINDOW AND PORTAL DOOR TYPES VIA SELECTION MODE
+//			STRICTLY ALLOW ONLY FIRST WALLS TO ACT AS PORTAL HINGES FOR SLOPING FLOOR AND CEILING
+//				STRICTLY ALLOW ONLY PERPENDICULAR WALLS TO FIRST WALL ACT AS ADDITIONAL PORTAL HINGES WHEN A PORTAL HINGE EXISTS ALREADY
 //			PRIORITIZE SELECTION OF PORTAL TYPES BEFORE WALL TYPES TO ALLOW DELETION OF PORTALS
 //		DELETION OF A PORTAL OR AN EFFECTOR WITH A LINKED SWITCH TO IT WILL SCAN AND DELETE THE LINKED SWITCH ALSO
 //			CAREFUL CODING OF THIS FEATURE MUST BE CONSIDERED
@@ -85,10 +103,9 @@
 //			WHOLE ROOMS WALL TEXTURES CAN BE ASSIGNED IN SELECTION MODE
 //			SINGLE WALLS TEXTURES CAN BE ASSIGNED IN SELECTION MODE
 //			EACH MAP FILE WILL BE A BUNDLE AND BLOB OF
-//				MAP DATA, N LINES
-//				DYNAMIC TEXTURES, N AMOUNT FOR N LINES
-//				HARD CODED SOUND FILES (WAV?), FIXED AMOUNT FOR X LINES
-//				HARD CODED GRAPHIC FILES (XPM?), FIXED AMOUNT FOR Z LINES
+//				MAP DATA, N LINES (TOML-LIKE MAP FORMAT)
+//				TEXTURES, N AMOUNT FOR N LINES (XPM)
+//				UI GRAPHICS AND AUDIO FIXED AMOUNT FOR N LINES (XPM, WAV)
 //			BINARY REQUIRES A MAPFILE TO LOAD AND PLAY A MAP
 //			WHEN MAPFILES AND EDITOR RESOURCES FOUND, ALLOW FULL MENU FOR EITHER LEVEL SELECT OR EDITING
 //			WHEN MAPFILES FOUND BUT NO EDITOR RESOURCES FOUND, ALLOW LEVEL SELECT AND GAME LOADING
@@ -142,7 +159,8 @@ void				init_edt(t_doom *doom, int argc, char **argv)
 	if (!doom->edt->buff)
 		ft_die("Fatal error: Could not retrieve buffer of Level Editor window.");
 	flood_buffer(doom->edt->buff, 0xff000000);
-	doom->edt_state = get_state();
+	//doom->edt_state = get_state();
+	get_state()->gui->activate(get_state());
 	doom->edt->map = NULL;
 	doom->edt->map_supplied = (argc == 2) ? 1 : 0;
 	doom->edt->map_path = (argc == 2) ? argv[1] : NULL;
@@ -157,8 +175,12 @@ void				destroy_edt(t_doom *doom)
 		create_strings_from_model(doom->mdl, doom->edt->map);
 		if (doom->mdl->player.x == -1 || doom->mdl->player.y == -1)
 			ft_putendl("Warning: Player position not supplied, did not save mapfile.");
-		else if (doom->map->was_filled && !overwrite_mapfile(doom->edt->map_path, doom->edt->map))
-			ft_putendl("Warning: Could not save mapfile, when attempted overwriting, write_mapfile failed.");
+		else if (doom->map->was_filled)
+		{
+			if (edt_handle_confirm_save(doom) == 1)
+				if (!(overwrite_mapfile(doom->edt->map_path, doom->edt->map)))
+					ft_putendl("Warning: Could not save mapfile, when attempted overwriting, write_mapfile failed.");
+		}
 		else if (!write_mapfile(doom->edt->map_path, doom->edt->map))
 			ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
 		if (doom->edt->map != NULL)
@@ -169,7 +191,8 @@ void				destroy_edt(t_doom *doom)
 	{
 		destroy_mapfile(doom->map);
 		doom->map_data_initialized = 0;
-			//ft_putendl("Destroyed mapfile!!!");
+		doom->map->was_filled = 0;
+			//ft_putendl("Destroyed mapfile by calling destroy_mapfile and setting map_data_initialized to 0");
 	}
 	SDL_FreeSurface(doom->edt->buff);
 	SDL_DestroyWindow(doom->edt->win);
@@ -180,7 +203,7 @@ void				destroy_edt(t_doom *doom)
 	doom->edt = NULL;
 }
 
-static void 		edt_gridify(void)
+void			edt_gridify(void)
 {
 	int 		y;
 	int			loc;

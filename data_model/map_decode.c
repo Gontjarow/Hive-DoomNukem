@@ -99,6 +99,7 @@ static void			map_enemy_to_model(const int *fields, t_model *mdl)
 	mdl->enemies->hp.max = fields[4];
 	mdl->enemies->hp.cur = fields[4];
 	mdl->enemies->wep.type_id = fields[5];
+	mdl->enemies->ai.type_id = fields[6];
 	mdl->enemy_count++;
 	if (mdl->enemy_count == 1)
 		mdl->enemy_first = mdl->enemies;
@@ -118,7 +119,7 @@ static t_token		*enemy_spec(void)
 	{
 		i = 0;
 		spec = (t_token *) malloc(sizeof(t_token));
-		spec->expected = 6;
+		spec->expected = 7;
 		spec->sur[0] = '[';
 		spec->sur[1] = ']';
 		spec->equ = '=';
@@ -132,6 +133,7 @@ static t_token		*enemy_spec(void)
 		ft_strcpy(spec->keys[3], "rot");
 		ft_strcpy(spec->keys[4], "hp");
 		ft_strcpy(spec->keys[5], "wep.type_id");
+		ft_strcpy(spec->keys[6], "ai.type_id");
 		spec->result_ptr = NULL;
 		spec->map_function = map_enemy_to_model;
 	}
@@ -242,6 +244,8 @@ static void			map_room_to_model(const int *fields, t_model *mdl)
 	mdl->rooms->wall_count = fields[2];
 	mdl->rooms->floor_height = fields[3];
 	mdl->rooms->roof_height = fields[4];
+	mdl->rooms->visual.x = -1;
+	mdl->rooms->visual.y = -1;
 	mdl->room_count++;
 	if (mdl->room_count == 1)
 		mdl->room_first = mdl->rooms;
@@ -480,7 +484,9 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 	{
 		ft_putendl("Warning: Empty map data strings at map_to_model");
 		doom_ptr()->map->was_filled = 0;
+		return ;
 	}
+	doom_ptr()->map->was_filled = 1;
 }
 
 /* Unit tested version of map_to_model

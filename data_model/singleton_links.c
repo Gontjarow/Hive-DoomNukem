@@ -29,8 +29,21 @@ t_doom      *doom_ptr(void)
 
 t_model     *get_model(void)
 {
-    static t_model *mdl_ptr = NULL;
+    static t_model	*mdl_ptr = NULL;
     if (!mdl_ptr)
-        mdl_ptr = doom_ptr()->mdl;
+    {
+		mdl_ptr = doom_ptr()->mdl;
+		singleton_manager(&mdl_ptr, SINGLETON_MDL, 0);
+	}
     return (mdl_ptr);
+}
+
+int 		singleton_manager(void **ptr, int type, int clear)
+{
+	static t_model	**mdl_singleton = NULL;
+
+	if (!clear && type == SINGLETON_MDL)
+		mdl_singleton = ptr;
+	else if (clear && type == SINGLETON_MDL)
+		*mdl_singleton = NULL;
 }

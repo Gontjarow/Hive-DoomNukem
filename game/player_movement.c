@@ -24,6 +24,7 @@ void			update_player_tail(t_doom *doom, double rad)
 
 static void		moving_up_down(t_doom *doom, int signal, double rad)
 {
+	signal = (-1) * signal;
 	if (doom->mdl->player.is_crouching && doom->sounds->footstep_delay == 0)
 		Mix_PlayChannel(2, doom->sounds->mcCrouching, 0);
 	else if (doom->mdl->player.is_running && doom->sounds->footstep_delay == 0)
@@ -39,6 +40,22 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 	((double)doom->mdl->player.mov_speed)) * -sin(rad);
 	update_player_tail(doom, rad);
 	handle_pickup(doom);
+}
+
+static void 	strafe(t_doom *doom, int signal)
+{
+	int orig_rot = doom->mdl->player.rot;
+	double strafe_rad;
+
+	doom->mdl->player.rot = doom->mdl->player.rot + (90 * signal);
+	if (doom->mdl->player.rot < 0)
+		doom->mdl->player.rot = 359 + (doom->mdl->player.rot);
+	if (doom->mdl->player.rot >= 360)
+		doom->mdl->player.rot = 0 + (doom->mdl->player.rot) - 360;
+	strafe_rad = deg_to_rad(doom->mdl->player.rot);
+	doom->mdl->player.x = doom->mdl->player.x + (((double)doom->mdl->player.mov_speed)) * -cos(strafe_rad);
+	doom->mdl->player.y = doom->mdl->player.y + (((double)doom->mdl->player.mov_speed)) * -sin(strafe_rad);
+	doom->mdl->player.rot = orig_rot;
 }
 
 static void		rotating_left_right(t_doom *doom, int signal)
@@ -76,13 +93,17 @@ void			handle_player_movement(t_doom *doom)
 	rad = deg_to_rad(doom->mdl->player.rot);
 	if (doom->sounds->footstep_delay > 0)
 		doom->sounds->footstep_delay--;
-	if (doom->keystates[SDL_SCANCODE_W])
+	if (doom->keystates[SDL_SCANCODE_W] || doom->keystates[SDL_SCANCODE_UP])
 		moving_up_down(doom, 1, rad);
-	if (doom->keystates[SDL_SCANCODE_S])
+	if (doom->keystates[SDL_SCANCODE_S] || doom->keystates[SDL_SCANCODE_DOWN])
 		moving_up_down(doom, -1, rad);
 	if (doom->keystates[SDL_SCANCODE_A])
-		rotating_left_right(doom, -1);
+		strafe(doom, 1);
 	if (doom->keystates[SDL_SCANCODE_D])
+		strafe(doom, -1);
+	if (doom->keystates[SDL_SCANCODE_LEFT])
+		rotating_left_right(doom, -1);
+	if (doom->keystates[SDL_SCANCODE_RIGHT])
 		rotating_left_right(doom, 1);
 	validate_player_position(doom, old);
 }

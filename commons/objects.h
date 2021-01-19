@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/19 17:29:33 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 20:14:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,6 @@
 # define OBJECTS_H
 
 #include "doom-nukem.h"
-
-# define 				WAV_PLOP "wav/plop.wav"
-# define 				WAV_STEAM0 "wav/steam/0.wav"
-# define 				WAV_SWORD "wav/sword.wav"
-# define				WAV_THUNDER "wav/thunder.wav"
-# define 				IMG_THUNDER0 "img/thunder/0.png"
 
 typedef struct 			s_doom t_doom;
 
@@ -91,15 +85,15 @@ typedef struct 			s_player
 	struct s_weapon		wep;
 }						t_player;
 
-typedef struct			s_ai
+typedef struct          s_ai
 {
-	int					type_id;
-	int					min_dis;
-	int					max_dis;
-	int					aggro;
-	int					mov_speed;
-	int					dmg;
-}						t_ai;
+	int                 type_id;
+	int                 min_dis;
+	int                 max_dis;
+	int                 aggro;
+	int                 mov_speed;
+	int                 dmg;
+}                       t_ai;
 
 typedef struct 			s_enemy
 {
@@ -218,6 +212,13 @@ typedef struct			s_image
 	int					endian;
 }						t_image;
 
+
+/*
+ * from alphabet.c
+ * */
+
+void 					print_glyph_str(const char *str, SDL_Surface *buff, int x, int y);
+
 /*
  * from debug_console.c
  * */
@@ -235,7 +236,6 @@ void					debug_model_pickups(void);
 
 uint32_t 				get_exact_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface				*xpm2surface(char *path);
-SDL_Surface				*load_png(char *path);
 SDL_Surface				*load_texture(t_doom *doom, char *path);
 
 /*

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 10:58:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/11 19:13:42 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 18:44:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void 		destroy_alphabet(t_menu *menu)
 	}
 	c = ' ';
 	SDL_FreeSurface(menu->alphabet[(int)c]);
+	c = '.';
+	SDL_FreeSurface(menu->alphabet[(int)c]);
 }
 
 void 		load_alphabet(t_menu *menu)
@@ -58,6 +60,8 @@ void 		load_alphabet(t_menu *menu)
 	menu->alphabet[(int)c] = load_texture(menu->parent, "img/robo/robo_space.png");
 	c = '/';
 	menu->alphabet[(int)c] = load_texture(menu->parent, "img/robo/robo_slash.png");
+	c = '.';
+	menu->alphabet[(int)c] = load_texture(menu->parent, "img/robo/robo_period.png");
 }
 
 static void render_character2x(char c, t_doom *doom, int x, int y)
@@ -128,6 +132,42 @@ void 	print_alphabet(const char *str, t_doom *doom, int x, int y)
 		else
 			render_character(*str, doom, x, y);
 		x += 28 * doom->menu->alphabet_scale;
+		str++;
+	}
+}
+
+static void render_glyph(char c, SDL_Surface *buff, int x, int y)
+{
+	unsigned int 	*reference;
+	unsigned int	*pixels;
+	int 			i;
+	int 			j;
+	int 			k;
+
+	if (c >= 'A' && c <= 'Z')
+		c += 48;
+	i = 0;
+	k = 0;
+	pixels = buff->pixels;
+	if (doom_ptr()->menu->alphabet[(int)c])
+	{
+		reference = doom_ptr()->menu->alphabet[(int)c]->pixels;
+		j = x + (buff->w * y);
+		while (k < (doom_ptr()->menu->alphabet[(int)c]->w * doom_ptr()->menu->alphabet[(int)c]->h))
+		{
+			j = i == doom_ptr()->menu->alphabet[(int)c]->w ? j + buff->w : j;
+			i = i == doom_ptr()->menu->alphabet[(int)c]->w ? 0 : i;
+			pixels[i++ + j] = reference[k++];
+		}
+	}
+}
+
+void 	print_glyph_str(const char *str, SDL_Surface *buff, int x, int y)
+{
+	while (*str)
+	{
+		render_glyph(*str, buff, x, y);
+		x += doom_ptr()->menu->alphabet[(int)*str]->w + 2;
 		str++;
 	}
 }

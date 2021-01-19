@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/19 16:55:06 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 19:22:46 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,6 @@ void		game_mouse_down(t_doom *doom)
 		doom->game_quit = 0;
 }
 
-void		game_key_down(t_doom *doom)
-{
-	return ;
-}
-
 double		deg_to_rad(int deg)
 {
 	return (deg * M_PI / 180);
@@ -114,6 +109,6 @@ void		game_render(t_doom *doom)
 	handle_enemy_ai(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
-	render_frame(doom);
+	wire_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
 }
