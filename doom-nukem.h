@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/01/11 15:55:15 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 20:27:43 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 60
+# define FPS 20
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 1
@@ -70,9 +70,9 @@ typedef struct			s_doom
 
 void			ft_die(const char *error_message);
 void 			load_alphabet(t_menu *menu);
-void			load_numbers(t_menu *menu);
+void			load_numbers(t_doom *doom);
 void	 		destroy_alphabet(t_menu *menu);
-void			destroy_numbers(t_menu *menu);
+void			destroy_numbers(t_doom *doom);
 void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
 
 void			load_sounds(t_doom *doom);

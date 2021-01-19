@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 21:42:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/11 16:16:32 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 18:55:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define MINIMAP_H
 
 # include "doom-nukem.h"
-# define MWIN_WIDTH 384
-# define MWIN_HEIGHT 384
+# define MWIN_WIDTH 1024
+# define MWIN_HEIGHT 512
 
 typedef struct		s_minimap
 {

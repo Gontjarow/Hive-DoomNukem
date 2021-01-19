@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   alphabet.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 10:58:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/13 11:07:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2021/01/19 18:44:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ void 		load_alphabet(t_menu *menu)
 	}
 	c = ' ';
 	menu->alphabet[(int)c] = load_texture(menu->parent, "img/robo/robo_space.png");
+	c = '/';
+	menu->alphabet[(int)c] = load_texture(menu->parent, "img/robo/robo_slash.png");
 	c = '.';
 	menu->alphabet[(int)c] = load_texture(menu->parent, "img/robo/robo_period.png");
 }

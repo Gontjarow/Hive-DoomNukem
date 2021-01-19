@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/11 15:26:57 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 20:14:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,6 @@
 # define OBJECTS_H
 
 #include "doom-nukem.h"
-
-# define 				WAV_PLOP "wav/plop.wav"
-# define 				WAV_STEAM0 "wav/steam/0.wav"
-# define 				WAV_SWORD "wav/sword.wav"
-# define				WAV_THUNDER "wav/thunder.wav"
-# define 				IMG_THUNDER0 "img/thunder/0.png"
-# define				WAV_PISTOLRLD "wav/pistolreload.wav"
-# define				WAV_ASSAULTRLD "wav/assaultreload.wav"
-# define				WAV_SMGRLD "wav/smgreload.wav"
-# define				WAV_PISTOLSHOT "wav/pistolshot.wav"
-# define				WAV_WALKING "wav/walking.wav"
-# define				WAV_RUNNING "wav/running.wav"
-# define				WAV_CROUCHING "wav/crouching.wav"
-# define				WAV_ENEMYDEATH "wav/enemy_dead.wav"
-# define				WAV_ASSAULTSHOT "wav/assaultshot.wav"
-# define				WAV_SMGSHOT "wav/smgshot.wav"
-# define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
-# define				WAV_AMMOPICKUP "wav/ammopickup.wav"
 
 typedef struct 			s_doom t_doom;
 
@@ -70,6 +52,7 @@ typedef struct 			s_weapon
 	int					do_own;
 	int 				cooldown;
 	int 				reload_time;
+	struct SDL_Surface	*weap_img;
 	struct Mix_Chunk 	*fire_sound;
 	struct Mix_Chunk	*reload_sound;
 }						t_weapon;
@@ -94,8 +77,9 @@ typedef struct 			s_player
 	int					shoot_cd;
 	int					reload_time;
 	int					weap_id;
+	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
-	struct s_weapon		weap_arr[3];
+	struct s_weapon		weap_arr[10];
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;
@@ -179,6 +163,7 @@ typedef struct 			s_sounds
 	struct Mix_Chunk	*mcEnemyDeath;
 	struct Mix_Chunk	*mcHealthPickup;
 	struct Mix_Chunk	*mcAmmoPickup;
+	struct Mix_Chunk	*mcWeaponPickup;
 	int					footstep_delay;
 }						t_sounds;
 
@@ -195,7 +180,6 @@ typedef struct			s_menu
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
-	struct SDL_Surface	*hud_num[9];
 	int 				alphabet_scale;
 	SDL_Surface			*thunder;
 	struct s_doom		*parent;

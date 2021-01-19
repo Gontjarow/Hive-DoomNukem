@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 15:46:17 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/15 17:20:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/15 15:16:16 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,34 +32,6 @@ int			player_collision_with_enemies(t_doom *doom)
 		if ((distance < 10 + 10) && enemy->hp.cur > 0)
 			return (-1);
 		enemy = enemy->next;
-	}
-	return (0);
-}
-
-int			enemy_collision_with_enemies(t_doom *doom, t_enemy *enemy)
-{
-	t_enemy *next_enemy;
-	int		dx;
-	int		dy;
-	int		ec2;
-	int		distance;
-
-	ec2 = doom->mdl->enemy_count;
-	next_enemy = doom->mdl->enemy_first;
-	if (ec2 > 1)
-	{
-		while (ec2 - 1)
-		{
-			if (next_enemy->id == enemy->id && next_enemy->next != NULL)
-				next_enemy = next_enemy->next;
-			dx = next_enemy->x - enemy->x;
-			dy = next_enemy->y - enemy->y;
-			distance = sqrt(dx * dx + dy * dy);
-			if ((distance < 10 + 10) && next_enemy->hp.cur > 0)
-				return (-1);
-			ec2--;
-			next_enemy = next_enemy->next;
-		}
 	}
 	return (0);
 }

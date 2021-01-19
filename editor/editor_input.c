@@ -342,4 +342,3 @@ void			edt_keystate_input(t_doom *doom)
 		lock_del = 1;
 	}
 }
-
