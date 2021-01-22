@@ -1,8 +1,8 @@
 #include "renderer.h"
 
-void	vec2p(t_xy v)
+void	vec2p(const char *name, t_xy v)
 {
-	printf("\n{%8.3f, %8.3f}\n", v.x, v.y);
+	printf("%s{%8.3f, %8.3f}\n", name, v.x, v.y);
 }
 
 t_xy	vec2(double x, double y)
@@ -12,36 +12,27 @@ t_xy	vec2(double x, double y)
 
 t_xyz	vec23(t_xy v, double z)
 {
-	return vec3(v.x, v.y, z);
+	return (vec3(v.x, v.y, z));
 }
 
 t_xy	vec2_add(t_xy a, t_xy b)
 {
-	return vec2(
-		a.x + b.x,
-		a.y + b.y
-	);
+	return (vec2(a.x + b.x, a.y + b.y));
 }
 
 t_xy	vec2_sub(t_xy a, t_xy b)
 {
-	return vec2(
-		a.x - b.x,
-		a.y - b.y
-	);
+	return (vec2(a.x - b.x, a.y - b.y));
 }
 
 t_xy	vec2_mul(t_xy v, double factor)
 {
-	return vec2(
-		v.x * factor,
-		v.y * factor
-	);
+	return (vec2(v.x * factor, v.y * factor));
 }
 
 t_xy	vec2_div(t_xy v, double divisor)
 {
-	return vec2_mul(v, 1 / divisor);
+	return (vec2_mul(v, 1 / divisor));
 }
 
 double	vec2_dot(t_xy a, t_xy b)
@@ -52,6 +43,16 @@ double	vec2_dot(t_xy a, t_xy b)
 double	vec2_cross(t_xy a, t_xy b)
 {
 	return ((a.x * b.y) - (a.y * b.x));
+}
+
+double	vec2_mag(t_xy v)
+{
+	return (sqrt(v.x * v.x + v.y * v.y));
+}
+
+t_xy	vec2_norm(t_xy v)
+{
+	return (vec2_div(v, vec2_mag(v)));
 }
 
 double	vec2_slope(t_xy a, t_xy b)
@@ -80,35 +81,20 @@ t_xy	vec2_clamp(t_xy v, double min, double max)
 ** [ cos  |  sin ]
 */
 
-t_xy	vec2_rot(t_xy v, double cos, double sin)
+// t_xy	vec2_rot(t_xy v, double cos, double sin)
+// {
+// 	return ((t_xy){
+// 		v.x * sin - v.y * cos,
+// 		v.x * cos + v.y * sin
+// 	});
+// }
+
+t_xy	vec2_rot(t_xy v, double angle)
 {
+	double c = cos(angle);
+	double s = sin(angle);
 	return ((t_xy){
-		v.x * sin - v.y * cos,
-		v.x * cos + v.y * sin
+		v.x * c - v.y * s,
+		v.x * s + v.y * c
 	});
-}
-
-/*
-** Liang-Barsky
-*/
-
-t_xy	vec2_intersect(t_xy p, t_xy n, t_xy a, t_xy b)
-{
-	double dota = vec2_dot(vec2_sub(a, p), n);
-	double dotb = vec2_dot(vec2_sub(b, p), n);
-	ft_assert(!(dota < 0 && dotb < 0), "Both outside");
-	ft_assert(!(dota >= 0 && dotb >= 0), "Both inside");
-
-	double dotd = dota - dotb;
-	double t = dota / dotd;
-	if (dota < 0)
-		return (vec2_add(a, vec2_mul(vec2_sub(b,a), t)));
-	else
-		return (vec2_add(b, vec2_mul(vec2_sub(b,a), t)));
-
-	// 0 <= t <= 1
-	return (vec2(
-		a.x + t * (b.x - a.x),
-		a.y + t * (b.y - a.y)
-	));
 }
