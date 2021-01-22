@@ -214,11 +214,21 @@ int				ft_mini(int a, int b)
 
 void			render_frame(t_doom *doom)
 {
+	printf("\nFRAME START\n");
 	t_world	*world;
 	double	*zbuffer;
 
 	world = doom->game->world;
 	zbuffer = get_zbuffer();
+
+	// Todo: Update these with regular inputs:
+	world->player.position = vec3(
+		doom->mdl->player.x,
+		doom->mdl->player.y,
+		doom->mdl->player.height);
+	world->player.angle = deg_to_rad(doom->mdl->player.rot);
+	world->player.sin = sin(world->player.angle);
+	world->player.cos = cos(world->player.angle);
 
 	flood_buffer(doom->game->buff, 0x112233);
 	memset_f(zbuffer, INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
@@ -245,120 +255,78 @@ void			render_frame(t_doom *doom)
 	t_section	*section = &queue[0];
 	t_sector2	*sector = &world->sectors[section->id];
 
+
+
+	// WALL RENDER LOOP :D
 	unsigned vertex = 0;
 	while (vertex < sector->vertex_count)
 	{
 		// Calculate relative vertex positions for one wall.
+		// The world's zero-point is now considered to be the player.
 		t_xy v1 = vec2_sub(sector->vertex[vertex+0], vec32(world->player.position));
 		t_xy v2 = vec2_sub(sector->vertex[vertex+1], vec32(world->player.position));
+		t_xy_line wall = line_xy(v1, v2, 0xffffff);
+		linep("wall original: ", wall);
 
-		// Todo: Update these with regular inputs:
-		world->player.angle = deg_to_rad(get_model()->player.rot);
-		world->player.sin = sin(world->player.angle);
-		world->player.cos = cos(world->player.angle);
+		// Rotate the world around the player. (counter to actual rotation)
+		// The player can be thought of as always facing "up."
+		wall = line_rot(wall, world->player.angle + M_PI/2);
+		linep("wall rotated:  ", wall);
 
-		// Rotate the vertices around the player. (Negate player's rotation?)
-		// Note: Y value is considered the Z depth after this point.
-		// Note: More accurately, the the player will be facing "up" on the screen,
-		// and the world will rotate around the player. X = right? Y = up
-		// Todo: Render a debug view for this.
-		t_xy rot_v1 = vec2_rot(v1, world->player.cos, world->player.sin);
-		t_xy rot_v2 = vec2_rot(v2, world->player.cos, world->player.sin);
 
-		if (rot_v1.y <= 0 && rot_v2.y <= 0)
+		//                -GAME_MIDHEIGHT
+		//                 |-----------|
+		// -GAME_MIDWIDTH  |           |  GAME_MIDWIDTH
+		//                 |           |
+		//                 |-----0-----|
+
+		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_MIDHEIGHT);
+		t_xy b = vec2( GAME_MIDWIDTH, -GAME_MIDHEIGHT);
+		t_xy c = vec2( GAME_MIDWIDTH,            0.01);
+		t_xy d = vec2(-GAME_MIDWIDTH,            0.01);
+		t_xy_line *bounds = set_clip_bounds(a, b, c, d);
+		clip_to_bounds(wall, &wall, bounds);
+		linep("wall clipped:  ", wall);
+
+
+		//   0----------|
+		//   |          |  GAME_WIN_WIDTH
+		//   |          |
+		//   |----------|
+		//  GAME_MIDHEIGHT
+
+		t_xy_line debug = line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT));
+		drawline(debug, doom->game->buff);
+
+
+		if (line_is_zero(wall))
 		{
-			printf("Both vertices are behind the player's view. Skip.\n");
+			printf("BIG ZERO\n");
 			++vertex;
 			continue;
 		}
+		linep("dbg clipped:   ", debug);
 
-		// If one of the vertices is behind the camera, do line clipping.
-		if (rot_v1.y <= 0 || rot_v2.y <= 0)
+		/* Do perspective transformation */
+		t_xy_line scale;
+
+		scale.start.x = hfov / wall.start.y;
+		scale.stop.x = hfov / wall.stop.y;
+		// scale.start.y = vfov / wall.start.y;
+		// scale.stop.y = vfov / wall.stop.y;
+		int x1 = GAME_MIDWIDTH - (int)(wall.start.x * scale.start.x);
+		int x2 = GAME_MIDWIDTH - (int)(wall.stop.x * scale.stop.x);
+
+		if(x1 >= x2 || x2 < section->left || x1 > section->right)
 		{
-			printf("Do line clipping!\n");
-			const double near_z = 0.0001;
-			const double far_z = 5;
-			const double near_side = 0.00001; // Sign defines normal direction?
-			const double far_side = 20;       // Sign defines normal direction?
-
-			// Uhhh...
-			t_xy tail = vec2(doom->mdl->player.tail.x, doom->mdl->player.tail.y);
-			tail = vec2_sub(vec2_div(tail, WORLD_SCALE), vec32(world->player.position));
-			t_xy normal = vec32(vec3_norm(vec23(tail, 0)));
-
-			t_xy near_normal = vec2_mul(normal, -1);
-			t_xy far_normal  = normal;
-
-			{
-				// update_player_tail(doom_ptr(), deg_to_rad(mdl->player.rot));
-
-				t_xy debug = vec2_mul(vec32(world->player.position), WORLD_SCALE);
-				render_line_simple(doom, debug, vec2_add(debug, vec2_mul(near_normal, 30)), 0x6EEB83);
-				render_line_simple(doom, debug, vec2_add(debug, vec2_mul( far_normal, 30)), 0x1BE7FF);
-				SDL_UpdateWindowSurface(doom->minimap->win);
-			}
-
-			t_xy intersect1 = vec2_intersect(vec32(world->player.position), near_normal, rot_v1, rot_v2);
-			t_xy intersect2 = vec2_intersect(vec32(world->player.position),  far_normal, rot_v1, rot_v2);
-
-			// If the transformed point is behind the player's view,
-			// replace it with the appropriate intersection. (whose depth is positive)
-			if (rot_v1.y < near_z) rot_v1 = (intersect1.y > 0) ? intersect1 : intersect2;
-			if (rot_v2.y < near_z) rot_v2 = (intersect2.y > 0) ? intersect2 : intersect1;
-		}
-
-		// Calculate perspective transformation.
-		const double horizontal_fov = 0.73 * GAME_WIN_HEIGHT;
-		const double vertical_fov = 0.2 * GAME_WIN_HEIGHT;
-		t_xy scale1 = vec2(horizontal_fov / rot_v1.y, vertical_fov / rot_v1.y);
-		t_xy scale2 = vec2(horizontal_fov / rot_v2.y, vertical_fov / rot_v2.y);
-		int x1 = GAME_MIDWIDTH - (rot_v1.x * scale1.x);
-		int x2 = GAME_MIDWIDTH - (rot_v2.x * scale2.x); // -14007
-
-		if (x1 >= x2 || x2 < section->left || x1 > section->right)
-		{
-			printf("This section range is out of bounds. Skip.\n");
+			printf("BIG NO NO\n");
 			++vertex;
-			continue;
+			continue; // Only render if it's visible
+			// Form of "side clipping" due to X checking
 		}
 
-		// Calculate distance to floor and ceiling.
-		double y_ceil  = sector->ceil - world->player.position.z;
-		double y_floor = sector->floor - world->player.position.z;
-
-		int neighbor = sector->neighbors[vertex];
-
-		// Calculate vertical line length.
-		int y1_start = GAME_MIDHEIGHT - (int)(y_ceil  * scale1.y);
-		int y1_end   = GAME_MIDHEIGHT - (int)(y_floor * scale1.y);
-		int y2_start = GAME_MIDHEIGHT - (int)(y_ceil  * scale2.y);
-		int y2_end   = GAME_MIDHEIGHT - (int)(y_floor * scale2.y);
-
-		// ACTUALLY DO THE RENDERING
-		int x_begin	= ft_maxi(x1, section->left);
-		int x_end	= ft_maxi(x2, section->right);
-		int x = x_begin;
-		while (x <= x_end)
-		{
-			int y_begin = y2_start + (x - x1) * (y2_start - y1_start) / (x2 - x1);
-			int y_end   = y2_end   + (x - x1) * (y2_end   - y1_end  ) / (x2 - x1);
-			double y_begin_clamped = (y_begin < y_top[x]) ? y_top[x] : y_begin;
-			double y_end_clamped   = (y_end   > y_bot[x]) ? y_bot[x] : y_end;
-
-			// ceiling
-			vertical_line(x, y_top[x], y_begin_clamped-1, 0x9AC4F8);
-
-			// wall
-			if (neighbor >= 0)
-				vertical_line(x, y_begin_clamped, y_end_clamped, 0x9A275A);
-			else
-				vertical_line(x, y_begin_clamped, y_end_clamped, 0xCB958E);
-
-			// floor
-			vertical_line(x, y_end_clamped, y_bot[x], 0x99EDCC);
-			++x;
-		}
-
+		drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
+		// linep("wall", debug);
 		++vertex;
 	}
 }
