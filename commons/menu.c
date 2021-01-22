@@ -204,6 +204,7 @@ void		window_and_menu_events(t_doom *doom)
 		doom->buff = SDL_GetWindowSurface(doom->win);
 		doom->menu_out_of_focus = 0;
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+		SDL_SetRelativeMouseMode(SDL_FALSE);
 	}
 }
 
@@ -243,6 +244,8 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
 	printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
 	if (DEBUG == 1)
 		init_minimap(doom);
+	if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+		ft_putendl("Warning: Failed to capture mouse to window!");
 	SDL_UpdateWindowSurface(doom->game->win);
 	Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 }

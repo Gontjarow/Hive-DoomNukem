@@ -60,6 +60,7 @@ int					player_shoots(t_doom *doom)
 	double	rad;
 
 	rad = deg_to_rad(doom->mdl->player.rot);
+	rad = rad - M_PI;
 	enemy_who_was_hit = -1;
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
 	doom->mdl->player.bullet_pos.y = doom->mdl->player.y;

@@ -48,7 +48,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define FLOOR_MAX				390
 # define ROOF_MIN				0
 # define ROOF_MAX				400
-# define FLOOR_ROOF_DIFF_LIMIT	50
+# define FLOOR_ROOF_DIFF_LIMIT	10
 # define GRID_START_SIZE		32
 # define DOUBLE_CLICK_COOLDOWN	24
 # define STRING_ENTER_MAPFILE	"input mapfile name with a..z and ."

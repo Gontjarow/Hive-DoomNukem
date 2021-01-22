@@ -40,7 +40,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 20
+# define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 1
