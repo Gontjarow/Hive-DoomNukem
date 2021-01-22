@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 19:07:57 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/22 20:47:04 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,26 @@ void		destroy_minimap(t_doom *doom)
 	doom->minimap = NULL;
 }
 
+// TODO: Use this prototype for the animations and turn all the txt_sprites into single pointer to fit the enemy active sprite - by ms
+
+// void		animate_ranged_walk(t_enemy *enemy, t_doom *doom)
+// {
+// 	static SDL_Surface *frames[4] = { 0 };
+// 	static int i = 0;
+
+// 	if (frames[0] == 0)
+// 	{
+// 		frames[0] = doom->sprites->txt_ranged_front_walk[0];
+// 		frames[1] = doom->sprites->txt_ranged_front_walk[1];
+// 		frames[2] = doom->sprites->txt_ranged_front_walk[2];
+// 		frames[3] = doom->sprites->txt_ranged_front_walk[3];
+// 	}
+// 	enemy->anim_phase++;
+// 	if (enemy->anim_phase > 3)
+// 		enemy->anim_phase = 0;
+// 	enemy->active_sprite = frames[enemy->anim_phase++];
+// }
+
 void		update_minimap(t_doom *doom)
 {
 	flood_buffer(doom->minimap->buff, 0xff000000);
@@ -78,6 +98,18 @@ void		update_minimap(t_doom *doom)
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);
 	print_minimap_pickups(doom);
+	if (doom->sounds->footstep_delay > 0)
+	{
+		print_minimap_mult_sprite(doom, doom->sprites->txt_ranged_front_walk, doom->minimap->sprite_num++);
+		animate_walk();
+		if (doom->minimap->sprite_num == 4)
+			doom->minimap->sprite_num = 0;
+	}
+	else
+	{
+		print_minimap_single_sprite(doom, doom->sprites->txt_ranged_front_idle);
+	}
+	
 	/* 
 		This is a test for the game HUD - by MS
 	*/
@@ -116,9 +148,10 @@ void		init_minimap(t_doom *doom)
 	if (doom->minimap->buff == NULL)
 		ft_die("Fatal error: Failed init of SDL_Surface from minimap");
 	doom->minimap->scale = 1.0;
+	doom->minimap->sprite_num = 0;
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
-	SDL_SetWindowPosition(doom->minimap->win, win_x - MWIN_WIDTH, win_y);
-	SDL_RaiseWindow(doom->game->win);
+	SDL_SetWindowPosition(doom->minimap->win, win_x, win_y);
+	// SDL_RaiseWindow(doom->game->win);
 	update_minimap(doom);
 	ai_assignment(doom);	// this wont be here in the future
 }

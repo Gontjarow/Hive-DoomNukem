@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 20:18:00 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/22 19:55:37 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 			deal_damage_on_player(doom, enemy);
 		}
 	}
-	//enemy->active_sprite = doom->sprites->txtAttackSprites[enemy->sprite_id];
+	// enemy->active_sprite = doom->sprites->txt_front_attack_sprites[enemy->sprite_id];
 	enemy->did_shoot = 1;
 	enemy->who_shot = enemy->id;
 	Mix_PlayChannel(4, doom->sounds->mcPistolShot, 0);

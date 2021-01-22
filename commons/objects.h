@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/19 20:14:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/22 20:46:03 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct 			s_enemy
 	int					did_shoot;
 	int					who_shot;
 	int					shoot_cd;
+	int					anim_phase;
 	uint32_t			ray_color;
 	struct s_ai			ai;
 	struct s_coord		bullet_pos;
@@ -173,11 +174,38 @@ typedef struct 			s_sounds
 typedef struct 			s_sprites
 {
 	// Underlying data holders, invididually named for readability
-	struct SDL_Surface	*txtRangedFrontAttack;
-	struct SDL_Surface	*txtRangedIdle;
+	struct SDL_Surface	*txt_ranged_front_attack;
+	struct SDL_Surface	*txt_ranged_front_idle;
+	struct SDL_Surface	**txt_ranged_front_walk;
+	struct SDL_Surface	*txt_ranged_side_attack;
+	struct SDL_Surface	*txt_ranged_side_idle;
+	struct SDL_Surface	**txt_ranged_side_walk;
+	struct SDL_Surface	**txt_ranged_death;
+
+	struct SDL_Surface	**txt_melee_front_attack;
+	struct SDL_Surface	**txt_melee_front_walk;
+	struct SDL_Surface	**txt_melee_side_attack;
+	struct SDL_Surface	**txt_melee_side_walk;
+	struct SDL_Surface	*txt_melee_front_idle;
+	struct SDL_Surface	*txt_melee_side_idle;
+	struct SDL_Surface	**txt_melee_death;
+
+	struct SDL_Surface	**txt_boss_front_attack;
+	struct SDL_Surface	**txt_boss_front_walk;
+	struct SDL_Surface	**txt_boss_side_attack;
+	struct SDL_Surface	**txt_boss_side_walk;
+	struct SDL_Surface	*txt_boss_front_idle;
+	struct SDL_Surface	*txt_boss_side_idle;
+	struct SDL_Surface	**txt_boss_death;
 	//...
 	// Sprite "API" where its fetchable for each sprite ID the Attack, Idle, etc. states
-	struct SDL_Surface 	**txtFrontAttackSprites;
+	struct SDL_Surface 	**txt_front_attack_sprites;
+	struct SDL_Surface	**txt_side_attack_sprites;
+	struct SDL_Surface	**txt_front_walk_sprites;
+	struct SDL_Surface	**txt_side_walk_sprites;
+	struct SDL_Surface	**txt_front_idle_sprites;
+	struct SDL_Surface	**txt_side_idle_sprites;
+	struct SDL_Surface	**txt_death_sprites;
 	//...
 }						t_sprites;
 
