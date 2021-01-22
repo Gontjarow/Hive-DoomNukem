@@ -1,5 +1,62 @@
 #include "doom-nukem.h"
 
+static void		tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type)
+{
+	t_line 		line;
+	t_point		rel_pos;
+	t_player	*player;
+	t_enemy		*enemy;
+
+	line.color = type_colors(obj_type);
+	line.buff = buff;
+	if (obj_type == PLAYER)
+	{
+		player = (t_player*)obj_ptr;
+		rel_pos = scrolled_position((int)player->x, (int)player->y, get_state());
+		line.x1 = rel_pos.x;
+		line.y1 = rel_pos.y;
+		rel_pos = scrolled_position(player->tail.x, player->tail.y, get_state());
+		line.x2 = rel_pos.x;
+		line.y2 = rel_pos.y;
+		if (valid_line(&line))
+			render_line(&line);
+	}
+	else if (obj_type == ENEMY)
+	{
+		enemy = (t_enemy*)obj_ptr;
+		rel_pos = scrolled_position(enemy->x, enemy->y, get_state());
+		line.x1 = rel_pos.x;
+		line.y1 = rel_pos.y;
+		rel_pos = scrolled_position(enemy->tail.x, enemy->tail.y, get_state());
+		line.x2 = rel_pos.x;
+		line.y2 = rel_pos.y;
+		if (valid_line(&line))
+			render_line(&line);
+	}
+}
+
+static void			update_tail(void *obj_ptr, int obj_type)
+{
+	t_player	*player;
+	t_enemy		*enemy;
+	double 		rad;
+
+	if (obj_type == PLAYER)
+	{
+		player = (t_player*)obj_ptr;
+		rad = ((player->rot) * M_PI / 180);
+		player->tail.x = (int)player->x + (int)(12.0 * -cos(rad));
+		player->tail.y = (int)player->y + (int)(12.0 * -sin(rad));
+	}
+	else if (obj_type == ENEMY)
+	{
+		enemy = (t_enemy*)obj_ptr;
+		rad = ((enemy->rot) * M_PI / 180);
+		enemy->tail.x = enemy->x + (int)(12.0 * -cos(rad));
+		enemy->tail.y = enemy->y + (int)(12.0 * -sin(rad));
+	}
+}
+
 void		draw_player(t_model *mdl, t_state *state)
 {
 	int		relative_x;
@@ -17,7 +74,8 @@ void		draw_player(t_model *mdl, t_state *state)
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
 	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(PLAYER));
-	update_tail_to_buffer(editor_back_buffer()->buff, (void*)&(mdl->player), PLAYER);
+	update_tail((void*)&(mdl->player), PLAYER);
+	tail_to_buffer(editor_back_buffer()->buff, (void*)&(mdl->player), PLAYER);
 }
 
 void		draw_enemy(t_enemy *enemy, t_state *state)
@@ -37,9 +95,11 @@ void		draw_enemy(t_enemy *enemy, t_state *state)
 	relative_x /= state->zoom_factor;
 	relative_y /= state->zoom_factor;
 	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(ENEMY));
-	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y - 4}, enemy->wep.type_id * 10, type_colors(ENEMY));
-	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y + 4}, enemy->ai.type_id, type_colors(ENEMY));
-	update_tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
+	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y - 5}, enemy->wep.type_id * 10, type_colors(ENEMY));
+	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x - 5, relative_y + 5}, enemy->ai.type_id, type_colors(ENEMY));
+	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x + 5, relative_y + 5}, enemy->sprite_id, type_colors(ENEMY));
+	update_tail((void*)enemy, ENEMY);
+	//tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
 }
 
 

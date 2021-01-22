@@ -106,6 +106,7 @@ typedef struct 			s_enemy
 	int					did_shoot;
 	int					who_shot;
 	int					shoot_cd;
+	int 				sprite_id;
 	uint32_t			ray_color;
 	struct s_ai			ai;
 	struct s_coord		bullet_pos;

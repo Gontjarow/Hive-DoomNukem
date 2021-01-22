@@ -141,6 +141,7 @@ typedef struct 			s_state
     int 				confine_skip;
     int 				selected_weapon_type;
     int 				selected_ai_type;
+    int 				selected_sprite_id;
     int 				grid_on;
     int 				grid_size;
     int 				cooldown;

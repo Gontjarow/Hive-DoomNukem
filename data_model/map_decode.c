@@ -100,6 +100,7 @@ static void			map_enemy_to_model(const int *fields, t_model *mdl)
 	mdl->enemies->hp.cur = fields[4];
 	mdl->enemies->wep.type_id = fields[5];
 	mdl->enemies->ai.type_id = fields[6];
+	mdl->enemies->sprite_id = fields[7];
 	mdl->enemy_count++;
 	if (mdl->enemy_count == 1)
 		mdl->enemy_first = mdl->enemies;
@@ -119,7 +120,7 @@ static t_token		*enemy_spec(void)
 	{
 		i = 0;
 		spec = (t_token *) malloc(sizeof(t_token));
-		spec->expected = 7;
+		spec->expected = 8;
 		spec->sur[0] = '[';
 		spec->sur[1] = ']';
 		spec->equ = '=';
@@ -134,6 +135,7 @@ static t_token		*enemy_spec(void)
 		ft_strcpy(spec->keys[4], "hp");
 		ft_strcpy(spec->keys[5], "wep.type_id");
 		ft_strcpy(spec->keys[6], "ai.type_id");
+		ft_strcpy(spec->keys[7], "sprite_id");
 		spec->result_ptr = NULL;
 		spec->map_function = map_enemy_to_model;
 	}

@@ -25,7 +25,7 @@ int			destroy_sprites(t_doom *doom)
 {
 	int i;
 
-	SDL_DestroySurface(doom->sprites->txtRangedFrontAttack);
+	SDL_FreeSurface(doom->sprites->txtRangedFrontAttack);
 	i = sprite_amounts(FRONT_ATTACK);
 	while (i)
 		doom->sprites->txtFrontAttackSprites[i--] = NULL;

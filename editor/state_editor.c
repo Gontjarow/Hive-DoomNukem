@@ -91,6 +91,7 @@ t_state				*get_state(void)
 		state->confine_skip = 1;
 		state->selected_weapon_type = 1;
 		state->selected_ai_type = 0;
+		state->selected_sprite_id = 0;
 		state->grid_on = 1;
 		state->grid_size = GRID_START_SIZE;
 		state->gui->activate(state);

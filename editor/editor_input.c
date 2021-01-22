@@ -163,6 +163,46 @@ void 			edt_handle_next_input_loop(t_doom *doom)
 	draw_confirmation(&input, doom);
 }
 
+static void		handle_regular_numbers(t_doom *doom)
+{
+	int i;
+	static int	scancodes[9] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
+								   SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
+								   SDL_SCANCODE_8, SDL_SCANCODE_9 };
+
+	i = 0;
+	while (i < 9)
+	{
+		if (doom->keystates[scancodes[i++]])
+		{
+			get_state()->selected_weapon_type = (i);
+			printf("Selected weapon type %d\n", get_state()->selected_weapon_type);
+			if (get_state()->gui == mode_pickups())
+				pickups_refresh_preview();
+			break ;
+		}
+	}
+}
+
+static void 	handle_shifted_numbers(t_doom *doom)
+{
+	int i;
+	static int	scancodes[9] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
+								   SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
+								   SDL_SCANCODE_8, SDL_SCANCODE_9 };
+
+	i = 0;
+	while (i < 9)
+	{
+		if (doom->keystates[scancodes[i++]])
+		{
+			get_state()->selected_sprite_id = (i);
+			printf("Selected sprite_id %d\n", get_state()->selected_sprite_id);
+			break ;
+		}
+	}
+}
+
 void			edt_keystate_input(t_doom *doom)
 {
 	static int	lock_w = 0;
@@ -181,9 +221,7 @@ void			edt_keystate_input(t_doom *doom)
 	static int lock_k = 0;
 	static int lock_l = 0;
 	static int	lock_del = 0;
-	static int	scancodes[9] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
-	SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
-	SDL_SCANCODE_8, SDL_SCANCODE_9 };
+
 	handle_keyboard_scrolling(doom);
 
 	if (lock_w && !doom->keystates[SDL_SCANCODE_W])
@@ -317,28 +355,20 @@ void			edt_keystate_input(t_doom *doom)
 		puts("Pressed L: Selected AI type boss (2)");
 	}
 
-	int i = 0;
-	while (i < 9)
-	{
-		if (doom->keystates[scancodes[i++]])
-		{
-			get_state()->selected_weapon_type = (i);
-			printf("Selected weapon type %d\n", get_state()->selected_weapon_type);
-			if (get_state()->gui == mode_pickups())
-				pickups_refresh_preview();
-			break ;
-		}
-	}
-
 	if (lock_del && !doom->keystates[SDL_SCANCODE_DELETE])
 		lock_del = 0;
 	else if (doom->keystates[SDL_SCANCODE_DELETE] && !lock_del)
 	{
 		if (get_state()->gui == mode_select())
 		{
-				//puts("Select Room mode, DEL key pressed!");
+			//puts("Select Room mode, DEL key pressed!");
 			select_delete_room();
 		}
 		lock_del = 1;
 	}
+
+	if (doom->keystates[SDL_SCANCODE_LSHIFT] || doom->keystates[SDL_SCANCODE_RSHIFT])
+		return (handle_shifted_numbers(doom));
+	else
+		return (handle_regular_numbers(doom));
 }
