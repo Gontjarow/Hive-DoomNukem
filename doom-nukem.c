@@ -33,7 +33,10 @@ static void	init_doom(t_doom *doom)
 	doom->buff = SDL_GetWindowSurface(doom->win);
 	if (doom->buff == NULL)
 		ft_die("Fatal error: Failed initialization of SDL_Surface with SDL_GetWindowSurface on init_doom.");
+	doom->sounds = NULL;
 	load_sounds(doom);
+	doom->sprites = NULL;
+	load_sprites(doom);
 	doom->quit = 0;
 	doom->edt_quit = 1;
 	doom->game_quit = 1;
@@ -59,6 +62,7 @@ static int	destroy_and_quit(t_doom *doom)
 	if (doom->mdl)
 		destroy_model(doom);
 	destroy_sounds(doom);
+	destroy_sprites(doom);
 	SDL_FreeSurface(doom->buff);
 	SDL_DestroyWindow(doom->win);
 	Mix_Quit();

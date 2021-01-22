@@ -15,6 +15,8 @@
 
 #include "doom-nukem.h"
 
+enum 	e_sprite_categories { FRONT_ATTACK };
+
 typedef struct 			s_doom t_doom;
 
 typedef struct 			s_point
@@ -111,6 +113,7 @@ typedef struct 			s_enemy
 	struct s_health		hp;
 	struct s_weapon		wep;
 	struct s_enemy		*next;
+	struct SDL_Surface	*active_sprite;
 }						t_enemy;
 
 typedef struct 			s_wall
@@ -167,6 +170,18 @@ typedef struct 			s_sounds
 	int					footstep_delay;
 }						t_sounds;
 
+typedef struct 			s_sprites
+{
+	// Underlying data holders, invididually named for readability
+	struct SDL_Surface	*txtRangedFrontAttack;
+	struct SDL_Surface	*txtRangedIdle;
+	//...
+	// Sprite "API" where its fetchable for each sprite ID the Attack, Idle, etc. states
+	struct SDL_Surface 	**txtFrontAttackSprites;
+	//...
+}						t_sprites;
+
+//txtAttackSprites[sprite_id]
 typedef struct			s_animation
 {
 	SDL_Surface 		**surfaces;

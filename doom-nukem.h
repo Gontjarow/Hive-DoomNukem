@@ -40,7 +40,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 60
+# define FPS 120
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 1
@@ -61,6 +61,7 @@ typedef struct			s_doom
 	union SDL_Event		event;
 	struct s_mapfile	*map;
 	struct s_sounds		*sounds;
+	struct s_sprites	*sprites;
 	struct s_menu		*menu;
 	struct s_minimap    *minimap;
 	struct s_editor		*edt;
@@ -77,6 +78,9 @@ void 			print_alphabet(const char *str, t_doom *doom, int x, int y);
 
 void			load_sounds(t_doom *doom);
 void			destroy_sounds(t_doom *doom);
+
+int 			load_sprites(t_doom *doom);
+int 			destroy_sprites(t_doom *doom);
 
 void 			init_menu(t_doom *doom);
 void 			destroy_menu(t_doom *doom);

@@ -41,10 +41,10 @@
 [Wall] id = 40 | start.x = 813 | start.y = 743 | end.x = 832 | end.y = 724
 [Wall] id = 41 | start.x = 832 | start.y = 724 | end.x = 931 | end.y = 775
 
-[Room] id = 0 | first_wall_id = 0 | wall_count = 8 | floor_height = 130 | roof_height = 160
-[Room] id = 1 | first_wall_id = 8 | wall_count = 8 | floor_height = 110 | roof_height = 140
-[Room] id = 2 | first_wall_id = 16 | wall_count = 16 | floor_height = 90 | roof_height = 120
-[Room] id = 3 | first_wall_id = 32 | wall_count = 10 | floor_height = 70 | roof_height = 100
+[Room] id = 0 | first_wall_id = 0 | wall_count = 8 | floor_height = 100 | roof_height = 140
+[Room] id = 1 | first_wall_id = 8 | wall_count = 8 | floor_height = 100 | roof_height = 140
+[Room] id = 2 | first_wall_id = 16 | wall_count = 16 | floor_height = 100 | roof_height = 140
+[Room] id = 3 | first_wall_id = 32 | wall_count = 10 | floor_height = 100 | roof_height = 140
 
 [Portal] id = 0 | start.x = 384 | start.y = 415 | end.x = 384 | end.y = 320
 [Portal] id = 1 | start.x = 864 | start.y = 351 | end.x = 900 | end.y = 225
