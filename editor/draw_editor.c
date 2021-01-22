@@ -6,6 +6,7 @@ void				redraw_editor_to_backbuffer(uint32_t color)
 	if (get_model() == NULL)
 		return ;
 	x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, color);
+	x_walls_to_buffer(get_model()->portal_count, get_model()->portal_first, editor_back_buffer()->buff, COLOR_PORTAL);
 	print_mode_info(get_state()->gui);
 	draw_scroll_bars_to_backbuffer(get_state());
 	draw_plantings_to_backbuffer(get_model(), get_state());

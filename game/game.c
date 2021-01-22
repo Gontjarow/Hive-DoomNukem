@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2020/12/23 03:30:10 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 19:22:46 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,15 +101,12 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 
 void		game_render(t_doom *doom)
 {
-	//if (doom->keystates[SDL_SCANCODE_ESCAPE])
-	//	printf("ESC key pressed!\n");
-	// printf("Player Health: %d\n", doom->mdl->player.hp.cur);
+	if (doom->keystates[SDL_SCANCODE_ESCAPE])
+		printf("ESC key pressed!\n");
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);
-	enemy_update_cooldown(doom);
-	rotate_enemy_towards_player(doom);
-	move_enemy_towards_player(doom);
+	handle_enemy_ai(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
 	// wire_frame(doom);

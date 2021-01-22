@@ -40,6 +40,25 @@ void			show_editor_polymap(SDL_Surface *polymap, uint32_t *colors)
 		//puts("Drew polymap onto screen!");
 }
 
+void 			record_portal(t_model *mdl, t_wall *wall)
+{
+	t_wall	*next_portal;
+
+	mdl->portals->id = mdl->portal_count;
+	mdl->portals->start.x = wall->start.x;
+	mdl->portals->start.y = wall->start.y;
+	mdl->portals->end.x = wall->end.x;
+	mdl->portals->end.y = wall->end.y;
+	mdl->portal_count++;
+	next_portal = (t_wall*)malloc(sizeof(t_wall));
+	if (!next_portal)
+		ft_die("Fatal error: Could not malloc t_wall at record_portal.");
+	if (mdl->portal_count == 1)
+		mdl->portal_first = mdl->portals;
+	mdl->portals->next = next_portal;
+	mdl->portals = next_portal;
+}
+
 void			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count)
 {
 	t_room	*next_room;
@@ -104,10 +123,11 @@ t_enemy	*record_enemy(t_point location, t_point *tail, t_model *mdl)
 	mdl->enemies->id = mdl->enemy_count;
 	mdl->enemies->x = location.x;
 	mdl->enemies->y = location.y;
-	mdl->enemies->wep.type_id = 0;
+	mdl->enemies->wep.type_id = get_state()->selected_weapon_type;
 	mdl->enemies->hp.max = 100;
 	mdl->enemies->rot = degree_rot((t_point){location.x, location.y}, tail);
 		//printf("Enemy rot value is %d\n", mdl->enemies->rot);
+	mdl->enemies->ai.type_id = get_state()->selected_ai_type;
 	new_enemy = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!new_enemy)
 		ft_die("Fatal error: Could not malloc t_enemy at record_enemy");

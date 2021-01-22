@@ -90,10 +90,12 @@ t_state				*get_state(void)
 		state->scroll_y = 0;
 		state->confine_skip = 1;
 		state->selected_weapon_type = 1;
+		state->selected_ai_type = 0;
 		state->grid_on = 1;
 		state->grid_size = GRID_START_SIZE;
 		state->gui->activate(state);
 		state->cooldown = 0;
+		state->saving_choice = 1;
 		//print_mode_info(state->gui);
 		//draw_scroll_bars_to_backbuffer(state);
 	}

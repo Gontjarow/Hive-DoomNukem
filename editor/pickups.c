@@ -183,6 +183,7 @@ void			pickups_plant(int x, int y)
 		pickups_plant_ammo(x, y);
 	else if (pickups_logic()->plant_type == PICKUP_WEAPON)
 		pickups_plant_weapon(x, y);
+	get_state()->saving_choice = 0;
 }
 
 void			pickups_activate(t_state *state)
@@ -294,6 +295,7 @@ static int 		remove_pickup(int id)
 			get_model()->pickup_count--;
 			free(pickup);
 			recalc_pickup_ids();
+			get_state()->saving_choice = 0;
 			break ;
 		}
 		pickup = pickup->next;

@@ -105,6 +105,8 @@ void 		polydraw_right_click(int x, int y)
 	// Check if polydraw_status->phase is not polydraw_continue() to early exit!
 	if (status->phase != 1 || get_state()->thread_permission == 1)
 		return ;
+	polydraw_status()->reset(polydraw_status());
+	/* Below obsoleted for now
 	// When the phase is polydraw_continue(), proceed a cycle of polydraw_continue() followed
 	// by the polydraw_end(). Invoke them in order with the "reflection", to maintain
 	// coherence and code style and logic unity with polydraw_left_click function.
@@ -116,6 +118,7 @@ void 		polydraw_right_click(int x, int y)
 	assert(status->phase == 2);
 	// This invokes polydraw_end()
 	status->phases[status->phase](status);
+	*/
 }
 
 void 		polydraw_middle_click(int x, int y)
@@ -124,7 +127,7 @@ void 		polydraw_middle_click(int x, int y)
 
 	status = polydraw_status();
 	// Check if polydraw_status->phase is not polydraw_continue() to early exit!
-	if (status->phase == 0)
+	if (status->phase != -1)
 		return ;
 	//ft_putendl("Polydraw middle_clicked");
 	// Have mapped polydraw_status->reset (polydraw_reset) to polydraw_middle_click here.

@@ -49,7 +49,11 @@ void 			planting_plant(int x, int y)
 		clean_up = 2;
 	}
 	else if (planting_logic()->plant_type == ENEMY)
+	{
 		enemy = record_enemy(relative, tail, get_model());
+		digit_to_buffer(editor_back_buffer()->buff, (t_point){x, y - 4}, enemy->wep.type_id * 10, type_colors(ENEMY));
+		digit_to_buffer(editor_back_buffer()->buff, (t_point){x, y + 4}, enemy->ai.type_id, type_colors(ENEMY));
+	}
 	if (!clean_up)
 		update_tail_to_buffer(editor_back_buffer()->buff, enemy, ENEMY);
 	planting_logic()->planted_ticks = SDL_GetTicks();
@@ -59,4 +63,5 @@ void 			planting_plant(int x, int y)
 		planting_logic()->plant_type = ENEMY;
 	if (clean_up == 2)
 		redraw_editor_to_backbuffer(COLOR_LINE);
+	get_state()->saving_choice = 0;
 }

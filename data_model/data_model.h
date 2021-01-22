@@ -8,7 +8,26 @@ typedef struct 			SDL_Surface SDL_Surface;
 
 # define 				TOKEN_FIELD_LIMIT 16
 # define				TOKEN_KEY_LIMIT 16
+# define 				WAV_PLOP "wav/plop.wav"
+# define 				WAV_STEAM0 "wav/steam/0.wav"
+# define 				WAV_SWORD "wav/sword.wav"
+# define				WAV_THUNDER "wav/thunder.wav"
+# define 				IMG_THUNDER0 "img/thunder/0.png"
+# define				WAV_PISTOLRLD "wav/pistolreload.wav" 
+# define				WAV_ASSAULTRLD "wav/assaultreload.wav"
+# define				WAV_SMGRLD "wav/smgreload.wav"
+# define				WAV_PISTOLSHOT "wav/pistolshot.wav"
+# define				WAV_WALKING "wav/walking.wav"
+# define				WAV_RUNNING "wav/running.wav"
+# define				WAV_CROUCHING "wav/crouching.wav"
+# define				WAV_ENEMYDEATH "wav/enemy_dead.wav"
+# define				WAV_ASSAULTSHOT "wav/assaultshot.wav"
+# define				WAV_SMGSHOT "wav/smgshot.wav"
+# define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
+# define				WAV_AMMOPICKUP "wav/ammopickup.wav"
+# define				WAV_WEAPONPICKUP "wav/weaponpickup.wav"
 
+enum e_singleton_types { SINGLETON_MDL };
 /*
 ** *
 ** Model struct (>Model<-View-Controller) - Game (Controller) modifies this with the input, logic code
@@ -86,6 +105,7 @@ int 					load_model(t_doom *doom);
 t_doom					*set_doom_singleton(t_doom *doom);
 t_doom      		    *doom_ptr(void);
 t_model					*get_model(void);
+int 					singleton_manager(void **ptr, int type, int clear);
 
 /*
  * from mapfile.c

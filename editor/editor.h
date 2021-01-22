@@ -34,6 +34,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define EDT_WIN_WIDTH			1600
 # define EDT_WIN_HEIGHT			900
 # define COLOR_LINE				0xffffffff
+# define COLOR_PORTAL			0xff00ffff
 # define COLOR_SELECTION_LINE	0xffffff00
 # define COLOR_GRID_LINE		0xff888888
 # define COLOR_PLAYER			0xff00ff00
@@ -44,14 +45,15 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define PICKUP_RADIUS			16
 # define HEIGHT_STEPPING		10
 # define FLOOR_MIN				0
-# define FLOOR_MAX				2000
+# define FLOOR_MAX				390
 # define ROOF_MIN				0
-# define ROOF_MAX				2000
+# define ROOF_MAX				400
 # define FLOOR_ROOF_DIFF_LIMIT	50
 # define GRID_START_SIZE		32
 # define DOUBLE_CLICK_COOLDOWN	24
 # define STRING_ENTER_MAPFILE	"input mapfile name with a..z and ."
 # define STRING_VALID_CHAR_INFO	"save and confirm next map with enter"
+# define STRING_CONFIRM_SAVING	"do you want to save changes to map"
 
 typedef struct 			s_2d_layer
 {
@@ -67,6 +69,13 @@ typedef struct 			s_linedraw
     int                 draw_from_y;
     int                 draw_to_x;
     int                 draw_to_y;
+    int 				portalizing;
+    int 				portalizing_to_a;
+	int 				portalizing_to_b;
+    int 				portal_option_a;
+    int 				portal_option_b;
+    t_point				portal_a_loc;
+    t_point				portal_b_loc;
 }						t_linedraw;
 
 enum 					e_logic_type {PLAYER, ENEMY};
@@ -131,9 +140,11 @@ typedef struct 			s_state
     int 				scroll_y;
     int 				confine_skip;
     int 				selected_weapon_type;
+    int 				selected_ai_type;
     int 				grid_on;
     int 				grid_size;
     int 				cooldown;
+    int 				saving_choice;
 }						t_state;
 
 typedef struct 			s_editor
@@ -162,6 +173,7 @@ void					edt_render(t_doom *doom);
 void					edt_mouse_motion(t_doom *doom);
 void					edt_mouse_down(t_doom *doom);
 void					edt_keystate_input(t_doom *doom);
+int 					edt_handle_confirm_save(t_doom *doom);
 
 /*
  * from draw_editor.c
@@ -237,7 +249,7 @@ t_wall					*linedraw_to_wall(t_linedraw *data);
 /*
  * from magnets.c
  * */
-
+t_point			 		detect_wall_point(int x, int y, t_model *mdl, t_state *state);
 void            		check_any_magnet_hits(int x, int y, t_model *mdl, t_state *state);
 void            		magnet_test(void* argv);
 
@@ -372,6 +384,8 @@ void 					polydraw_middle_click(int x, int y);
 void					show_editor_polymap(SDL_Surface *polymap, uint32_t *colors);
 void					record_player(t_point location, t_point *tail, t_model *mdl);
 t_enemy					*record_enemy(t_point location, t_point *tail, t_model *mdl);
+void		 			record_portal(t_model *mdl, t_wall *wall);
+void					record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count);
 void					create_strings_from_model(t_model *mdl, t_mapfile *map);
 
 /*

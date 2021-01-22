@@ -6,8 +6,8 @@ void		init_model(t_doom *doom)
 	doom->mdl = (t_model*)malloc(sizeof(t_model));
 	if (!doom->mdl)
 		ft_die("Fatal error: Mallocing model struct failed at init_model.");
+	get_model();
 	doom->mdl->parent = doom;
-
 	// Mallocing lists of objects
 	doom->mdl->walls = (t_wall*)malloc(sizeof(t_wall));
 	if (!doom->mdl->walls)
@@ -85,4 +85,5 @@ void 		destroy_model(t_doom *doom)
 	doom->mdl->parent = NULL;
 	free(doom->mdl);
 	doom->mdl = NULL;
+	singleton_manager(NULL, SINGLETON_MDL, 1);
 }

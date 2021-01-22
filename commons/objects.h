@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/11 15:26:57 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 20:14:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@
 # define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
 # define				WAV_AMMOPICKUP "wav/ammopickup.wav"
 
-typedef struct			s_doom t_doom;
 typedef struct			s_xy t_xy;
+typedef struct 			s_doom t_doom;
 
 typedef struct 			s_point
 {
@@ -71,6 +71,7 @@ typedef struct 			s_weapon
 	int					do_own;
 	int 				cooldown;
 	int 				reload_time;
+	struct SDL_Surface	*weap_img;
 	struct Mix_Chunk 	*fire_sound;
 	struct Mix_Chunk	*reload_sound;
 }						t_weapon;
@@ -95,12 +96,23 @@ typedef struct 			s_player
 	int					shoot_cd;
 	int					reload_time;
 	int					weap_id;
+	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
-	struct s_weapon		weap_arr[3];
+	struct s_weapon		weap_arr[10];
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;
 }						t_player;
+
+typedef struct          s_ai
+{
+	int                 type_id;
+	int                 min_dis;
+	int                 max_dis;
+	int                 aggro;
+	int                 mov_speed;
+	int                 dmg;
+}                       t_ai;
 
 typedef struct 			s_enemy
 {
@@ -112,6 +124,7 @@ typedef struct 			s_enemy
 	int					who_shot;
 	int					shoot_cd;
 	uint32_t			ray_color;
+	struct s_ai			ai;
 	struct s_coord		bullet_pos;
 	struct s_point		tail;
 	struct s_health		hp;
@@ -169,6 +182,7 @@ typedef struct 			s_sounds
 	struct Mix_Chunk	*mcEnemyDeath;
 	struct Mix_Chunk	*mcHealthPickup;
 	struct Mix_Chunk	*mcAmmoPickup;
+	struct Mix_Chunk	*mcWeaponPickup;
 	int					footstep_delay;
 }						t_sounds;
 
@@ -185,7 +199,6 @@ typedef struct			s_menu
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
-	struct SDL_Surface	*hud_num[9];
 	int 				alphabet_scale;
 	SDL_Surface			*thunder;
 	struct s_doom		*parent;

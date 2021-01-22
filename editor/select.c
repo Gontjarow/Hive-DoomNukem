@@ -10,8 +10,8 @@ t_select 		*select_logic(void)
 		if (!logic)
 			ft_die("Fatal error: Could not malloc logic for planting at select_logic");
 		logic->selected_room_id = -1;
-		logic->last_floor = 1000;
-		logic->last_roof = 1300;
+		logic->last_floor = 100;
+		logic->last_roof = 120;
 	}
 	return (logic);
 }
@@ -71,6 +71,7 @@ void 			select_roof(int dir)
 	select_logic()->last_floor = room->floor_height;
 	select_logic()->last_roof = room->roof_height;
 	select_change_zoom(get_state());
+	get_state()->saving_choice = 0;
 }
 
 void 			select_floor(int dir)
@@ -92,6 +93,7 @@ void 			select_floor(int dir)
 	select_logic()->last_floor = room->floor_height;
 	select_logic()->last_roof = room->roof_height;
 	select_change_zoom(get_state());
+	get_state()->saving_choice = 0;
 }
 
 void 			select_delete_room(void)
@@ -101,6 +103,7 @@ void 			select_delete_room(void)
 	delete_room(room_by_id(select_logic()->selected_room_id), get_model());
 	select_logic()->selected_room_id = -1;
 	select_change_zoom(get_state());
+	get_state()->saving_choice = 0;
 }
 
 static void 	select_room(int x, int y)

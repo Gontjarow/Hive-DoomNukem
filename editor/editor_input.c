@@ -27,6 +27,18 @@ void			edt_mouse_down(t_doom *doom)
 		state->gui->right_click(doom->event.button.x, doom->event.button.y);
 }
 
+static void 	draw_save(t_doom *doom)
+{
+	get_state()->gui->change_zoom(get_state());
+	flood_buffer(doom->edt->buff, 0xff000000);
+	SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+	editor_back_buffer()->rendering_on = 0;
+	edt_gridify();
+	print_glyph_str(STRING_CONFIRM_SAVING, doom->edt->buff, 80, 50);
+	if (get_state()->saving_choice == 0)
+		print_glyph_str("yes or no y..n", doom->edt->buff, 90, 90);
+}
+
 static void 	draw_input(t_doom *doom)
 {
 	get_state()->gui->change_zoom(get_state());
@@ -92,6 +104,35 @@ static void 	read_keystate_input(char *arr, int *i, t_doom *doom)
 	}
 }
 
+
+static int 	confirm_save(t_doom *doom)
+{
+	int 			finished;
+
+	get_state()->gui->deactivate(get_state());
+	get_state()->job_abort = 1;
+	if (get_state()->saving_choice == 1)
+		return (1);
+		//puts("Listening for confirm_save input:\n");
+	finished = 0;
+	while (!finished)
+	{
+		draw_save(doom);
+		SDL_UpdateWindowSurface(doom_ptr()->edt->win);
+		SDL_PumpEvents();
+		doom->keystates = SDL_GetKeyboardState(NULL);
+		if (doom->keystates[SDL_SCANCODE_Y] || doom->keystates[SDL_SCANCODE_N])
+			finished = 1;
+		get_state()->saving_choice = doom->keystates[SDL_SCANCODE_Y] - doom->keystates[SDL_SCANCODE_N];
+	}
+	return (get_state()->saving_choice);
+}
+
+int 			edt_handle_confirm_save(t_doom *doom)
+{
+	return (confirm_save(doom));
+}
+
 void 			edt_handle_next_input_loop(t_doom *doom)
 {
 	uint32_t	input_ticks;
@@ -136,6 +177,9 @@ void			edt_keystate_input(t_doom *doom)
 	static int 	lock_t = 0;
 	static int 	lock_b = 0;
 	static int	lock_n = 0;
+	static int lock_j = 0;
+	static int lock_k = 0;
+	static int lock_l = 0;
 	static int	lock_del = 0;
 	static int	scancodes[9] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
 	SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
@@ -249,12 +293,37 @@ void			edt_keystate_input(t_doom *doom)
 		lock_b = 1;
 	}
 
+	if (lock_j && !doom->keystates[SDL_SCANCODE_J])
+		lock_j = 0;
+	else if (doom->keystates[SDL_SCANCODE_J] && !lock_j)
+	{
+		get_state()->selected_ai_type = 0;
+		puts("Pressed J: Selected AI type ranged (0)");
+	}
+
+	if (lock_k && !doom->keystates[SDL_SCANCODE_K])
+		lock_k = 0;
+	else if (doom->keystates[SDL_SCANCODE_K] && !lock_k)
+	{
+		get_state()->selected_ai_type = 1;
+		puts("Pressed K: Selected AI type melee (1)");
+	}
+
+	if (lock_l && !doom->keystates[SDL_SCANCODE_L])
+		lock_l = 0;
+	else if (doom->keystates[SDL_SCANCODE_L] && !lock_l)
+	{
+		get_state()->selected_ai_type = 2;
+		puts("Pressed L: Selected AI type boss (2)");
+	}
+
 	int i = 0;
 	while (i < 9)
 	{
 		if (doom->keystates[scancodes[i++]])
 		{
 			get_state()->selected_weapon_type = (i);
+			printf("Selected weapon type %d\n", get_state()->selected_weapon_type);
 			if (get_state()->gui == mode_pickups())
 				pickups_refresh_preview();
 			break ;
@@ -273,4 +342,3 @@ void			edt_keystate_input(t_doom *doom)
 		lock_del = 1;
 	}
 }
-

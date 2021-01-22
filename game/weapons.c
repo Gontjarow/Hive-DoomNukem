@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/08 18:04:15 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/19 18:52:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void		init_player_weapon(t_doom *doom)
 {
+	init_hud(doom);
+	load_numbers(doom);
 	doom->mdl->player.weap_arr[0].ammo_cur = 12;
 	doom->mdl->player.weap_arr[0].ammo_res = 9999;
 	doom->mdl->player.weap_arr[0].ammo_max = 12;
@@ -22,15 +24,17 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[0].reload_time = 20;
 	doom->mdl->player.weap_arr[0].fire_sound = doom->sounds->mcPistolShot;
 	doom->mdl->player.weap_arr[0].reload_sound = doom->sounds->mcPistolRld;
+	doom->mdl->player.weap_arr[0].weap_img = load_texture(doom, "img/weapons/colt.png");
 	doom->mdl->player.weap_arr[0].do_own = 1;
 	doom->mdl->player.weap_arr[1].ammo_cur = 30;
 	doom->mdl->player.weap_arr[1].ammo_res = 250;
 	doom->mdl->player.weap_arr[1].ammo_max = 30;
-	doom->mdl->player.weap_arr[1].cooldown = 5;
+	doom->mdl->player.weap_arr[1].cooldown = 2;
 	doom->mdl->player.weap_arr[1].dmg = 25;
 	doom->mdl->player.weap_arr[1].reload_time = 25;
 	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcSmgShot;
 	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcSmgRld;
+	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/mp5.png");
 	doom->mdl->player.weap_arr[1].do_own = 0;
 	doom->mdl->player.weap_arr[2].ammo_cur = 40;
 	doom->mdl->player.weap_arr[2].ammo_res = 200;
@@ -40,6 +44,7 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[2].reload_time = 35;
 	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcAssaultShot;
 	doom->mdl->player.weap_arr[2].reload_sound = doom->sounds->mcAssaultRld;
+	doom->mdl->player.weap_arr[2].weap_img = load_texture(doom, "img/weapons/ak47.png");
 	doom->mdl->player.weap_arr[2].do_own = 0;
 }
 
@@ -117,16 +122,7 @@ void		player_update_weapons(t_doom *doom)
 		doom->mdl->player.shoot_cd--;
 	if (doom->mdl->player.reload_time > 0)
 	{
-		printf("Reloading...\n");
+		// printf("Reloading...\n");
 		doom->mdl->player.reload_time--;
 	}
-	// if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0
-	// 	&& doom->mdl->player.reload_time == 0)
-	// 	printf("Player ammo: %d/%d\n", doom->mdl->player.weap_arr
-	// 	[doom->mdl->player.weap_id].ammo_cur, doom->mdl->player.
-	// 	weap_arr[doom->mdl->player.weap_id].ammo_res);
-	// else if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].
-	// 		ammo_cur == 0)
-	// 	printf("Out of ammo!\n");
-	// printf("Player HP: %d\n", doom->mdl->player.hp.cur);
 }

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:44:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/11 15:55:20 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/11 18:25:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void 		init_menu(t_doom *doom)
 	else
 		ft_die("Fatal error: Texture loading failure at init_menu.");
 	load_alphabet(doom->menu);
-	load_numbers(doom->menu);
 	load_animation(doom->menu);
 	Mix_PlayChannel( -1, doom->sounds->mcThunder, 0);
 }
@@ -65,7 +64,6 @@ void 		destroy_menu(t_doom *doom)
 	doom->menu->ani_thunder.surfaces = NULL;
 	SDL_FreeSurface(doom->menu->thunder);
 	destroy_alphabet(doom->menu);
-	destroy_numbers(doom->menu);
 	free(doom->menu);
 	doom->menu = NULL;
 }
@@ -209,8 +207,32 @@ void		window_and_menu_events(t_doom *doom)
 	}
 }
 
+static int ms_since(double milliseconds, double *compared_to)
+{
+	double	now;
+
+	now = SDL_GetTicks();
+	if (now - *compared_to > milliseconds)
+	{
+		*compared_to = now;
+		return (1);
+	}
+	return (0);
+}
+
 static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
 {
+	static double 	spam_lock = 0;
+
+	if (argc != 2)
+	{
+		if (ms_since(200, &spam_lock))
+		{
+			ft_putendl("No level specified as argument!");
+			Mix_PlayChannel(-1, doom->sounds->mcSteam, 0);
+		}
+		return ;
+	}
 	SDL_MinimizeWindow(doom->win);
 	doom->buff = SDL_GetWindowSurface(doom->win);
 	init_game(doom, argc, argv);
@@ -235,6 +257,7 @@ static void	start_editor_from_menu(t_doom *doom, int argc, char **argv)
 	doom->menu_out_of_focus = 1;
 	if (!load_model(doom))
 		ft_die("Fatal error: Could not load model when entering Editor from the main menu.");
+	get_state()->saving_choice = 1;
 	redraw_editor_to_backbuffer(0xffffffff);
 	SDL_UpdateWindowSurface(doom->edt->win);
 	Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
