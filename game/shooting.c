@@ -47,7 +47,7 @@ void				deal_damage(t_doom *doom, int enemy_id)
 			if (enemy->hp.cur <= 0)
 			{
 				enemy->hp.cur = 0;
-				Mix_PlayChannel(1, doom->sounds->mcEnemyDeath, 0);
+				Mix_PlayChannel(-1, doom->sounds->mcEnemyDeath, 0);
 			}
 		}
 		enemy = enemy->next;

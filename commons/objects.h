@@ -79,6 +79,7 @@ typedef struct 			s_player
 	int					shoot_cd;
 	int					reload_time;
 	int					weap_id;
+	int					shooting;
 	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
 	struct s_weapon		weap_arr[10];

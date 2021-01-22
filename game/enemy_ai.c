@@ -68,7 +68,7 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 	//enemy->active_sprite = doom->sprites->txtAttackSprites[enemy->sprite_id];
 	enemy->did_shoot = 1;
 	enemy->who_shot = enemy->id;
-	Mix_PlayChannel(4, doom->sounds->mcPistolShot, 0);
+	Mix_PlayChannel(-1, doom->sounds->mcPistolShot, 0);
 }
 
 void		handle_enemy_shooting(t_doom *doom)

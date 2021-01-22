@@ -160,6 +160,9 @@ void 			edt_handle_next_input_loop(t_doom *doom)
 		input_ticks = SDL_GetTicks();
 		SDL_UpdateWindowSurface(doom_ptr()->edt->win);
 	}
+	if (doom->mdl->chain != NULL)
+		free(doom->mdl->chain);
+	doom->mdl->chain = ft_strdup(&input);
 	draw_confirmation(&input, doom);
 }
 

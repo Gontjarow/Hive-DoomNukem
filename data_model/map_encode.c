@@ -8,6 +8,8 @@
 
 void	update_player_string(t_model *mdl, t_mapfile *map)
 {
+	char *tmp;
+
 	map->join_string = ft_strnew(255);
 	sprintf(map->join_string, "[Player] spawn.x = %d | spawn.y = %d | rot = %d\n",
 			(int)mdl->player.x, (int)mdl->player.y, mdl->player.rot);
@@ -16,8 +18,26 @@ void	update_player_string(t_model *mdl, t_mapfile *map)
 	if (map->player_string)
 		free(map->player_string);
 	map->player_string = ft_strnew(1);
+	tmp = map->player_string;
 	map->player_string = ft_strjoin(map->player_string, map->join_string);
 	free(map->join_string);
+	free(tmp);
+	map->join_string = NULL;
+}
+
+void	update_chain_string(t_model *mdl, t_mapfile *map)
+{
+	char *tmp;
+
+	map->join_string = ft_strnew(255);
+	sprintf(map->join_string, "[Chain_to_mapfile] %s\n", mdl->chain);
+	if (map->chain_string)
+		free(map->chain_string);
+	map->chain_string = ft_strnew(1);
+	tmp = map->chain_string;
+	map->chain_string = ft_strjoin(map->chain_string, map->join_string);
+	free(map->join_string);
+	free(tmp);
 	map->join_string = NULL;
 }
 

@@ -83,9 +83,9 @@ static void distribute_inputs(t_doom *doom)
 		else if (doom->event.type == SDL_MOUSEMOTION && !doom->game_quit &&
 				 doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
 			game_mouse_motion(doom);
-		else if (doom->event.type == SDL_MOUSEBUTTONDOWN && !doom->game_quit &&
-				 doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
-			game_mouse_down(doom);
+		else if ((doom->event.type == SDL_MOUSEBUTTONDOWN || doom->event.type == SDL_MOUSEBUTTONUP)
+		&& !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
+			game_mouse_updown(doom);
 		else
 			window_and_menu_events(doom);
 	}

@@ -94,7 +94,7 @@ void 			destroy_game(t_doom *doom);
 void			game_render(t_doom *doom);
 void	 		game_loop(t_doom *doom);
 void			game_mouse_motion(t_doom *doom);
-void 			game_mouse_down(t_doom *doom);
+void 			game_mouse_updown(t_doom *doom);
 void			game_key_down(t_doom *doom);
 
 #endif
