@@ -222,10 +222,10 @@ void			render_frame(t_doom *doom)
 	zbuffer = get_zbuffer();
 
 	// Todo: Update these with regular inputs:
-	world->player.position = vec3(
+	world->player.position = vec3_div(vec3(
 		doom->mdl->player.x,
 		doom->mdl->player.y,
-		doom->mdl->player.height);
+		doom->mdl->player.height * WORLD_SCALE), WORLD_SCALE);
 	world->player.angle = deg_to_rad(doom->mdl->player.rot);
 	world->player.sin = sin(world->player.angle);
 	world->player.cos = cos(world->player.angle);
@@ -270,7 +270,7 @@ void			render_frame(t_doom *doom)
 
 		// Rotate the world around the player. (counter to actual rotation)
 		// The player can be thought of as always facing "up."
-		wall = line_rot(wall, world->player.angle + M_PI/2);
+		wall = line_rot(wall, world->player.angle + M_PI);
 		linep("wall rotated:  ", wall);
 
 
@@ -310,20 +310,20 @@ void			render_frame(t_doom *doom)
 		/* Do perspective transformation */
 		t_xy_line scale;
 
-		scale.start.x = hfov / wall.start.y;
-		scale.stop.x = hfov / wall.stop.y;
-		// scale.start.y = vfov / wall.start.y;
-		// scale.stop.y = vfov / wall.stop.y;
-		int x1 = GAME_MIDWIDTH - (int)(wall.start.x * scale.start.x);
-		int x2 = GAME_MIDWIDTH - (int)(wall.stop.x * scale.stop.x);
+		// scale.start.x = hfov / wall.start.y;
+		// scale.stop.x = hfov / wall.stop.y;
+		// // scale.start.y = vfov / wall.start.y;
+		// // scale.stop.y = vfov / wall.stop.y;
+		// int x1 = GAME_MIDWIDTH - (int)(wall.start.x * scale.start.x);
+		// int x2 = GAME_MIDWIDTH - (int)(wall.stop.x * scale.stop.x);
 
-		if(x1 >= x2 || x2 < section->left || x1 > section->right)
-		{
-			printf("BIG NO NO\n");
-			++vertex;
-			continue; // Only render if it's visible
-			// Form of "side clipping" due to X checking
-		}
+		// if(x1 >= x2 || x2 < section->left || x1 > section->right)
+		// {
+		// 	printf("BIG NO NO\n");
+		// 	++vertex;
+		// 	continue; // Only render if it's visible
+		// 	// Form of "side clipping" due to X checking
+		// }
 
 		drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
 		// linep("wall", debug);

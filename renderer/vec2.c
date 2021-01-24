@@ -94,7 +94,7 @@ t_xy	vec2_rot(t_xy v, double angle)
 	double c = cos(angle);
 	double s = sin(angle);
 	return ((t_xy){
-		v.x * c - v.y * s,
-		v.x * s + v.y * c
+		v.x * s - v.y * c,
+		v.x * c + v.y * s
 	});
 }
