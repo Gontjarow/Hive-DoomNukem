@@ -261,6 +261,9 @@ void			render_frame(t_doom *doom)
 	unsigned vertex = 0;
 	while (vertex < sector->vertex_count)
 	{
+		drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,             GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
+		drawline(line_xy(vec2(GAME_MIDWIDTH,                   0), vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
+
 		// Calculate relative vertex positions for one wall.
 		// The world's zero-point is now considered to be the player.
 		t_xy v1 = vec2_sub(sector->vertex[vertex+0], vec32(world->player.position));
@@ -274,28 +277,26 @@ void			render_frame(t_doom *doom)
 		linep("wall rotated:  ", wall);
 
 
+		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_MIDHEIGHT);
+		t_xy b = vec2( GAME_MIDWIDTH, -GAME_MIDHEIGHT);
+		t_xy c = vec2( GAME_MIDWIDTH,           -0.01);
+		t_xy d = vec2(-GAME_MIDWIDTH,           -0.01);
+		t_xy_line *bounds = set_clip_bounds(a, b, c, d);
 		//                -GAME_MIDHEIGHT
 		//                 |-----------|
 		// -GAME_MIDWIDTH  |           |  GAME_MIDWIDTH
 		//                 |           |
 		//                 |-----0-----|
-
-		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_MIDHEIGHT);
-		t_xy b = vec2( GAME_MIDWIDTH, -GAME_MIDHEIGHT);
-		t_xy c = vec2( GAME_MIDWIDTH,            0.01);
-		t_xy d = vec2(-GAME_MIDWIDTH,            0.01);
-		t_xy_line *bounds = set_clip_bounds(a, b, c, d);
 		clip_to_bounds(wall, &wall, bounds);
 		linep("wall clipped:  ", wall);
 
 
+		t_xy_line debug = line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT));
 		//   0----------|
 		//   |          |  GAME_WIN_WIDTH
 		//   |          |
 		//   |----------|
 		//  GAME_MIDHEIGHT
-
-		t_xy_line debug = line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT));
 		drawline(debug, doom->game->buff);
 
 
@@ -307,26 +308,51 @@ void			render_frame(t_doom *doom)
 		}
 		linep("dbg clipped:   ", debug);
 
-		/* Do perspective transformation */
 		t_xy_line scale;
 
-		// scale.start.x = hfov / wall.start.y;
-		// scale.stop.x = hfov / wall.stop.y;
-		// // scale.start.y = vfov / wall.start.y;
-		// // scale.stop.y = vfov / wall.stop.y;
-		// int x1 = GAME_MIDWIDTH - (int)(wall.start.x * scale.start.x);
-		// int x2 = GAME_MIDWIDTH - (int)(wall.stop.x * scale.stop.x);
+		// Move the X coordinates horizontally further away
+		// from zero (center of the screen)
+		// based on their Y distance.
+		scale.start.x = -(GAME_MIDHEIGHT / wall.start.y);
+		scale.stop.x = -(GAME_MIDHEIGHT / wall.stop.y);
 
-		// if(x1 >= x2 || x2 < section->left || x1 > section->right)
-		// {
-		// 	printf("BIG NO NO\n");
-		// 	++vertex;
-		// 	continue; // Only render if it's visible
-		// 	// Form of "side clipping" due to X checking
-		// }
+		// same thing for Y, but NOT USED YET.
+		scale.start.y = -(GAME_MIDHEIGHT / wall.start.y);
+		scale.stop.y = -(GAME_MIDHEIGHT / wall.stop.y);
 
-		drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
-		// linep("wall", debug);
+		// if (vertex == 0)
+		{
+			linep("\tscale:  ", scale);
+			debug = line_xy(
+				vec2((wall.start.x * scale.start.x), (wall.start.y)),
+				vec2((wall.stop.x * scale.stop.x),   (wall.stop.y)),
+				0x6666ff);
+
+			linep("\tresult: ", debug);
+			debug = line_add_offset(debug, vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT));
+
+			debug = line_clamp(debug, vec2(0, 0), vec2(GAME_WIN_WIDTH-1, GAME_WIN_HEIGHT-1));
+			linep("\tdrawn:  ", debug);
+			drawline(debug, doom->game->buff);
+		}
+
+		// Note these (and many things above) needed to be flipped. (x1 = stop, x2 = start)
+		// Todo: Why is everything flipped? Is it the screen coordinates? (up: -Y)
+		int x1 = GAME_MIDWIDTH - wall.stop.x * scale.stop.x;
+		int x2 = GAME_MIDWIDTH - wall.start.x * scale.start.x;
+		printf("x1:%4i, x2:%4i\n", x1, x2);
+
+		// Make sure the horizontal line crosses the current render section.
+		// If the points are backwards, identical, or impossible, ignore them.
+		if(x1 >= x2 || x2 < section->left || x1 > section->right)
+		{
+			printf("BIG NO NO\n");
+			++vertex;
+			continue;
+		}
+
+		// Todo: Vertical lines!
+
 		++vertex;
 	}
 }

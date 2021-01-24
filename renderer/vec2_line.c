@@ -206,3 +206,20 @@ void			clip_to_bounds(t_xy_line in, t_xy_line *out, t_xy_line edge[4])
 	vec2_clip_line(*out, out, edge[2]);
 	vec2_clip_line(*out, out, edge[3]);
 }
+
+t_xy_line		line_clamp(t_xy_line in, t_xy min, t_xy max)
+{
+	in.start.x = (in.start.x < min.x) ? min.x : in.start.x;
+	in.stop.x  = (in.stop.x  < min.x) ? min.x : in.stop.x;
+
+	in.start.y = (in.start.y < min.y) ? min.y : in.start.y;
+	in.stop.y  = (in.stop.y  < min.y) ? min.y : in.stop.y;
+
+	in.start.x = (in.start.x > max.x) ? max.x : in.start.x;
+	in.stop.x  = (in.stop.x  > max.x) ? max.x : in.stop.x;
+
+	in.start.y = (in.start.y > max.y) ? max.y : in.start.y;
+	in.stop.y  = (in.stop.y  > max.y) ? max.y : in.stop.y;
+
+	return (in);
+}
