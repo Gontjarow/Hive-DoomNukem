@@ -97,7 +97,7 @@ void		draw_enemy(t_enemy *enemy, t_state *state)
 	circle_to_buffer(editor_back_buffer()->buff,(t_point){relative_x, relative_y}, 12 / state->zoom_factor, type_colors(ENEMY));
 	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y - 5}, enemy->wep.type_id * 10, type_colors(ENEMY));
 	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x - 5, relative_y + 5}, enemy->ai.type_id, type_colors(ENEMY));
-	digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x + 5, relative_y + 5}, enemy->sprite_id, type_colors(ENEMY));
+	//digit_to_buffer(editor_back_buffer()->buff, (t_point){relative_x + 5, relative_y + 5}, enemy->sprite_id, type_colors(ENEMY));
 	update_tail((void*)enemy, ENEMY);
 	//tail_to_buffer(editor_back_buffer()->buff, (void*)enemy, ENEMY);
 }

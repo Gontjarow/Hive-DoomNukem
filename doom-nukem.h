@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/01/19 20:27:43 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/22 19:41:12 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 60
+# define FPS 33
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 1
@@ -53,6 +53,7 @@ typedef struct			s_doom
 	int					minimap_quit;
 	int 				menu_out_of_focus;
 	int 				map_data_initialized;
+	float				fps;
 	const Uint8* 		keystates;
 	uint32_t 			app_start;
 	uint32_t 			frame_start;

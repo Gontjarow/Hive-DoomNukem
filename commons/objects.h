@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/19 20:14:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/25 18:04:39 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,14 @@ typedef struct          s_ai
 	int                 dmg;
 }                       t_ai;
 
+typedef struct			s_animation
+{
+	SDL_Surface 		**surfaces;
+	int 				frames;
+	int 				current;
+	int					done;
+}						t_animation;
+
 typedef struct 			s_enemy
 {
 	int 				id;
@@ -107,7 +115,7 @@ typedef struct 			s_enemy
 	int					did_shoot;
 	int					who_shot;
 	int					shoot_cd;
-	int 				sprite_id;
+	int					anim_phase;
 	uint32_t			ray_color;
 	struct s_ai			ai;
 	struct s_coord		bullet_pos;
@@ -115,6 +123,7 @@ typedef struct 			s_enemy
 	struct s_health		hp;
 	struct s_weapon		wep;
 	struct s_enemy		*next;
+	struct s_animation	anim;
 	struct SDL_Surface	*active_sprite;
 }						t_enemy;
 
@@ -175,21 +184,30 @@ typedef struct 			s_sounds
 typedef struct 			s_sprites
 {
 	// Underlying data holders, invididually named for readability
-	struct SDL_Surface	*txtRangedFrontAttack;
-	struct SDL_Surface	*txtRangedIdle;
-	//...
-	// Sprite "API" where its fetchable for each sprite ID the Attack, Idle, etc. states
-	struct SDL_Surface 	**txtFrontAttackSprites;
-	//...
-}						t_sprites;
+	struct SDL_Surface	*txt_ranged_front_attack;
+	struct SDL_Surface	*txt_ranged_front_idle;
+	struct SDL_Surface	**txt_ranged_front_walk;
+	struct SDL_Surface	*txt_ranged_side_attack;
+	struct SDL_Surface	*txt_ranged_side_idle;
+	struct SDL_Surface	**txt_ranged_side_walk;
+	struct SDL_Surface	**txt_ranged_death;
 
-//txtAttackSprites[sprite_id]
-typedef struct			s_animation
-{
-	SDL_Surface 		**surfaces;
-	int 				frames;
-	int 				current;
-}						t_animation;
+	struct SDL_Surface	**txt_melee_front_attack;
+	struct SDL_Surface	**txt_melee_front_walk;
+	struct SDL_Surface	**txt_melee_side_attack;
+	struct SDL_Surface	**txt_melee_side_walk;
+	struct SDL_Surface	*txt_melee_front_idle;
+	struct SDL_Surface	*txt_melee_side_idle;
+	struct SDL_Surface	**txt_melee_death;
+
+	struct SDL_Surface	**txt_boss_front_attack;
+	struct SDL_Surface	**txt_boss_front_walk;
+	struct SDL_Surface	**txt_boss_side_attack;
+	struct SDL_Surface	**txt_boss_side_walk;
+	struct SDL_Surface	*txt_boss_front_idle;
+	struct SDL_Surface	*txt_boss_side_idle;
+	struct SDL_Surface	**txt_boss_death;
+}						t_sprites;
 
 typedef struct			s_menu
 {

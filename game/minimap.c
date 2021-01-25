@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 19:07:57 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/25 18:34:12 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,16 @@ void		update_minimap(t_doom *doom)
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);
 	print_minimap_pickups(doom);
+
+	print_minimap_single_sprite(doom, doom->mdl->enemy_first->active_sprite); // Sprite and animation display test for game rendering - by MS
 	/* 
 		This is a test for the game HUD - by MS
 	*/
-	//print_minimap_weapons(doom);
-	//game_print_alphabet("hp", doom, MWIN_WIDTH - 160, 50);
-	//game_print_numbers(ft_itoa(doom->mdl->player.hp.cur), doom, MWIN_WIDTH - 100, 50);
+	print_minimap_weapons(doom);
+	game_print_alphabet("fps", doom, MWIN_WIDTH - 200, 20);
+	game_print_alphabet("hp", doom, MWIN_WIDTH - 200, 80);
+	game_print_numbers(ft_itoa(doom->mdl->player.hp.cur), doom, MWIN_WIDTH - 100, 80);
+	game_print_numbers(ft_itoa((int)doom->fps), doom, MWIN_WIDTH - 100, 20);
 	/*if (doom->mdl->player.reload_time == 0)
 	{
 		game_print_numbers(ft_itoa(doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur), doom, MWIN_WIDTH - 180, 356);
@@ -116,9 +120,17 @@ void		init_minimap(t_doom *doom)
 	if (doom->minimap->buff == NULL)
 		ft_die("Fatal error: Failed init of SDL_Surface from minimap");
 	doom->minimap->scale = 1.0;
+	doom->minimap->sprite_num = 0;
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
-	SDL_SetWindowPosition(doom->minimap->win, win_x - MWIN_WIDTH, win_y);
+	SDL_SetWindowPosition(doom->minimap->win, (1920 / 2) - GAME_MIDWIDTH, win_y - 400);
+	SDL_SetWindowPosition(doom->game->win, (1920 / 2) - GAME_MIDWIDTH, win_y + 128);
 	SDL_RaiseWindow(doom->game->win);
+
+	// this wont be here in the future
+	init_enemy_sprite(doom);
+
 	update_minimap(doom);
-	ai_assignment(doom);	// this wont be here in the future
+	
+	// this wont be here in the future
+	ai_assignment(doom);
 }

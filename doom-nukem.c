@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/22 17:07:30 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/22 18:38:20 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,10 +104,17 @@ int			main(int argc, char *argv[])
 {
 	t_doom			doom;
 	uint32_t		frame_ticks;
+	int 			fps_cooldown;
+	uint32_t		frames_between;
+	uint32_t 		time_between;
+	float 			acc_time;
 
 	init_doom(&doom);
 	set_doom_singleton(&doom);
 	init_menu(&doom);
+	fps_cooldown = 100;
+	frames_between = 0;
+	time_between = SDL_GetTicks();
 	while (!doom.quit)
 	{
 		doom.keystates = SDL_GetKeyboardState(NULL);
@@ -117,10 +124,23 @@ int			main(int argc, char *argv[])
 		run_loops(&doom, argc, argv);
 		// Delay until next frame
 		frame_ticks = SDL_GetTicks() - doom.frame_start;
-		if (frame_ticks < TICKS_PER_FRAME)
+		if (fps_cooldown)
+		{
+			frames_between++;
+			fps_cooldown--;
+		}
+		else
+		{
+			acc_time = ((float)SDL_GetTicks() - (float)time_between) / 1000.0f;
+			doom.fps = (float)frames_between / acc_time;
+			fps_cooldown = 100;
+			time_between = SDL_GetTicks();
+			frames_between = 0;
+		}
+		/*if (frame_ticks < TICKS_PER_FRAME)
 		{
 			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
-		}
+		}*/
 		SDL_UpdateWindowSurface(doom.win);
 	}
 	return (destroy_and_quit(&doom));

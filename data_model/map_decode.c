@@ -114,7 +114,7 @@ static void			map_enemy_to_model(const int *fields, t_model *mdl)
 	mdl->enemies->hp.cur = fields[4];
 	mdl->enemies->wep.type_id = fields[5];
 	mdl->enemies->ai.type_id = fields[6];
-	mdl->enemies->sprite_id = fields[7];
+	//mdl->enemies->sprite_id = fields[7];
 	mdl->enemy_count++;
 	if (mdl->enemy_count == 1)
 		mdl->enemy_first = mdl->enemies;

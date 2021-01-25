@@ -46,7 +46,8 @@ void	add_enemy_to_string(t_enemy *enemy, t_mapfile *map)
 	map->join_string = ft_strnew(255);
 
 	sprintf(map->join_string, "[Enemy] id = %d | x = %d | y = %d | rot = %d | hp = %d | wep.type_id = %d | ai.type_id = %d | sprite_id = %d\n",
-			enemy->id, enemy->x, enemy->y, enemy->rot, enemy->hp.max, enemy->wep.type_id, enemy->ai.type_id, enemy->sprite_id);
+			enemy->id, enemy->x, enemy->y, enemy->rot, enemy->hp.max, enemy->wep.type_id, enemy->ai.type_id, 0);
+	//TODO REPLACE OR REMOVE 0 WITH ENEMY->SPRITE_ID IF GOING TO USE THAT FIELD
 	if (!map->enemy_string)
 		map->enemy_string = ft_strnew(1);
 	map->enemy_string = ft_strjoin(map->enemy_string, map->join_string);
