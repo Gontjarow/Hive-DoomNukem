@@ -411,4 +411,13 @@ void					find_visual_xy(t_room *room);
 
 void					delete_room(t_room *room, t_model *mdl);
 
+enum					e_clockwise_return_code { NEEDS_FLIPPING = 2 };
+
+/*
+ * from clockwiseness.c
+ * */
+
+void		 			flip_room(t_room *room, t_model *mdl);
+int						is_clockwise_convex_polygon(t_room *room);
+
 #endif

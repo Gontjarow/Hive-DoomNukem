@@ -62,6 +62,7 @@ void 			record_portal(t_model *mdl, t_wall *wall)
 void			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count)
 {
 	t_room	*next_room;
+	int 	can_be_recorded;
 
 	mdl->rooms->id = mdl->room_count;
 	mdl->rooms->floor_height = select_logic()->last_floor;
@@ -84,12 +85,22 @@ void			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_co
 		mdl->rooms->first_wall = room_first_wall;
 	}
 	mdl->rooms->first_wall_id = mdl->rooms->first_wall->id;
+	can_be_recorded = is_clockwise_convex_polygon(mdl->rooms);
 	add_room_polymap(mdl->rooms, mdl->poly_map, get_conv_colors());
 		//show_editor_polymap(mdl->poly_map, get_debug_convs());
 		//puts("Added room polymap!");
-	//KISS(YAGNI): find_visual_xy(mdl, mdl->rooms);
 	mdl->rooms->next = next_room;
 	mdl->rooms = next_room;
+	if (!can_be_recorded)
+	{
+		ft_putendl("Would be OUTRIGHT COOL to undo the room from the records here!");
+		delete_room(room_by_id(mdl->room_count - 1), mdl);
+	}
+	else if (can_be_recorded == NEEDS_FLIPPING)
+	{
+		ft_putendl("Would be FLIPPING NICE to flip the room point order here!");
+		flip_room(room_by_id(mdl->room_count - 1), mdl);
+	}
 }
 
 static int 	degree_rot(t_point location, t_point *tail)
