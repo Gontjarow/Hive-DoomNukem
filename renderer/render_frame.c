@@ -277,6 +277,7 @@ void			render_frame(t_doom *doom)
 		t_xy v1 = vec2_sub(sector->vertex[vertex+0], vec32(world->player.position));
 		t_xy v2 = vec2_sub(sector->vertex[vertex+1], vec32(world->player.position));
 		t_xy_line wall = line_xy(v1, v2, 0xffffff);
+		t_xy_line debug;
 		linep("wall original: ", wall);
 
 		// Rotate the world around the player. (counter to actual rotation)
@@ -285,8 +286,8 @@ void			render_frame(t_doom *doom)
 		linep("wall rotated:  ", wall);
 
 
-		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_MIDHEIGHT);
-		t_xy b = vec2( GAME_MIDWIDTH, -GAME_MIDHEIGHT);
+		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
+		t_xy b = vec2( GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
 		t_xy c = vec2( GAME_MIDWIDTH,           -0.01);
 		t_xy d = vec2(-GAME_MIDWIDTH,           -0.01);
 		t_xy_line *bounds = set_clip_bounds(a, b, c, d);
@@ -296,25 +297,24 @@ void			render_frame(t_doom *doom)
 		//                 |           |
 		//                 |-----0-----|
 		clip_to_bounds(wall, &wall, bounds);
-		linep("wall clipped:  ", wall);
+		// linep("wall clipped:  ", wall);
 
 
-		t_xy_line debug = line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT));
+		// debug = line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT));
 		//   0----------|
 		//   |          |  GAME_WIN_WIDTH
 		//   |          |
 		//   |----------|
 		//  GAME_MIDHEIGHT
-		drawline(debug, doom->game->buff);
-
-
 		if (line_is_zero(wall))
 		{
 			printf("BIG ZERO\n");
 			++vertex;
 			continue;
 		}
-		linep("dbg clipped:   ", debug);
+		// linep("dbg clipped:   ", debug);
+		// drawline(debug, doom->game->buff);
+
 
 		t_xy_line scale;
 
@@ -324,30 +324,10 @@ void			render_frame(t_doom *doom)
 		scale.start.x = -(GAME_MIDHEIGHT / wall.start.y);
 		scale.stop.x = -(GAME_MIDHEIGHT / wall.stop.y);
 
-		// same thing for Y, but NOT USED YET.
-		scale.start.y = -(GAME_MIDHEIGHT / wall.start.y);
-		scale.stop.y = -(GAME_MIDHEIGHT / wall.stop.y);
-
-		// if (vertex == 0)
-		{
-			linep("\tscale:  ", scale);
-			debug = line_xy(
-				vec2((wall.start.x * scale.start.x), (wall.start.y)),
-				vec2((wall.stop.x * scale.stop.x),   (wall.stop.y)),
-				0x6666ff);
-
-			linep("\tresult: ", debug);
-			debug = line_add_offset(debug, vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT));
-
-			debug = line_clamp(debug, vec2(0, 0), vec2(GAME_WIN_WIDTH-1, GAME_WIN_HEIGHT-1));
-			linep("\tdrawn:  ", debug);
-			drawline(debug, doom->game->buff);
-		}
-
 		// Note these (and many things above) needed to be flipped. (x1 = stop, x2 = start)
 		// Todo: Why is everything flipped? Is it the screen coordinates? (up: -Y)
-		int x1 = GAME_MIDWIDTH - wall.stop.x * scale.stop.x;
-		int x2 = GAME_MIDWIDTH - wall.start.x * scale.start.x;
+		int x1 = GAME_MIDWIDTH + (int)(wall.start.x * scale.start.x);
+		int x2 = GAME_MIDWIDTH + (int)(wall.stop.x * scale.stop.x);
 		printf("x1:%4i, x2:%4i\n", x1, x2);
 
 		// Make sure the horizontal line crosses the current render section.
@@ -359,7 +339,82 @@ void			render_frame(t_doom *doom)
 			continue;
 		}
 
+		x1 = clamp(x1, section->left, section->right);
+		x2 = clamp(x2, section->left, section->right);
+		printf("x1:%4i, x2:%4i (clamped)\n", x1, x2);
+
 		// Todo: Vertical lines!
+
+		double ceil;
+		double floor;
+		ceil = sector->ceil - world->player.position.z;
+		floor = sector->floor - world->player.position.z;
+
+		scale.start.y = (GAME_MIDHEIGHT / wall.start.y);
+		scale.stop.y = (GAME_MIDHEIGHT / wall.stop.y);
+
+		// Todo: account for camera yaw later.
+		int yawed_start_ceil  = GAME_MIDHEIGHT - ((ceil ) * scale.start.y);
+		int yawed_start_floor = GAME_MIDHEIGHT - ((floor) * scale.start.y);
+
+		int yawed_stop_ceil   = GAME_MIDHEIGHT - ((ceil ) * scale.stop.y);
+		int yawed_stop_floor  = GAME_MIDHEIGHT - ((floor) * scale.stop.y);
+
+		printf("ceil:%f floor:%f, yawed_start_ceil:%-8i , yawed_start_floor:%-8i , yawed_stop_ceil:%-8i , yawed_stop_floor:%-8i \n",
+			ceil, floor, yawed_start_ceil, yawed_start_floor, yawed_stop_ceil, yawed_stop_floor);
+
+		// Begin the confusion...
+		{
+			// begin/end at the shortest possible range.
+			int beginx = ft_maxi(x1, section->left);
+			int endx   = ft_mini(x2, section->right);
+			printf("vline begin%i end%i\n", beginx, endx);
+
+			// Debug info for specific walls
+			int colors[] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x0};
+			const char *name[] = {"red", "green", "blue", "grey", "white", "black"};
+			printf("drawing %s\n", name[vertex]);
+			vertical_line(beginx, 0,              GAME_MIDHEIGHT,    colors[vertex]);
+			vertical_line(endx,   GAME_MIDHEIGHT, GAME_WIN_HEIGHT-1, colors[vertex]);
+
+			int x = beginx;
+			while (x < endx)
+			{
+				int horizontal = x2 - x1;
+				int ceil_line  = yawed_stop_ceil  - yawed_start_ceil;
+				int floor_line = yawed_stop_floor - yawed_start_floor;
+				int distance   = x - x1;
+
+				int distance_along_ceil  = distance * ceil_line;
+				int distance_along_floor = distance * floor_line;
+
+				int y_start = yawed_start_ceil + (distance_along_ceil / horizontal);
+				int y_stop  = yawed_start_floor + (distance_along_floor / horizontal);
+
+				y_start = clamp(y_start, y_top[x], y_bot[x]);
+				y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
+
+				if (x == beginx+1) printf("x:%-4i ytop:%-4i ybot: %-4i  ||  y_start:%-8i y_stop:%-8i\n",
+					x, y_top[x], y_bot[x], y_start, y_stop);
+
+				vertical_line(x, y_start, y_stop, colors[vertex]);
+				++x;
+			}
+		}
+
+		// Debug view.
+		{
+			linep("\tscale:  ", scale);
+			debug = line_xy(
+				vec2((wall.start.x * 1), (wall.start.y * 1)),
+				vec2((wall.stop.x * 1),   (wall.stop.y * 1)),
+				0xfffa00);
+
+			debug = line_add_offset(debug, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT));
+			linep("\tdrawn:  ", debug);
+
+			drawline(debug, doom->game->buff);
+		}
 
 		++vertex;
 	}
