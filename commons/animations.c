@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 15:08:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/25 18:38:18 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/25 19:50:39 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void		animation_switch(t_enemy *enemy, t_doom *doom, int flag)
 {
-	// -1 - Idle state / 0 - Death State / 1 - Move state / 2 - Attack state
+	// -1 - Idle state / 0 - Death State / 1 - Move state / 2 - Attack state / 3 - Hurt state
 	if (enemy->ai.type_id == 0 && flag == 0)
 		animate_ranged_death(enemy, doom);
 	else if (enemy->ai.type_id == 1 && flag == 0)
@@ -33,6 +33,12 @@ void		animation_switch(t_enemy *enemy, t_doom *doom, int flag)
 		animate_melee_front_attack(enemy, doom);
 	else if (enemy->ai.type_id == 2 && flag == 2)
 		animate_boss_front_attack(enemy, doom);
+	else if (enemy->ai.type_id == 0 && flag == 3)
+		animate_ranged_hurt(enemy, doom);
+	else if (enemy->ai.type_id == 1 && flag == 3)
+		animate_melee_hurt(enemy, doom);
+	else if (enemy->ai.type_id == 2 && flag == 3)
+		animate_boss_hurt(enemy, doom);
 }
 
 void		animate_ranged_front_walk(t_enemy *enemy, t_doom *doom)
@@ -90,6 +96,23 @@ void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 	enemy->active_sprite = frames[enemy->anim_phase++];
 	if (enemy->anim_phase > 6)
 		enemy->anim.done = -1;
+}
+
+void		animate_ranged_hurt(t_enemy *enemy, t_doom *doom)
+{
+	static SDL_Surface	*frames[2] = { 0 };
+
+	if (frames[0] == 0)
+	{
+		frames[0] = doom->sprites->txt_ranged_front_idle;
+		frames[1] = doom->sprites->txt_ranged_death[0];
+	}
+	if (enemy->anim_phase > 1)
+	{
+		enemy->anim_phase = 0;
+		enemy->anim.done = -1;
+	}
+	enemy->active_sprite = frames[enemy->anim_phase++];
 }
 
 void		animate_ranged_front_attack(t_enemy *enemy, t_doom *doom)
@@ -184,6 +207,23 @@ void		animate_melee_death(t_enemy *enemy, t_doom *doom)
 	enemy->active_sprite = frames[enemy->anim_phase++];
 	if (enemy->anim_phase > 5)
 		enemy->anim.done = -1;
+}
+
+void		animate_melee_hurt(t_enemy *enemy, t_doom *doom)
+{
+	static SDL_Surface	*frames[2] = { 0 };
+
+	if (frames[0] == 0)
+	{
+		frames[0] = doom->sprites->txt_melee_front_idle;
+		frames[1] = doom->sprites->txt_melee_death[0];
+	}
+	if (enemy->anim_phase > 1)
+	{
+		enemy->anim_phase = 0;
+		enemy->anim.done = -1;
+	}
+	enemy->active_sprite = frames[enemy->anim_phase++];
 }
 
 void		animate_melee_front_attack(t_enemy *enemy, t_doom *doom)
@@ -289,6 +329,23 @@ void		animate_boss_death(t_enemy *enemy, t_doom *doom)
 	enemy->active_sprite = frames[enemy->anim_phase++];
 	if (enemy->anim_phase > 8)
 		enemy->anim.done = -1;
+}
+
+void		animate_boss_hurt(t_enemy *enemy, t_doom *doom)
+{
+	static SDL_Surface	*frames[2] = { 0 };
+
+	if (frames[0] == 0)
+	{
+		frames[0] = doom->sprites->txt_boss_front_idle;
+		frames[1] = doom->sprites->txt_boss_death[0];
+	}
+	if (enemy->anim_phase > 1)
+	{
+		enemy->anim_phase = 0;
+		enemy->anim.done = -1;
+	}
+	enemy->active_sprite = frames[enemy->anim_phase++];
 }
 
 void		animate_boss_front_attack(t_enemy *enemy, t_doom *doom)
