@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 16:53:38 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/25 16:31:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,8 @@ void			ai_assignment(t_doom *doom);
 int				check_hit_on_player(t_doom *doom, t_enemy *enemy);
 int				enemy_collision(t_doom *doom, t_enemy *enemy);
 int				calc_distance(t_enemy *enemy, t_doom *doom);
+
+void			animation_switch(t_enemy *enemy, t_doom *doom, int flag);
+void			init_enemy_sprite(t_doom *doom);
 
 #endif

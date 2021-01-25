@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 19:46:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/25 18:44:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void				deal_damage(t_doom *doom, int enemy_id)
 			if (enemy->hp.cur <= 0)
 			{
 				enemy->hp.cur = 0;
+				enemy->anim.done = 0;
 				Mix_PlayChannel(1, doom->sounds->mcEnemyDeath, 0);
 			}
 		}

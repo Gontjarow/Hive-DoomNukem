@@ -161,6 +161,27 @@ static int	load_boss_sprite(t_doom *doom, char *path, int i)
 	return (1);
 }
 
+void		init_enemy_sprite(t_doom *doom)
+{
+	int		ec;
+	t_enemy	*enemy;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		if (enemy->ai.type_id == 0)
+			enemy->active_sprite = doom->sprites->txt_ranged_front_idle;
+		else if (enemy->ai.type_id == 1)
+			enemy->active_sprite = doom->sprites->txt_melee_front_idle;
+		else if (enemy->ai.type_id == 2)
+			enemy->active_sprite = doom->sprites->txt_boss_front_idle;
+		enemy = enemy->next;
+	}
+}
+
 int			load_sprites(t_doom *doom)
 {
 	char	i;
@@ -175,10 +196,6 @@ int			load_sprites(t_doom *doom)
 	load_ranged_sprite(doom, path, i);
 	load_melee_sprite(doom, path, i);
 	load_boss_sprite(doom, path, i);
-	// doom->sprites->txt_front_attack_sprites = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * sprite_amounts(FRONT_ATTACK));
-	// doom->sprites->txt_front_attack_sprites[0] = doom->sprites->txt_ranged_front_attack;
-	// doom->sprites->txt_front_attack_sprites[1] = doom->sprites->txt_melee_front_attack;
-	// doom->sprites->txt_front_attack_sprites[2] = doom->sprites->txt_boss_front_attack;
 	return (1);
 }
 
@@ -232,13 +249,6 @@ void		print_minimap_single_sprite(t_doom *doom, SDL_Surface *sprite)					//debug
 
 int			destroy_sprites(t_doom *doom)
 {
-	// int i;
-
-	// SDL_FreeSurface(doom->sprites->txt_ranged_front_attack);
-	// i = sprite_amounts(FRONT_ATTACK);
-	// while (i)
-	// 	doom->sprites->txt_front_attack_sprites[i--] = NULL;
-	// free(doom->sprites->txt_front_attack_sprites);
 	free(doom->sprites);
 	doom->sprites = NULL;
 	return (1);

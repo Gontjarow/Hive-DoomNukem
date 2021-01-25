@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/22 20:46:03 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/25 18:04:39 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,14 @@ typedef struct          s_ai
 	int                 dmg;
 }                       t_ai;
 
+typedef struct			s_animation
+{
+	SDL_Surface 		**surfaces;
+	int 				frames;
+	int 				current;
+	int					done;
+}						t_animation;
+
 typedef struct 			s_enemy
 {
 	int 				id;
@@ -114,6 +122,7 @@ typedef struct 			s_enemy
 	struct s_health		hp;
 	struct s_weapon		wep;
 	struct s_enemy		*next;
+	struct s_animation	anim;
 	struct SDL_Surface	*active_sprite;
 }						t_enemy;
 
@@ -197,25 +206,7 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_boss_front_idle;
 	struct SDL_Surface	*txt_boss_side_idle;
 	struct SDL_Surface	**txt_boss_death;
-	//...
-	// Sprite "API" where its fetchable for each sprite ID the Attack, Idle, etc. states
-	struct SDL_Surface 	**txt_front_attack_sprites;
-	struct SDL_Surface	**txt_side_attack_sprites;
-	struct SDL_Surface	**txt_front_walk_sprites;
-	struct SDL_Surface	**txt_side_walk_sprites;
-	struct SDL_Surface	**txt_front_idle_sprites;
-	struct SDL_Surface	**txt_side_idle_sprites;
-	struct SDL_Surface	**txt_death_sprites;
-	//...
 }						t_sprites;
-
-//txtAttackSprites[sprite_id]
-typedef struct			s_animation
-{
-	SDL_Surface 		**surfaces;
-	int 				frames;
-	int 				current;
-}						t_animation;
 
 typedef struct			s_menu
 {
