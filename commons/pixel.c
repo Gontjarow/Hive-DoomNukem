@@ -70,8 +70,9 @@ void 	set_pixel(SDL_Surface *buff, int x, int y, uint32_t color)
 	pixels = buff->pixels;
 	location = x + buff->w * y;
 	maximum_limit = buff->w * buff->h;
-	if (location >= maximum_limit || location < 0)
-		return (ft_putendl("Warning: set_pixel called to set a pixel outside buffer memory area. Operation was blocked."));
-	pixels[location] = color;
+	if (0 <= location && location < maximum_limit)
+		pixels[location] = color;
+	// else
+	// 	return (ft_putendl("Warning: set_pixel called to set a pixel outside buffer memory area. Operation was blocked."));
 }
 

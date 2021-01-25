@@ -139,7 +139,7 @@ static void		vertical_line(int column, int start, int end, int color)
 	draw = 1 + (end - start);
 	while (draw-- > 0)
 	{
-		pixel[GAME_WIN_HEIGHT * (start + draw) + column] = color;
+		pixel[GAME_WIN_WIDTH * (start + draw) + column] = color;
 	}
 }
 
@@ -221,11 +221,12 @@ void			render_frame(t_doom *doom)
 	world = doom->game->world;
 	zbuffer = get_zbuffer();
 
+	ft_memset(&world->player, 0, sizeof(world->player));
 	// Todo: Update these with regular inputs:
 	world->player.position = vec3_div(vec3(
 		doom->mdl->player.x,
 		doom->mdl->player.y,
-		doom->mdl->player.height * WORLD_SCALE), WORLD_SCALE);
+		doom->mdl->player.height), WORLD_SCALE);
 	world->player.angle = deg_to_rad(doom->mdl->player.rot);
 	world->player.sin = sin(world->player.angle);
 	world->player.cos = cos(world->player.angle);

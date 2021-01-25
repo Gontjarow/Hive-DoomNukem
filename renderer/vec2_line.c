@@ -188,14 +188,14 @@ void			vec2_clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane)
 	}
 }
 
-t_xy_line		*set_clip_bounds(t_xy top_l, t_xy top_r, t_xy bot_r, t_xy bot_l)
+t_xy_line		*set_clip_bounds(t_xy topl, t_xy topr, t_xy botr, t_xy botl)
 {
 	static t_xy_line bound[4] = {0};
 
-	bound[0] = line_xy(top_l, top_r, 0xffffff);
-	bound[1] = line_xy(top_r, bot_r, 0xffffff);
-	bound[2] = line_xy(bot_r, bot_l, 0xffffff);
-	bound[3] = line_xy(bot_l, top_l, 0xffffff);
+	bound[0] = line_xy(topl, topr, 0xffffff);
+	bound[1] = line_xy(topr, botr, 0xffffff);
+	bound[2] = line_xy(botr, botl, 0xffffff);
+	bound[3] = line_xy(botl, topl, 0xffffff);
 	return (bound);
 }
 
