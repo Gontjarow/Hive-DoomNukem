@@ -212,6 +212,13 @@ int				ft_mini(int a, int b)
 		return (b);
 }
 
+double yaw_height(double ceil, double wall_y, double player_yaw)
+{
+	// printf("yaw_height(%f, %f, %f) = %f\n",
+	// 	ceil, wall_y, player_yaw, (ceil + wall_y * player_yaw));
+	return (ceil + (wall_y * player_yaw));
+}
+
 void			render_frame(t_doom *doom)
 {
 	printf("\nFRAME START\n");
