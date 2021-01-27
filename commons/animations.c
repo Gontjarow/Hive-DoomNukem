@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 15:08:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 15:36:04 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 15:50:09 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-void		animate_ranged_hurt(t_enemy *enemy, t_doom *doom)
+void			animate_ranged_hurt(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface	*frames[2] = { 0 };
 
@@ -29,7 +29,7 @@ void		animate_ranged_hurt(t_enemy *enemy, t_doom *doom)
 	enemy->active_sprite = frames[enemy->anim_phase++];
 }
 
-void		animate_melee_hurt(t_enemy *enemy, t_doom *doom)
+void			animate_melee_hurt(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface	*frames[2] = { 0 };
 
@@ -46,7 +46,7 @@ void		animate_melee_hurt(t_enemy *enemy, t_doom *doom)
 	enemy->active_sprite = frames[enemy->anim_phase++];
 }
 
-void		animate_boss_hurt(t_enemy *enemy, t_doom *doom)
+void			animate_boss_hurt(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface	*frames[2] = { 0 };
 
@@ -63,30 +63,35 @@ void		animate_boss_hurt(t_enemy *enemy, t_doom *doom)
 	enemy->active_sprite = frames[enemy->anim_phase++];
 }
 
-void		animation_switch(t_enemy *enemy, t_doom *doom, int flag)
+static void		animation_switch2(t_enemy *enemy, t_doom *doom)
 {
-	if (enemy->ai.type_id == 0 && flag == DEATH)
-		animate_ranged_death(enemy, doom);
-	else if (enemy->ai.type_id == 1 && flag == DEATH)
-		animate_melee_death(enemy, doom);
-	else if (enemy->ai.type_id == 2 && flag == DEATH)
-		animate_boss_death(enemy, doom);
-	else if (enemy->ai.type_id == 0 && flag == MOVE)
-		animate_ranged_front_walk(enemy, doom);
-	else if (enemy->ai.type_id == 1 && flag == MOVE)
-		animate_melee_front_walk(enemy, doom);
-	else if (enemy->ai.type_id == 2 && flag == MOVE)
-		animate_boss_front_walk(enemy, doom);
-	else if (enemy->ai.type_id == 0 && flag == ATTACK)
+	if (enemy->ai.type_id == 0 && enemy->anim.done == ATTACK)
 		animate_ranged_front_attack(enemy, doom);
-	else if (enemy->ai.type_id == 1 && flag == ATTACK)
+	else if (enemy->ai.type_id == 1 && enemy->anim.done == ATTACK)
 		animate_melee_front_attack(enemy, doom);
-	else if (enemy->ai.type_id == 2 && flag == ATTACK)
+	else if (enemy->ai.type_id == 2 && enemy->anim.done == ATTACK)
 		animate_boss_front_attack(enemy, doom);
-	else if (enemy->ai.type_id == 0 && flag == HURT)
+	else if (enemy->ai.type_id == 0 && enemy->anim.done == HURT)
 		animate_ranged_hurt(enemy, doom);
-	else if (enemy->ai.type_id == 1 && flag == HURT)
+	else if (enemy->ai.type_id == 1 && enemy->anim.done == HURT)
 		animate_melee_hurt(enemy, doom);
-	else if (enemy->ai.type_id == 2 && flag == HURT)
+	else if (enemy->ai.type_id == 2 && enemy->anim.done == HURT)
 		animate_boss_hurt(enemy, doom);
+}
+
+void			animation_switch(t_enemy *enemy, t_doom *doom)
+{
+	if (enemy->ai.type_id == 0 && enemy->anim.done == DEATH)
+		animate_ranged_death(enemy, doom);
+	else if (enemy->ai.type_id == 1 && enemy->anim.done == DEATH)
+		animate_melee_death(enemy, doom);
+	else if (enemy->ai.type_id == 2 && enemy->anim.done == DEATH)
+		animate_boss_death(enemy, doom);
+	else if (enemy->ai.type_id == 0 && enemy->anim.done == MOVE)
+		animate_ranged_front_walk(enemy, doom);
+	else if (enemy->ai.type_id == 1 && enemy->anim.done == MOVE)
+		animate_melee_front_walk(enemy, doom);
+	else if (enemy->ai.type_id == 2 && enemy->anim.done == MOVE)
+		animate_boss_front_walk(enemy, doom);
+	animation_switch2(enemy, doom);
 }
