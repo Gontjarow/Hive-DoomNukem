@@ -4,6 +4,9 @@
 # include "doom-nukem.h"
 # include <assert.h>
 
+# define DEG_TO_RAD 0.0174532925
+# define RAD_TO_DEG 57.2957795
+
 # define T_DIR 0.0
 # define T_POS 1.0
 

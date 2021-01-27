@@ -321,8 +321,10 @@ void			render_frame(t_doom *doom)
 		// Move the X coordinates horizontally further away
 		// from zero (center of the screen)
 		// based on their Y distance.
-		scale.start.x = -(GAME_MIDHEIGHT / wall.start.y);
-		scale.stop.x = -(GAME_MIDHEIGHT / wall.stop.y);
+
+		// (window height / Y position) = 90 degree FOV
+		scale.start.x = -(GAME_WIN_HEIGHT / wall.start.y);
+		scale.stop.x = -(GAME_WIN_HEIGHT / wall.stop.y);
 
 		// Note these (and many things above) needed to be flipped. (x1 = stop, x2 = start)
 		// Todo: Why is everything flipped? Is it the screen coordinates? (up: -Y)
@@ -350,8 +352,8 @@ void			render_frame(t_doom *doom)
 		ceil = sector->ceil - world->player.position.z;
 		floor = sector->floor - world->player.position.z;
 
-		scale.start.y = (GAME_MIDHEIGHT / wall.start.y);
-		scale.stop.y = (GAME_MIDHEIGHT / wall.stop.y);
+		scale.start.y = (GAME_WIN_HEIGHT / wall.start.y);
+		scale.stop.y = (GAME_WIN_HEIGHT / wall.stop.y);
 
 		// Todo: account for camera yaw later.
 		int yawed_start_ceil  = GAME_MIDHEIGHT - ((ceil ) * scale.start.y);
@@ -414,6 +416,12 @@ void			render_frame(t_doom *doom)
 			linep("\tdrawn:  ", debug);
 
 			drawline(debug, doom->game->buff);
+			// Proves 90 degree FOV
+			t_xy center = vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-1);
+			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90+45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
+			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90-45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
+			// drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90+45+22.5)*DEG_TO_RAD)), 0xff66ff), doom->game->buff);
+			// drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90-45-22.5)*DEG_TO_RAD)), 0xff66ff), doom->game->buff);
 		}
 
 		++vertex;
