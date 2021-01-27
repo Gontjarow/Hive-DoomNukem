@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:34:32 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/25 18:13:17 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 15:58:53 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	moving_enemy(t_doom *doom, t_enemy *enemy, t_point old)
 		enemy->x = old.x;
 		enemy->y = old.y;
 	}
-	enemy->anim.done = 1;
+	enemy->anim.done = MOVE;
 }
 
 void		handle_enemy_movement(t_enemy *enemy, t_doom *doom, t_point old)
@@ -48,7 +48,8 @@ void		handle_enemy_movement(t_enemy *enemy, t_doom *doom, t_point old)
 	int		distance;
 
 	distance = calc_distance(enemy, doom);
-	if (check_location(doom, enemy->x, enemy->y) != check_location(doom, doom->mdl->player.x, doom->mdl->player.y))
+	if (check_location(doom, enemy->x, enemy->y) != check_location(doom,
+	doom->mdl->player.x, doom->mdl->player.y))
 		enemy->ai.aggro = 0;
 	if (distance > enemy->ai.min_dis && enemy->ai.aggro == 1)
 		moving_enemy(doom, enemy, old);
