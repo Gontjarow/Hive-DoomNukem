@@ -162,6 +162,21 @@ int			load_pickup_sprite(t_doom *doom)
 	doom->sprites->txt_health_pickup = load_texture(doom, "img/pickups/health.png");
 	doom->sprites->txt_smg_ammo_pickup = load_texture(doom, "img/pickups/smgammo.png");
 	doom->sprites->txt_assault_ammo_pickup = load_texture(doom, "img/pickups/akammo.png");
+	return (1);
+}
+
+void		load_health_bars(t_doom *doom, char *path, int i)
+{
+	if (!(doom->sprites->txt_health_bar = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 11)))
+		return (-1);
+	i = 0;
+	while (i < 10)
+	{
+		path = extension_num_path("img/sprites/hud/healthbar/health_", i + '0', ".png");
+		doom->sprites->txt_health_bar[i] = load_texture(doom, path);
+		i++;
+	}
+	doom->sprites->txt_health_bar[10] = load_texture(doom, "img/sprites/hud/healthbar/health_10.png");
 }
 
 int			load_sprites(t_doom *doom)
@@ -179,6 +194,7 @@ int			load_sprites(t_doom *doom)
 	load_melee_sprite(doom, path, i);
 	load_boss_sprite(doom, path, i);
 	load_pickup_sprite(doom);
+	load_health_bars(doom, path, i);
 	return (1);
 }
 
@@ -216,7 +232,7 @@ void		print_minimap_single_sprite(t_doom *doom, SDL_Surface *sprite)					//debug
 	int				cut;
 
 	pixels = doom->minimap->buff->pixels;
-	ref = sprite->pixels;
+ 	ref = sprite->pixels;
 	cut = 15 * MWIN_WIDTH;
 	y = (MWIN_WIDTH - sprite->w) + ((MWIN_HEIGHT - sprite->h) * MWIN_WIDTH) - cut;
 	y += cut;

@@ -103,7 +103,7 @@ static void run_loops(t_doom *doom, int argc, char **argv)
 int			main(int argc, char *argv[])
 {
 	t_doom			doom;
-	//uint32_t		frame_ticks;
+	uint32_t		frame_ticks;
 	int 			fps_cooldown;
 	uint32_t		frames_between;
 	uint32_t 		time_between;
@@ -130,7 +130,7 @@ int			main(int argc, char *argv[])
 		distribute_inputs(&doom, argc, argv);
 		run_loops(&doom, argc, argv);
 		// Delay until next frame
-		//frame_ticks = SDL_GetTicks() - doom.frame_start;
+		frame_ticks = SDL_GetTicks() - doom.frame_start;
 		if (fps_cooldown)
 		{
 			frames_between++;
@@ -144,8 +144,8 @@ int			main(int argc, char *argv[])
 			time_between = SDL_GetTicks();
 			frames_between = 0;
 		}
-		//if (frame_ticks < TICKS_PER_FRAME)
-		//	SDL_Delay(TICKS_PER_FRAME - frame_ticks);
+		if (frame_ticks < TICKS_PER_FRAME)
+			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
 		SDL_UpdateWindowSurface(doom.win);
 	}
 	return (destroy_and_quit(&doom));

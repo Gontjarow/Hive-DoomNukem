@@ -21,12 +21,14 @@ void			animate_ranged_hurt(t_enemy *enemy, t_doom *doom)
 		frames[0] = doom->sprites->txt_ranged_front_idle;
 		frames[1] = doom->sprites->txt_ranged_death[0];
 	}
-	if (enemy->anim_phase > 1)
+	/*if (enemy->anim_phase > 1)
 	{
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
-	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	}*/
+	if (enemy->stun_time == 0)
+		enemy->anim.done = IDLE;
+	enemy->active_sprite = frames[1];
 }
 
 void			animate_melee_hurt(t_enemy *enemy, t_doom *doom)
@@ -38,12 +40,9 @@ void			animate_melee_hurt(t_enemy *enemy, t_doom *doom)
 		frames[0] = doom->sprites->txt_melee_front_idle;
 		frames[1] = doom->sprites->txt_melee_death[0];
 	}
-	if (enemy->anim_phase > 1)
-	{
-		enemy->anim_phase = 0;
+	if (enemy->stun_time == 0)
 		enemy->anim.done = IDLE;
-	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[1];
 }
 
 void			animate_boss_hurt(t_enemy *enemy, t_doom *doom)

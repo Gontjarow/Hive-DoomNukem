@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 15:30:04 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:46:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void				deal_damage(t_doom *doom, int enemy_id)
 	{
 		if (enemy->id == enemy_id && enemy->hp.cur > 0)
 		{
+			if (enemy->stun_cd == 0)
+				enemy->stun_time = 10;
 			enemy->anim.done = HURT;
 			enemy->ai.aggro = 1;
 			enemy->hp.cur -=

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 15:10:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 20:02:59 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,15 @@ void		update_minimap(t_doom *doom)
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);
 	print_minimap_pickups(doom);
-
-	print_minimap_single_sprite(doom, doom->mdl->enemy_first->active_sprite); // Sprite and animation display test for game rendering - by MS
 	/*
 		This is a test for the game HUD - by MS
 	*/
-	print_minimap_weapons(doom);
-	game_print_alphabet("fps", doom, MWIN_WIDTH - 200, 20);
-	game_print_alphabet("hp", doom, MWIN_WIDTH - 200, 80);
-	game_print_numbers(ft_itoa(doom->mdl->player.hp.cur), doom, MWIN_WIDTH - 100, 80);
-	game_print_numbers(ft_itoa((int)doom->fps), doom, MWIN_WIDTH - 100, 20);
+	// handle_player_health_bar(doom);
+	print_minimap_single_sprite(doom, doom->mdl->player.active_health_bar); // Sprite and animation display test for game rendering - by MS
+	// print_minimap_single_sprite(doom, doom->mdl->enemy_first->active_sprite);
+	//print_minimap_weapons(doom);
+	//game_print_alphabet("hp", doom, MWIN_WIDTH - 160, 50);
+	//game_print_numbers(ft_itoa(doom->mdl->player.hp.cur), doom, MWIN_WIDTH - 100, 50);
 	/*if (doom->mdl->player.reload_time == 0)
 	{
 		game_print_numbers(ft_itoa(doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur), doom, MWIN_WIDTH - 180, 356);
@@ -128,6 +127,9 @@ void		init_minimap(t_doom *doom)
 
 	// this wont be here in the future
 	init_enemy_sprite(doom);
+
+	// this wont be here in the future
+	handle_game_hud(doom);
 
 	update_minimap(doom);
 	
