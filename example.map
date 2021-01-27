@@ -9,4 +9,4 @@
 [Enemy] id = 0 | x = 1158 | y = 401 | rot = 304 | hp = 100 | wep.type_id = 1 | ai.type_id = 0
 
 
-[Player] spawn.x = 125 | spawn.y = 135 | rot = 270
+[Player] spawn.x = 125 | spawn.y = 135 | rot = 0

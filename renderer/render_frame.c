@@ -284,12 +284,13 @@ void			render_frame(t_doom *doom)
 		// The player can be thought of as always facing "up."
 		wall = line_rot(wall, world->player.angle + M_PI);
 		// linep("wall rotated:  ", wall);
+		t_xy_line wall_preclip = wall;
 
 
 		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
 		t_xy b = vec2( GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
-		t_xy c = vec2( GAME_MIDWIDTH,           -0.01);
-		t_xy d = vec2(-GAME_MIDWIDTH,           -0.01);
+		t_xy c = vec2( GAME_MIDWIDTH,           -1.01);
+		t_xy d = vec2(-GAME_MIDWIDTH,           -1.01);
 		t_xy_line *bounds = set_clip_bounds(a, b, c, d);
 		//                -GAME_MIDHEIGHT
 		//                 |-----------|
@@ -308,7 +309,9 @@ void			render_frame(t_doom *doom)
 		//  GAME_MIDHEIGHT
 		if (line_is_zero(wall))
 		{
-			// printf("BIG ZERO\n");
+			debug = line_add_offset(wall_preclip, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+			debug.color = 0xFF005A;
+			drawline(debug, doom->game->buff);
 			++vertex;
 			continue;
 		}
@@ -332,11 +335,13 @@ void			render_frame(t_doom *doom)
 		int x2 = GAME_MIDWIDTH + (int)(wall.stop.x * scale.stop.x);
 		// printf("x1:%4i, x2:%4i\n", x1, x2);
 
-		// Make sure the horizontal line crosses the current render section.
+		// Make sure the original_length line crosses the current render section.
 		// If the points are backwards, identical, or impossible, ignore them.
 		if(x1 >= x2 || x2 < section->left || x1 > section->right)
 		{
-			// printf("BIG NO NO\n");
+			debug = line_add_offset(wall_preclip, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+			debug.color = 0xFFA753;
+			drawline(debug, doom->game->buff);
 			++vertex;
 			continue;
 		}
@@ -352,8 +357,17 @@ void			render_frame(t_doom *doom)
 		ceil = sector->ceil - world->player.position.z;
 		floor = sector->floor - world->player.position.z;
 
-		scale.start.y = (GAME_WIN_HEIGHT / wall.start.y);
-		scale.stop.y = (GAME_WIN_HEIGHT / wall.stop.y);
+
+		t_xy planeleft = ( vec2_rot(vec2(0, -100), 135*DEG_TO_RAD) );
+		t_xy planeright = ( vec2_rot(vec2(0, -100), 45*DEG_TO_RAD) );
+		t_xy_line line = line_xy(vec2(0,0), planeleft, 0x00ffff);
+		t_xy_line wall_segment;
+		vec2_clip_line(wall, &wall_segment, line);
+		line = line_xy(planeright, vec2(0,0), 0x00ffff);
+		vec2_clip_line(wall_segment, &wall_segment, line);
+
+		scale.start.y = (GAME_WIN_HEIGHT / wall_segment.start.y);
+		scale.stop.y = (GAME_WIN_HEIGHT / wall_segment.stop.y);
 
 		// Todo: account for camera yaw later.
 		int yawed_start_ceil  = GAME_MIDHEIGHT - ((ceil ) * scale.start.y);
@@ -362,15 +376,15 @@ void			render_frame(t_doom *doom)
 		int yawed_stop_ceil   = GAME_MIDHEIGHT - ((ceil ) * scale.stop.y);
 		int yawed_stop_floor  = GAME_MIDHEIGHT - ((floor) * scale.stop.y);
 
-		printf("\tceil:%-4.0f floor:%-4.0f || yawed_start_ceil:%-8i , yawed_stop_ceil:%-8i , yawed_start_floor:%-8i ,  yawed_stop_floor:%-8i \n",
-			ceil, floor, yawed_start_ceil, yawed_stop_ceil, yawed_start_floor, yawed_stop_floor);
+		// printf("\tceil:%-4.0f floor:%-4.0f || yawed_start_ceil:%-8i , yawed_stop_ceil:%-8i , yawed_start_floor:%-8i ,  yawed_stop_floor:%-8i \n",
+		// 	ceil, floor, yawed_start_ceil, yawed_stop_ceil, yawed_start_floor, yawed_stop_floor);
 
 		// Begin the confusion...
 		{
 			// begin/end at the shortest possible range.
 			int beginx = ft_maxi(x1, section->left);
 			int endx   = ft_mini(x2, section->right);
-			printf("\tvline begin%i end%i\n", beginx, endx);
+			// printf("\tvline begin%i end%i\n", beginx, endx);
 
 			// Debug info for specific walls
 			int colors[] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x0};
@@ -382,48 +396,69 @@ void			render_frame(t_doom *doom)
 			}
 
 			int x = beginx;
+			int i = 0;
 			while (x < endx)
 			{
-				int horizontal = x2 - x1;
-				int ceil_line  = yawed_stop_ceil  - yawed_start_ceil;
-				int floor_line = yawed_stop_floor - yawed_start_floor;
-				int distance   = x - x1;
+				int ceil_diff = yawed_stop_ceil - yawed_start_ceil;
+				int floor_diff = yawed_stop_floor - yawed_start_floor;
 
-				int distance_along_ceil  = distance * ceil_line;
-				int distance_along_floor = distance * floor_line;
+				double clip_length = line_mag(wall);
+				double orig_length = line_mag(wall_preclip);
+				double beginf = orig_length - clip_length;
+				double increment = clip_length / (endx - beginx);
+				int distance = x - x1;
 
-				int y_start = yawed_start_floor + (distance_along_floor / horizontal);
-				int y_stop  = yawed_start_ceil + (distance_along_ceil / horizontal);
+				double kalle = (yawed_stop_ceil - yawed_start_ceil) / (double)(endx - beginx);
+
+
+				double angle_calc = (i * kalle);
+				int y_start = yawed_start_floor - angle_calc;
+				int y_stop  = yawed_start_ceil + angle_calc;
 
 				y_start = clamp(y_start, y_top[x], y_bot[x]);
 				y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
-
-				if (x == beginx+1) printf("\t\tx:%-4i ytop:%-4i ybot: %-4i  ||  y_start:%-8i y_stop:%-8i\n",
-					x, y_top[x], y_bot[x], y_start, y_stop);
-
 				vertical_line(x, y_start, y_stop, colors[vertex]);
+
+
+				// more debugs wew
+				if (colors[vertex] == 0xff6666)
+				{
+					// printf("SLOPE %f\n", wall_slope);
+					drawline(line_xy(vec2(x1, GAME_MIDHEIGHT+5), vec2(x2, GAME_MIDHEIGHT+5), 0xffff00), doom->game->buff);
+				}
 				++x;
+				++i;
 			}
 		}
 
 		// Debug view.
 		{
-			// linep("\tscale:  ", scale);
-			debug = line_xy(
-				vec2((wall.start.x * 1), (wall.start.y * 1)),
-				vec2((wall.stop.x * 1),   (wall.stop.y * 1)),
-				0xfffa00);
-
-			debug = line_add_offset(debug, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT));
-			// linep("\tdrawn:  ", debug);
-
+			debug = line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+			debug.color = 0xffffff;
 			drawline(debug, doom->game->buff);
 			// Proves 90 degree FOV
-			t_xy center = vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-1);
+			t_xy center = vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100);
 			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90+45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
 			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90-45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
-			// drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90+45+22.5)*DEG_TO_RAD)), 0xff66ff), doom->game->buff);
-			// drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90-45-22.5)*DEG_TO_RAD)), 0xff66ff), doom->game->buff);
+			drawline(line_xy(vec2_add(center, vec2(-50,0)), vec2_add(center, vec2(50,0)), 0xff0000), doom->game->buff);
+
+
+			// t_xy planeleft = ( vec2_rot(vec2(0, -100), 135*DEG_TO_RAD) );
+			// t_xy planeright = ( vec2_rot(vec2(0, -100), 45*DEG_TO_RAD) );
+
+			// t_xy_line line = line_xy(vec2(0,0), planeleft, 0x00ffff);
+			// drawline(line_add_offset(line, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), doom->game->buff);
+			// wall.color = 0x00ffff;
+			// drawline(line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), doom->game->buff);
+
+			// t_xy_line out;
+			// out.color = 0x00ffff;
+			// vec2_clip_line(wall, &out, line);
+			// line = line_xy(planeright, vec2(0,0), 0x00ffff);
+			// vec2_clip_line(out, &out, line);
+
+			// draw_box(vec2_add(out.start, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, out.color, doom->game->buff);
+			// draw_box(vec2_add(out.stop, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, out.color, doom->game->buff);
 		}
 
 		++vertex;
