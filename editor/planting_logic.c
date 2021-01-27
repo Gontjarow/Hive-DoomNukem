@@ -52,8 +52,7 @@ void 			planting_plant(int x, int y)
 	{
 		enemy = record_enemy(relative, tail, get_model());
 		digit_to_buffer(editor_back_buffer()->buff, (t_point){x, y - 5}, enemy->wep.type_id * 10, type_colors(ENEMY));
-		digit_to_buffer(editor_back_buffer()->buff, (t_point){x - 5, y + 5}, enemy->ai.type_id, type_colors(ENEMY));
-		//digit_to_buffer(editor_back_buffer()->buff, (t_point){x + 5, y + 5}, enemy->sprite_id, type_colors(ENEMY));
+		digit_to_buffer(editor_back_buffer()->buff, (t_point){x, y + 5}, enemy->ai.type_id, type_colors(ENEMY));
 	}
 	if (!clean_up)
 		update_tail_to_buffer(editor_back_buffer()->buff, enemy, ENEMY);

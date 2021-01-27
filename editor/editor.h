@@ -326,6 +326,7 @@ void 					effect_middle_click(int x, int y);
  * */
 
 t_point					relative_position(int x, int y, t_state *state);
+t_point                 scroll_adjusted(t_point point);
 t_point					scrolled_position(int x, int y, t_state *state);
 uint32_t				type_colors(int type);
 uint32_t				pickup_color(int flavor);

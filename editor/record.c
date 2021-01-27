@@ -93,12 +93,14 @@ void			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_co
 	mdl->rooms = next_room;
 	if (!can_be_recorded)
 	{
-		ft_putendl("Would be OUTRIGHT COOL to undo the room from the records here!");
+		//ft_putendl("Would be OUTRIGHT COOL to undo the room from the records here!");
 		delete_room(room_by_id(mdl->room_count - 1), mdl);
+		Mix_PlayChannel(-1, doom_ptr()->sounds->mcPlop, 0);
+		get_state()->gui->change_zoom(get_state());
 	}
 	else if (can_be_recorded == NEEDS_FLIPPING)
 	{
-		ft_putendl("Would be FLIPPING NICE to flip the room point order here!");
+		//ft_putendl("Would be FLIPPING NICE to flip the room point order here!");
 		flip_room(room_by_id(mdl->room_count - 1), mdl);
 	}
 }

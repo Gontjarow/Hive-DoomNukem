@@ -223,16 +223,19 @@ void			    destroy_edt(t_doom *doom)
 		if (doom->edt->map != NULL)
 			destroy_mapfile(doom->edt->map);
         doom->edt->map = NULL;
-	} else
+	}
+	else if (doom->mdl->player.x == -1 || doom->mdl->player.y == -1)
+    {
+        ft_putendl("Warning: Player position not supplied, did not save mapfile.");
+    }
+	else
     {
         doom->edt->map = init_mapfile();
         create_strings_from_model(doom->mdl, doom->edt->map);
 	    if (doom->edt->map_path)
 	        free(doom->edt->map_path);
 	    doom->edt->map_path = ask_to_save(doom);
-        if (doom->mdl->player.x == -1 || doom->mdl->player.y == -1)
-            ft_putendl("Warning: Player position not supplied, did not save mapfile.");
-        else if (!write_mapfile(doom->edt->map_path, doom->edt->map))
+        if (!write_mapfile(doom->edt->map_path, doom->edt->map))
             ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
         if (doom->edt->map != NULL)
             destroy_mapfile(doom->edt->map);

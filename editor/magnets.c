@@ -22,36 +22,29 @@ static void		set_portal_ids_to_linedraw_data(t_status *status, int id, int other
 	data->portalizing = 1;
 	data->portalizing_to_a = 0;
 	data->portalizing_to_b = 0;
-	circle_to_buffer(doom_ptr()->edt->buff, data->portal_a_loc, 15 / get_state()->zoom_factor, 0xff00ffff);
-	circle_to_buffer(doom_ptr()->edt->buff, data->portal_b_loc, 15 / get_state()->zoom_factor, 0xff00ffff);
+	// TODO plot to buffer according to zoom and scrolls here
+	circle_to_buffer(doom_ptr()->edt->buff, scroll_adjusted(data->portal_a_loc), 15 / get_state()->zoom_factor, 0xff00ffff);
+	circle_to_buffer(doom_ptr()->edt->buff, scroll_adjusted(data->portal_b_loc), 15 / get_state()->zoom_factor, 0xff00ffff);
 }
 
 t_point 		detect_wall_point(int x, int y, t_model *mdl, t_state *state)
 {
-	int			zf;
-	int 		sx;
-	int 		sy;
 	int         wc;
 	t_wall      *wall;
 
-	zf = state->zoom_factor;
-	sx = state->scroll_x;
-	sy = state->scroll_y;
 	wc = mdl->wall_count;
 	wall = mdl->wall_first;
 	while (wc--)
 	{
-		if (abs((wall->start.x / zf) - x - (sx / zf)) < 15 && abs((wall->start.y / zf) - y - (sy / zf)) < 15)
+		if (abs((wall->start.x) - x) < 15 && abs((wall->start.y) - y < 15))
 		{
-				//ft_putendl("Magnet hit within 15 units for a starting point of a wall.");
 			set_portal_ids_to_linedraw_data(polydraw_status(), wall->id, -1);
-			return (t_point) {(wall->start.x / zf) - (sx / zf), (wall->start.y / zf) - (sy / zf) };
+			return (t_point) {wall->start.x, wall->start.y};
 		}
-		else if (abs((wall->end.x / zf) - x - (sx / zf)) < 15 && abs((wall->end.y / zf) - y - (sy / zf)) < 15)
+		else if (abs((wall->end.x) - x) < 15 && abs((wall->end.y) - y) < 15)
 		{
-				//ft_putendl("Magnet hit within 15 units for a ending point of a wall.");
 			set_portal_ids_to_linedraw_data(polydraw_status(), wall->id, 1);
-			return (t_point) {(wall->end.x / zf) - (sx / zf), (wall->end.y / zf) - (sy / zf) };
+			return (t_point) {wall->end.x, wall->end.y};
 		}
 		wall = wall->next;
 	}

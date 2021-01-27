@@ -17,6 +17,7 @@
 
 enum 	e_sprite_categories { FRONT_ATTACK };
 enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
+enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
 
 typedef struct 			s_doom t_doom;
 
