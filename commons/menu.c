@@ -48,6 +48,8 @@ void 		init_menu(t_doom *doom)
     doom->menu->selected = 1;
     doom->menu->mousing_at = -1;
     doom->menu->esc_lock = 0;
+    doom->menu->update_argc_argv = 0;
+    doom->menu->added_arg = NULL;
     doom->menu->parent = doom;
     doom->menu->thunder = load_texture(doom, IMG_THUNDER0);
     if (doom->menu->thunder)
@@ -84,6 +86,8 @@ void 		destroy_menu(t_doom *doom)
         SDL_FreeSurface(doom->menu->ani_thunder.surfaces[i]);
         doom->menu->ani_thunder.surfaces[i] = NULL;
     }
+    if (doom->menu->added_arg)
+        free(doom->menu->added_arg);
     free(doom->menu->ani_thunder.surfaces);
     doom->menu->ani_thunder.surfaces = NULL;
     SDL_FreeSurface(doom->menu->thunder);
@@ -125,7 +129,7 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
     doom->menu_out_of_focus = 1;
     load_model(doom);
     // PLAYER X, Y IN MODEL IS -1 AND -1, CAUSING MINIMAP LINE OFF BUFFER?
-    printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
+    //printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
     if (DEBUG == 1)
         init_minimap(doom);
     if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)

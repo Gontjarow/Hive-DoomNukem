@@ -118,6 +118,12 @@ int			main(int argc, char *argv[])
 	doom.fps = 150;
 	while (!doom.quit)
 	{
+	    if (argc == 1 && doom.menu->update_argc_argv)
+        {
+	        argc = 2;
+	        argv[1] = doom.menu->added_arg;
+	        doom.menu->update_argc_argv = 0;
+        }
 		doom.keystates = SDL_GetKeyboardState(NULL);
 		doom.frame_start = SDL_GetTicks();
 		// Distribute inputs via SDL_Events, also handle window management with window_and_menu_events()

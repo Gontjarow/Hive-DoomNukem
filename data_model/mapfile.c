@@ -26,6 +26,7 @@ t_mapfile	*init_mapfile(void)
 	map->wall_string = NULL;
 	map->room_string = NULL;
 	map->pickup_string = NULL;
+	map->chain_string = NULL;
 	map->was_filled = 0;
 	return (map);
 }
@@ -53,7 +54,6 @@ void 	destroy_mapfile(t_mapfile *map)
 	map->wall_string = NULL;
 	map->room_string = NULL;
 	free(map);
-	map = NULL;
 }
 
 int		write_mapfile(char *map_path, t_mapfile *map)

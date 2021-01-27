@@ -109,7 +109,103 @@ void				init_edt(t_doom *doom, int argc, char **argv)
 		doom->edt->map = init_mapfile();
 }
 
-void				destroy_edt(t_doom *doom)
+static void 	draw_confirmation(char *input, t_doom *doom)
+{
+    get_state()->gui->change_zoom(get_state());
+    flood_buffer(doom->edt->buff, 0xff000000);
+    SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+    editor_back_buffer()->rendering_on = 0;
+    edt_gridify();
+    print_glyph_str("saved map as ", doom->edt->buff, 480, 860);
+    print_glyph_str(input, doom->edt->buff, 922, 860);
+    print_glyph_str("saved map as ", editor_back_buffer()->buff, 480, 860);
+    print_glyph_str(input,editor_back_buffer()->buff, 922, 860);
+}
+
+static void 	draw_input(t_doom *doom)
+{
+    get_state()->gui->change_zoom(get_state());
+    flood_buffer(doom->edt->buff, 0xff000000);
+    SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+    editor_back_buffer()->rendering_on = 0;
+    edt_gridify();
+    print_glyph_str(STRING_ENTER_MAPFILE, doom->edt->buff, 80, 50);
+    print_glyph_str(STRING_VALID_CHAR_INFO, doom->edt->buff, 90, 90);
+}
+
+static void 	read_keystate_input(char *arr, int *i, t_doom *doom)
+{
+    SDL_Scancode	alphabet[27] = { SDL_SCANCODE_A, SDL_SCANCODE_B,
+                                     SDL_SCANCODE_C, SDL_SCANCODE_D,	SDL_SCANCODE_E, SDL_SCANCODE_F,
+                                     SDL_SCANCODE_G, SDL_SCANCODE_H, SDL_SCANCODE_I, SDL_SCANCODE_J,
+                                     SDL_SCANCODE_K, SDL_SCANCODE_L, SDL_SCANCODE_M, SDL_SCANCODE_N,
+                                     SDL_SCANCODE_O, SDL_SCANCODE_P, SDL_SCANCODE_Q, SDL_SCANCODE_R,
+                                     SDL_SCANCODE_S, SDL_SCANCODE_T, SDL_SCANCODE_U, SDL_SCANCODE_V,
+                                     SDL_SCANCODE_W, SDL_SCANCODE_X, SDL_SCANCODE_Y, SDL_SCANCODE_Z,
+                                     SDL_SCANCODE_PERIOD };
+    char 			chars[27] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+                                  'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                                  'w', 'x', 'y', 'z', '.'};
+    int 			x;
+
+    if (doom->keystates[SDL_SCANCODE_BACKSPACE] && *i > 0)
+    {
+        //ft_putchar('\n');
+        arr[(*i) - 1] = '\0';
+        (*i)--;
+        //ft_putstr(arr);
+        draw_input(doom);
+        print_glyph_str(arr, doom->edt->buff, 100, 130);
+        return ;
+    }
+    x = 0;
+    while (x < 27)
+    {
+        if (*i == 255)
+            break ;
+        if (doom->keystates[alphabet[x]])
+        {
+            arr[*i] = chars[x];
+            (*i)++;
+            draw_input(doom);
+            print_glyph_str(arr, doom->edt->buff, 100, 130);
+        }
+        x++;
+    }
+}
+
+static char         *ask_to_save(t_doom *doom)
+{
+        uint32_t	input_ticks;
+        int 		finished;
+        int 		i;
+        char 		input[255];
+
+        //puts("Listening for input:\n");
+        draw_input(doom);
+        finished = 0;
+        while (finished < 255)
+            input[finished++] = '\0';
+        finished = 0;
+        i = 0;
+        input_ticks = SDL_GetTicks();
+        while (!finished)
+        {
+            if (SDL_GetTicks() - input_ticks < 64)
+                continue ;
+            SDL_PumpEvents();
+            doom->keystates = SDL_GetKeyboardState(NULL);
+            if (doom->keystates[SDL_SCANCODE_RETURN] || doom->keystates[SDL_SCANCODE_ESCAPE] || i == 255)
+                finished = 1;
+            read_keystate_input(&input, &i, doom);
+            input_ticks = SDL_GetTicks();
+            SDL_UpdateWindowSurface(doom_ptr()->edt->win);
+        }
+        draw_confirmation(&input, doom);
+        return (ft_strdup(&input));
+}
+
+void			    destroy_edt(t_doom *doom)
 {
 	if (doom->edt->map_supplied)
 	{
@@ -126,7 +222,26 @@ void				destroy_edt(t_doom *doom)
 			ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
 		if (doom->edt->map != NULL)
 			destroy_mapfile(doom->edt->map);
-	}
+        doom->edt->map = NULL;
+	} else
+    {
+        doom->edt->map = init_mapfile();
+        create_strings_from_model(doom->mdl, doom->edt->map);
+	    if (doom->edt->map_path)
+	        free(doom->edt->map_path);
+	    doom->edt->map_path = ask_to_save(doom);
+        if (doom->mdl->player.x == -1 || doom->mdl->player.y == -1)
+            ft_putendl("Warning: Player position not supplied, did not save mapfile.");
+        else if (!write_mapfile(doom->edt->map_path, doom->edt->map))
+            ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
+        if (doom->edt->map != NULL)
+            destroy_mapfile(doom->edt->map);
+        doom->edt->map = NULL;
+        SDL_Delay(500);
+        doom->menu->update_argc_argv = 1;
+        doom->menu->added_arg = ft_strdup(doom->edt->map_path);
+        free(doom->edt->map_path);
+    }
 	// TODO TECHNICAL DEBT, SEPARATE OUT OF THIS FUNCTION, PERHAPS INTO MENU ITEM WHICH KILLS EDITOR
 	if (doom->map_data_initialized && doom->map->was_filled)
 	{

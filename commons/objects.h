@@ -217,6 +217,8 @@ typedef struct			s_menu
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
 	int 				alphabet_scale;
+	int                 update_argc_argv;
+	char                *added_arg;
 	SDL_Surface			*thunder;
 	struct s_doom		*parent;
 }						t_menu;
