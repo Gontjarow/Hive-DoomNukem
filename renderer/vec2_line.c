@@ -55,6 +55,17 @@ t_xy_line		line_rot(t_xy_line line, double angle)
 	return (out);
 }
 
+t_xy			line_norm(t_xy_line line)
+{
+	return (vec2_norm(vec2_sub(line.stop, line.start)));
+}
+
+double			line_mag(t_xy_line line)
+{
+	return (vec2_mag(vec2_sub(line.stop, line.start)));
+}
+
+
 // 0 when perpendicular,
 // 1 when parallel and both vectors are normal,
 // otherwise the distance along the normal.

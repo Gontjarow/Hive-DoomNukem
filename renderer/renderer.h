@@ -136,7 +136,6 @@ double			vec2_slope(t_xy a, t_xy b);
 double			vec2_invslope(t_xy a, t_xy b);
 t_xy			vec2_clamp(t_xy v, double min, double max);
 t_xy			vec2_rot(t_xy v, double angle);
-t_xy			vec2_intersect(t_xy p, t_xy n, t_xy a, t_xy b);
 
 void			vec3p(t_xyz v);
 t_xyz			vec3(double x, double y, double z);
@@ -197,11 +196,14 @@ signed			line_is_zero(t_xy_line line);
 t_xy_line		line_add_offset(t_xy_line line, t_xy offset);
 t_xy_line		line_sub_offset(t_xy_line line, t_xy offset);
 t_xy_line		line_rot(t_xy_line line, double angle);
+t_xy			line_norm(t_xy_line line);
+double			line_mag(t_xy_line line);
 void			clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane);
 
 t_xy_line		*set_clip_bounds(t_xy topl, t_xy topr, t_xy botr, t_xy botl);
 void			clip_to_bounds(t_xy_line in, t_xy_line *out, t_xy_line edge[4]);
 
 t_xy_line		line_clamp(t_xy_line in, t_xy min, t_xy max);
+void			vec2_clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane);
 
 #endif
