@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:34:32 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/25 18:13:17 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 15:30:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	moving_enemy(t_doom *doom, t_enemy *enemy, t_point old)
 		enemy->x = old.x;
 		enemy->y = old.y;
 	}
-	enemy->anim.done = 1;
+	enemy->anim.done = MOVE;
 }
 
 void		handle_enemy_movement(t_enemy *enemy, t_doom *doom, t_point old)

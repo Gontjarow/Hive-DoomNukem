@@ -24,25 +24,20 @@ static int	sprite_amounts(int category)
 static int	load_ranged_sprite(t_doom *doom, char *path, int i)
 {
 	if (!(doom->sprites->txt_ranged_front_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
-			return (-1);
+		return (-1);
+	if (!(doom->sprites->txt_ranged_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
+		return (-1);
+	if (!(doom->sprites->txt_ranged_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 7)))
+		return (-1);
 	i = '0';
 	while (i < '4')
 	{
 		path = extension_num_path("img/sprites/ranged/front/walk_", i + 1, ".png");
 		doom->sprites->txt_ranged_front_walk[i - 48] = load_texture(doom, path);
-		i++;
-	}
-	if (!(doom->sprites->txt_ranged_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
-			return (-1);
-	i = '0';
-	while (i < '4')
-	{
 		path = extension_num_path("img/sprites/ranged/side/walk_", i + 1, ".png");
 		doom->sprites->txt_ranged_side_walk[i - 48] = load_texture(doom, path);
 		i++;
 	}
-	if (!(doom->sprites->txt_ranged_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 7)))
-			return (-1);
 	i = '0';
 	while (i < '7')
 	{
@@ -60,43 +55,33 @@ static int	load_ranged_sprite(t_doom *doom, char *path, int i)
 static int	load_melee_sprite(t_doom *doom, char *path, int i)
 {
 	if (!(doom->sprites->txt_melee_front_attack = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 3)))
-			return (-1);
+		return (-1);
+	if (!(doom->sprites->txt_melee_side_attack = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 3)))
+		return (-1);
+	if (!(doom->sprites->txt_melee_front_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
+		return (-1);
+	if (!(doom->sprites->txt_melee_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
+		return (-1);
+	if (!(doom->sprites->txt_melee_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
+		return (-1);
 	i = '0';
 	while (i < '3')
 	{
 		path = extension_num_path("img/sprites/melee/front/attack_", i + 1, ".png");
 		doom->sprites->txt_melee_front_attack[i - 48] = load_texture(doom, path);
-		i++;
-	}
-	if (!(doom->sprites->txt_melee_side_attack = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 3)))
-			return (-1);
-	i = '0';
-	while (i < '3')
-	{
 		path = extension_num_path("img/sprites/melee/side/attack_", i + 1, ".png");
 		doom->sprites->txt_melee_side_attack[i - 48] = load_texture(doom, path);
 		i++;
 	}
-	if (!(doom->sprites->txt_melee_front_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
-			return (-1);
 	i = '0';
 	while (i < '4')
 	{
 		path = extension_num_path("img/sprites/melee/front/walk_", i + 1, ".png");
 		doom->sprites->txt_melee_front_walk[i - 48] = load_texture(doom, path);
-		i++;
-	}
-	if (!(doom->sprites->txt_melee_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
-			return (-1);
-	i = '0';
-	while (i < '4')
-	{
 		path = extension_num_path("img/sprites/melee/side/walk_", i + 1, ".png");
 		doom->sprites->txt_melee_side_walk[i - 48] = load_texture(doom, path);
 		i++;
 	}
-	if (!(doom->sprites->txt_melee_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
-			return (-1);
 	i = '0';
 	while (i < '6')
 	{
@@ -112,43 +97,33 @@ static int	load_melee_sprite(t_doom *doom, char *path, int i)
 static int	load_boss_sprite(t_doom *doom, char *path, int i)
 {
 	if (!(doom->sprites->txt_boss_front_attack = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 2)))
-			return (-1);
+		return (-1);
+	if (!(doom->sprites->txt_boss_side_attack = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 2)))
+		return (-1);
+	if (!(doom->sprites->txt_boss_front_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
+		return (-1);
+	if (!(doom->sprites->txt_boss_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
+		return (-1);
+	if (!(doom->sprites->txt_boss_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 10)))
+		return (-1);
 	i = '0';
 	while (i < '2')
 	{
 		path = extension_num_path("img/sprites/boss/front/attack_", i + 1, ".png");
 		doom->sprites->txt_boss_front_attack[i - 48] = load_texture(doom, path);
-		i++;
-	}
-	if (!(doom->sprites->txt_boss_side_attack = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 2)))
-			return (-1);
-	i = '0';
-	while (i < '2')
-	{
 		path = extension_num_path("img/sprites/boss/side/attack_", i + 1, ".png");
 		doom->sprites->txt_boss_side_attack[i - 48] = load_texture(doom, path);
 		i++;
 	}
-	if (!(doom->sprites->txt_boss_front_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
-			return (-1);
 	i = '0';
 	while (i < '6')
 	{
 		path = extension_num_path("img/sprites/boss/front/walk_", i + 1, ".png");
 		doom->sprites->txt_boss_front_walk[i - 48] = load_texture(doom, path);
-		i++;
-	}
-	if (!(doom->sprites->txt_boss_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
-			return (-1);
-	i = '0';
-	while (i < '6')
-	{
 		path = extension_num_path("img/sprites/boss/side/walk_", i + 1, ".png");
 		doom->sprites->txt_boss_side_walk[i - 48] = load_texture(doom, path);
 		i++;
 	}
-	if (!(doom->sprites->txt_boss_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 10)))
-			return (-1);
 	i = '0';
 	while (i < '9')
 	{
@@ -182,6 +157,13 @@ void		init_enemy_sprite(t_doom *doom)
 	}
 }
 
+int			load_pickup_sprite(t_doom *doom)
+{
+	doom->sprites->txt_health_pickup = load_texture(doom, "img/pickups/health.png");
+	doom->sprites->txt_smg_ammo_pickup = load_texture(doom, "img/pickups/smgammo.png");
+	doom->sprites->txt_assault_ammo_pickup = load_texture(doom, "img/pickups/akammo.png");
+}
+
 int			load_sprites(t_doom *doom)
 {
 	char	i;
@@ -196,6 +178,7 @@ int			load_sprites(t_doom *doom)
 	load_ranged_sprite(doom, path, i);
 	load_melee_sprite(doom, path, i);
 	load_boss_sprite(doom, path, i);
+	load_pickup_sprite(doom);
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/25 19:47:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 15:26:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "doom-nukem.h"
 
 enum 	e_sprite_categories { FRONT_ATTACK };
+enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
 
 typedef struct 			s_doom t_doom;
 
@@ -182,6 +183,10 @@ typedef struct 			s_sounds
 
 typedef struct 			s_sprites
 {
+	struct SDL_Surface *txt_health_pickup;
+	struct SDL_Surface *txt_smg_ammo_pickup;
+	struct SDL_Surface *txt_assault_ammo_pickup;
+
 	// Underlying data holders, invididually named for readability
 	struct SDL_Surface	*txt_ranged_front_attack;
 	struct SDL_Surface	*txt_ranged_front_idle;

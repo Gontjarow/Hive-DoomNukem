@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/25 18:34:12 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 15:10:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void		update_minimap(t_doom *doom)
 	print_minimap_pickups(doom);
 
 	print_minimap_single_sprite(doom, doom->mdl->enemy_first->active_sprite); // Sprite and animation display test for game rendering - by MS
-	/* 
+	/*
 		This is a test for the game HUD - by MS
 	*/
 	//print_minimap_weapons(doom);
