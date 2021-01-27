@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/27 15:26:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:45:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ typedef struct 			s_player
 	int					shoot_cd;
 	int					reload_time;
 	int					weap_id;
+	struct SDL_Surface	*active_health_bar;
 	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
 	struct s_weapon		weap_arr[10];
@@ -116,6 +117,8 @@ typedef struct 			s_enemy
 	int					who_shot;
 	int					shoot_cd;
 	int					anim_phase;
+	int					stun_time;
+	int					stun_cd;
 	uint32_t			ray_color;
 	struct s_ai			ai;
 	struct s_coord		bullet_pos;
@@ -183,6 +186,11 @@ typedef struct 			s_sounds
 
 typedef struct 			s_sprites
 {
+	// HUD Sprites
+	struct SDL_Surface **txt_health_bar;
+	struct SDL_Surface *txt_key_hud;
+
+	// Pickup Sprites
 	struct SDL_Surface *txt_health_pickup;
 	struct SDL_Surface *txt_smg_ammo_pickup;
 	struct SDL_Surface *txt_assault_ammo_pickup;

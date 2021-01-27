@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 18:49:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:27:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,21 @@ void		init_hud(t_doom *doom)
 			ft_die("Error allocating weap_img!\n");
 		n++;
 	}
+}
+
+void		handle_player_health_bar(t_doom *doom)
+{
+	float	percentage;
+	int		pos;
+
+	percentage = doom->mdl->player.hp.cur / 10;
+	pos = (int)percentage;
+	doom->mdl->player.active_health_bar = doom->sprites->txt_health_bar[pos];
+}
+
+void		handle_game_hud(t_doom *doom)
+{
+	handle_player_health_bar(doom);
 }
 
 static void render_character(char c, t_doom *doom, int x, int y)

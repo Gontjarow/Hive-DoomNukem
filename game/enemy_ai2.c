@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 15:53:37 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:30:31 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,6 @@ void		handle_enemy_ai(t_doom *doom)
 	enemy_update_cooldown(doom);
 	rotate_enemy_towards_player(doom);
 	move_enemy_towards_player(doom);
-	handle_enemy_animation(doom);
 	handle_enemy_shooting(doom);
+	handle_enemy_animation(doom);
 }

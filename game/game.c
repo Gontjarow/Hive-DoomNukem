@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/19 19:22:46 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:43:09 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ void		game_render(t_doom *doom)
 	handle_player_action(doom);
 	player_update_weapons(doom);
 	handle_enemy_ai(doom);
+	handle_game_hud(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
 	wire_frame(doom);

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 15:53:12 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 20:00:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@ void		enemy_update_cooldown(t_doom *doom)
 	{
 		if (enemy->shoot_cd > 0)
 			enemy->shoot_cd--;
+		if (enemy->stun_cd > 0)
+			enemy->stun_cd--;
+		if (enemy->stun_time > 0)
+		{
+			enemy->stun_time--;
+			if (enemy->stun_time == 0)
+				enemy->stun_cd = 3;
+		}
 		enemy = enemy->next;
 	}
 }
@@ -81,7 +89,7 @@ void		handle_enemy_shooting(t_doom *doom)
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
-		if (enemy->hp.cur > 0)
+		if (enemy->hp.cur > 0 && enemy->stun_time == 0)
 		{
 			distance = calc_distance(enemy, doom);
 			if (distance < enemy->ai.min_dis && enemy->shoot_cd == 0)

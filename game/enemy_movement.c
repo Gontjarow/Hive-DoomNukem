@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:18:34 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 17:43:15 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:14:40 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void			rotate_enemy_towards_player(t_doom *doom)
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
-		if (enemy->hp.cur > 0)
+		if (enemy->hp.cur > 0 && enemy->stun_time == 0)
 		{
 			rad = deg_to_rad(enemy->rot);
 			p.x = enemy->x + 10 * -cos(rad);
@@ -101,7 +101,7 @@ void			move_enemy_towards_player(t_doom *doom)
 		old.x = enemy->x;
 		old.y = enemy->y;
 		if (check_location(doom, enemy->x, enemy->y) != -1
-			&& enemy->hp.cur > 0)
+			&& enemy->hp.cur > 0 && enemy->stun_time == 0)
 			handle_enemy_movement(enemy, doom, old);
 		enemy = enemy->next;
 	}

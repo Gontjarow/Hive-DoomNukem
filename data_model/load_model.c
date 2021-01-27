@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/27 15:31:30 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:44:54 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -540,6 +540,8 @@ static void		assign_enemy_cd(t_model *mdl)
 	enemy = mdl->enemy_first;
 	while (ec--)
 	{
+		enemy->stun_time = 0;
+		enemy->stun_cd = 0;
 		enemy->anim.done = IDLE;
 		enemy->anim_phase = 0;
 		enemy->shoot_cd = 0;
