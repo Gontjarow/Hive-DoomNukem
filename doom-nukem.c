@@ -26,7 +26,7 @@ static void	init_doom(t_doom *doom)
 		ft_die("Fatal error: Failed initialization of SDL2 audio.");
 	if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0)
 		ft_die("Fatal error: SDL_mixer could not initialize!");
-	doom->win = SDL_CreateWindow("Hive-DoomNukem", SDL_WINDOWPOS_CENTERED,
+	doom->win = SDL_CreateWindow("Doomed 3D", SDL_WINDOWPOS_CENTERED,
 				SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, 0);
 	if (doom->win == NULL)
 		ft_die("Fatal error: Failed initialization of SDL_Window with SDL_CreateWindow on init_doom.");
@@ -70,7 +70,7 @@ static int	destroy_and_quit(t_doom *doom)
 	return (0);
 }
 
-static void distribute_inputs(t_doom *doom)
+static void distribute_inputs(t_doom *doom, int argc, char **argv)
 {
 	while (SDL_PollEvent(&doom->event) != 0)
 	{
@@ -87,13 +87,13 @@ static void distribute_inputs(t_doom *doom)
 		&& !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
 			game_mouse_updown(doom);
 		else
-			window_and_menu_events(doom);
+			window_and_menu_events(doom, argc, argv);
 	}
 }
 
 static void run_loops(t_doom *doom, int argc, char **argv)
 {
-	main_menu_loop(doom, argc, argv);
+    main_menu_loop(doom, argc, argv);
 	if (!doom->edt_quit)
 		edt_render(doom);
 	if (!doom->game_quit)
@@ -103,7 +103,7 @@ static void run_loops(t_doom *doom, int argc, char **argv)
 int			main(int argc, char *argv[])
 {
 	t_doom			doom;
-	uint32_t		frame_ticks;
+	//uint32_t		frame_ticks;
 	int 			fps_cooldown;
 	uint32_t		frames_between;
 	uint32_t 		time_between;
@@ -115,15 +115,16 @@ int			main(int argc, char *argv[])
 	fps_cooldown = 100;
 	frames_between = 0;
 	time_between = SDL_GetTicks();
+	doom.fps = 150;
 	while (!doom.quit)
 	{
 		doom.keystates = SDL_GetKeyboardState(NULL);
 		doom.frame_start = SDL_GetTicks();
 		// Distribute inputs via SDL_Events, also handle window management with window_and_menu_events()
-		distribute_inputs(&doom);
+		distribute_inputs(&doom, argc, argv);
 		run_loops(&doom, argc, argv);
 		// Delay until next frame
-		frame_ticks = SDL_GetTicks() - doom.frame_start;
+		//frame_ticks = SDL_GetTicks() - doom.frame_start;
 		if (fps_cooldown)
 		{
 			frames_between++;
@@ -137,10 +138,8 @@ int			main(int argc, char *argv[])
 			time_between = SDL_GetTicks();
 			frames_between = 0;
 		}
-		/*if (frame_ticks < TICKS_PER_FRAME)
-		{
-			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
-		}*/
+		//if (frame_ticks < TICKS_PER_FRAME)
+		//	SDL_Delay(TICKS_PER_FRAME - frame_ticks);
 		SDL_UpdateWindowSurface(doom.win);
 	}
 	return (destroy_and_quit(&doom));

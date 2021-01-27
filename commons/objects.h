@@ -212,6 +212,7 @@ typedef struct 			s_sprites
 typedef struct			s_menu
 {
 	int 				selected;
+	int                 mousing_at;
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
