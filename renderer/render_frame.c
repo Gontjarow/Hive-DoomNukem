@@ -200,6 +200,7 @@ void			render_frame(t_doom *doom)
 	world->player.angle = deg_to_rad(doom->mdl->player.rot);
 	world->player.sin = sin(world->player.angle);
 	world->player.cos = cos(world->player.angle);
+	// world->player.yaw = doom->mdl->player.yaw;
 
 	flood_buffer(doom->game->buff, 0x112233);
 	memset_f(zbuffer, INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
@@ -332,14 +333,14 @@ void			render_frame(t_doom *doom)
 		line = line_xy(planeright, vec2(0,0), 0x00ffff);
 		vec2_clip_line(wall_segment, &wall_segment, line);
 
-		scale.start.y = (GAME_WIN_HEIGHT / wall_segment.start.y);
-		scale.stop.y = (GAME_WIN_HEIGHT / wall_segment.stop.y);
+		scale.start.y = -(GAME_WIN_HEIGHT / wall_segment.start.y);
+		scale.stop.y = -(GAME_WIN_HEIGHT / wall_segment.stop.y);
 
-		int yawed_start_ceil  = GAME_MIDHEIGHT - (((ceil ) + wall_segment.start.y * world->player.yaw) * scale.start.y);
-		int yawed_start_floor = GAME_MIDHEIGHT - (((floor) + wall_segment.start.y * world->player.yaw) * scale.start.y);
+		int yawed_start_ceil  = GAME_MIDHEIGHT - (((ceil ) + wall_segment.start.y * (world->player.yaw)) * scale.start.y);
+		int yawed_start_floor = GAME_MIDHEIGHT - (((floor) + wall_segment.start.y * (world->player.yaw)) * scale.start.y);
 
-		int yawed_stop_ceil   = GAME_MIDHEIGHT - (((ceil ) + wall_segment.stop.y * world->player.yaw) * scale.stop.y);
-		int yawed_stop_floor  = GAME_MIDHEIGHT - (((floor) + wall_segment.stop.y * world->player.yaw) * scale.stop.y);
+		int yawed_stop_ceil   = GAME_MIDHEIGHT - (((ceil ) + wall_segment.stop.y * (world->player.yaw)) * scale.stop.y);
+		int yawed_stop_floor  = GAME_MIDHEIGHT - (((floor) + wall_segment.stop.y * (world->player.yaw)) * scale.stop.y);
 
 		// printf("\tceil:%-4.0f floor:%-4.0f || yawed_start_ceil:%-8i , yawed_stop_ceil:%-8i , yawed_start_floor:%-8i ,  yawed_stop_floor:%-8i \n",
 		// 	ceil, floor, yawed_start_ceil, yawed_stop_ceil, yawed_start_floor, yawed_stop_floor);
@@ -377,8 +378,8 @@ void			render_frame(t_doom *doom)
 
 
 				double angle_calc = (i * kalle);
-				int y_start = yawed_start_floor - angle_calc;
-				int y_stop  = yawed_start_ceil + angle_calc;
+				int y_start = yawed_start_ceil + angle_calc;
+				int y_stop = yawed_start_floor - angle_calc;
 
 				y_start = clamp(y_start, y_top[x], y_bot[x]);
 				y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
