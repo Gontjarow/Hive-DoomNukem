@@ -19,6 +19,7 @@ enum 	e_sprite_categories { FRONT_ATTACK };
 enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
 enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
 
+typedef struct			s_xy t_xy;
 typedef struct 			s_doom t_doom;
 
 typedef struct 			s_point
@@ -299,6 +300,7 @@ void 					render_line(t_line *l);
 void					careful_render_line(t_line *l);
 void					preserve_render_line(t_line *l);
 void					unpreserve_render_line(t_line *l);
+void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
 
 /*
  * from pixel.c
