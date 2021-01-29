@@ -350,71 +350,46 @@ void			render_frame(t_doom *doom)
 			// begin/end at the shortest possible range.
 			int beginx = ft_maxi(x1, section->left);
 			int endx   = ft_mini(x2, section->right);
-			// printf("\tvline begin%i end%i\n", beginx, endx);
 
 			// Debug info for specific walls
 			int colors[] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x0};
 			const char *name[] = {"red", "green", "blue", "grey", "white", "black"};
 			{
-				// printf("\tdrawing %s\n", name[vertex]);
 				vertical_line(beginx, 0,              GAME_MIDHEIGHT,    colors[vertex]);
 				vertical_line(endx,   GAME_MIDHEIGHT, GAME_WIN_HEIGHT-1, colors[vertex]);
 			}
 
+			double kalle = (yawed_stop_ceil - yawed_start_ceil) / (double)(endx - beginx);
+			double kalle2 = (yawed_stop_floor - yawed_start_floor) / (double)(endx - beginx);
+
 			int x = beginx;
-			int i = 0;
 			while (x < endx)
 			{
-				double kalle = (yawed_stop_ceil - yawed_start_ceil) / (double)(endx - beginx);
-				double kalle2 = (yawed_stop_floor - yawed_start_floor) / (double)(endx - beginx);
-
-
-				double angle_calc = (i * kalle);
-				double angle_calc2 = (i * kalle2);
-				int y_start = yawed_start_ceil + angle_calc;
-				int y_stop = yawed_start_floor + angle_calc2;
+				int y_start = yawed_start_ceil + ((x - beginx) * kalle);
+				int y_stop = yawed_start_floor + ((x - beginx) * kalle2);
 
 				y_start = clamp(y_start, y_top[x], y_bot[x]);
 				y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
 				vertical_line(x, y_start, y_stop, colors[vertex]);
 
-
-				// more debugs wew
-				if (colors[vertex] == 0xff6666)
-				{
-					// printf("SLOPE %f\n", wall_slope);
-					drawline(line_xy(vec2(x1, GAME_MIDHEIGHT+5), vec2(x2, GAME_MIDHEIGHT+5), 0xffff00), doom->game->buff);
-				}
 				++x;
-				++i;
 			}
 		}
 
 		// Debug view.
 		{
-			debug = line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+			debug = line_add_offset(wall_segment, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
 			debug.color = 0xffffff;
 			drawline(debug, doom->game->buff);
+
 			// Proves 90 degree FOV
 			t_xy center = vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100);
 			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90+45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
 			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90-45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
 			drawline(line_xy(vec2_add(center, vec2(-50,0)), vec2_add(center, vec2(50,0)), 0xff0000), doom->game->buff);
 
-
-			// t_xy planeleft = ( vec2_rot(vec2(0, -100), 135*DEG_TO_RAD) );
-			// t_xy planeright = ( vec2_rot(vec2(0, -100), 45*DEG_TO_RAD) );
-
-			// t_xy_line line = line_xy(vec2(0,0), planeleft, 0x00ffff);
-			// drawline(line_add_offset(line, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), doom->game->buff);
-			// wall.color = 0x00ffff;
-			// drawline(line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), doom->game->buff);
-
 			t_xy_line out = wall_segment;
 			out.color = 0x00ffff;
-			// vec2_clip_line(wall, &out, line);
-			// line = line_xy(planeright, vec2(0,0), 0x00ffff);
-			// vec2_clip_line(out, &out, line);
 
 			draw_box(vec2_add(out.start, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, out.color, doom->game->buff);
 			draw_box(vec2_add(out.stop, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, out.color, doom->game->buff);
