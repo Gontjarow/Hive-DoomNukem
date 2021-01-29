@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/22 19:17:12 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 16:16:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 {
 	signal = (-1) * signal;
 	if (doom->mdl->player.is_crouching && doom->sounds->footstep_delay == 0)
-		Mix_PlayChannel(2, doom->sounds->mcCrouching, 0);
+		Mix_PlayChannel(-1, doom->sounds->mcCrouching, 0);
 	else if (doom->mdl->player.is_running && doom->sounds->footstep_delay == 0)
-		Mix_PlayChannel(2, doom->sounds->mcRunning, 0);
+		Mix_PlayChannel(-1, doom->sounds->mcRunning, 0);
 	else if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching
 			&& doom->sounds->footstep_delay == 0)
-		Mix_PlayChannel(2, doom->sounds->mcWalking, 0);
+		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
 	if (doom->sounds->footstep_delay == 0)
 		doom->sounds->footstep_delay = 8;
 	doom->mdl->player.x = doom->mdl->player.x + (signal *
@@ -56,6 +56,7 @@ static void 	strafe(t_doom *doom, int signal)
 	doom->mdl->player.x = doom->mdl->player.x + (((double)doom->mdl->player.mov_speed)) * -cos(strafe_rad);
 	doom->mdl->player.y = doom->mdl->player.y + (((double)doom->mdl->player.mov_speed)) * -sin(strafe_rad);
 	doom->mdl->player.rot = orig_rot;
+	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
 }
 
 static void		rotating_left_right(t_doom *doom, int signal)

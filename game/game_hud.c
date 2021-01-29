@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 18:49:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:27:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,52 @@ void		init_hud(t_doom *doom)
 			ft_die("Error allocating weap_img!\n");
 		n++;
 	}
+}
+
+void		handle_player_health_bar(t_doom *doom)
+{
+	float	percentage;
+	int		pos;
+
+	percentage = doom->mdl->player.hp.cur / 10;
+	pos = (int)percentage;
+	doom->mdl->player.active_health_bar = doom->sprites->txt_health_bar[pos];
+}
+
+// Surf refers to WHAT you want to draw
+// Buff refers to WHERE you want to draw it TO
+// X, Y refer to the X, Y location of the BUFF surface
+static void draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
+{
+    int *pix[2];
+    int i;
+    int iter;
+    int limit_x;
+    int limit_total;
+
+    iter = 0;
+    i = x;
+    limit_x = x + surf->w;
+    limit_total = surf->w * surf->h;
+    pix[0] = (int*)buff->pixels;
+    pix[1] = (int*)surf->pixels;
+    while (iter < limit_total)
+    {
+        x = i;
+        while (x < limit_x)
+            pix[0][(y * buff->w) + x++] = pix[1][iter++];
+        y++;
+    }
+}
+
+void        render_hud(t_doom *doom)
+{
+    draw_surface(512, 450, doom->mdl->player.active_health_bar, doom->game->buff);
+}
+
+void		handle_game_hud(t_doom *doom)
+{
+	handle_player_health_bar(doom);
 }
 
 static void render_character(char c, t_doom *doom, int x, int y)

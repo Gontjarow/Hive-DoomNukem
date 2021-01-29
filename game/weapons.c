@@ -45,20 +45,27 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcAssaultShot;
 	doom->mdl->player.weap_arr[2].reload_sound = doom->sounds->mcAssaultRld;
 	doom->mdl->player.weap_arr[2].weap_img = load_texture(doom, "img/weapons/ak47.png");
-	doom->mdl->player.weap_arr[2].do_own = 0;
+		doom->mdl->player.weap_arr[2].do_own = 1; // Debug faster with AK
+		doom->mdl->player.weap_id = 2;
 }
 
 static void	player_swap_weapons(t_doom *doom)
 {
-	if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr
-		[0].do_own == 1)
+	if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[0].do_own == 1 && doom->mdl->player.weap_id != 0)
+	{
 		doom->mdl->player.weap_id = 0;
-	if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr
-		[1].do_own == 1)
+		Mix_PlayChannel(-1, doom->sounds->mcPistolRld, 0);
+	}
+	if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[1].do_own == 1 && doom->mdl->player.weap_id != 1)
+	{
 		doom->mdl->player.weap_id = 1;
-	if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr
-		[2].do_own == 1)
+		Mix_PlayChannel(-1, doom->sounds->mcSmgRld, 0);
+	}
+	if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[2].do_own == 1 && doom->mdl->player.weap_id != 2)
+	{
 		doom->mdl->player.weap_id = 2;
+		Mix_PlayChannel(-1, doom->sounds->mcAssaultRld, 0);
+	}
 }
 
 static void	handle_ammo_calc(t_doom *doom)
@@ -96,7 +103,7 @@ static void	player_shoot_reload(t_doom *doom)
 			[doom->mdl->player.weap_id].ammo_cur > 0 &&
 				doom->mdl->player.reload_time == 0)
 		{
-			Mix_PlayChannel(0, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
+			Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
 			player_shoots(doom);
 		}
 	}
@@ -106,7 +113,7 @@ static void	player_shoot_reload(t_doom *doom)
 			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max &&
 			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res > 0)
 		{
-			Mix_PlayChannel(0, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].reload_sound, 0);
+			Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].reload_sound, 0);
 			doom->mdl->player.reload_time = doom->mdl->player.weap_arr
 				[doom->mdl->player.weap_id].reload_time;
 			handle_ammo_calc(doom);

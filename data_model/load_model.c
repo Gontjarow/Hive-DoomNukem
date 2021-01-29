@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/19 19:35:13 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:44:54 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -291,6 +291,7 @@ static void init_mapdata(t_doom *doom)
 	doom->map->join_string = NULL;
 	doom->map->enemy_string = NULL;
 	doom->map->player_string = NULL;
+	doom->map->chain_string = NULL;
 	doom->map->portal_string = NULL;
 	doom->map->wall_string = NULL;
 	doom->map->room_string = NULL;
@@ -305,6 +306,8 @@ void 		destroy_mapdata(t_doom *doom)
 		free(doom->map->join_string);
 	if (doom->map->player_string != NULL)
 		free(doom->map->player_string);
+	if (doom->map->player_string != NULL)
+		free(doom->map->chain_string);
 	if (doom->map->wall_string != NULL)
 		free(doom->map->wall_string);
 	if (doom->map->room_string != NULL)
@@ -403,6 +406,16 @@ static int	stringify_mapfile(t_doom *doom, char *map_path)
 				free(join);
 				join = doom->map->player_string;
 				doom->map->player_string = ft_strjoin(doom->map->player_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Chain_to_mapfile]", 18)){
+				if (doom->map->chain_string == NULL)
+					doom->map->chain_string = ft_strnew(1);
+				join = doom->map->chain_string;
+				doom->map->chain_string = ft_strjoin(doom->map->chain_string, line);
+				free(join);
+				join = doom->map->chain_string;
+				doom->map->chain_string = ft_strjoin(doom->map->chain_string, "\n");
 				free(join);
 			}
 			free(line);
@@ -540,6 +553,10 @@ static void		assign_enemy_cd(t_model *mdl)
 	enemy = mdl->enemy_first;
 	while (ec--)
 	{
+		enemy->stun_time = 0;
+		enemy->stun_cd = 0;
+		enemy->anim.done = IDLE;
+		enemy->anim_phase = 0;
 		enemy->shoot_cd = 0;
 		enemy->wep.cooldown = 15;
 		enemy = enemy->next;
@@ -600,7 +617,7 @@ int			load_model(t_doom *doom)
 		// Initialize the enemy weapon cooldown for shooting
 		assign_enemy_cd(doom->mdl);
 		// Create polymap buffer for rooms for instant tracking of room_id where player is
-		ft_putendl("Launching game, calling expand_mdl_polygon_maps");
+		    //ft_putendl("Launching game, calling expand_mdl_polygon_maps");
 		expand_mdl_polygon_maps(doom->mdl);
 	}
 	return (1);

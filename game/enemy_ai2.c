@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 20:15:34 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:30:31 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void		ai_boss(t_doom *doom, t_enemy *enemy)
 	enemy->ai.dmg = 5;
 }
 
-void		ai_assignment(t_doom *doom)			// this must be done before or after load model?
+void		ai_assignment(t_doom *doom)
 {
 	int		ec;
 	t_enemy	*enemy;
@@ -86,10 +86,27 @@ void		ai_assignment(t_doom *doom)			// this must be done before or after load mo
 	}
 }
 
+void		handle_enemy_animation(t_doom *doom)
+{
+	int		ec;
+	t_enemy	*enemy;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		animation_switch(enemy, doom);
+		enemy = enemy->next;
+	}
+}
+
 void		handle_enemy_ai(t_doom *doom)
 {
 	enemy_update_cooldown(doom);
 	rotate_enemy_towards_player(doom);
 	move_enemy_towards_player(doom);
 	handle_enemy_shooting(doom);
+	handle_enemy_animation(doom);
 }

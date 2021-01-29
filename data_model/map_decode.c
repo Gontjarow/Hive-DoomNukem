@@ -1,5 +1,19 @@
 #include "doom-nukem.h"
 
+// Mapping Chain to model
+
+static void			map_chain_to_model(const char *str, t_model *mdl)
+{
+	char *tmp;
+	if (ft_strnstr(str, "[Chain_to_mapfile]", 18))
+	{
+		tmp = ft_strsub(str, 18, ft_strlen(str) - 18);
+		mdl->chain = ft_strtrim(tmp);
+		free(tmp);
+	}
+	printf("Model set to chain to map \"%s\"\n", mdl->chain);
+}
+
 // 2x Pickup spec functions
 static void			map_pickup_to_model(const int *fields, t_model *mdl)
 {
@@ -100,6 +114,7 @@ static void			map_enemy_to_model(const int *fields, t_model *mdl)
 	mdl->enemies->hp.cur = fields[4];
 	mdl->enemies->wep.type_id = fields[5];
 	mdl->enemies->ai.type_id = fields[6];
+	//mdl->enemies->sprite_id = fields[7];
 	mdl->enemy_count++;
 	if (mdl->enemy_count == 1)
 		mdl->enemy_first = mdl->enemies;
@@ -119,7 +134,7 @@ static t_token		*enemy_spec(void)
 	{
 		i = 0;
 		spec = (t_token *) malloc(sizeof(t_token));
-		spec->expected = 7;
+		spec->expected = 8;
 		spec->sur[0] = '[';
 		spec->sur[1] = ']';
 		spec->equ = '=';
@@ -134,6 +149,7 @@ static t_token		*enemy_spec(void)
 		ft_strcpy(spec->keys[4], "hp");
 		ft_strcpy(spec->keys[5], "wep.type_id");
 		ft_strcpy(spec->keys[6], "ai.type_id");
+		ft_strcpy(spec->keys[7], "sprite_id");
 		spec->result_ptr = NULL;
 		spec->map_function = map_enemy_to_model;
 	}
@@ -458,7 +474,8 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 		ft_die("Fatal error: map_to_model player data missing from mapfile.");
 	else
 		map_string(map->player_string, mdl, player_spec());
-
+	if (map->chain_string)
+		map_chain_to_model(map->chain_string, mdl);
 	//ft_putendl("Attempting to convert player from map to model at map_to_model");
 	//debug_model_player();
 	if (map->wall_string)

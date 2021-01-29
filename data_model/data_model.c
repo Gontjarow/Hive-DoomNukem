@@ -33,6 +33,7 @@ void		init_model(t_doom *doom)
 	flood_buffer(doom->mdl->poly_map, 0xffffffff);
 
 	// Initializing values to pointers and members
+	doom->mdl->chain = NULL;
 	doom->mdl->wall_first = NULL;
 	doom->mdl->room_first = NULL;
 	doom->mdl->portal_first = NULL;
@@ -66,18 +67,21 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.bullet_pos.y = 0.0;
 	doom->mdl->player.hp.cur = 100;
 	doom->mdl->player.hp.max = 100;
+	doom->mdl->player.shooting = 0;
 	init_player_weapon(doom);
 }
 
 void 		destroy_model(t_doom *doom)
 {
-	// WARNING! INCOMPLETE MEMORY MANAGEMENT
-	// NEEDS TO ITERATE THROUGH LINKED LISTS AND DESTROY THEM SYSTEMATICALLY
-	// - krusthol
+	// TODO ITERATE THROUGH LINKED LISTS AND DESTROY ALL NODES
+
 	free(doom->mdl->enemies);
 	free(doom->mdl->portals);
 	free(doom->mdl->walls);
 	free(doom->mdl->rooms);
+	if (doom->mdl->chain != NULL)
+		free(doom->mdl->chain);
+	doom->mdl->chain = NULL;
 	doom->mdl->wall_first = NULL;
 	doom->mdl->room_first = NULL;
 	doom->mdl->portal_first = NULL;

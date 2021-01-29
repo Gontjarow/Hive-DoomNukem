@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/19 19:22:46 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:43:09 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,12 @@ void		game_mouse_motion(t_doom *doom)
 		doom->game_quit = 0;
 }
 
-void		game_mouse_down(t_doom *doom)
+void		game_mouse_updown(t_doom *doom)
 {
-	if (doom->game_quit == 0)
-		doom->game_quit = 0;
+	if (doom->event.type == SDL_MOUSEBUTTONUP && doom->event.button.button == SDL_BUTTON_LEFT)
+		doom->mdl->player.shooting = 0;
+	if (doom->event.type == SDL_MOUSEBUTTONDOWN && doom->event.button.button == SDL_BUTTON_LEFT)
+		doom->mdl->player.shooting = 1;
 }
 
 double		deg_to_rad(int deg)
@@ -106,7 +108,16 @@ void		game_render(t_doom *doom)
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);
+	if (doom->mdl->player.shooting)
+	{
+		if (doom->mdl->player.shoot_cd == 0 && doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0 && doom->mdl->player.reload_time == 0)
+		{
+			Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
+			player_shoots(doom);
+		}
+	}
 	handle_enemy_ai(doom);
+	handle_game_hud(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
 	// wire_frame(doom);

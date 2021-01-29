@@ -71,7 +71,7 @@ static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 		pickup = delete_first(doom);
 	else
 		pickup = delete_node(current, prev, pickup);
-	Mix_PlayChannel(3, doom->sounds->mcHealthPickup, 0);
+	Mix_PlayChannel(-1, doom->sounds->mcHealthPickup, 0);
 	doom->mdl->pickup_count--;
 }
 
@@ -90,7 +90,7 @@ void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 		pickup = delete_first(doom);
 	else
 		pickup = delete_node(current, prev, pickup);
-	Mix_PlayChannel(3, doom->sounds->mcAmmoPickup, 0);
+	Mix_PlayChannel(-1, doom->sounds->mcAmmoPickup, 0);
 	doom->mdl->pickup_count--;
 }
 
@@ -107,7 +107,7 @@ void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 		pickup = delete_first(doom);
 	else
 		pickup = delete_node(current, prev, pickup);
-	Mix_PlayChannel(3, doom->sounds->mcWeaponPickup, 0);
+	Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
 	doom->mdl->pickup_count--;
 }
 

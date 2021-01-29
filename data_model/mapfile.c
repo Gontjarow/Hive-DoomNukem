@@ -26,6 +26,7 @@ t_mapfile	*init_mapfile(void)
 	map->wall_string = NULL;
 	map->room_string = NULL;
 	map->pickup_string = NULL;
+	map->chain_string = NULL;
 	map->was_filled = 0;
 	return (map);
 }
@@ -53,7 +54,6 @@ void 	destroy_mapfile(t_mapfile *map)
 	map->wall_string = NULL;
 	map->room_string = NULL;
 	free(map);
-	map = NULL;
 }
 
 int		write_mapfile(char *map_path, t_mapfile *map)
@@ -84,6 +84,9 @@ int		write_mapfile(char *map_path, t_mapfile *map)
 		write(opened, new_line, 1);
 		if (mdl->pickup_count > 0)
 			write(opened, map->pickup_string, ft_strlen(map->pickup_string));
+		write(opened, new_line, 1);
+		if (map->chain_string)
+			write(opened, map->chain_string, ft_strlen(map->chain_string));
 		write(opened, new_line, 1);
 		write(opened, map->player_string, ft_strlen(map->player_string));
 		ft_putstr("Hive-DoomNukem: write_mapfile saved mapdata to mapfile: ");

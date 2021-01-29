@@ -15,6 +15,11 @@ t_point			relative_position(int x, int y, t_state *state)
 	return ((t_point){relative_x, relative_y});
 }
 
+t_point         scroll_adjusted(t_point point)
+{
+    return (scrolled_position(point.x, point.y, get_state()));
+}
+
 t_point			scrolled_position(int x, int y, t_state *state)
 {
 	int relative_x;

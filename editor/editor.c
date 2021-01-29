@@ -12,65 +12,14 @@
 
 #include "doom-nukem.h"
 
-//		COMPLETED FOR EDITOR IN GENERAL
-//			GRID SYSTEM ON TOP OF EVERYTHING ELSE // DONE
-//				MODULO OFFSETTED BY SCROLL_X, SCROLL_Y, STEPPING DIVIDED BY ZOOMFACTOR // DONE
-//				DRAW VERY LAST ON SCREEN AREA // DONE
-//				ONLY ON BLACK PIXELS STRAIGHT TO BUFFER // DONE
-//				TOGGLE WITH G // DONE
-//				ADD TO AVOID[X] COLORS THE COLOR_GRID_LINE VALUE // DONE
-//				DECOUPLED FROM EVERYTHING EXCEPT EDITOR BACK BUFFER // DONE
-//				VARY STEPPING WITH KEYS T AND B // DONE
-//				EXCLUDE INFO BOXES AND SCROLL BAR AREAS FROM DRAWING // DONE
-//			PREVIEW TRAILING TAIL FOR ROTATABLES PLANTING // DONE
-//			ENEMIES DOUBLE CLICK DELETE // DONE
-//				LEFT CLICK THEN LEFT CLICK AGAIN TO DELETE ENEMY // DONE
-//			PICKUPS DOUBLE CLICK DELETE // DONE
-//				LEFT CLICK THEN LEFT CLICK AGAIN TO DELETE ENEMY // DONE
-//			SELECTION MODE FOR COMPLETE ROOMS // DONE
-//				SELECTING ANOTHER OR DESELECTION // DONE
-//				RENDER BARYMETRIC CENTER FOR SELECTED ROOM // DONE
-//				RENDER DIGITS VISIBLE FOR SELECTED ROOMS ROOF // DONE
-//					ON TOP OF THE BARYMETRIC VISUAL SQUARE // DONE
-//				RENDER DIGITS VISIBLE FOR SELECTED ROOMS FLOOR // DONE
-//					AT THE BOTTOM OF THE BARYMETRIC VISUAL SQUARE // DONE
-//			FIX ZOOMED, SCROLLED FUNCTIONALITY FOR DOUBLE CLICK DELETIONS // DONE
-//			INPUT SYSTEM FOR HEIGHT OF BOTH SELECTED ROOM ROOF AND FLOOR // DONE
-//				E,R,D,F KEYBOARD STEPPING // DONE
-//			EDITOR SPAWNS NEW ROOMS WITH THE LAST VALUES USED OR MODIFIED // DONE
-//			ADJUST ROTATION FOR ENEMIES // DONE
-//				SINGLE CLICK TO HIGHLIGHT IN GRID COLOR // DONE
-//				SINGLE CLICK AGAIN OUTSIDE TO REASSIGN TAIL AFTER DELAY // DONE
-//			DELETION OF A SELECTED ROOM WITH DEL KEY // DONE
-//				THIS IS A DELICATE AND LARGE FEATURE THAT REQUIRES CARE TO CODE CORRECTLY // DONE
-//				CHAIN FREE A ROOMS WALLS FIRST // DONE
-//				NOTE HOW MANY WALLS ARE REMOVED AS X // DONE
-//				REDUCE ROOM COUNT BY ONE // DONE
-//				OFFSET EACH REMAINING ROOMS FIRST_WALL_ID BY X // DONE
-//				REDUCE WALL COUNT BY X // DONE
-//				RELINK ROOM_FIRST IF NECESSARY // DONE
-//				RELINK PREVIOUS AND NEXT ROOMS TOGETHER // DONE
-//				RELINK WALL_FIRST IF NECESSARY // DONE
-//				OR RELINK PREVIOUS AND NEXT WALLS TOGETHER // DONE
-//				OR IF LAST ROOM OF ROOM CHAIN, RELINK PREVIOUS ROOMS WALL AND ROOM TO MDL HEADS
-//				RECALCULATE WALL IDS // DONE
-//				RECALCULATE ROOM IDS // DONE
-//				FORMAT AND FLOOD POLYMAP AS EMPTY // DONE
-//				REPAINT POLYMAP FOR EACH SURVIVING ROOM // DONE
-
-//	TODO BIG NOTE TO SELF - CHECK IF TRUE!
-//  	EDITOR COULD GUARANTEE CLOCKWISE ARRANGEMENT OF WALL NODES IN ROOMS
+// TODO FOR EDITOR
+//		ENABLE MANUAL SINGLE WALL PORTAL CREATION
+//      ENABLE TEXTURING ROOMS IN EDITOR
+//		CONSIDER SLOPING (DELEGATE TO NGONTJAR)
+//		PLAY AROUND WITH FLIGHT PACK ITEM FOR FLYING
+//      CONSIDER "EVERY ROOM MUST HAVE A LIGHT SWITCH" MANDATORY RULE
 
 //	TODO FOR EFFECTORS
-//		MODE_EFFECT // DONE
-//		MODE_EFFECT GRAPHICS AND CYCLING // DONE
-//		EFFECT.C FUNCTION STUBS // DONE
-//		EDITOR_INPUT HANDLING OF TEXT INPUT PROTOTYPE // DONE
-//		HANDLE CHAINING MAP FILE TOKEN AS [CHAIN_TO_MAPFILE] FILENAME = "example.map" STYLE TOKEN
-//		ADD CHAIN PROP TO MODEL, MAP STRINGS
-//		EDIT STRINGIFY FUNCTION IN LOAD_MODEL
-//		EDIT MAP_TO_MODEL IN MAP_DECODE
-//		ADD FUNCTION UPDATE_CHAIN_STRING TO MAP_ENCODE
 //		EFFECTORS WILL BE [EFFECT] TOKEN TYPE AND FOUND IN MDL->EFFECT
 //		MAP_DECODE AND MAP_ENCODE ADDITIONS FOR [EFFECT] TYPE
 //		EFFECT WILL HAVE A ID, TYPE [ENUMERATED INTEGER], LOC(ATION).X, LOC(ATION).Y, TARGET(LOCATION).X, TARGET(LOCATION).Y, TARGET_ID
@@ -79,40 +28,36 @@
 // 		EFFECTORS WILL BE TRIANGLES IN DIFFERENT COLORS IN THE EDITOR VIEW
 //			EFFECTOR TRIANGLE WILL BE POINTING UP FOR ORIGIN AND DOWN FOR DESTINATION OR TARGET
 //			EFFECTOR TRIANGLE WILL BE NOTED AND MATCHED WITH ID DIGITS BELOW TRIANGLE AND LIMITED TO 99
-//			NEW MODE TO PLANT EFFECTORS CALLED EFFECT.C
 //			FIRST EFFECTOR ADDS LEVEL EXITS IN THE EDITOR
 //				IF NO LEVEL EXIT DEFINED, REMIND AND WARN ABOUT DEBUGGING MAP
 //			SECOND EFFECTOR WILL BE LIGHT SOURCES WITH LIGHT INTENSITY AND RADIUS VALUES
 //			THIRD EFFECTOR WILL BE A SWITCH, WITH LOCATION AND TARGET TYPE AND ID (TOGGLING LIGHT OR OPENING BLOCKING DOOR)
 //			FOURTH EFFECTOR WILL BE A ONE WAY TELEPORT, WITH LOCATION AND DESTINATION POINTS
-//			SUPPORT TEXT INPUT AND PRINTING TEXT TO EDITOR GUI
-//			A SINGLE FILENAME PARAMETER FOR CHAINING A MAP TO ANOTHER MAP
-//				IF BLANK, IT WILL MEAN END OF CAMPAIGN FROM THE LEVEL EXIT
+//			FOR A BLANK CHAIN_TO_MAPFILE VALUE THE MAP CAMPAIGN TRIGGERS CAMPAIGN VICTORY FROM THE LEVEL EXIT
 
-//		TODO FOR ALLOWING 2.5D RENDERING TO HAPPEN
-//		PORTALIZATION
-//			PORTAL VIRTUAL, PORTAL WINDOW AND PORTAL DOOR TYPES VIA SELECTION MODE
-//			STRICTLY ALLOW ONLY FIRST WALLS TO ACT AS PORTAL HINGES FOR SLOPING FLOOR AND CEILING
-//				STRICTLY ALLOW ONLY PERPENDICULAR WALLS TO FIRST WALL ACT AS ADDITIONAL PORTAL HINGES WHEN A PORTAL HINGE EXISTS ALREADY
-//			PRIORITIZE SELECTION OF PORTAL TYPES BEFORE WALL TYPES TO ALLOW DELETION OF PORTALS
-//		DELETION OF A PORTAL OR AN EFFECTOR WITH A LINKED SWITCH TO IT WILL SCAN AND DELETE THE LINKED SWITCH ALSO
-//			CAREFUL CODING OF THIS FEATURE MUST BE CONSIDERED
-//		TEXTURE RESOURCES
-//			EACH WALL MUST BE MATCHED TO A TEXTURE ID
-//			EDITOR ALLOWS FOR EXTERNAL TEXTURES TO BE LOADED AND ASSIGNED IDS TO
-//			WHOLE ROOMS WALL TEXTURES CAN BE ASSIGNED IN SELECTION MODE
-//			SINGLE WALLS TEXTURES CAN BE ASSIGNED IN SELECTION MODE
-//			EACH MAP FILE WILL BE A BUNDLE AND BLOB OF
-//				MAP DATA, N LINES (TOML-LIKE MAP FORMAT)
-//				TEXTURES, N AMOUNT FOR N LINES (XPM)
-//				UI GRAPHICS AND AUDIO FIXED AMOUNT FOR N LINES (XPM, WAV)
-//			BINARY REQUIRES A MAPFILE TO LOAD AND PLAY A MAP
-//			WHEN MAPFILES AND EDITOR RESOURCES FOUND, ALLOW FULL MENU FOR EITHER LEVEL SELECT OR EDITING
-//			WHEN MAPFILES FOUND BUT NO EDITOR RESOURCES FOUND, ALLOW LEVEL SELECT AND GAME LOADING
-//			WHEN NO MAPFILES FOUND, BUT EDITOR RESOURCES FOUND, ALLOW BINARY BOOTING TO EDITOR
-//			WHEN NO MAPFILES OR EDITOR RESOURCES FOUND, REFUSE BINARY BOOTING
+//		TODO FOR PORTALIZATION
+//	 			PORTAL VIRTUAL, PORTAL WINDOW AND PORTAL DOOR TYPES VIA SELECTION MODE
+//				STRICTLY ALLOW ONLY FIRST WALLS TO ACT AS PORTAL HINGES FOR SLOPING FLOOR AND CEILING
+//					STRICTLY ALLOW ONLY PERPENDICULAR WALLS TO FIRST WALL ACT AS ADDITIONAL PORTAL HINGES WHEN A PORTAL HINGE EXISTS ALREADY
+//				PRIORITIZE SELECTION OF PORTAL TYPES BEFORE WALL TYPES TO ALLOW DELETION OF PORTALS
+//			DELETION OF A PORTAL OR AN EFFECTOR WITH A LINKED SWITCH TO IT WILL SCAN AND DELETE THE LINKED SWITCH ALSO
+//				CAREFUL CODING OF THIS FEATURE MUST BE CONSIDERED
+//			TEXTURE RESOURCES
+//				EACH WALL MUST BE MATCHED TO A TEXTURE ID
+//				EDITOR ALLOWS FOR EXTERNAL TEXTURES TO BE LOADED AND ASSIGNED IDS TO
+//				WHOLE ROOMS WALL TEXTURES CAN BE ASSIGNED IN SELECTION MODE
+//				SINGLE WALLS TEXTURES CAN BE ASSIGNED IN SELECTION MODE
+//				EACH MAP FILE WILL BE A BUNDLE AND BLOB OF
+//					MAP DATA, N LINES (TOML-LIKE MAP FORMAT)
+//					TEXTURES, N AMOUNT FOR N LINES (XPM)
+//					UI GRAPHICS AND AUDIO FIXED AMOUNT FOR N LINES (XPM, WAV)
+//				BINARY REQUIRES A MAPFILE TO LOAD AND PLAY A MAP
+//				WHEN MAPFILES AND EDITOR RESOURCES FOUND, ALLOW FULL MENU FOR EITHER LEVEL SELECT OR EDITING
+//				WHEN MAPFILES FOUND BUT NO EDITOR RESOURCES FOUND, ALLOW LEVEL SELECT AND GAME LOADING
+//				WHEN NO MAPFILES FOUND, BUT EDITOR RESOURCES FOUND, ALLOW BINARY BOOTING TO EDITOR
+//				WHEN NO MAPFILES OR EDITOR RESOURCES FOUND, REFUSE BINARY BOOTING
 
-// TODO TECH DEBT, OPTIMIZATION AND FORBIDDEN DEBT
+// TODO FOR FIXING TECH DEBT, OPTIMIZING AND REMOVING FORBIDDEN FUNCTIONS
 //		THE SOLUTION FOR INFINITE LOOPING CLIP DETECTION: LIMITED TO 10 ITERATIONS
 //		SCROLL BARS AS LINES TO INDICATE LOCATION SCROLLED TO: DID NOT USE RECT DRAWING
 //  	SDL_BLIT ON UNOPTIMIZED SDL_SURFACES
@@ -142,9 +87,6 @@
 // Check for wall intersections, and disallow. As above, error console (later GUI) and prevent
 // closing and saving, until resolved.
 
-// COMPLETED UPGRADE TO JSON LIKE PARSING FOR MAP DATA IN AND OUT, BEFORE ADDING
-//		PICKUPS, EFFECTORS DATA TYPES, EXPANDING THE OLD DATA WITH MORE FIELDS ETC // DONE
-
 void				init_edt(t_doom *doom, int argc, char **argv)
 {
 	doom->edt = (t_editor*)malloc(sizeof(t_editor));
@@ -168,7 +110,103 @@ void				init_edt(t_doom *doom, int argc, char **argv)
 		doom->edt->map = init_mapfile();
 }
 
-void				destroy_edt(t_doom *doom)
+static void 	draw_confirmation(char *input, t_doom *doom)
+{
+    get_state()->gui->change_zoom(get_state());
+    flood_buffer(doom->edt->buff, 0xff000000);
+    SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+    editor_back_buffer()->rendering_on = 0;
+    edt_gridify();
+    print_glyph_str("saved map as ", doom->edt->buff, 480, 860);
+    print_glyph_str(input, doom->edt->buff, 922, 860);
+    print_glyph_str("saved map as ", editor_back_buffer()->buff, 480, 860);
+    print_glyph_str(input,editor_back_buffer()->buff, 922, 860);
+}
+
+static void 	draw_input(t_doom *doom)
+{
+    get_state()->gui->change_zoom(get_state());
+    flood_buffer(doom->edt->buff, 0xff000000);
+    SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+    editor_back_buffer()->rendering_on = 0;
+    edt_gridify();
+    print_glyph_str(STRING_ENTER_MAPFILE, doom->edt->buff, 80, 50);
+    print_glyph_str(STRING_VALID_CHAR_INFO, doom->edt->buff, 90, 90);
+}
+
+static void 	read_keystate_input(char *arr, int *i, t_doom *doom)
+{
+    SDL_Scancode	alphabet[27] = { SDL_SCANCODE_A, SDL_SCANCODE_B,
+                                     SDL_SCANCODE_C, SDL_SCANCODE_D,	SDL_SCANCODE_E, SDL_SCANCODE_F,
+                                     SDL_SCANCODE_G, SDL_SCANCODE_H, SDL_SCANCODE_I, SDL_SCANCODE_J,
+                                     SDL_SCANCODE_K, SDL_SCANCODE_L, SDL_SCANCODE_M, SDL_SCANCODE_N,
+                                     SDL_SCANCODE_O, SDL_SCANCODE_P, SDL_SCANCODE_Q, SDL_SCANCODE_R,
+                                     SDL_SCANCODE_S, SDL_SCANCODE_T, SDL_SCANCODE_U, SDL_SCANCODE_V,
+                                     SDL_SCANCODE_W, SDL_SCANCODE_X, SDL_SCANCODE_Y, SDL_SCANCODE_Z,
+                                     SDL_SCANCODE_PERIOD };
+    char 			chars[27] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+                                  'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                                  'w', 'x', 'y', 'z', '.'};
+    int 			x;
+
+    if (doom->keystates[SDL_SCANCODE_BACKSPACE] && *i > 0)
+    {
+        //ft_putchar('\n');
+        arr[(*i) - 1] = '\0';
+        (*i)--;
+        //ft_putstr(arr);
+        draw_input(doom);
+        print_glyph_str(arr, doom->edt->buff, 100, 130);
+        return ;
+    }
+    x = 0;
+    while (x < 27)
+    {
+        if (*i == 255)
+            break ;
+        if (doom->keystates[alphabet[x]])
+        {
+            arr[*i] = chars[x];
+            (*i)++;
+            draw_input(doom);
+            print_glyph_str(arr, doom->edt->buff, 100, 130);
+        }
+        x++;
+    }
+}
+
+static char         *ask_to_save(t_doom *doom)
+{
+        uint32_t	input_ticks;
+        int 		finished;
+        int 		i;
+        char 		input[255];
+
+        //puts("Listening for input:\n");
+        draw_input(doom);
+        finished = 0;
+        while (finished < 255)
+            input[finished++] = '\0';
+        finished = 0;
+        i = 0;
+        input_ticks = SDL_GetTicks();
+        while (!finished)
+        {
+            if (SDL_GetTicks() - input_ticks < 64)
+                continue ;
+            SDL_PumpEvents();
+            doom->keystates = SDL_GetKeyboardState(NULL);
+            if (doom->keystates[SDL_SCANCODE_RETURN] || doom->keystates[SDL_SCANCODE_ESCAPE] || i == 255)
+                finished = 1;
+            read_keystate_input(&input, &i, doom);
+            input_ticks = SDL_GetTicks();
+            SDL_UpdateWindowSurface(doom_ptr()->edt->win);
+        }
+        draw_confirmation(&input, doom);
+        return (ft_strdup(&input));
+}
+
+void			    destroy_edt(t_doom *doom)
 {
 	if (doom->edt->map_supplied)
 	{
@@ -185,7 +223,29 @@ void				destroy_edt(t_doom *doom)
 			ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
 		if (doom->edt->map != NULL)
 			destroy_mapfile(doom->edt->map);
+        doom->edt->map = NULL;
 	}
+	else if (doom->mdl->player.x == -1 || doom->mdl->player.y == -1)
+    {
+        ft_putendl("Warning: Player position not supplied, did not save mapfile.");
+    }
+	else
+    {
+        doom->edt->map = init_mapfile();
+        create_strings_from_model(doom->mdl, doom->edt->map);
+	    if (doom->edt->map_path)
+	        free(doom->edt->map_path);
+	    doom->edt->map_path = ask_to_save(doom);
+        if (!write_mapfile(doom->edt->map_path, doom->edt->map))
+            ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
+        if (doom->edt->map != NULL)
+            destroy_mapfile(doom->edt->map);
+        doom->edt->map = NULL;
+        SDL_Delay(500);
+        doom->menu->update_argc_argv = 1;
+        doom->menu->added_arg = ft_strdup(doom->edt->map_path);
+        free(doom->edt->map_path);
+    }
 	// TODO TECHNICAL DEBT, SEPARATE OUT OF THIS FUNCTION, PERHAPS INTO MENU ITEM WHICH KILLS EDITOR
 	if (doom->map_data_initialized && doom->map->was_filled)
 	{
@@ -243,10 +303,6 @@ void			edt_gridify(void)
 			y++;
 			loc += 10;
 		}
-		/* whole line gridification style
-		 if (y % grid_sz == sy_mod)
-			if (pixels[loc] == 0xff000000)
-				pixels[loc] = col; */
 		loc++;
 	}
 }

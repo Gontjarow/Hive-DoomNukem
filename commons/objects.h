@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/19 20:14:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/27 19:45:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,9 @@
 
 #include "doom-nukem.h"
 
-# define 				WAV_PLOP "wav/plop.wav"
-# define 				WAV_STEAM0 "wav/steam/0.wav"
-# define 				WAV_SWORD "wav/sword.wav"
-# define				WAV_THUNDER "wav/thunder.wav"
-# define 				IMG_THUNDER0 "img/thunder/0.png"
-# define				WAV_PISTOLRLD "wav/pistolreload.wav"
-# define				WAV_ASSAULTRLD "wav/assaultreload.wav"
-# define				WAV_SMGRLD "wav/smgreload.wav"
-# define				WAV_PISTOLSHOT "wav/pistolshot.wav"
-# define				WAV_WALKING "wav/walking.wav"
-# define				WAV_RUNNING "wav/running.wav"
-# define				WAV_CROUCHING "wav/crouching.wav"
-# define				WAV_ENEMYDEATH "wav/enemy_dead.wav"
-# define				WAV_ASSAULTSHOT "wav/assaultshot.wav"
-# define				WAV_SMGSHOT "wav/smgshot.wav"
-# define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
-# define				WAV_AMMOPICKUP "wav/ammopickup.wav"
+enum 	e_sprite_categories { FRONT_ATTACK };
+enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
+enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
 
 typedef struct			s_xy t_xy;
 typedef struct 			s_doom t_doom;
@@ -96,6 +82,8 @@ typedef struct 			s_player
 	int					shoot_cd;
 	int					reload_time;
 	int					weap_id;
+	int					shooting;
+	struct SDL_Surface	*active_health_bar;
 	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
 	struct s_weapon		weap_arr[10];
@@ -114,6 +102,14 @@ typedef struct          s_ai
 	int                 dmg;
 }                       t_ai;
 
+typedef struct			s_animation
+{
+	SDL_Surface 		**surfaces;
+	int 				frames;
+	int 				current;
+	int					done;
+}						t_animation;
+
 typedef struct 			s_enemy
 {
 	int 				id;
@@ -123,6 +119,9 @@ typedef struct 			s_enemy
 	int					did_shoot;
 	int					who_shot;
 	int					shoot_cd;
+	int					anim_phase;
+	int					stun_time;
+	int					stun_cd;
 	uint32_t			ray_color;
 	struct s_ai			ai;
 	struct s_coord		bullet_pos;
@@ -130,6 +129,8 @@ typedef struct 			s_enemy
 	struct s_health		hp;
 	struct s_weapon		wep;
 	struct s_enemy		*next;
+	struct s_animation	anim;
+	struct SDL_Surface	*active_sprite;
 }						t_enemy;
 
 typedef struct 			s_wall
@@ -186,20 +187,53 @@ typedef struct 			s_sounds
 	int					footstep_delay;
 }						t_sounds;
 
-typedef struct			s_animation
+typedef struct 			s_sprites
 {
-	SDL_Surface 		**surfaces;
-	int 				frames;
-	int 				current;
-}						t_animation;
+	// HUD Sprites
+	struct SDL_Surface **txt_health_bar;
+	struct SDL_Surface *txt_key_hud;
+
+	// Pickup Sprites
+	struct SDL_Surface *txt_health_pickup;
+	struct SDL_Surface *txt_smg_ammo_pickup;
+	struct SDL_Surface *txt_assault_ammo_pickup;
+
+	// Underlying data holders, invididually named for readability
+	struct SDL_Surface	*txt_ranged_front_attack;
+	struct SDL_Surface	*txt_ranged_front_idle;
+	struct SDL_Surface	**txt_ranged_front_walk;
+	struct SDL_Surface	*txt_ranged_side_attack;
+	struct SDL_Surface	*txt_ranged_side_idle;
+	struct SDL_Surface	**txt_ranged_side_walk;
+	struct SDL_Surface	**txt_ranged_death;
+
+	struct SDL_Surface	**txt_melee_front_attack;
+	struct SDL_Surface	**txt_melee_front_walk;
+	struct SDL_Surface	**txt_melee_side_attack;
+	struct SDL_Surface	**txt_melee_side_walk;
+	struct SDL_Surface	*txt_melee_front_idle;
+	struct SDL_Surface	*txt_melee_side_idle;
+	struct SDL_Surface	**txt_melee_death;
+
+	struct SDL_Surface	**txt_boss_front_attack;
+	struct SDL_Surface	**txt_boss_front_walk;
+	struct SDL_Surface	**txt_boss_side_attack;
+	struct SDL_Surface	**txt_boss_side_walk;
+	struct SDL_Surface	*txt_boss_front_idle;
+	struct SDL_Surface	*txt_boss_side_idle;
+	struct SDL_Surface	**txt_boss_death;
+}						t_sprites;
 
 typedef struct			s_menu
 {
 	int 				selected;
+	int                 mousing_at;
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
 	int 				alphabet_scale;
+	int                 update_argc_argv;
+	char                *added_arg;
 	SDL_Surface			*thunder;
 	struct s_doom		*parent;
 }						t_menu;
