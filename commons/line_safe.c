@@ -48,7 +48,7 @@ static void		line_draw_safe(t_line *l, int delta_x, int delta_y)
 	abs_deltas[0] = abs(delta_x);
 	abs_deltas[1] = abs(delta_y);
 	kx = 2 * abs_deltas[1] - abs_deltas[0];
-	set_pixel(l->buff, l->fx, l->fy, l->color);
+	set_pixel_safe(l->buff, l->fx, l->fy, l->color);
 	while (l->fx < l->px)
 	{
 		l->fx++;
@@ -75,7 +75,7 @@ static void		line_mirror_safe(t_line *l, int delta_x, int delta_y)
 	abs_deltas[0] = abs(delta_x);
 	abs_deltas[1] = abs(delta_y);
 	ky = 2 * abs_deltas[0] - abs_deltas[1];
-	set_pixel(l->buff, l->fx, l->fy, l->color);
+	set_pixel_safe(l->buff, l->fx, l->fy, l->color);
 	while (l->fy < l->py)
 	{
 		l->fy++;

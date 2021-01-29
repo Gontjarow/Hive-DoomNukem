@@ -462,3 +462,15 @@ void			unpreserve_render_line(t_line *l)
 		line_unpreserve_mirror(l, delta_x, delta_y);
 	}
 }
+
+void			render_line_simple(t_doom *doom, t_xy a, t_xy b, int c)
+{
+	t_line line;
+	line.x1 = a.x;
+	line.y1 = a.y;
+	line.x2 = b.x;
+	line.y2 = b.y;
+	line.color = c;
+	line.buff = doom->minimap->buff;
+	render_line(&line);
+}
