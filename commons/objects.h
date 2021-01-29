@@ -68,6 +68,7 @@ typedef struct 			s_player
 	double				rot_vertical;
 	double 				x;
 	double 				y;
+	double 				yaw;
 	int 				rot;
 	int					height;
 	int					is_jumping;

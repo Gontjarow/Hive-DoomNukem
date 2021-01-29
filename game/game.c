@@ -54,8 +54,24 @@ void		destroy_game(t_doom *doom)
 
 void		game_mouse_motion(t_doom *doom)
 {
-	if (doom->game_quit == 0)
-		doom->game_quit = 0;
+	static double yaw = 0.0;
+	int x;
+	int y;
+	int delta;
+
+	SDL_GetRelativeMouseState(&x,&y);
+	yaw   = clamp(yaw + y*0.01f, -(M_PI / 8), (M_PI / 8));
+	doom->mdl->player.yaw = yaw;
+	delta = abs(x);
+	if (x > 0)
+		get_model()->player.rot += delta;
+	if (x < 0)
+		get_model()->player.rot -= delta;
+	if (doom_ptr()->mdl->player.rot < 0)
+		doom_ptr()->mdl->player.rot = 359 + (doom_ptr()->mdl->player.rot);
+	if (doom_ptr()->mdl->player.rot >= 360)
+		doom_ptr()->mdl->player.rot = 0 + (doom_ptr()->mdl->player.rot) - 360;
+	update_player_tail(doom_ptr(), deg_to_rad(doom_ptr()->mdl->player.rot));
 }
 
 void		game_mouse_updown(t_doom *doom)
