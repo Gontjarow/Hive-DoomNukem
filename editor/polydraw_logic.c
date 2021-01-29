@@ -73,6 +73,7 @@ static int		isolated_portalization_check(t_status *status, int x, int y)
 
 static int			handle_portalization(t_status *status, t_linedraw *data)
 {
+	t_wall 	*wall;
 	/* ISOLATE PORTALIZATION HERE */
 	//printf("data | por_a = %d [%d, %d] | por_b = %d [%d, %d]\n", data->portal_option_a, data->portal_a_loc.x,
 	// data->portal_a_loc.y, data->portal_option_b, data->portal_b_loc.x, data->portal_b_loc.y);
@@ -93,13 +94,6 @@ static int			handle_portalization(t_status *status, t_linedraw *data)
 		assert(status->phase == 2);
 		wall_to_buffer(linedraw_to_wall(data), editor_back_buffer()->buff, 0xffffffff);
 
-		// TODO:
-		// 	FIX EDGE CASES FOR PORTAL A AND PORTAL B BY ID SELECTION LOGIC ->
-		//		COULD BE INCORRECT WHEN:
-		//			ID IS 0
-		//			FIRST WALL OF A ROOM
-		//			LAST WALL OF A ROOM
-
 		// A COMPLETING CONNECTOR WALL THAT AUTOCOMPLETES THE ROOM CREATION AND DOES THE PORTAL
 		// THUS FINISHING THE PORTALIZATION PROCESS
 		data->drawing_underway = 1;
@@ -109,19 +103,16 @@ static int			handle_portalization(t_status *status, t_linedraw *data)
 		data->draw_to_y = wall_by_id(data->origin_id)->start.y;
 		wall_to_buffer(linedraw_to_wall(data), editor_back_buffer()->buff, COLOR_PORTAL);
 
-		// RESERVED FOR HANDLING PORTAL CREATION TO MODEL
-		t_wall 	*wall;
-		wall = wall_by_id(get_model()->wall_count - 1);
-			//ft_putendl("PORTAL CREATED TOO!");
-			//printf("wall[%d] equals new portal! %d, %d -> %d, %d\n", wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
-		record_portal(get_model(), wall);
-		// RESERVED FOR HANDLING PORTAL CREATION TO MODEL
-
 		// Invokation of the ending phase, polydraw_end, if status->thread_hit was TRUE, do polydraw_end (phase 2)
 		// This basically ONLY happens, when a Room is created properly, thus, call record_room() here.
 		if (status->phase == 2)
 		{
-			record_room(get_model(), wall_by_id(data->origin_id), data->origin_id);
+			// RESERVED FOR HANDLING PORTAL CREATION TO MODEL
+			wall = wall_by_id(get_model()->wall_count - 1);
+			//ft_putendl("PORTAL CREATED TOO!");
+			//printf("wall[%d] equals new portal! %d, %d -> %d, %d\n", wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
+			if (record_room(get_model(), wall_by_id(data->origin_id), data->origin_id))
+				record_portal(get_model(), wall);
 			get_state()->saving_choice = 0;
 			//debug_model_rooms();
 			status->phases[status->phase](status);

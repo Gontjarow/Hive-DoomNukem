@@ -1,21 +1,36 @@
 #include "doom-nukem.h"
 
+//  TODO FIX ERRORS WHEN PORTALIZING ON EDGE CASES
+//      FIX EDGE CASES FOR PORTAL A AND PORTAL B BY ID SELECTION LOGIC ->
+// 		COULD BE INCORRECT WHEN:
+// 			THE FIRST WALL OF A ROOM
+//              must iterate to last wall p
+// 			LAST WALL OF A ROOM
+//              easy, can fix by refering to previous wall and first_wall
+
 static void		set_portal_ids_to_linedraw_data(t_status *status, int id, int other_wall_id)
 {
-	t_linedraw *data;
+	t_linedraw  *data;
+	t_room      *room;
 
 	data = (t_linedraw*)status->data;
+	data->portal_option_a = id;
+	room = room_by_wall_id(id, get_model());
+	if (id == room->first_wall_id && other_wall_id == -1)
+		data->portal_option_b = room->first_wall_id + room->wall_count - 1;
+	else if (other_wall_id == -1)
+		data->portal_option_b = id - 1;
+	if (id == room->first_wall_id + room->wall_count - 1 && other_wall_id == 1)
+		data->portal_option_b = room->first_wall_id;
+	else if (other_wall_id == 1)
+		data->portal_option_b = id + 1;
 	if (other_wall_id == 1) // same id start, plus one id end
 	{
-		data->portal_option_a = id;
-		data->portal_option_b = id + 1;
 		data->portal_a_loc = (t_point) {wall_by_id(data->portal_option_a)->start.x, wall_by_id(data->portal_option_a)->start.y};
 		data->portal_b_loc = (t_point) {wall_by_id(data->portal_option_b)->end.x, wall_by_id(data->portal_option_b)->end.y};
 	}
 	else if (other_wall_id == -1) // same id end, minus one id start
 	{
-		data->portal_option_a = id;
-		data->portal_option_b = id - 1;
 		data->portal_a_loc = (t_point) {wall_by_id(data->portal_option_a)->end.x, wall_by_id(data->portal_option_a)->end.y};
 		data->portal_b_loc = (t_point) {wall_by_id(data->portal_option_b)->start.x, wall_by_id(data->portal_option_b)->start.y};
 	}
@@ -36,7 +51,7 @@ t_point 		detect_wall_point(int x, int y, t_model *mdl, t_state *state)
 	wall = mdl->wall_first;
 	while (wc--)
 	{
-		if (abs((wall->start.x) - x) < 15 && abs((wall->start.y) - y < 15))
+		if (abs((wall->start.x) - x) < 15 && abs((wall->start.y) - y)  < 15)
 		{
 			set_portal_ids_to_linedraw_data(polydraw_status(), wall->id, -1);
 			return (t_point) {wall->start.x, wall->start.y};

@@ -36,6 +36,9 @@ void		handle_player_health_bar(t_doom *doom)
 	doom->mdl->player.active_health_bar = doom->sprites->txt_health_bar[pos];
 }
 
+// Surf refers to WHAT you want to draw
+// Buff refers to WHERE you want to draw it TO
+// X, Y refer to the X, Y location of the BUFF surface
 static void draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
     int *pix[2];
