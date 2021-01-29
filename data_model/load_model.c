@@ -291,6 +291,7 @@ static void init_mapdata(t_doom *doom)
 	doom->map->join_string = NULL;
 	doom->map->enemy_string = NULL;
 	doom->map->player_string = NULL;
+	doom->map->chain_string = NULL;
 	doom->map->portal_string = NULL;
 	doom->map->wall_string = NULL;
 	doom->map->room_string = NULL;
@@ -305,6 +306,8 @@ void 		destroy_mapdata(t_doom *doom)
 		free(doom->map->join_string);
 	if (doom->map->player_string != NULL)
 		free(doom->map->player_string);
+	if (doom->map->player_string != NULL)
+		free(doom->map->chain_string);
 	if (doom->map->wall_string != NULL)
 		free(doom->map->wall_string);
 	if (doom->map->room_string != NULL)
@@ -403,6 +406,16 @@ static int	stringify_mapfile(t_doom *doom, char *map_path)
 				free(join);
 				join = doom->map->player_string;
 				doom->map->player_string = ft_strjoin(doom->map->player_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Chain_to_mapfile]", 18)){
+				if (doom->map->chain_string == NULL)
+					doom->map->chain_string = ft_strnew(1);
+				join = doom->map->chain_string;
+				doom->map->chain_string = ft_strjoin(doom->map->chain_string, line);
+				free(join);
+				join = doom->map->chain_string;
+				doom->map->chain_string = ft_strjoin(doom->map->chain_string, "\n");
 				free(join);
 			}
 			free(line);

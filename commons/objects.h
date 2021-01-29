@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/29 15:24:33 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/29 16:36:53 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct 			s_player
 	int					reload_time;
 	int					weap_id;
 	struct SDL_Surface	*active_health_bar;
+	int					shooting;
 	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
 	struct s_weapon		weap_arr[10];

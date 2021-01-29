@@ -26,12 +26,12 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 {
 	signal = (-1) * signal;
 	if (doom->mdl->player.is_crouching && doom->sounds->footstep_delay == 0)
-		Mix_PlayChannel(2, doom->sounds->mcCrouching, 0);
+		Mix_PlayChannel(-1, doom->sounds->mcCrouching, 0);
 	else if (doom->mdl->player.is_running && doom->sounds->footstep_delay == 0)
-		Mix_PlayChannel(2, doom->sounds->mcRunning, 0);
+		Mix_PlayChannel(-1, doom->sounds->mcRunning, 0);
 	else if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching
 			&& doom->sounds->footstep_delay == 0)
-		Mix_PlayChannel(2, doom->sounds->mcWalking, 0);
+		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
 	if (doom->sounds->footstep_delay == 0)
 		doom->sounds->footstep_delay = 8;
 	doom->mdl->player.x = doom->mdl->player.x + (signal *

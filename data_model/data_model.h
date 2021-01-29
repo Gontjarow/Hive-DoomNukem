@@ -57,6 +57,7 @@ typedef struct			s_model
 	int 				portal_count;
 	int 				enemy_count;
 	int 				pickup_count;
+	char 				*chain;
 } 						t_model;
 
 typedef struct 			s_mapfile
@@ -67,6 +68,7 @@ typedef struct 			s_mapfile
 	char 				*enemy_string;
 	char 				*pickup_string;
 	char 				*player_string;
+	char 				*chain_string;
 	char 				*join_string;
 	int 				was_filled;
 }						t_mapfile;
@@ -121,6 +123,7 @@ int						overwrite_mapfile(char *map_path, t_mapfile *map);
  * */
 
 void					update_player_string(t_model *mdl, t_mapfile *map);
+void					update_chain_string(t_model *mdl, t_mapfile *map);
 void					add_enemy_to_string(t_enemy *enemy, t_mapfile *map);
 void					add_wall_to_string(t_wall *wall, t_mapfile *map);
 void					add_portal_to_string(t_wall *portal, t_mapfile *map);

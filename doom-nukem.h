@@ -40,7 +40,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 10
+# define FPS 33
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 1
@@ -53,6 +53,7 @@ typedef struct			s_doom
 	int					minimap_quit;
 	int 				menu_out_of_focus;
 	int 				map_data_initialized;
+	float				fps;
 	const Uint8* 		keystates;
 	uint32_t 			app_start;
 	uint32_t 			frame_start;
@@ -94,7 +95,7 @@ void 			destroy_game(t_doom *doom);
 void			game_render(t_doom *doom);
 void	 		game_loop(t_doom *doom);
 void			game_mouse_motion(t_doom *doom);
-void 			game_mouse_down(t_doom *doom);
+void 			game_mouse_updown(t_doom *doom);
 void			game_key_down(t_doom *doom);
 
 #endif

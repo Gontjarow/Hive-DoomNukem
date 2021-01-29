@@ -141,6 +141,7 @@ typedef struct 			s_state
     int 				confine_skip;
     int 				selected_weapon_type;
     int 				selected_ai_type;
+    int 				selected_sprite_id;
     int 				grid_on;
     int 				grid_size;
     int 				cooldown;
@@ -409,5 +410,14 @@ void					find_visual_xy(t_room *room);
  * */
 
 void					delete_room(t_room *room, t_model *mdl);
+
+enum					e_clockwise_return_code { NEEDS_FLIPPING = 2 };
+
+/*
+ * from clockwiseness.c
+ * */
+
+void		 			flip_room(t_room *room, t_model *mdl);
+int						is_clockwise_convex_polygon(t_room *room);
 
 #endif
