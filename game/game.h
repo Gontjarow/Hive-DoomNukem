@@ -52,6 +52,7 @@ void			handle_pickup(t_doom *doom);
 void			game_print_alphabet(const char *str, t_doom *doom, int x, int y);
 void			game_print_numbers(const char *str, t_doom *doom, int x, int y);
 void			init_hud(t_doom *doom);
+void            render_hud(t_doom *doom);
 void			handle_game_hud(t_doom *doom);
 
 void			update_player_tail(t_doom *doom, double rad);

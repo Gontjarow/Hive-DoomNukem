@@ -22,7 +22,7 @@ static int		inner_checks(double deflection_angle, int *i, int *report_non_convex
 
 	if (deflection_angle != (dir = 0))
 		dir = deflection_angle > 0 ? 1 : -1;
-	printf("abc angle %d: %f\n", (*i)++, (deflection_angle / M_PI) * 180.0f);
+	//printf("abc angle %d: %f\n", (*i)++, (deflection_angle / M_PI) * 180.0f);
 	if (*compare_dir != 0 && *compare_dir != dir)
 		*report_non_convex = 1;
 	*compare_dir = dir;
@@ -48,7 +48,7 @@ void 			flip_room(t_room *room, t_model *mdl)
 
 	debug_model_walls();
 	debug_model_rooms();
-	printf("FLIPPING OPERATION BEGIN!\n\n");
+	//printf("FLIPPING OPERATION BEGIN!\n\n");
 	flip_wall(room->first_wall);
 	walls = (t_wall**)malloc(sizeof(t_wall*) * room->wall_count);
 	if (walls == NULL)
@@ -67,12 +67,12 @@ void 			flip_room(t_room *room, t_model *mdl)
 	while (i < room->wall_count - 1)
 	{
 		walls[i]->next = walls[i + 1];
-		printf("walls[%d]->next = walls[(%d + 1) = %d]\n", i, i, i + 1);
+		//printf("walls[%d]->next = walls[(%d + 1) = %d]\n", i, i, i + 1);
 		i++;
 	}
 	walls[i]->next = mdl->walls;
-	printf("walls[%d]->next = mdl->walls\n", i);
-	printf("OPERATION COMPLETE!\n\n");
+	//printf("walls[%d]->next = mdl->walls\n", i);
+	//printf("OPERATION COMPLETE!\n\n");
 	debug_model_walls();
 	debug_model_rooms();
 	free(walls);
@@ -121,8 +121,8 @@ int				is_clockwise_convex_polygon(t_room *room)
 		sum += deflection_angle;
 		running += (M_PI - fabs(deflection_angle));
 	(compare_dir == 1) ? plus++ : minus++;
-	printf("deflection angles sum for %d angles: %f\n", i, (sum / M_PI) * 180.0f);
-	printf("deflection angles running sum for %d angles: %f\n", i, (running / M_PI) * 180.0f);
+	//printf("deflection angles sum for %d angles: %f\n", i, (sum / M_PI) * 180.0f);
+	//printf("deflection angles running sum for %d angles: %f\n", i, (running / M_PI) * 180.0f);
 	if (wall->end.x != room->first_wall->start.x || wall->end.y != room->first_wall->start.y)
 	{
 		if (report_non_convex)
@@ -152,7 +152,7 @@ int				is_clockwise_convex_polygon(t_room *room)
 		ft_putendl("WARNING: Convex polygon detected, but it was COUNTER-CLOCKWISE!");
 		return (2);
 	}
-	ft_putendl("Room passed is_clockwise_convex_polygon checks!");
+	//ft_putendl("Room passed is_clockwise_convex_polygon checks!");
 	return (1);
 }
 

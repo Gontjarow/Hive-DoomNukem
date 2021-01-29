@@ -52,7 +52,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define GRID_START_SIZE		32
 # define DOUBLE_CLICK_COOLDOWN	24
 # define STRING_ENTER_MAPFILE	"input mapfile name with a..z and ."
-# define STRING_VALID_CHAR_INFO	"save and confirm next map with enter"
+# define STRING_VALID_CHAR_INFO	"save and confirm with enter"
 # define STRING_CONFIRM_SAVING	"do you want to save changes to map"
 
 typedef struct 			s_2d_layer
@@ -200,6 +200,7 @@ void	 				handle_keyboard_scrolling(t_doom *doom);
  * from walls.c
  * */
 
+t_room					*room_by_wall_id(int id, t_model *mdl);
 void					wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
 void 					room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color);
 void					x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
@@ -326,6 +327,7 @@ void 					effect_middle_click(int x, int y);
  * */
 
 t_point					relative_position(int x, int y, t_state *state);
+t_point                 scroll_adjusted(t_point point);
 t_point					scrolled_position(int x, int y, t_state *state);
 uint32_t				type_colors(int type);
 uint32_t				pickup_color(int flavor);
@@ -386,7 +388,7 @@ void					show_editor_polymap(SDL_Surface *polymap, uint32_t *colors);
 void					record_player(t_point location, t_point *tail, t_model *mdl);
 t_enemy					*record_enemy(t_point location, t_point *tail, t_model *mdl);
 void		 			record_portal(t_model *mdl, t_wall *wall);
-void					record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count);
+int						record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count);
 void					create_strings_from_model(t_model *mdl, t_mapfile *map);
 
 /*
@@ -406,7 +408,7 @@ void 					repaint_polymap(t_model *mdl);
 void					find_visual_xy(t_room *room);
 
 /*
- * from rooms.c
+ * from delete_room.c
  * */
 
 void					delete_room(t_room *room, t_model *mdl);
@@ -419,5 +421,12 @@ enum					e_clockwise_return_code { NEEDS_FLIPPING = 2 };
 
 void		 			flip_room(t_room *room, t_model *mdl);
 int						is_clockwise_convex_polygon(t_room *room);
+
+/*
+ * from delete_portal.c
+ * */
+
+void					delete_portals_by_room(t_room *room, t_model *mdl);
+void					delete_portal(t_wall *portal, t_model *mdl);
 
 #endif

@@ -87,7 +87,7 @@ void 			init_menu(t_doom *doom);
 void 			destroy_menu(t_doom *doom);
 void			render_animation(t_doom *doom);
 void			load_animation(t_menu *menu);
-void			window_and_menu_events(t_doom *doom);
+void			window_and_menu_events(t_doom *doom, int argc, char **argv);
 void			main_menu_loop(t_doom *doom, int argc, char **argv);
 
 void 			init_game(t_doom *doom, int argc, char **argv);

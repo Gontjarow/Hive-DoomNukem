@@ -42,7 +42,7 @@ void				deal_damage(t_doom *doom, int enemy_id)
 		if (enemy->id == enemy_id && enemy->hp.cur > 0)
 		{
 			if (enemy->stun_cd == 0)
-				enemy->stun_time = 2;
+				enemy->stun_time = 10;
 			enemy->anim.done = HURT;
 			enemy->ai.aggro = 1;
 			enemy->hp.cur -=

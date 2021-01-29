@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/29 16:36:53 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/29 17:39:10 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 enum 	e_sprite_categories { FRONT_ATTACK };
 enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
+enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
 
 typedef struct 			s_doom t_doom;
 
@@ -80,8 +81,8 @@ typedef struct 			s_player
 	int					shoot_cd;
 	int					reload_time;
 	int					weap_id;
-	struct SDL_Surface	*active_health_bar;
 	int					shooting;
+	struct SDL_Surface	*active_health_bar;
 	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
 	struct s_weapon		weap_arr[10];
@@ -192,6 +193,7 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_assault_ammo_bar;
 	struct SDL_Surface	*txt_smg_ammo_bar;
 	struct SDL_Surface	*txt_pistol_ammo_bar;
+	struct SDL_Surface	*txt_clip_bar;
 	struct SDL_Surface	*txt_key_hud;
 
 	// Pickup Sprites
@@ -228,10 +230,13 @@ typedef struct 			s_sprites
 typedef struct			s_menu
 {
 	int 				selected;
+	int                 mousing_at;
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
 	int 				alphabet_scale;
+	int                 update_argc_argv;
+	char                *added_arg;
 	SDL_Surface			*thunder;
 	struct s_doom		*parent;
 }						t_menu;

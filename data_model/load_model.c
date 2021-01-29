@@ -617,7 +617,7 @@ int			load_model(t_doom *doom)
 		// Initialize the enemy weapon cooldown for shooting
 		assign_enemy_cd(doom->mdl);
 		// Create polymap buffer for rooms for instant tracking of room_id where player is
-		ft_putendl("Launching game, calling expand_mdl_polygon_maps");
+		    //ft_putendl("Launching game, calling expand_mdl_polygon_maps");
 		expand_mdl_polygon_maps(doom->mdl);
 	}
 	return (1);

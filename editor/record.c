@@ -59,7 +59,7 @@ void 			record_portal(t_model *mdl, t_wall *wall)
 	mdl->portals = next_portal;
 }
 
-void			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count)
+int			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_count)
 {
 	t_room	*next_room;
 	int 	can_be_recorded;
@@ -93,14 +93,18 @@ void			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_co
 	mdl->rooms = next_room;
 	if (!can_be_recorded)
 	{
-		ft_putendl("Would be OUTRIGHT COOL to undo the room from the records here!");
+		//ft_putendl("Would be OUTRIGHT COOL to undo the room from the records here!");
 		delete_room(room_by_id(mdl->room_count - 1), mdl);
+		Mix_PlayChannel(-1, doom_ptr()->sounds->mcPlop, 0);
+		get_state()->gui->change_zoom(get_state());
+		return (0);
 	}
 	else if (can_be_recorded == NEEDS_FLIPPING)
 	{
-		ft_putendl("Would be FLIPPING NICE to flip the room point order here!");
+		//ft_putendl("Would be FLIPPING NICE to flip the room point order here!");
 		flip_room(room_by_id(mdl->room_count - 1), mdl);
 	}
+	return (1);
 }
 
 static int 	degree_rot(t_point location, t_point *tail)
@@ -160,7 +164,8 @@ void		create_strings_from_model(t_model *mdl, t_mapfile *map)
 	t_pickup	*pickup;
 
 	update_player_string(mdl, map);
-	update_chain_string(mdl, map);
+	if (map->chain_string)
+		update_chain_string(mdl, map);
 	count = mdl->enemy_count;
 	enemy = mdl->enemy_first;
 	while (count--)
