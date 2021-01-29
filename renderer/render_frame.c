@@ -48,51 +48,13 @@ void			zbuffer_to_window(t_doom *doom)
 		GAME_WIN_WIDTH * GAME_WIN_HEIGHT * sizeof(*pixels));
 }
 
-// ---------------------
-
-typedef struct	s_sector2
-{
-	double		floor;
-	double		ceil;
-	unsigned	vertex_count;
-	t_xy		*vertex;
-	signed		*neighbors;
-}				t_sector2;
-
-typedef struct	s_section
-{
-	int id;
-	int left;
-	int right;
-}				t_section;
-
-typedef struct	s_camera
-{
-	signed	sector_id;
-	t_xyz	position;
-	t_xyz	velocity;
-	double	angle;
-	double	sin;
-	double	cos;
-	double	yaw;
-}				t_camera;
-
-typedef struct	s_world
-{
-	unsigned	sector_count;
-	t_sector2	*sectors;
-	t_camera	player;
-}				t_world;
-
-// ---------------------
-
 static void		print_data(t_world *world)
 {
 	unsigned sectors = world->sector_count;
 	unsigned si = 0;
 	while (si < sectors)
 	{
-		t_sector2 sector = world->sectors[si];
+		t_sector sector = world->sectors[si];
 		unsigned verts = sector.vertex_count;
 		printf("world->sectors[%3d]->vertex_count: %u\n", si, verts);
 		unsigned vi = 0;
@@ -108,22 +70,22 @@ static void		print_data(t_world *world)
 
 t_world			*get_world()
 {
-    static t_world  *world = NULL;
-    t_model         *mdl;
+	static t_world  *world = NULL;
+	t_model         *mdl;
 
-    if (world == NULL)
-    {
-        world = malloc(sizeof(*world));
-        mdl = get_model();
-        world->sectors = malloc(mdl->room_count * sizeof(t_sector2));
-		ft_bzero(world->sectors, mdl->room_count * sizeof(t_sector2));
-        world->sector_count = 0;
-        ft_memset(&world->player, 0, sizeof(world->player));
-        world->player.position = vec3(mdl->player.x, mdl->player.y, 0);
-        world->player.position = vec3_div(world->player.position, WORLD_SCALE);
-        world->player.position.z = EYE_HEIGHT;
-    }
-    return (world);
+	if (world == NULL)
+	{
+		world = malloc(sizeof(*world));
+		mdl = get_model();
+		world->sectors = malloc(mdl->room_count * sizeof(t_sector));
+		ft_bzero(world->sectors, mdl->room_count * sizeof(t_sector));
+		world->sector_count = 0;
+		ft_memset(&world->player, 0, sizeof(world->player));
+		world->player.position = vec3(mdl->player.x, mdl->player.y, 0);
+		world->player.position = vec3_div(world->player.position, WORLD_SCALE);
+		world->player.position.z = EYE_HEIGHT;
+	}
+	return (world);
 }
 
 static void		vertical_line(int column, int start, int end, int color)
@@ -152,7 +114,7 @@ t_world			*load_world(t_world *world)
     while (~--rooms)
     {
         // Pointer to sector to modify
-        t_sector2 *sector = &world->sectors[room_index];
+        t_sector *sector = &world->sectors[room_index];
 
         // Sector init
         sector->vertex_count = room->wall_count; // +1?
@@ -191,6 +153,7 @@ t_world			*load_world(t_world *world)
         ++world->sector_count;
         room = room->next;
     }
+	ft_memset(&world->player, 0, sizeof(world->player));
 	world->player.sector_id = room_id_from_polymap(mdl->poly_map, mdl->player.x, mdl->player.y);
     print_data(world);
     return (world);
@@ -221,14 +184,14 @@ double yaw_height(double ceil, double wall_y, double player_yaw)
 
 void			render_frame(t_doom *doom)
 {
-	printf("\nFRAME START\n");
+	// printf("\nFRAME START\n");
 	t_world	*world;
 	double	*zbuffer;
 
 	world = doom->game->world;
 	zbuffer = get_zbuffer();
 
-	ft_memset(&world->player, 0, sizeof(world->player));
+	// ft_memset(&world->player, 0, sizeof(world->player));
 	// Todo: Update these with regular inputs:
 	world->player.position = vec3_div(vec3(
 		doom->mdl->player.x,
@@ -261,7 +224,7 @@ void			render_frame(t_doom *doom)
 
 	// Easy access to current render data (sector to draw, section to draw into)
 	t_section	*section = &queue[0];
-	t_sector2	*sector = &world->sectors[section->id];
+	t_sector	*sector = &world->sectors[section->id];
 
 
 
@@ -271,6 +234,9 @@ void			render_frame(t_doom *doom)
 	{
 		drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,             GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
 		drawline(line_xy(vec2(GAME_MIDWIDTH,                   0), vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
+
+		world->player.yaw = clamp(world->player.yaw, -M_PI/2, M_PI/2);
+		// printf("yaw %f\n",world->player.yaw);
 
 		// Calculate relative vertex positions for one wall.
 		// The world's zero-point is now considered to be the player.
@@ -348,7 +314,7 @@ void			render_frame(t_doom *doom)
 
 		x1 = clamp(x1, section->left, section->right);
 		x2 = clamp(x2, section->left, section->right);
-		printf("\nnew render section: x1:%i, x2:%i (clamped)\n", x1, x2);
+		// printf("\nnew render section: x1:%i, x2:%i (clamped)\n", x1, x2);
 
 		// Todo: Vertical lines!
 
@@ -369,12 +335,11 @@ void			render_frame(t_doom *doom)
 		scale.start.y = (GAME_WIN_HEIGHT / wall_segment.start.y);
 		scale.stop.y = (GAME_WIN_HEIGHT / wall_segment.stop.y);
 
-		// Todo: account for camera yaw later.
-		int yawed_start_ceil  = GAME_MIDHEIGHT - ((ceil ) * scale.start.y);
-		int yawed_start_floor = GAME_MIDHEIGHT - ((floor) * scale.start.y);
+		int yawed_start_ceil  = GAME_MIDHEIGHT - (((ceil ) + wall_segment.start.y * world->player.yaw) * scale.start.y);
+		int yawed_start_floor = GAME_MIDHEIGHT - (((floor) + wall_segment.start.y * world->player.yaw) * scale.start.y);
 
-		int yawed_stop_ceil   = GAME_MIDHEIGHT - ((ceil ) * scale.stop.y);
-		int yawed_stop_floor  = GAME_MIDHEIGHT - ((floor) * scale.stop.y);
+		int yawed_stop_ceil   = GAME_MIDHEIGHT - (((ceil ) + wall_segment.stop.y * world->player.yaw) * scale.stop.y);
+		int yawed_stop_floor  = GAME_MIDHEIGHT - (((floor) + wall_segment.stop.y * world->player.yaw) * scale.stop.y);
 
 		// printf("\tceil:%-4.0f floor:%-4.0f || yawed_start_ceil:%-8i , yawed_stop_ceil:%-8i , yawed_start_floor:%-8i ,  yawed_stop_floor:%-8i \n",
 		// 	ceil, floor, yawed_start_ceil, yawed_stop_ceil, yawed_start_floor, yawed_stop_floor);
@@ -390,7 +355,7 @@ void			render_frame(t_doom *doom)
 			int colors[] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x0};
 			const char *name[] = {"red", "green", "blue", "grey", "white", "black"};
 			{
-				printf("\tdrawing %s\n", name[vertex]);
+				// printf("\tdrawing %s\n", name[vertex]);
 				vertical_line(beginx, 0,              GAME_MIDHEIGHT,    colors[vertex]);
 				vertical_line(endx,   GAME_MIDHEIGHT, GAME_WIN_HEIGHT-1, colors[vertex]);
 			}
@@ -451,14 +416,14 @@ void			render_frame(t_doom *doom)
 			// wall.color = 0x00ffff;
 			// drawline(line_add_offset(wall, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), doom->game->buff);
 
-			// t_xy_line out;
-			// out.color = 0x00ffff;
+			t_xy_line out = wall_segment;
+			out.color = 0x00ffff;
 			// vec2_clip_line(wall, &out, line);
 			// line = line_xy(planeright, vec2(0,0), 0x00ffff);
 			// vec2_clip_line(out, &out, line);
 
-			// draw_box(vec2_add(out.start, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, out.color, doom->game->buff);
-			// draw_box(vec2_add(out.stop, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, out.color, doom->game->buff);
+			draw_box(vec2_add(out.start, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, out.color, doom->game->buff);
+			draw_box(vec2_add(out.stop, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, out.color, doom->game->buff);
 		}
 
 		++vertex;

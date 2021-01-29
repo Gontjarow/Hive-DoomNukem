@@ -93,6 +93,40 @@ typedef struct	s_cam
 	t_xyz	rot;
 }				t_cam;
 
+typedef struct	s_sector
+{
+	double		floor;
+	double		ceil;
+	unsigned	vertex_count;
+	t_xy		*vertex;
+	signed		*neighbors;
+}				t_sector;
+
+typedef struct	s_section
+{
+	int id;
+	int left;
+	int right;
+}				t_section;
+
+typedef struct	s_camera
+{
+	signed	sector_id;
+	t_xyz	position;
+	t_xyz	velocity;
+	double	angle;
+	double	sin;
+	double	cos;
+	double	yaw;
+}				t_camera;
+
+typedef struct	s_world
+{
+	unsigned	sector_count;
+	t_sector	*sectors;
+	t_camera	player;
+}				t_world;
+
 # include "model.h"
 
 double			*get_zbuffer();
