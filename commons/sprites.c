@@ -179,6 +179,14 @@ void		load_health_bars(t_doom *doom, char *path, int i)
 	doom->sprites->txt_health_bar[10] = load_texture(doom, "img/sprites/hud/healthbar/health_10.png");
 }
 
+void		load_ammo_bars(t_doom *doom)
+{
+	doom->sprites->txt_pistol_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/pistolammo.png");
+	doom->sprites->txt_smg_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/smgammo.png");
+	doom->sprites->txt_assault_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/assaultammo.png");
+	printf("Loaded ammo bars!\n");
+}
+
 int			load_sprites(t_doom *doom)
 {
 	char	i;
@@ -195,6 +203,7 @@ int			load_sprites(t_doom *doom)
 	load_boss_sprite(doom, path, i);
 	load_pickup_sprite(doom);
 	load_health_bars(doom, path, i);
+	load_ammo_bars(doom);
 	return (1);
 }
 

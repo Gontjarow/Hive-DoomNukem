@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 19:27:21 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/29 16:32:59 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,40 @@ void		handle_player_health_bar(t_doom *doom)
 	doom->mdl->player.active_health_bar = doom->sprites->txt_health_bar[pos];
 }
 
+void		handle_player_ammo_bar(t_doom *doom)
+{
+	int		ammo;
+	int		i;
+	int		space;
+	int		newline;
+
+	ammo = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur;
+	i = 0;
+	space = 10;
+	newline = 0;
+	while (i < ammo)
+	{
+		if (doom->mdl->player.weap_id == 0)
+			print_minimap_single_sprite(doom, doom->sprites->txt_pistol_ammo_bar);
+		else if (doom->mdl->player.weap_id == 1)
+			print_minimap_single_sprite(doom, doom->sprites->txt_smg_ammo_bar);
+		else if (doom->mdl->player.weap_id == 2)
+			print_minimap_single_sprite(doom, doom->sprites->txt_assault_ammo_bar);
+		// if (i % 5 == 0)
+		// {
+		// 	newline += 10;
+		// 	space = 10;
+		// }
+		// else
+			space += 10;
+		i++;
+	}
+}
+
 void		handle_game_hud(t_doom *doom)
 {
 	handle_player_health_bar(doom);
+	// handle_player_ammo_bar(doom);
 }
 
 static void render_character(char c, t_doom *doom, int x, int y)

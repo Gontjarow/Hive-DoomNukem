@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/27 19:45:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/29 15:24:33 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,13 +187,16 @@ typedef struct 			s_sounds
 typedef struct 			s_sprites
 {
 	// HUD Sprites
-	struct SDL_Surface **txt_health_bar;
-	struct SDL_Surface *txt_key_hud;
+	struct SDL_Surface	**txt_health_bar;
+	struct SDL_Surface	*txt_assault_ammo_bar;
+	struct SDL_Surface	*txt_smg_ammo_bar;
+	struct SDL_Surface	*txt_pistol_ammo_bar;
+	struct SDL_Surface	*txt_key_hud;
 
 	// Pickup Sprites
-	struct SDL_Surface *txt_health_pickup;
-	struct SDL_Surface *txt_smg_ammo_pickup;
-	struct SDL_Surface *txt_assault_ammo_pickup;
+	struct SDL_Surface	*txt_health_pickup;
+	struct SDL_Surface	*txt_smg_ammo_pickup;
+	struct SDL_Surface	*txt_assault_ammo_pickup;
 
 	// Underlying data holders, invididually named for readability
 	struct SDL_Surface	*txt_ranged_front_attack;
