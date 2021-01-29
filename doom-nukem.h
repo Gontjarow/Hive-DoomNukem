@@ -24,7 +24,6 @@
 # include "game.h"
 # include "minimap.h"
 # include "renderer.h"
-# include "wireframe.h"
 
 # include <fcntl.h>
 # include <unistd.h>

@@ -124,9 +124,10 @@ int			main(int argc, char *argv[])
 	fps_cooldown = 100;
 	frames_between = 0;
 	time_between = SDL_GetTicks();
-	doom.fps = 150;
+	doom.fps = 30;
 	while (!doom.quit)
 	{
+		doom.frame_start = SDL_GetTicks();
 	    if (argc == 1 && doom.menu->update_argc_argv)
         {
 	        argc = 2;
@@ -134,12 +135,8 @@ int			main(int argc, char *argv[])
 	        doom.menu->update_argc_argv = 0;
         }
 		doom.keystates = SDL_GetKeyboardState(NULL);
-		doom.frame_start = SDL_GetTicks();
-		// Distribute inputs via SDL_Events, also handle window management with window_and_menu_events()
 		distribute_inputs(&doom, argc, argv);
 		run_loops(&doom, argc, argv);
-		// Delay until next frame
-		frame_ticks = SDL_GetTicks() - doom.frame_start;
 		if (fps_cooldown)
 		{
 			frames_between++;
@@ -149,13 +146,21 @@ int			main(int argc, char *argv[])
 		{
 			acc_time = ((float)SDL_GetTicks() - (float)time_between) / 1000.0f;
 			doom.fps = (float)frames_between / acc_time;
+			ft_putnbr((int)doom.fps);
+			ft_putendl(" fps");
 			fps_cooldown = 100;
 			time_between = SDL_GetTicks();
 			frames_between = 0;
 		}
+ 		SDL_UpdateWindowSurface(doom.win);
+		frame_ticks = SDL_GetTicks() - doom.frame_start;
 		if (frame_ticks < TICKS_PER_FRAME)
+		{
 			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
-		SDL_UpdateWindowSurface(doom.win);
+		}
 	}
 	return (destroy_and_quit(&doom));
 }
+
+
+

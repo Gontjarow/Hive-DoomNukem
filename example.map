@@ -1,11 +1,15 @@
-[Wall] id = 0 | start.x = 164 | start.y = 118 | end.x = 962 | end.y = 82
-[Wall] id = 1 | start.x = 962 | start.y = 82 | end.x = 1468 | end.y = 340
-[Wall] id = 2 | start.x = 1468 | start.y = 340 | end.x = 1388 | end.y = 789
-[Wall] id = 3 | start.x = 1388 | start.y = 789 | end.x = 497 | end.y = 823
-[Wall] id = 4 | start.x = 497 | start.y = 823 | end.x = 131 | end.y = 600
-[Wall] id = 5 | start.x = 131 | start.y = 600 | end.x = 164 | end.y = 118
+[Wall] id = 0 | start.x = 188 | start.y = 238 | end.x = 780 | end.y = 118
+[Wall] id = 1 | start.x = 780 | start.y = 118 | end.x = 1822 | end.y = 160
+[Wall] id = 2 | start.x = 1822 | start.y = 160 | end.x = 2776 | end.y = 432
+[Wall] id = 3 | start.x = 2776 | start.y = 432 | end.x = 2936 | end.y = 786
+[Wall] id = 4 | start.x = 2936 | start.y = 786 | end.x = 2946 | end.y = 1318
+[Wall] id = 5 | start.x = 2946 | start.y = 1318 | end.x = 2630 | end.y = 1610
+[Wall] id = 6 | start.x = 2630 | start.y = 1610 | end.x = 1726 | end.y = 1682
+[Wall] id = 7 | start.x = 1726 | start.y = 1682 | end.x = 664 | end.y = 1516
+[Wall] id = 8 | start.x = 664 | start.y = 1516 | end.x = 174 | end.y = 934
+[Wall] id = 9 | start.x = 174 | start.y = 934 | end.x = 188 | end.y = 238
 
-[Room] id = 0 | first_wall_id = 0 | wall_count = 6 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 10 | floor_height = 100 | roof_height = 120
 
 
 [Enemy] id = 0 | x = 988 | y = 557 | rot = 199 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0

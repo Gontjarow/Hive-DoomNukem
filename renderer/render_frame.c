@@ -200,6 +200,7 @@ void			render_frame(t_doom *doom)
 	world->player.angle = deg_to_rad(doom->mdl->player.rot);
 	world->player.sin = sin(world->player.angle);
 	world->player.cos = cos(world->player.angle);
+	world->player.yaw = doom->mdl->player.yaw;
 
 	flood_buffer(doom->game->buff, 0x112233);
 	memset_f(zbuffer, INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
