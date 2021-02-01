@@ -70,6 +70,7 @@ typedef struct			s_doom
 	struct s_game		*game;
 }						t_doom;
 
+void			ft_assert(int eval, const char *error_message);
 void			ft_die(const char *error_message);
 void 			load_alphabet(t_menu *menu);
 void			load_numbers(t_doom *doom);

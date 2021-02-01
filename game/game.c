@@ -120,6 +120,7 @@ void		game_render(t_doom *doom)
 	handle_game_hud(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
-	wire_frame(doom);
+	// wire_frame(doom);
+	render_frame(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
 }
