@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 18:52:21 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/29 18:57:01 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void		init_player_weapon(t_doom *doom)
 	init_hud(doom);
 	load_numbers(doom);
 	doom->mdl->player.weap_arr[0].ammo_cur = 12;
-	doom->mdl->player.weap_arr[0].ammo_res = 9999;
+	doom->mdl->player.weap_arr[0].ammo_res = 1;
 	doom->mdl->player.weap_arr[0].ammo_max = 12;
 	doom->mdl->player.weap_arr[0].cooldown = 10;
 	doom->mdl->player.weap_arr[0].dmg = 20;
@@ -27,7 +27,7 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[0].weap_img = load_texture(doom, "img/weapons/colt.png");
 	doom->mdl->player.weap_arr[0].do_own = 1;
 	doom->mdl->player.weap_arr[1].ammo_cur = 30;
-	doom->mdl->player.weap_arr[1].ammo_res = 250;
+	doom->mdl->player.weap_arr[1].ammo_res = 5;
 	doom->mdl->player.weap_arr[1].ammo_max = 30;
 	doom->mdl->player.weap_arr[1].cooldown = 2;
 	doom->mdl->player.weap_arr[1].dmg = 25;
@@ -37,7 +37,7 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/mp5.png");
 	doom->mdl->player.weap_arr[1].do_own = 0;
 	doom->mdl->player.weap_arr[2].ammo_cur = 40;
-	doom->mdl->player.weap_arr[2].ammo_res = 200;
+	doom->mdl->player.weap_arr[2].ammo_res = 3;
 	doom->mdl->player.weap_arr[2].ammo_max = 40;
 	doom->mdl->player.weap_arr[2].cooldown = 2;
 	doom->mdl->player.weap_arr[2].dmg = 30;
@@ -74,24 +74,15 @@ static void	handle_ammo_calc(t_doom *doom)
 	int rest;
 
 	if (doom->mdl->player.weap_id == 0)	// pistol has infinite ammo
+	{
 		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur = 12;
+		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res = 1;
+	}
 	else
 	{
-		dif = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max -
-		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur;
-		rest = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res - dif;
-		if (rest <= 0)
-		{
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur +=
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res;
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res = 0;
-		}
-		else
-		{
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur =
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max;
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res = rest;
-		}
+		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur =
+		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max;
+		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res--;
 	}
 }
 
