@@ -15,9 +15,9 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		// The world's zero-point is considered to be the player.
 
 		wall = line_rot(line_relative(
-			sector->vertex[vertex + 0],
-			sector->vertex[vertex + 1],
-			vec32(doom->game->world->player.position)),
+				sector->vertex[vertex + 0],
+				sector->vertex[vertex + 1],
+				vec32(doom->game->world->player.position)),
 			doom->game->world->player.angle + M_PI);
 
 		//! Rotate the world around the player. (counter to actual rotation)
@@ -25,13 +25,11 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 		t_xy_line wall_preclip = wall;
 
-		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
-		t_xy b = vec2( GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
-		t_xy c = vec2( GAME_MIDWIDTH,       NEAR_PLANE);
-		t_xy d = vec2(-GAME_MIDWIDTH,       NEAR_PLANE);
-		t_xy_line *bounds = set_clip_bounds(a, b, c, d);
-
-		clip_to_bounds(wall, &wall, bounds);
+		clip_to_bounds(wall, &wall, set_clip_bounds(
+			vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
+			vec2(GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
+			vec2(GAME_MIDWIDTH, NEAR_PLANE),
+			vec2(-GAME_MIDWIDTH, NEAR_PLANE)));
 
 		//! Ignore zero-length walls.
 		if (line_is_zero(wall))
