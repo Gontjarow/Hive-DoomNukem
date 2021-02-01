@@ -175,11 +175,44 @@ int				ft_mini(int a, int b)
 		return (b);
 }
 
-double yaw_height(double ceil, double wall_y, double player_yaw)
+unsigned		sprite_pixel(t_enemy *enemy, int x, int y)
 {
-	// printf("yaw_height(%f, %f, %f) = %f\n",
-	// 	ceil, wall_y, player_yaw, (ceil + wall_y * player_yaw));
-	return (ceil + (wall_y * player_yaw));
+	unsigned	*sprite;
+	unsigned	pixel;
+	unsigned	size;
+
+	sprite = enemy->active_sprite->pixels;
+	pixel = enemy->active_sprite->w * y + x;
+	size = enemy->active_sprite->w * enemy->active_sprite->h;
+	if ((pixel < size) && ((sprite[pixel] >> 6) != BYTE_TRANSPARENT))
+		return(sprite[pixel]);
+	else
+		return (COLOR_TRANSPARENT);
+}
+
+void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
+{
+	unsigned	*pixels;
+	unsigned	color;
+	double		y_step;
+	double		tex_y;
+
+	tex_y = 0;
+	y_step = (double)enemy->active_sprite->h / (range.y - range.x);
+	if (range.x < 0)
+	{
+		tex_y += y_step * -range.x;
+		range.x = 0;
+	}
+	pixels = doom_ptr()->game->buff->pixels;
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		color = sprite_pixel(enemy, tex_x, tex_y);
+		if (color != COLOR_TRANSPARENT)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+		tex_y += y_step;
+		range.x++;
+	}
 }
 
 void			render_frame(t_doom *doom)
@@ -244,8 +277,8 @@ void			render_frame(t_doom *doom)
 
 		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
 		t_xy b = vec2( GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
-		t_xy c = vec2( GAME_MIDWIDTH,           -1.01);
-		t_xy d = vec2(-GAME_MIDWIDTH,           -1.01);
+		t_xy c = vec2( GAME_MIDWIDTH,       NEAR_PLANE);
+		t_xy d = vec2(-GAME_MIDWIDTH,       NEAR_PLANE);
 		t_xy_line *bounds = set_clip_bounds(a, b, c, d);
 
 		clip_to_bounds(wall, &wall, bounds);
@@ -358,80 +391,67 @@ void			render_frame(t_doom *doom)
 	}
 
 	//! Render enemies.
+	// TODO: Z Buffer
 	signed	enemy_count = doom->mdl->enemy_count;
 	t_enemy	*enemy = doom->mdl->enemy_first;
 	while (~--enemy_count)
 	{
 		double turn_90 = world->player.angle + PI_BY_TWO;
 		t_xy epos  = vec2_div(vec2(enemy->x, enemy->y), WORLD_SCALE);
-		t_xy left  = vec2_add(epos, vec2(-cos(turn_90) * 10, -sin(turn_90) * 10));
-		t_xy right = vec2_add(epos, vec2(+cos(turn_90) * 10, +sin(turn_90) * 10));
+		t_xy left  = vec2_add(epos, vec2(-cos(turn_90) * SPRITE_SCALE, -sin(turn_90) * SPRITE_SCALE));
+		t_xy right = vec2_add(epos, vec2(+cos(turn_90) * SPRITE_SCALE, +sin(turn_90) * SPRITE_SCALE));
 		left = vec2_sub(left, vec32(world->player.position));
 		right = vec2_sub(right, vec32(world->player.position));
 
 		t_xy_line eline = line_xy(left, right, 0xff00ff);
 		eline = line_rot(eline, world->player.angle + M_PI);
 
-		// TODO: REPLACE WITH ACTUAL SPRITE RENDERING
-		// draw fake wall where the enemy is
+		// draw
+		if (eline.start.y <= NEAR_PLANE)
 		{
 			t_xy_line scale;
+
 			//! Calculate points scaled by horizontal FOV.
-			// (window height / Y position) = 90 degree FOV
 			scale.start.x = GAME_WIN_HEIGHT / -eline.start.y;
 			scale.stop.x = GAME_WIN_HEIGHT / -eline.stop.y;
 
-			int x1 = GAME_MIDWIDTH + (int)(eline.start.x * scale.start.x);
-			int x2 = GAME_MIDWIDTH + (int)(eline.stop.x * scale.stop.x);
+			int left = GAME_MIDWIDTH + (int)(eline.start.x * scale.start.x);
+			int right = GAME_MIDWIDTH + (int)(eline.stop.x * scale.stop.x);
 
-			//! Ignore impossible walls, or walls that are backwards.
-			if(x1 >= x2 || x2 < section->left || x1 > section->right)
+			//! Ignore impossible walls.
+			if(left >= right || right < 0 || left >= GAME_WIN_WIDTH)
 			{
+				enemy = enemy->next;
 				continue;
 			}
 
-			//! Don't begin/end drawing from outside of the current render section.
-			x1 = clamp(x1, section->left, section->right);
-			x2 = clamp(x2, section->left, section->right);
+			int enemy_id = room_id_from_polymap(doom->mdl->poly_map, enemy->x, enemy->y);
+
+			double floor = world->sectors[enemy_id].floor - world->player.position.z;
+			double ceil = floor + 20; // TODO: Define enemy height in a sensible way.
 
 			//! Calculate ceil/floor height and draw vertical lines left-to-right.
 			scale.start.y = GAME_WIN_HEIGHT / -eline.start.y;
 			scale.stop.y = GAME_WIN_HEIGHT / -eline.stop.y;
 
-			double ceil = sector->ceil - world->player.position.z;
-			double floor = sector->floor - world->player.position.z;
-
 			int yawed_start_ceil  = GAME_MIDHEIGHT - (ceil  + eline.start.y * world->player.yaw) * scale.start.y;
 			int yawed_start_floor = GAME_MIDHEIGHT - (floor + eline.start.y * world->player.yaw) * scale.start.y;
 
-			int yawed_stop_ceil   = GAME_MIDHEIGHT - (ceil  + eline.stop.y * world->player.yaw) * scale.stop.y;
-			int yawed_stop_floor  = GAME_MIDHEIGHT - (floor + eline.stop.y * world->player.yaw) * scale.stop.y;
-
-			//! Begin/end at the shortest possible range within the render section.
-			x1 = ft_maxi(x1, section->left);
-			x2 = ft_mini(x2, section->right);
-
-			double ceil_angle = (yawed_stop_ceil - yawed_start_ceil) / (double)(x2 - x1);
-			double floor_angle = (yawed_stop_floor - yawed_start_floor) / (double)(x2 - x1);
-
-			int x = x1;
-			while (x < x2)
+			int x = left;
+			if (x < 0)
+				x -= x;
+			while (x < right && x < GAME_WIN_WIDTH)
 			{
-				int y_start = yawed_start_ceil + ((x - x1) * ceil_angle);
-				int y_stop = yawed_start_floor + ((x - x1) * floor_angle);
-
-				y_start = clamp(y_start, y_top[x], y_bot[x]);
-				y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
-				vertical_line(x, y_start, y_stop, 0xff00ff);
-				printf("victory\n");
+				int tex_x = (x - left) * (double)enemy->active_sprite->w / (right - left);
+				vertical_sprite(enemy, x, tex_x, vec2(yawed_start_ceil, yawed_start_floor));
 				++x;
 			}
 		}
 
-		t_xy_line debug = line_add_offset(eline, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+		t_xy_line debug;
+		debug = line_add_offset(eline, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
 		drawline(debug, doom->game->buff);
 
-		linep("eline", debug);
 		enemy = enemy->next;
 	}
 }

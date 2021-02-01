@@ -11,9 +11,15 @@
 # define T_DIR 0.0
 # define T_POS 1.0
 
+# define NEAR_PLANE -1.01
 # define EYE_HEIGHT 6
 # define WORLD_SCALE 10
 # define MAX_SECTOR_QUEUE 32
+
+// For sprite drawing
+# define SPRITE_SCALE 10
+# define BYTE_TRANSPARENT 0xFF
+# define COLOR_TRANSPARENT 0xFF00FF
 
 // For line clipping
 # define LINE_SIDES_CROSS -1
