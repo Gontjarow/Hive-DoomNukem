@@ -1,19 +1,21 @@
-[Wall] id = 0 | start.x = 188 | start.y = 238 | end.x = 780 | end.y = 118
-[Wall] id = 1 | start.x = 780 | start.y = 118 | end.x = 1822 | end.y = 160
-[Wall] id = 2 | start.x = 1822 | start.y = 160 | end.x = 2776 | end.y = 432
-[Wall] id = 3 | start.x = 2776 | start.y = 432 | end.x = 2936 | end.y = 786
-[Wall] id = 4 | start.x = 2936 | start.y = 786 | end.x = 2946 | end.y = 1318
-[Wall] id = 5 | start.x = 2946 | start.y = 1318 | end.x = 2630 | end.y = 1610
-[Wall] id = 6 | start.x = 2630 | start.y = 1610 | end.x = 1726 | end.y = 1682
-[Wall] id = 7 | start.x = 1726 | start.y = 1682 | end.x = 664 | end.y = 1516
-[Wall] id = 8 | start.x = 664 | start.y = 1516 | end.x = 174 | end.y = 934
-[Wall] id = 9 | start.x = 174 | start.y = 934 | end.x = 188 | end.y = 238
+[Wall] id = 0 | start.x = 508 | start.y = 449 | end.x = 713 | end.y = 296
+[Wall] id = 1 | start.x = 713 | start.y = 296 | end.x = 969 | end.y = 265
+[Wall] id = 2 | start.x = 969 | start.y = 265 | end.x = 1164 | end.y = 398
+[Wall] id = 3 | start.x = 1164 | start.y = 398 | end.x = 1202 | end.y = 511
+[Wall] id = 4 | start.x = 1202 | start.y = 511 | end.x = 1019 | end.y = 672
+[Wall] id = 5 | start.x = 1019 | start.y = 672 | end.x = 712 | end.y = 679
+[Wall] id = 6 | start.x = 712 | start.y = 679 | end.x = 581 | end.y = 555
+[Wall] id = 7 | start.x = 581 | start.y = 555 | end.x = 508 | end.y = 449
 
-[Room] id = 0 | first_wall_id = 0 | wall_count = 10 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 8 | floor_height = 100 | roof_height = 120
 
 
-[Enemy] id = 0 | x = 988 | y = 557 | rot = 199 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 944 | y = 330 | rot = 360 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 1077 | y = 519 | rot = 114 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 2 | x = 935 | y = 617 | rot = 161 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Pickup] id = 0 | loc.x = 966 | loc.y = 424 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 1 | loc.x = 839 | loc.y = 550 | flavor = 0 | weapon_type_id = 0
 
 
-
-[Player] spawn.x = 318 | spawn.y = 363 | rot = 360
+[Player] spawn.x = 597 | spawn.y = 468 | rot = 98

@@ -72,7 +72,9 @@ static void		rotating_left_right(t_doom *doom, int signal)
 
 static void		validate_player_position(t_doom *doom, t_coord old)
 {
-	int		location_id;
+	static	int	last_room_id = -1;
+	int			current_room;
+	int			location_id;
 
 	location_id = check_location(doom, doom->mdl->player.x,
 					doom->mdl->player.y);
@@ -82,6 +84,21 @@ static void		validate_player_position(t_doom *doom, t_coord old)
 		doom->mdl->player.x = old.x;
 		doom->mdl->player.y = old.y;
 	}
+	current_room = check_location(doom, doom->mdl->player.x, doom->mdl->player.y);
+	if (last_room_id != current_room)
+	{
+		doom->mdl->player.room_id = current_room;
+		doom->mdl->player.room = room_by_id(current_room);
+		last_room_id = current_room;
+	}
+}
+
+static void		apply_gravity(t_doom *doom)
+{
+	if (doom->mdl->player.z > doom->mdl->player.room->floor_height + doom->mdl->player.height)
+		doom->mdl->player.z--;
+	else if (doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height)
+		doom->mdl->player.z = doom->mdl->player.room->floor_height + doom->mdl->player.height;
 }
 
 void			handle_player_movement(t_doom *doom)
@@ -94,9 +111,9 @@ void			handle_player_movement(t_doom *doom)
 	rad = deg_to_rad(doom->mdl->player.rot);
 	if (doom->sounds->footstep_delay > 0)
 		doom->sounds->footstep_delay--;
-	if (doom->keystates[SDL_SCANCODE_W] || doom->keystates[SDL_SCANCODE_UP])
+	if (doom->keystates[SDL_SCANCODE_W])
 		moving_up_down(doom, 1, rad);
-	if (doom->keystates[SDL_SCANCODE_S] || doom->keystates[SDL_SCANCODE_DOWN])
+	if (doom->keystates[SDL_SCANCODE_S])
 		moving_up_down(doom, -1, rad);
 	if (doom->keystates[SDL_SCANCODE_A])
 		strafe(doom, 1);
@@ -106,5 +123,28 @@ void			handle_player_movement(t_doom *doom)
 		rotating_left_right(doom, -1);
 	if (doom->keystates[SDL_SCANCODE_RIGHT])
 		rotating_left_right(doom, 1);
+	if (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN])
+	{
+		doom->mdl->player.height = doom->keystates[SDL_SCANCODE_UP] ? doom->mdl->player.height + 1 : doom->mdl->player.height - 1;
+		ft_putnbr(doom->mdl->player.height);
+		ft_putendl(" player height");
+	}
+	static int lock_c = 0;
+	if (doom->keystates[SDL_SCANCODE_C] && !lock_c)
+	{
+		doom->game->cel_shade_hud = !(doom->game->cel_shade_hud);
+		lock_c = 1;
+	}
+	if (!doom->keystates[SDL_SCANCODE_C] && lock_c)
+		lock_c = 0;
+	static int lock_m = 0;
+	if (doom->keystates[SDL_SCANCODE_M] && !lock_m)
+	{
+		doom->game->show_info = !(doom->game->show_info);
+		lock_m = 1;
+	}
+	if (!doom->keystates[SDL_SCANCODE_M] && lock_m)
+		lock_m = 0;
 	validate_player_position(doom, old);
+	apply_gravity(doom);
 }

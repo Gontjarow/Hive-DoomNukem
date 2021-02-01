@@ -27,7 +27,7 @@ static void	player_crouch(t_doom *doom)
 	{
 		doom->mdl->player.crouch_lock = 1;
 		doom->mdl->player.is_crouching = 1;
-		doom->mdl->player.mov_speed = 15;
+		doom->mdl->player.mov_speed = 5;
 		while (doom->mdl->player.height != 50)
 			doom->mdl->player.height -= 10;
 	}
@@ -35,7 +35,7 @@ static void	player_crouch(t_doom *doom)
 	{
 		doom->mdl->player.crouch_lock = 0;
 		doom->mdl->player.is_crouching = 0;
-		doom->mdl->player.mov_speed = 30;
+		doom->mdl->player.mov_speed = 10;
 		while (doom->mdl->player.height != 100)
 			doom->mdl->player.height += 10;
 	}

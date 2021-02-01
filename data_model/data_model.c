@@ -54,10 +54,10 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.is_jumping = 0;
 	doom->mdl->player.is_crouching = 0;
 	doom->mdl->player.is_running = 0;
-	doom->mdl->player.height = 100;
-	doom->mdl->player.min_speed = 15;	// crouched
-	doom->mdl->player.mov_speed = 30;	// walking
-	doom->mdl->player.max_speed = 60;	// running
+	doom->mdl->player.height = 20;
+	doom->mdl->player.min_speed = 5;	// crouched
+	doom->mdl->player.mov_speed = 10;	// walking
+	doom->mdl->player.max_speed = 20;	// running
 	doom->mdl->player.rot_speed = 5;
 	doom->mdl->player.run_lock = 0;
 	doom->mdl->player.crouch_lock = 0;
@@ -69,6 +69,8 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.hp.cur = 100;
 	doom->mdl->player.hp.max = 100;
 	doom->mdl->player.shooting = 0;
+	doom->mdl->player.room_id = -1;
+	doom->mdl->player.room = NULL;
 	init_player_weapon(doom);
 }
 

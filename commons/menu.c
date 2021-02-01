@@ -132,9 +132,13 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
     // PLAYER X, Y IN MODEL IS -1 AND -1, CAUSING MINIMAP LINE OFF BUFFER?
     //printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
     if (DEBUG == 1)
-    	init_minimap(doom);
-    //if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
-    //	ft_putendl("Warning: Failed to capture mouse to window!");
+    {
+		init_minimap(doom);
+		SDL_SetWindowPosition(doom->minimap->win, 0, 0);
+		SDL_RaiseWindow(doom->game->win);
+	}
+    if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+    	ft_putendl("Warning: Failed to capture mouse to window!");
     SDL_UpdateWindowSurface(doom->game->win);
     Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 }

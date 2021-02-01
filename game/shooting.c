@@ -68,8 +68,11 @@ int					player_shoots(t_doom *doom)
 	enemy_who_was_hit = -1;
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
 	doom->mdl->player.bullet_pos.y = doom->mdl->player.y;
-	doom->minimap->player_ray_color = 0xffff0000;
-	doom->minimap->player_ray_timeout = 15;
+	if (DEBUG == 1)
+	{
+		doom->minimap->player_ray_color = 0xffff0000;
+		doom->minimap->player_ray_timeout = 15;
+	}
 	doom->mdl->player.shoot_cd = doom->mdl->player.weap_arr
 								[doom->mdl->player.weap_id].cooldown;
 	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur--;
@@ -81,7 +84,8 @@ int					player_shoots(t_doom *doom)
 		enemy_who_was_hit = check_hit(doom);
 		if (enemy_who_was_hit >= 0)
 		{
-			doom->minimap->player_ray_color = 0xff00ff00;
+			if (DEBUG == 1)
+				doom->minimap->player_ray_color = 0xff00ff00;
 			deal_damage(doom, enemy_who_was_hit);
 		}
 	}

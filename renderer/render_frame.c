@@ -56,12 +56,12 @@ static void		print_data(t_world *world)
 	{
 		t_sector sector = world->sectors[si];
 		unsigned verts = sector.vertex_count;
-		printf("world->sectors[%3d]->vertex_count: %u\n", si, verts);
+		//printf("world->sectors[%3d]->vertex_count: %u\n", si, verts);
 		unsigned vi = 0;
 		while (vi < verts)
 		{
-			printf("\tvertex[%3d] x,y | %4.0f, %4.0f\n",
-				vi, sector.vertex[vi].x, sector.vertex[vi].y);
+			//printf("\tvertex[%3d] x,y | %4.0f, %4.0f\n",
+				//vi, sector.vertex[vi].x, sector.vertex[vi].y);
 			++vi;
 		}
 		++si;
@@ -118,8 +118,8 @@ t_world			*load_world(t_world *world)
 
         // Sector init
         sector->vertex_count = room->wall_count; // +1?
-        sector->floor = 0;
-        sector->ceil = 20;
+        sector->floor = 10;
+        sector->ceil = 15; //"60"
 
         // Allocate fixed size blocks
 		// Note: sector->vertex has one extra index
@@ -195,7 +195,7 @@ void			render_frame(t_doom *doom)
 	world->player.position = vec3_div(vec3(
 		doom->mdl->player.x,
 		doom->mdl->player.y,
-		doom->mdl->player.height), WORLD_SCALE);
+		doom->mdl->player.z), WORLD_SCALE);
 	world->player.angle = doom->mdl->player.rot * DEG_TO_RAD;
 	world->player.sin = sin(world->player.angle);
 	world->player.cos = cos(world->player.angle);
@@ -255,7 +255,8 @@ void			render_frame(t_doom *doom)
 		{
 			debug = line_add_offset(wall_preclip, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
 			debug.color = 0xFF005A;
-			drawline(debug, doom->game->buff);
+			if (doom->game->show_info)
+				drawline(debug, doom->game->buff);
 			++vertex;
 			continue;
 		}
@@ -275,7 +276,8 @@ void			render_frame(t_doom *doom)
 		{
 			debug = line_add_offset(wall_preclip, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
 			debug.color = 0xFFA753;
-			drawline(debug, doom->game->buff);
+			if (doom->game->show_info)
+				drawline(debug, doom->game->buff);
 			++vertex;
 			continue;
 		}
@@ -314,7 +316,8 @@ void			render_frame(t_doom *doom)
 		x2 = ft_mini(x2, section->right);
 
 		// Debug info for specific walls
-		int colors[256] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x0};
+		int colors[256] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x330033, 0x003300, 0x333300, 0x000033};
+		if (doom->game->show_info)
 		{
 			vertical_line(x1,              0, GAME_MIDHEIGHT,    colors[vertex]);
 			vertical_line(x2, GAME_MIDHEIGHT, GAME_WIN_HEIGHT-1, colors[vertex]);
@@ -337,6 +340,7 @@ void			render_frame(t_doom *doom)
 		}
 
 		//! Debug view.
+		if (doom->game->show_info)
 		{
 			drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,             GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
 			drawline(line_xy(vec2(GAME_MIDWIDTH,                   0), vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
@@ -358,14 +362,21 @@ void			render_frame(t_doom *doom)
 	}
 
 	//! Render enemies.
+	int		sprite_size = 1;
+	int		skip_on_start = 1;
 	signed	enemy_count = doom->mdl->enemy_count;
 	t_enemy	*enemy = doom->mdl->enemy_first;
 	while (~--enemy_count)
 	{
+		if (!skip_on_start)
+			enemy = enemy->next;
+		skip_on_start = 0;
+		if (enemy->hp.cur < 1)
+			continue ;
 		double turn_90 = world->player.angle + PI_BY_TWO;
 		t_xy epos  = vec2_div(vec2(enemy->x, enemy->y), WORLD_SCALE);
-		t_xy left  = vec2_add(epos, vec2(-cos(turn_90) * 10, -sin(turn_90) * 10));
-		t_xy right = vec2_add(epos, vec2(+cos(turn_90) * 10, +sin(turn_90) * 10));
+		t_xy left  = vec2_add(epos, vec2(-cos(turn_90) * sprite_size, -sin(turn_90) * sprite_size));
+		t_xy right = vec2_add(epos, vec2(+cos(turn_90) * sprite_size, +sin(turn_90) * sprite_size));
 		left = vec2_sub(left, vec32(world->player.position));
 		right = vec2_sub(right, vec32(world->player.position));
 
@@ -398,8 +409,10 @@ void			render_frame(t_doom *doom)
 			scale.start.y = GAME_WIN_HEIGHT / -eline.start.y;
 			scale.stop.y = GAME_WIN_HEIGHT / -eline.stop.y;
 
-			double ceil = sector->ceil - world->player.position.z;
+			double ceil = sector->floor + 3  - world->player.position.z; //(enemy->height = "30")
 			double floor = sector->floor - world->player.position.z;
+
+			world->player.sector_id = room_id_from_polymap(get_model()->poly_map, enemy->x, enemy->y);
 
 			int yawed_start_ceil  = GAME_MIDHEIGHT - (ceil  + eline.start.y * world->player.yaw) * scale.start.y;
 			int yawed_start_floor = GAME_MIDHEIGHT - (floor + eline.start.y * world->player.yaw) * scale.start.y;
@@ -423,15 +436,16 @@ void			render_frame(t_doom *doom)
 				y_start = clamp(y_start, y_top[x], y_bot[x]);
 				y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
 				vertical_line(x, y_start, y_stop, 0xff00ff);
-				printf("victory\n");
+				//printf("victory\n");
 				++x;
 			}
 		}
 
 		t_xy_line debug = line_add_offset(eline, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
-		drawline(debug, doom->game->buff);
+		if (doom->game->show_info)
+			drawline(debug, doom->game->buff);
 
-		linep("eline", debug);
-		enemy = enemy->next;
+		//linep("eline", debug);
+
 	}
 }

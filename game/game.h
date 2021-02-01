@@ -32,6 +32,9 @@ typedef struct			s_game
 	struct s_doom		*parent;
 	char 				*map_path;
 	int 				map_supplied;
+	SDL_Surface			*hud_location;
+	int					cel_shade_hud;
+	int					show_info;
 }						t_game;
 
 double			deg_to_rad(int deg);
@@ -54,8 +57,7 @@ void			handle_pickup(t_doom *doom);
 void			game_print_alphabet(const char *str, t_doom *doom, int x, int y);
 void			game_print_numbers(const char *str, t_doom *doom, int x, int y);
 void			init_hud(t_doom *doom);
-void            render_hud(t_doom *doom);
-void			handle_game_hud(t_doom *doom);
+void			render_game_hud(t_doom *doom);
 
 void			update_player_tail(t_doom *doom, double rad);
 void			rotate_enemy_towards_player(t_doom *doom);

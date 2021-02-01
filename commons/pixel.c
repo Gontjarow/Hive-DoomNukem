@@ -12,6 +12,68 @@
 
 #include "doom-nukem.h"
 
+// Surf refers to WHAT you want to draw
+// Buff refers to WHERE you want to draw it TO
+// X, Y refer to the X, Y location of the BUFF surface
+void		draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
+{
+	int *pix[2];
+	int i;
+	int iter;
+	int limit_x;
+	int limit_total;
+
+	iter = 0;
+	i = x;
+	limit_x = x + surf->w;
+	limit_total = surf->w * surf->h;
+	pix[0] = (int*)buff->pixels;
+	pix[1] = (int*)surf->pixels;
+	while (iter < limit_total)
+	{
+		x = i;
+		while (x < limit_x)
+			pix[0][(y * buff->w) + x++] = pix[1][iter++];
+		y++;
+	}
+}
+
+void		draw_visible(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
+{
+	int *pix[2];
+	int i;
+	int iter;
+	int limit_x;
+	int limit_total;
+
+	iter = 0;
+	i = x;
+	limit_x = x + surf->w;
+	limit_total = surf->w * surf->h;
+	pix[0] = (int*)buff->pixels;
+	pix[1] = (int*)surf->pixels;
+	while (iter < limit_total)
+	{
+		x = i;
+		while (x < limit_x)
+		{
+			if (pix[1][iter] >> 24 != 0)
+			{
+				pix[0][(y * buff->w) + x++] = pix[1][iter++];
+					//printf("%x alpha at %d, %d\n", pix[1][iter] >> 24, x, y);
+			}
+			else
+			{
+				//printf("%x alpha at %d, %d\n", pix[1][iter] >> 24, x, y);
+				x++;
+				iter++;
+			}
+		}
+
+		y++;
+	}
+}
+
 void	flood_buffer(SDL_Surface *buff, uint32_t color)
 {
 	uint32_t	*pixels;

@@ -55,7 +55,8 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 	bullet_speed = 1;
 	did_hit = 0;
 	enemy->ray_color = 0xffff0000;
-	doom->minimap->enemy_ray_timeout = 15;
+	if (DEBUG == 1)
+		doom->minimap->enemy_ray_timeout = 15;
 	enemy->shoot_cd = enemy->wep.cooldown;
 	enemy->bullet_pos.x = enemy->x;
 	enemy->bullet_pos.y = enemy->y;

@@ -37,6 +37,9 @@ void		init_game(t_doom *doom, int argc, char **argv)
 	}
 	else
 		ft_die("Fatal error: No map specified as argument to load Play Level.");
+	doom->game->hud_location = NULL;
+	doom->game->cel_shade_hud = 0;
+	doom->game->show_info = 0;
 }
 
 void		destroy_game(t_doom *doom)
@@ -119,6 +122,8 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 
 void		game_render(t_doom *doom)
 {
+	static int mix_i = 0;
+
 	if (doom->keystates[SDL_SCANCODE_ESCAPE])
 		printf("ESC key pressed!\n");
 	handle_player_movement(doom);
@@ -128,15 +133,23 @@ void		game_render(t_doom *doom)
 	{
 		if (doom->mdl->player.shoot_cd == 0 && doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0 && doom->mdl->player.reload_time == 0)
 		{
-			Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
+			Mix_PlayChannel(mix_i, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
+			mix_i++;
+			if (mix_i > 7)
+				mix_i = 0;
 			player_shoots(doom);
 		}
 	}
 	handle_enemy_ai(doom);
-	handle_game_hud(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
 	// wire_frame(doom);
 	render_frame(doom);
+	render_game_hud(doom);
+	static int i = 0;
+	draw_visible(0,0,doom->sprites->txt_boss_back_walk[(i / 4)],doom->game->buff);
+	i++;
+	if (i == 24)
+		i = 0;
 	SDL_UpdateWindowSurface(doom->game->win);
 }

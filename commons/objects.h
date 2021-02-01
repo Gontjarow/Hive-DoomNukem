@@ -22,6 +22,14 @@ enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
 typedef struct			s_xy t_xy;
 typedef struct 			s_doom t_doom;
 
+typedef struct	t_argb
+{
+	unsigned char a;
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+}				t_argb;
+
 typedef struct 			s_point
 {
 	int 				x;
@@ -68,7 +76,10 @@ typedef struct 			s_player
 	double				rot_vertical;
 	double 				x;
 	double 				y;
+	double				z;
 	double 				yaw;
+	int					room_id;
+	struct s_room		*room;
 	int 				rot;
 	int					height;
 	int					is_jumping;
@@ -227,6 +238,8 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_boss_front_idle;
 	struct SDL_Surface	*txt_boss_side_idle;
 	struct SDL_Surface	**txt_boss_death;
+	struct SDL_Surface	*txt_boss_back_walk_atlas;
+	struct SDL_Surface	**txt_boss_back_walk;
 }						t_sprites;
 
 typedef struct			s_menu
@@ -292,6 +305,7 @@ void					debug_model_pickups(void);
  * from texture.c
  * */
 
+SDL_Surface				*load_xpm(char *path);
 uint32_t 				get_exact_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface				*xpm2surface(char *path);
 SDL_Surface				*load_texture(t_doom *doom, char *path);
@@ -311,6 +325,8 @@ void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
  * from pixel.c
  * */
 
+void					draw_visible(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
+void					draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
 void					flood_buffer(SDL_Surface *buff, uint32_t color);
 void					set_protected_color(uint32_t color);
 int 					set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
@@ -321,5 +337,12 @@ void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
  */
 
 int			 			tail_degree_rot(t_point location, t_point *tail);
+
+/*
+ * from blend_color.c
+ * */
+
+uint32_t				blend_argb_ratio(uint32_t foreground, uint32_t background, double ratio);
+uint32_t				invert_color(uint32_t color);
 
 #endif

@@ -47,6 +47,27 @@ SDL_Surface		*xpm2surface(char *path)
 ** A loading texture we could use with any SDL2 supported image format
 */
 
+SDL_Surface		*load_xpm(char *path)
+{
+	SDL_Surface *surf;
+	SDL_Surface *conv;
+
+	if (!(IMG_Init(0)))
+		ft_die("Fatal error: IMG_Init() failure.");
+	surf = IMG_Load(path);
+	if (surf)
+	{
+		if (!(conv = SDL_ConvertSurfaceFormat(surf, SDL_PIXELFORMAT_ARGB8888, 0)))
+			ft_die("Fatal error: Could not convert XPM surface into ARGB8888 format.");
+		SDL_FreeSurface(surf);
+		return (conv);
+	}
+	ft_putstr(path);
+	ft_putstr(" could not be loaded!\n");
+	ft_die("Fatal error: Error loading XPM file.");
+	return (NULL);
+}
+
 SDL_Surface		*load_texture(t_doom *doom, char *path)
 {
 	SDL_Surface	*free_s;

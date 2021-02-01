@@ -100,7 +100,7 @@ void		update_minimap(t_doom *doom)
 	/*
 		End of test
 	*/
-	handle_game_hud(doom);
+	//handle_game_hud(doom);
 	SDL_UpdateWindowSurface(doom->minimap->win);
 }
 
@@ -130,7 +130,7 @@ void		init_minimap(t_doom *doom)
 	init_enemy_sprite(doom);
 
 	// this wont be here in the future
-	handle_game_hud(doom);
+	//handle_game_hud(doom);
 
 	update_minimap(doom);
 	
