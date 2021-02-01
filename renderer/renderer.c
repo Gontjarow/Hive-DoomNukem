@@ -1,5 +1,20 @@
 #include "renderer.h"
 
+t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out)
+{
+	//! Calculate points scaled by horizontal FOV.
+	// (window height / Y position) = 90 degree FOV
+	out->start.x = GAME_WIN_HEIGHT / -segment.start.y;
+	out->stop.x = GAME_WIN_HEIGHT / -segment.stop.y;
+}
+
+t_xy_line		calculate_vertical_scale(t_xy_line segment, t_xy_line *out)
+{
+	out->start.y = GAME_WIN_HEIGHT / -segment.start.y;
+	out->stop.y = GAME_WIN_HEIGHT / -segment.stop.y;
+}
+
+
 //! Render the walls of a sector to a section of the screen.
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot)
 {
@@ -7,6 +22,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 	unsigned vertex;
 	t_xy_line wall;
+	t_xy_line scale;
 
 	vertex = 0;
 	while (vertex < sector->vertex_count)
@@ -19,9 +35,6 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 				sector->vertex[vertex + 1],
 				vec32(doom->game->world->player.position)),
 			doom->game->world->player.angle + M_PI);
-
-		//! Rotate the world around the player. (counter to actual rotation)
-		// The player is considered as always facing "up."
 
 		t_xy_line wall_preclip = wall;
 
@@ -41,15 +54,10 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 			continue;
 		}
 
-		t_xy_line scale;
+		calculate_horizontal_scale(wall, &scale);
 
-		//! Calculate points scaled by horizontal FOV.
-		// (window height / Y position) = 90 degree FOV
-		scale.start.x = GAME_WIN_HEIGHT / -wall.start.y;
-		scale.stop.x = GAME_WIN_HEIGHT / -wall.stop.y;
-
-		int x1 = GAME_MIDWIDTH + (int)(wall.start.x * scale.start.x);
-		int x2 = GAME_MIDWIDTH + (int)(wall.stop.x * scale.stop.x);
+		int x1 = GAME_MIDWIDTH + (wall.start.x * scale.start.x);
+		int x2 = GAME_MIDWIDTH + (wall.stop.x * scale.stop.x);
 
 		//! Ignore impossible walls, or walls that are backwards.
 		if(x1 >= x2 || x2 < section->left || x1 > section->right)
@@ -64,31 +72,23 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		//! Don't begin/end drawing from outside of the current render section.
 		x1 = clamp(x1, section->left, section->right);
 		x2 = clamp(x2, section->left, section->right);
-		// printf("\nnew render section: x1:%i, x2:%i (clamped)\n", x1, x2);
-
-		double ceil = sector->ceil - doom->game->world->player.position.z;
-		double floor = sector->floor - doom->game->world->player.position.z;
 
 		//! One more clip into the player's view-cone.
 		t_xy_line wall_segment;
-
-		t_xy planeleft = vec2_rot(vec2(0, -100), 135*DEG_TO_RAD);
-		t_xy_line line = line_xy(vec2(0,0), planeleft, 0x00ffff);
-		vec2_clip_line(wall, &wall_segment, line);
-
-		t_xy planeright = vec2_rot(vec2(0, -100), 45*DEG_TO_RAD);
-		line = line_xy(planeright, vec2(0,0), 0x00ffff);
-		vec2_clip_line(wall_segment, &wall_segment, line);
+		clip_to_cone(wall, &wall_segment);
 
 		//! Calculate ceil/floor height and draw vertical lines left-to-right.
-		scale.start.y = GAME_WIN_HEIGHT / -wall_segment.start.y;
-		scale.stop.y = GAME_WIN_HEIGHT / -wall_segment.stop.y;
+		calculate_vertical_scale(wall_segment, &scale);
 
-		int yawed_start_ceil  = GAME_MIDHEIGHT - (ceil  + wall_segment.start.y * doom->game->world->player.yaw) * scale.start.y;
-		int yawed_start_floor = GAME_MIDHEIGHT - (floor + wall_segment.start.y * doom->game->world->player.yaw) * scale.start.y;
+		double ceil = sector->ceil - doom->game->world->player.position.z;
+		t_xy_line yawed_ceil;
+		yawed_ceil.start.y = GAME_MIDHEIGHT - (ceil + wall_segment.start.y * doom->game->world->player.yaw) * scale.start.y;
+		yawed_ceil.stop.y = GAME_MIDHEIGHT - (ceil + wall_segment.stop.y * doom->game->world->player.yaw) * scale.stop.y;
 
-		int yawed_stop_ceil   = GAME_MIDHEIGHT - (ceil  + wall_segment.stop.y * doom->game->world->player.yaw) * scale.stop.y;
-		int yawed_stop_floor  = GAME_MIDHEIGHT - (floor + wall_segment.stop.y * doom->game->world->player.yaw) * scale.stop.y;
+		double floor = sector->floor - doom->game->world->player.position.z;
+		t_xy_line yawed_floor;
+		yawed_floor.start.y = GAME_MIDHEIGHT - (floor + wall_segment.start.y * doom->game->world->player.yaw) * scale.start.y;
+		yawed_floor.stop.y = GAME_MIDHEIGHT - (floor + wall_segment.stop.y * doom->game->world->player.yaw) * scale.stop.y;
 
 		//! Begin/end at the shortest possible range within the render section.
 		x1 = ft_maxi(x1, section->left);
@@ -101,14 +101,14 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 			vertical_line(x2, GAME_MIDHEIGHT, GAME_WIN_HEIGHT-1, colors[vertex]);
 		}
 
-		double ceil_angle = (yawed_stop_ceil - yawed_start_ceil) / (double)(x2 - x1);
-		double floor_angle = (yawed_stop_floor - yawed_start_floor) / (double)(x2 - x1);
+		double ceil_angle = (yawed_ceil.stop.y - yawed_ceil.start.y) / (double)(x2 - x1);
+		double floor_angle = (yawed_floor.stop.y - yawed_floor.start.y) / (double)(x2 - x1);
 
 		int x = x1;
 		while (x < x2)
 		{
-			int y_start = yawed_start_ceil + ((x - x1) * ceil_angle);
-			int y_stop = yawed_start_floor + ((x - x1) * floor_angle);
+			int y_start = yawed_ceil.start.y + ((x - x1) * ceil_angle);
+			int y_stop = yawed_floor.start.y + ((x - x1) * floor_angle);
 
 			y_start = clamp(y_start, y_top[x], y_bot[x]);
 			y_stop  = clamp(y_stop, y_top[x], y_bot[x]);

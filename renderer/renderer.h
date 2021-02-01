@@ -218,8 +218,8 @@ void			clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane);
 
 t_xy_line		*set_clip_bounds(t_xy topl, t_xy topr, t_xy botr, t_xy botl);
 void			clip_to_bounds(t_xy_line in, t_xy_line *out, t_xy_line edge[4]);
+void			clip_to_cone(t_xy_line in, t_xy_line *out);
 
 t_xy_line		line_clamp(t_xy_line in, t_xy min, t_xy max);
-void			vec2_clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane);
 
 #endif
