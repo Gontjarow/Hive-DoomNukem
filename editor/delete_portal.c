@@ -36,22 +36,22 @@ void			delete_portals_by_room(t_room *room, t_model *mdl)
 {
 	t_wall	*portal;
 	int		pc;
-	int			debug_id;
+		//int	debug_id;
 
-	debug_model_portals();
-	ft_putendl("\nDeleting portals by room\n");
+		//debug_model_portals();
+		//ft_putendl("\nDeleting portals by room\n");
 	pc = mdl->portal_count;
 	portal = mdl->portal_first;
-		debug_id = 0;
+		//debug_id = 0;
 	while (pc--)
 	{
 		if (portal_belongs_to_room(portal, room))
 		{
 			delete_portal(portal, mdl);
-				printf("deleted portal id %d\n", debug_id);
+				//printf("deleted portal id %d\n", debug_id);
 		}
 		portal = portal->next;
-			debug_id++;
+			//debug_id++;
 	}
 	debug_model_portals();
 }
