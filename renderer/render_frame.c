@@ -242,7 +242,7 @@ void			render_frame(t_doom *doom)
 	t_section	*section = &queue[0];
 	t_sector	*sector = &world->sectors[section->id];
 
-	render_sector(sector, section, doom, y_top, y_bot);
+	render_sector(sector, section, doom);
 
 
 	//! Render enemies.

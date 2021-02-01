@@ -134,6 +134,20 @@ typedef struct	s_world
 	t_camera	player;
 }				t_world;
 
+typedef struct	s_vertical_wall
+{
+	// first part
+	t_xy_line	segment;     // original line data
+	t_xy_line	scale;       // fov scale
+	t_section	section;     // subsection on screen
+	// second part
+	t_xy_line	yawed_ceil;  // -y/+y height on screen
+	t_xy_line	yawed_floor; // -y/+y height on screen
+	// third part
+	double		ceil_angle;  // perspective slope (↓y)
+	double		floor_angle; // perspective slope (↑y)
+}				t_vertical_wall;
+
 double			*get_zbuffer();
 t_world			*get_world();
 t_world			*load_world(t_world *world);
@@ -144,7 +158,7 @@ void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
 void			vertical_line(int column, int start, int end, int color);
 
 void			render_frame(t_doom *doom);
-void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot);
+void			render_sector(t_sector *sector, t_section *section, t_doom *doom);
 
 /*
 ** Math is fun, okay? ⤵️
