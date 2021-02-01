@@ -16,6 +16,14 @@ t_xy_line		line_xy(t_xy start, t_xy stop, int color)
 	return ((t_xy_line){start, stop, color});
 }
 
+t_xy_line		line_relative(t_xy start, t_xy stop, t_xy origin)
+{
+	return (line_xy(
+		vec2_sub(start, origin),
+		vec2_sub(stop, origin),
+		0xffffff));
+}
+
 signed			line_is_zero(t_xy_line line)
 {
 	return (
@@ -31,16 +39,6 @@ t_xy_line		line_add_offset(t_xy_line line, t_xy offset)
 
 	out.start = vec2_add(line.start, offset);
 	out.stop = vec2_add(line.stop, offset);
-	out.color = line.color;
-	return (out);
-}
-
-t_xy_line		line_sub_offset(t_xy_line line, t_xy offset)
-{
-	t_xy_line out;
-
-	out.start = vec2_sub(out.start, offset);
-	out.stop = vec2_sub(out.stop, offset);
 	out.color = line.color;
 	return (out);
 }
