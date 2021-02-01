@@ -187,6 +187,8 @@ static void		handle_regular_numbers(t_doom *doom)
 	}
 }
 
+// TODO: Instead of sprite_id, use for room texture_id
+
 static void 	handle_shifted_numbers(t_doom *doom)
 {
 	int i;
@@ -307,7 +309,6 @@ void			edt_keystate_input(t_doom *doom)
 	else if (doom->keystates[SDL_SCANCODE_G] && !lock_g)
 	{
 		get_state()->grid_on = !(get_state()->grid_on);
-			//printf("get_state->grid_on is %d\n", get_state()->grid_on);
 		get_state()->gui->change_zoom(get_state());
 		lock_g = 1;
 	}
@@ -318,7 +319,6 @@ void			edt_keystate_input(t_doom *doom)
 	{
 		if (get_state()->grid_size < 64)
 			get_state()->grid_size *= 2;
-			//printf("get_state->grid_size is %d\n", get_state()->grid_size);
 		get_state()->gui->change_zoom(get_state());
 		lock_t = 1;
 	}
@@ -329,7 +329,6 @@ void			edt_keystate_input(t_doom *doom)
 	{
 		if (get_state()->grid_size > 16)
 			get_state()->grid_size /= 2;
-			//printf("get_state->grid_size is %d\n", get_state()->grid_size);
 		get_state()->gui->change_zoom(get_state());
 		lock_b = 1;
 	}
@@ -364,7 +363,6 @@ void			edt_keystate_input(t_doom *doom)
 	{
 		if (get_state()->gui == mode_select())
 		{
-			//puts("Select Room mode, DEL key pressed!");
 			select_delete_room();
 		}
 		lock_del = 1;

@@ -60,7 +60,7 @@ void		game_mouse_motion(t_doom *doom)
 	int delta;
 
 	SDL_GetRelativeMouseState(&x,&y);
-	yaw   = clamp(yaw + y*0.01f, -(M_PI / 8), (M_PI / 8));
+	yaw   = clamp(yaw - y*0.01f, -(M_PI / 8), (M_PI / 8));
 	doom->mdl->player.yaw = yaw;
 	delta = abs(x);
 	if (x > 0)

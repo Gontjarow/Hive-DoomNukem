@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 19:27:21 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/29 20:18:35 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,6 @@ void		init_hud(t_doom *doom)
 			ft_die("Error allocating weap_img!\n");
 		n++;
 	}
-}
-
-void		handle_player_health_bar(t_doom *doom)
-{
-	float	percentage;
-	int		pos;
-
-	percentage = doom->mdl->player.hp.cur / 10;
-	pos = (int)percentage;
-	doom->mdl->player.active_health_bar = doom->sprites->txt_health_bar[pos];
 }
 
 // Surf refers to WHAT you want to draw
@@ -62,6 +52,69 @@ static void draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
     }
 }
 
+void		handle_player_health_bar(t_doom *doom)
+{
+	float	percentage;
+	int		pos;
+
+	percentage = doom->mdl->player.hp.cur / 10;
+	pos = (int)percentage;
+	doom->mdl->player.active_health_bar = doom->sprites->txt_health_bar[pos];
+	draw_surface(0, WIN_HEIGHT - 35, doom->mdl->player.active_health_bar, doom->minimap->buff);
+}
+
+void		handle_player_ammo_bar(t_doom *doom)
+{
+	int		ammo;
+	int		i;
+	int		space;
+
+	ammo = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur;
+	i = 1;
+	space = 0;
+	while (i <= ammo)
+	{
+		if (doom->mdl->player.reload_time == 0)
+		{
+			if (doom->mdl->player.weap_id == 0)
+				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_pistol_ammo_bar, doom->minimap->buff);
+			else if (doom->mdl->player.weap_id == 1)
+				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_smg_ammo_bar, doom->minimap->buff);
+			else if (doom->mdl->player.weap_id == 2)
+				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_assault_ammo_bar, doom->minimap->buff);
+			space -= 10;
+		}
+		i++;
+	}
+}
+
+void		handle_clip_bar(t_doom *doom)
+{
+	int		clips;
+	int		i;
+	int		space;
+
+	clips = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res;
+	space = 0;
+	i = 0;
+	while (i < clips)
+	{
+		draw_surface((WIN_WIDTH - 20) + space, WIN_HEIGHT - 80, doom->sprites->txt_clip_bar, doom->minimap->buff);
+		space -= 20;
+		i++;
+	}
+}
+
+void		handle_weapon_bar(t_doom *doom)
+{
+	if (doom->mdl->player.weap_id == 0)
+		draw_surface(WIN_WIDTH - 150, 0, doom->mdl->player.weap_arr[0].weap_img, doom->minimap->buff);
+	else if (doom->mdl->player.weap_id == 1)
+		draw_surface(WIN_WIDTH - 240, 0, doom->mdl->player.weap_arr[1].weap_img, doom->minimap->buff);
+	else if (doom->mdl->player.weap_id == 2)
+		draw_surface(WIN_WIDTH - 250, 0, doom->mdl->player.weap_arr[2].weap_img, doom->minimap->buff);
+}
+
 void        render_hud(t_doom *doom)
 {
     draw_surface(512, 450, doom->mdl->player.active_health_bar, doom->game->buff);
@@ -70,6 +123,9 @@ void        render_hud(t_doom *doom)
 void		handle_game_hud(t_doom *doom)
 {
 	handle_player_health_bar(doom);
+	handle_player_ammo_bar(doom);
+	handle_clip_bar(doom);
+	handle_weapon_bar(doom);
 }
 
 static void render_character(char c, t_doom *doom, int x, int y)

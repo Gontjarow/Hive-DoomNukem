@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/11 19:56:02 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/01/29 19:03:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,10 @@ void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 	t_pickup	*prev;
 	int			pc;
 
-	doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res += 50;
-	if (doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res > 9999)
-		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res = 9999;
+	if (pickup->weapon_type_id - 1 == 0)
+		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res = 1;
+	else
+		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res += 1;
 	pc = doom->mdl->pickup_count;
 	current = doom->mdl->pickup_first;
 	if (current->id == pickup->id)
@@ -122,19 +123,15 @@ void			handle_pickup(t_doom *doom)
 	pickup = doom->mdl->pickup_first;
 	while (pc--)
 	{
-		// printf("Checking all pickups\n");
-		// printf("pickup id: %d\n", pickup->id);
-		// printf("Player HP: %d\n", doom->mdl->player.hp.cur);
 		if (pickup->flavor == PICKUP_HEALTH && player_collision_with_pickup
 			(doom, pickup) == -1 && doom->mdl->player.hp.cur < 100)
 			handle_health_pickup(doom, pickup);
 		else if (pickup->flavor == PICKUP_AMMO && player_collision_with_pickup
-			(doom, pickup) == -1)
+			(doom, pickup) == -1 && doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res < 10)
 			handle_ammo_pickup(doom, pickup);
 		else if (pickup->flavor == PICKUP_WEAPON && player_collision_with_pickup
 			(doom, pickup) == -1 && doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].do_own == 0)
 			handle_weapon_pickup(doom, pickup);
 		pickup = pickup->next;
 	}
-	// printf("\n");
 }

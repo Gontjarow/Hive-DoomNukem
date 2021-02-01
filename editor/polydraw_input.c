@@ -1,14 +1,5 @@
 #include "doom-nukem.h"
 
-// Cleared TO-DO Create a direct draw system for the preview lines.
-//  	Stage 1: For each line, have a) "draw" and b) "undraw" // DONE
-//		Stage 2: draw->undraw->draw-> for the preview lines directly in buffer // DONE
-//		Stage 3: This will cause overwritten data to be lost. "Solution": Disable overwrite "draw" and "undraw" // DONE
-//		Stage 4: Detect bug in the cycle where the magnetization kicks in and causes undraw to be lost // DONE
-//		Stage 5: Create masked_circle_to_buffer function to replace the default version from the code // DONE
-//		Stage 6: Cleanup the additional code, update headers, and test for bugs // DONE
-//		Stage 7: Commit and move to the next task // DONE
-
 void 		polydraw_mouse_motion(int x, int y)
 {
 	t_linedraw          *data;
@@ -120,6 +111,8 @@ void 		polydraw_right_click(int x, int y)
 	status->phases[status->phase](status);
 	*/
 }
+
+// TODO: Joined portalization functionality
 
 void 		polydraw_middle_click(int x, int y)
 {
