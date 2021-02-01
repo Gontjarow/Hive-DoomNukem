@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 19:30:31 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/01 18:36:40 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 
 void		ai_ranged(t_doom *doom, t_enemy *enemy)
 {
-	/*
-		Set enemy shoot cd
-		If aggro or distance >= 70 && distance <= 200
-		- Move forward player at normal speed
-		- Once distance < 70, start shooting player, dealing 5dmg per sec?
-		- HP normal
-	*/
 	enemy->ai.min_dis = 200;
 	enemy->ai.max_dis = 400;
 	enemy->ai.mov_speed = 10;
@@ -31,14 +24,6 @@ void		ai_ranged(t_doom *doom, t_enemy *enemy)
 
 void		ai_melee(t_doom *doom, t_enemy *enemy)
 {
-	/*
-		Set enemy shoot cd
-		If aggro or distance >= 100 && distance <= 300 (or 200)
-		- Move forward player at a higher speed than other enemies
-		- Once collided, start dealing 5-10 dmg per sec? Prob more dmg than ranged
-		- HP lower than ranged?
-		- Players should definitely avoid letting them get near to survive
-	*/
 	enemy->ai.min_dis = 40;
 	enemy->ai.max_dis = 300;
 	enemy->ai.mov_speed = 15;
@@ -49,14 +34,6 @@ void		ai_melee(t_doom *doom, t_enemy *enemy)
 
 void		ai_boss(t_doom *doom, t_enemy *enemy)
 {
-	/*
-		Set enemy shoot cd
-		If aggro or distance (*)
-		- Move forward player at slower speed?
-		- Once distance (*) or collided, start dealing dmg, lower than most but depending
-		of what is its kind, we could decide a balanced dmg rate
-		- HP Very big pool - gotta make the fight last longer than usual
-	*/
 	enemy->ai.min_dis = 70;
 	enemy->ai.max_dis = 200;
 	enemy->ai.mov_speed = 5;
@@ -82,22 +59,6 @@ void		ai_assignment(t_doom *doom)
 			ai_melee(doom, enemy);
 		else if (enemy->ai.type_id == 2)
 			ai_boss(doom, enemy);
-		enemy = enemy->next;
-	}
-}
-
-void		handle_enemy_animation(t_doom *doom)
-{
-	int		ec;
-	t_enemy	*enemy;
-
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return ;
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
-	{
-		animation_switch(enemy, doom);
 		enemy = enemy->next;
 	}
 }

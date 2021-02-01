@@ -162,6 +162,7 @@ int			load_pickup_sprite(t_doom *doom)
 	doom->sprites->txt_health_pickup = load_texture(doom, "img/pickups/health.png");
 	doom->sprites->txt_smg_ammo_pickup = load_texture(doom, "img/pickups/smgammo.png");
 	doom->sprites->txt_assault_ammo_pickup = load_texture(doom, "img/pickups/akammo.png");
+	doom->sprites->txt_key_hud = load_texture(doom, "img/pickups/key.png");
 	return (1);
 }
 

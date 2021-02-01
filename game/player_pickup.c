@@ -6,54 +6,11 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/29 19:03:30 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/01 19:16:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
-
-static int		player_collision_with_pickup(t_doom *doom, t_pickup *pickup)
-{
-	int		dx;
-	int		dy;
-	int		ec;
-	int		distance;
-
-	dx = (int)doom->mdl->player.x - pickup->loc.x;
-	dy = (int)doom->mdl->player.y - pickup->loc.y;
-	distance = sqrt(dx * dx + dy * dy);
-	if ((distance < 10 + PICKING_RADIUS))
-		return (-1);
-	return (0);
-}
-
-t_pickup		*delete_first(t_doom *doom)
-{
-	t_pickup	*head;
-	t_pickup	*temp;
-
-	head = doom->mdl->pickup_first;
-	if (head == NULL)
-		return (NULL);
-	temp = head;
-	head = head->next;
-    free(temp);
-	doom->mdl->pickup_first = head;
-	return (head);
-}
-
-t_pickup		*delete_node(t_pickup *current, t_pickup *prev, t_pickup *pickup)
-{
-	while (current != NULL && current->id != pickup->id)
-	{
-		prev = current;
-		current = current->next;
-	}
-    prev->next = current->next;
-	free(current);
-	pickup = prev;
-	return (pickup);
-}
 
 static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 {
@@ -61,7 +18,6 @@ static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 	t_pickup	*prev;
 	int			pc;
 
-	// printf("Pickup ID that u touched: %d\n", pickup->id);
 	doom->mdl->player.hp.cur += 50;
 	if (doom->mdl->player.hp.cur > 100)
 		doom->mdl->player.hp.cur = 100;
@@ -75,7 +31,7 @@ static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 	doom->mdl->pickup_count--;
 }
 
-void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
+static void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 {
 	t_pickup	*current;
 	t_pickup	*prev;
@@ -95,7 +51,7 @@ void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 	doom->mdl->pickup_count--;
 }
 
-void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
+static void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 {
 	t_pickup	*current;
 	t_pickup	*prev;
@@ -123,14 +79,17 @@ void			handle_pickup(t_doom *doom)
 	pickup = doom->mdl->pickup_first;
 	while (pc--)
 	{
-		if (pickup->flavor == PICKUP_HEALTH && player_collision_with_pickup
-			(doom, pickup) == -1 && doom->mdl->player.hp.cur < 100)
+		if (pickup->flavor == PICKUP_HEALTH &&
+		player_collision_with_pickup(doom, pickup) == -1 &&
+		doom->mdl->player.hp.cur < 100)
 			handle_health_pickup(doom, pickup);
-		else if (pickup->flavor == PICKUP_AMMO && player_collision_with_pickup
-			(doom, pickup) == -1 && doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res < 10)
+		else if (pickup->flavor == PICKUP_AMMO &&
+		player_collision_with_pickup(doom, pickup) == -1 &&
+		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res < 10)
 			handle_ammo_pickup(doom, pickup);
-		else if (pickup->flavor == PICKUP_WEAPON && player_collision_with_pickup
-			(doom, pickup) == -1 && doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].do_own == 0)
+		else if (pickup->flavor == PICKUP_WEAPON &&
+		player_collision_with_pickup(doom, pickup) == -1 &&
+		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].do_own == 0)
 			handle_weapon_pickup(doom, pickup);
 		pickup = pickup->next;
 	}

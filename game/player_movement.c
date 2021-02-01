@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 16:16:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/01 19:07:33 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,25 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 	handle_pickup(doom);
 }
 
-static void 	strafe(t_doom *doom, int signal)
+static void		strafe(t_doom *doom, int signal)
 {
-	int orig_rot = doom->mdl->player.rot;
-	double strafe_rad;
+	int			orig_rot;
+	double		strafe_rad;
 
+	orig_rot = doom->mdl->player.rot;
 	doom->mdl->player.rot = doom->mdl->player.rot + (90 * signal);
 	if (doom->mdl->player.rot < 0)
 		doom->mdl->player.rot = 359 + (doom->mdl->player.rot);
 	if (doom->mdl->player.rot >= 360)
 		doom->mdl->player.rot = 0 + (doom->mdl->player.rot) - 360;
 	strafe_rad = deg_to_rad(doom->mdl->player.rot);
-	doom->mdl->player.x = doom->mdl->player.x + (((double)doom->mdl->player.mov_speed)) * -cos(strafe_rad);
-	doom->mdl->player.y = doom->mdl->player.y + (((double)doom->mdl->player.mov_speed)) * -sin(strafe_rad);
+	doom->mdl->player.x = doom->mdl->player.x +
+	(((double)doom->mdl->player.mov_speed)) * -cos(strafe_rad);
+	doom->mdl->player.y = doom->mdl->player.y +
+	(((double)doom->mdl->player.mov_speed)) * -sin(strafe_rad);
 	doom->mdl->player.rot = orig_rot;
 	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
+	handle_pickup(doom);
 }
 
 static void		rotating_left_right(t_doom *doom, int signal)
@@ -68,20 +72,6 @@ static void		rotating_left_right(t_doom *doom, int signal)
 	if (doom->mdl->player.rot >= 360)
 		doom->mdl->player.rot = 0;
 	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
-}
-
-static void		validate_player_position(t_doom *doom, t_coord old)
-{
-	int		location_id;
-
-	location_id = check_location(doom, doom->mdl->player.x,
-					doom->mdl->player.y);
-	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT ||
-		player_collision_with_enemies(doom) == -1)
-	{
-		doom->mdl->player.x = old.x;
-		doom->mdl->player.y = old.y;
-	}
 }
 
 void			handle_player_movement(t_doom *doom)

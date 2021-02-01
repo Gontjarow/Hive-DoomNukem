@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 20:00:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/01 18:39:58 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,8 @@ void		enemy_update_cooldown(t_doom *doom)
 
 void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 {
-	int		bullet_speed;
 	int		did_hit;
 
-	bullet_speed = 1;
 	did_hit = 0;
 	enemy->ray_color = 0xffff0000;
 	doom->minimap->enemy_ray_timeout = 15;
@@ -62,8 +60,8 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 	while (check_location(doom, enemy->bullet_pos.x,
 		enemy->bullet_pos.y) != -1 && did_hit == 0)
 	{
-		enemy->bullet_pos.x += bullet_speed * -cos(deg_to_rad(enemy->rot));
-		enemy->bullet_pos.y += bullet_speed * -sin(deg_to_rad(enemy->rot));
+		enemy->bullet_pos.x += 1 * -cos(deg_to_rad(enemy->rot));
+		enemy->bullet_pos.y += 1 * -sin(deg_to_rad(enemy->rot));
 		did_hit = check_hit_on_player(doom, enemy);
 		if (did_hit == 1)
 		{
@@ -95,6 +93,22 @@ void		handle_enemy_shooting(t_doom *doom)
 			if (distance < enemy->ai.min_dis && enemy->shoot_cd == 0)
 				enemy_shoot_the_player(doom, enemy);
 		}
+		enemy = enemy->next;
+	}
+}
+
+void		handle_enemy_animation(t_doom *doom)
+{
+	int		ec;
+	t_enemy	*enemy;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		animation_switch(enemy, doom);
 		enemy = enemy->next;
 	}
 }
