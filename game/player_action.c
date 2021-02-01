@@ -17,18 +17,7 @@ static void	player_jumps(t_doom *doom)
 	if (doom->mdl->player.is_jumping == 0 &&
 		doom->mdl->player.is_crouching == 0)
 	{
-		while (doom->mdl->player.is_jumping == 0)
-		{
-			doom->mdl->player.height += 10;
-			if (doom->mdl->player.height == 200)
-				doom->mdl->player.is_jumping = 1;
-		}
-		while (doom->mdl->player.is_jumping == 1)
-		{
-			doom->mdl->player.height -= 10;
-			if (doom->mdl->player.height == 100)
-				doom->mdl->player.is_jumping = 0;
-		}
+		doom->mdl->player.height += 10;
 	}
 }
 
