@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/29 17:39:10 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/02 17:41:42 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,8 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_ranged_side_attack;
 	struct SDL_Surface	*txt_ranged_side_idle;
 	struct SDL_Surface	**txt_ranged_side_walk;
+	struct SDL_Surface	**txt_ranged_back_walk;
+	struct SDL_Surface	*txt_ranged_back_idle;
 	struct SDL_Surface	**txt_ranged_death;
 
 	struct SDL_Surface	**txt_melee_front_attack;
@@ -218,6 +220,8 @@ typedef struct 			s_sprites
 	struct SDL_Surface	**txt_melee_side_walk;
 	struct SDL_Surface	*txt_melee_front_idle;
 	struct SDL_Surface	*txt_melee_side_idle;
+	struct SDL_Surface	**txt_melee_back_walk;
+	struct SDL_Surface	*txt_melee_back_idle;
 	struct SDL_Surface	**txt_melee_death;
 
 	struct SDL_Surface	**txt_boss_front_attack;
@@ -226,6 +230,8 @@ typedef struct 			s_sprites
 	struct SDL_Surface	**txt_boss_side_walk;
 	struct SDL_Surface	*txt_boss_front_idle;
 	struct SDL_Surface	*txt_boss_side_idle;
+	struct SDL_Surface	**txt_boss_back_walk;
+	struct SDL_Surface	*txt_boss_back_idle;
 	struct SDL_Surface	**txt_boss_death;
 }						t_sprites;
 
