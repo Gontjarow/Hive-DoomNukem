@@ -17,27 +17,26 @@ static void	player_jumps(t_doom *doom)
 	if (doom->mdl->player.is_jumping == 0 &&
 		doom->mdl->player.is_crouching == 0)
 	{
-		doom->mdl->player.height += 10;
+		doom->mdl->player.z_velocity += 3.0;
+		doom->mdl->player.is_jumping = 1;
 	}
 }
 
 static void	player_crouch(t_doom *doom)
 {
-	if (!doom->mdl->player.crouch_lock)
+	if (!doom->mdl->player.is_crouching)
 	{
 		doom->mdl->player.crouch_lock = 1;
 		doom->mdl->player.is_crouching = 1;
 		doom->mdl->player.mov_speed = 5;
-		while (doom->mdl->player.height != 50)
-			doom->mdl->player.height -= 10;
+		doom->mdl->player.height = CROUCH_HEIGHT;
 	}
 	else
 	{
 		doom->mdl->player.crouch_lock = 0;
 		doom->mdl->player.is_crouching = 0;
 		doom->mdl->player.mov_speed = 10;
-		while (doom->mdl->player.height != 100)
-			doom->mdl->player.height += 10;
+		doom->mdl->player.height = STAND_HEIGHT;
 	}
 }
 

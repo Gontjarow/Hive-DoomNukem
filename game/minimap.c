@@ -81,7 +81,7 @@ void		update_minimap(t_doom *doom)
 	/*
 		This is a test for the game HUD - by MS
 	*/
-	handle_game_hud(doom);
+	//handle_game_hud(doom);
 	// handle_player_health_bar(doom);
 	// print_minimap_single_sprite(doom, doom->mdl->player.active_health_bar); // Sprite and animation display test for game rendering - by MS
 	// print_minimap_single_sprite(doom, doom->mdl->enemy_first->active_sprite);

@@ -15,6 +15,9 @@
 
 #include "doom-nukem.h"
 
+# define CROUCH_HEIGHT 10
+# define STAND_HEIGHT 20
+
 enum 	e_sprite_categories { FRONT_ATTACK };
 enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
 enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
@@ -77,6 +80,7 @@ typedef struct 			s_player
 	double 				x;
 	double 				y;
 	double				z;
+	double				z_velocity;
 	double 				yaw;
 	int					room_id;
 	struct s_room		*room;
@@ -245,7 +249,6 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_boss_back_idle;
 	struct SDL_Surface	**txt_boss_death;
 	struct SDL_Surface	*txt_boss_back_walk_atlas;
-	struct SDL_Surface	**txt_boss_back_walk;
 }						t_sprites;
 
 typedef struct			s_menu

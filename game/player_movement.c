@@ -74,35 +74,35 @@ static void		rotating_left_right(t_doom *doom, int signal)
 	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
 }
 
-void			validate_player_position(t_doom *doom, t_coord old)
-{
-	static	int	last_room_id = -1;
-	int			current_room;
-	int			location_id;
-
-	location_id = check_location(doom, doom->mdl->player.x,
-					doom->mdl->player.y);
-	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT ||
-		player_collision_with_enemies(doom) == -1)
-	{
-		doom->mdl->player.x = old.x;
-		doom->mdl->player.y = old.y;
-	}
-	current_room = check_location(doom, doom->mdl->player.x, doom->mdl->player.y);
-	if (last_room_id != current_room)
-	{
-		doom->mdl->player.room_id = current_room;
-		doom->mdl->player.room = room_by_id(current_room);
-		last_room_id = current_room;
-	}
-}
-
 static void		apply_gravity(t_doom *doom)
 {
-	if (doom->mdl->player.z > doom->mdl->player.room->floor_height + doom->mdl->player.height)
-		doom->mdl->player.z--;
-	else if (doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height)
+	doom->mdl->player.z += doom->mdl->player.z_velocity;
+	if ((int)doom->mdl->player.z > doom->mdl->player.room->floor_height + doom->mdl->player.height)
+	{
+		//puts("reducing height!");
+		doom->mdl->player.z_velocity -= 0.25;
+	}
+	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height
+		&& doom->mdl->player.z_velocity == 0.0)
+	{
+			//puts("bouncing up from the crouch!");
+		doom->mdl->player.z += 1.0;
+	}
+	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height)
+	{
+			//puts("hit the floor with the feet!");
 		doom->mdl->player.z = doom->mdl->player.room->floor_height + doom->mdl->player.height;
+		doom->mdl->player.z_velocity = 0.0;
+		doom->mdl->player.is_jumping = 0;
+	}
+	else if ((int)doom->mdl->player.z > doom->mdl->player.room->roof_height)
+	{
+		puts("hit the roof with the head");
+		doom->mdl->player.z = doom->mdl->player.room->roof_height;
+		doom->mdl->player.z_velocity = 0.0;
+	}
+		//printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height,
+		// doom->mdl->player.height);
 }
 
 void			handle_player_movement(t_doom *doom)

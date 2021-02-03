@@ -48,13 +48,15 @@ void		init_model(t_doom *doom)
 	// Initializing the player variables. Strongly related to the ../game/* functions!
 	doom->mdl->player.x = -1;
 	doom->mdl->player.y = -1;
+	doom->mdl->player.z = -1;
+	doom->mdl->player.z_velocity = 0.0;
 	doom->mdl->player.yaw = 0.0;
 	doom->mdl->player.rot_horizontal = 0;
 	doom->mdl->player.rot_vertical = 0;
 	doom->mdl->player.is_jumping = 0;
 	doom->mdl->player.is_crouching = 0;
 	doom->mdl->player.is_running = 0;
-	doom->mdl->player.height = 20;
+	doom->mdl->player.height = STAND_HEIGHT;
 	doom->mdl->player.min_speed = 5;	// crouched
 	doom->mdl->player.mov_speed = 10;	// walking
 	doom->mdl->player.max_speed = 20;	// running

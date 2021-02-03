@@ -12,16 +12,26 @@
 
 #include "doom-nukem.h"
 
-void		validate_player_position(t_doom *doom, t_coord old)
+
+void			validate_player_position(t_doom *doom, t_coord old)
 {
-	int		location_id;
+	static	int	last_room_id = -1;
+	int			current_room;
+	int			location_id;
 
 	location_id = check_location(doom, doom->mdl->player.x,
-					doom->mdl->player.y);
+								 doom->mdl->player.y);
 	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT ||
 		player_collision_with_enemies(doom) == -1)
 	{
 		doom->mdl->player.x = old.x;
 		doom->mdl->player.y = old.y;
+	}
+	current_room = check_location(doom, doom->mdl->player.x, doom->mdl->player.y);
+	if (last_room_id != current_room)
+	{
+		doom->mdl->player.room_id = current_room;
+		doom->mdl->player.room = room_by_id(current_room);
+		last_room_id = current_room;
 	}
 }

@@ -71,3 +71,5 @@ void		handle_enemy_ai(t_doom *doom)
 	handle_enemy_shooting(doom);
 	handle_enemy_animation(doom);
 }
+
+
