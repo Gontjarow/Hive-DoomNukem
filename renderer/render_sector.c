@@ -106,17 +106,31 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		double ceil_angle = (yawed_ceil.stop.y - yawed_ceil.start.y) / (double)(x2 - x1);
 		double floor_angle = (yawed_floor.stop.y - yawed_floor.start.y) / (double)(x2 - x1);
 
+		int orig_x1 = GAME_MIDWIDTH + (wall.start.x * scale.start.x);
+
+		t_xy_line scaled_preclip = line(
+			wall_preclip.start.x * scale.start.y,
+			wall_preclip.start.y * scale.start.y,
+			wall_preclip.stop.x  * scale.stop.y,
+			wall_preclip.stop.y  * scale.stop.y
+		);
+
+		// This wall's per-pixel ratio is based on the length
+		// of the original wall segment, regardless of any clipping.
+		double per_pixel = bricks->w / line_mag(scaled_preclip);
+
+		// todo: distance always begins from 0, meaning
+		// todo: the left-most vertical line on-screen will be
+		// todo: the left-most side of the texture,
+		// todo: regardless of where the wall originates.
+		// note: this causes the texture to slide horizontally.
 		int x = x1;
 		while (x < x2)
 		{
-			int y_start = yawed_ceil.start.y + ((x - x1) * ceil_angle);
-			int y_stop = yawed_floor.start.y + ((x - x1) * floor_angle);
-
-			y_start = clamp(y_start, y_top[x], y_bot[x]);
-			y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
-			// vertical_line(x, y_start, y_stop, colors[vertex]);
-
-			int tex_x = (x - x1) * (double)bricks->w / (x2 - x1);
+			int distance = (x - x1);
+			int tex_x = distance * per_pixel;
+			int y_start = yawed_ceil.start.y + (distance * ceil_angle);
+			int y_stop = yawed_floor.start.y + (distance * floor_angle);
 			vertical_wall(x, tex_x, vec2(y_start, y_stop), bricks);
 
 			++x;
