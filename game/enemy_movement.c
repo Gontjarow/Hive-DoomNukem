@@ -6,11 +6,27 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:18:34 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 19:14:40 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/03 19:00:18 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
+
+/*
+// orient = orientation(...)
+// orient is +deg or -deg 
+// if (orient > 90 || orient < -90)
+//    enemy->anim.orient = BACK
+// else if orient > 45 deg || orient < -45 deg
+//    enemy->anim.orient = SIDE
+// else
+//    enemy->anim.orient = FRONT
+orient = orientation(doom, enemy, p.x, p.y);
+if (orient > 0)
+   rotate_left(doom, enemy);
+else if (orient < 0)
+   rotate_right(doom, enemy);
+*/
 
 static void		rotate_left(t_doom *doom, t_enemy *enemy)
 {
@@ -55,54 +71,35 @@ static int		orientation(t_doom *doom, t_enemy *enemy, int x, int y)
 	return ((val > 0) ? 1 : 2);
 }
 
-void			rotate_enemy_towards_player(t_doom *doom)
+void			rotate_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 {
-	t_enemy	*enemy;
 	t_point	p;
-	int		ec;
 	int		orient;
 	double	rad;
 
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return ;
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
+	if (enemy->hp.cur > 0 && enemy->stun_time == 0)
 	{
-		if (enemy->hp.cur > 0 && enemy->stun_time == 0)
-		{
-			rad = deg_to_rad(enemy->rot);
-			p.x = enemy->x + 10 * -cos(rad);
-			p.y = enemy->y + 10 * -sin(rad);
-			orient = orientation(doom, enemy, p.x, p.y);
-			if (orient == 1)
-				rotate_left(doom, enemy);
-			else if (orient == 2)
-				rotate_right(doom, enemy);
-		}
-		enemy = enemy->next;
+		rad = deg_to_rad(enemy->rot);
+		p.x = enemy->x + 10 * -cos(rad);
+		p.y = enemy->y + 10 * -sin(rad);
+		orient = orientation(doom, enemy, p.x, p.y);
+		if (orient == 1)
+			rotate_left(doom, enemy);
+		else if (orient == 2)
+			rotate_right(doom, enemy);
 	}
 }
 
-void			move_enemy_towards_player(t_doom *doom)
+void			move_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 {
-	t_enemy	*enemy;
-	int		ec;
 	t_point	old;
-	t_coord	dist;
-	int		distance;
+	int		dist;
 
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return ;
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
-	{
-		old.x = enemy->x;
-		old.y = enemy->y;
-		if (check_location(doom, enemy->x, enemy->y) != -1
-			&& enemy->hp.cur > 0 && enemy->stun_time == 0)
-			handle_enemy_movement(enemy, doom, old);
-		enemy = enemy->next;
-	}
+	old.x = enemy->x;
+	old.y = enemy->y;
+	dist = calc_distance(enemy, doom);
+	if (check_location(doom, enemy->x, enemy->y) != -1
+		&& enemy->hp.cur > 0 && enemy->stun_time == 0
+			&& !(dist < enemy->ai.min_dis))
+		handle_enemy_movement(enemy, doom, old);
 }

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 18:39:58 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/03 15:59:27 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,17 @@ static void	deal_damage_on_player(t_doom *doom, t_enemy *enemy)
 	}
 }
 
-void		enemy_update_cooldown(t_doom *doom)
+void		enemy_update_cooldown(t_doom *doom, t_enemy *enemy)
 {
-	int		ec;
-	t_enemy	*enemy;
-
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return ;
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
+	if (enemy->shoot_cd > 0)
+		enemy->shoot_cd--;
+	if (enemy->stun_cd > 0)
+		enemy->stun_cd--;
+	if (enemy->stun_time > 0)
 	{
-		if (enemy->shoot_cd > 0)
-			enemy->shoot_cd--;
-		if (enemy->stun_cd > 0)
-			enemy->stun_cd--;
-		if (enemy->stun_time > 0)
-		{
-			enemy->stun_time--;
-			if (enemy->stun_time == 0)
-				enemy->stun_cd = 3;
-		}
-		enemy = enemy->next;
+		enemy->stun_time--;
+		if (enemy->stun_time == 0)
+			enemy->stun_cd = 3;
 	}
 }
 
@@ -75,40 +64,14 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 	Mix_PlayChannel(-1, doom->sounds->mcPistolShot, 0);
 }
 
-void		handle_enemy_shooting(t_doom *doom)
+void		handle_enemy_shooting(t_doom *doom, t_enemy *enemy)
 {
-	t_enemy	*enemy;
-	int		ec;
 	int		distance;
 
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return ;
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
+	if (enemy->hp.cur > 0 && enemy->stun_time == 0)
 	{
-		if (enemy->hp.cur > 0 && enemy->stun_time == 0)
-		{
-			distance = calc_distance(enemy, doom);
-			if (distance < enemy->ai.min_dis && enemy->shoot_cd == 0)
-				enemy_shoot_the_player(doom, enemy);
-		}
-		enemy = enemy->next;
-	}
-}
-
-void		handle_enemy_animation(t_doom *doom)
-{
-	int		ec;
-	t_enemy	*enemy;
-
-	ec = doom->mdl->enemy_count;
-	if (ec == 0)
-		return ;
-	enemy = doom->mdl->enemy_first;
-	while (ec--)
-	{
-		animation_switch(enemy, doom);
-		enemy = enemy->next;
+		distance = calc_distance(enemy, doom);
+		if (distance < enemy->ai.min_dis && enemy->shoot_cd == 0)
+			enemy_shoot_the_player(doom, enemy);
 	}
 }

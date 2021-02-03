@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/02/02 17:41:42 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/03 18:24:10 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 
 #include "doom-nukem.h"
 
-enum 	e_sprite_categories { FRONT_ATTACK };
-enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
+enum	e_enemy_aggro { INACTIVE, ACTIVE };
+enum 	e_sprite_orient { FRONT, LEFT, RIGHT, BACK };
+enum	e_sprite_state { DEATH, IDLE, MOVE, ATTACK, HURT };
 enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
 
 typedef struct			s_xy t_xy;
@@ -108,6 +109,7 @@ typedef struct			s_animation
 	SDL_Surface 		**surfaces;
 	int 				frames;
 	int 				current;
+	int					orient;
 	int					done;
 }						t_animation;
 

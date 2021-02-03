@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 18:58:28 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/03 18:00:01 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 		if (enemy->stun_cd == 0)
 			enemy->stun_time = 10;
 		enemy->anim.done = HURT;
-		enemy->ai.aggro = 1;
+		enemy->ai.aggro = ACTIVE;
 		enemy->hp.cur -=
 		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
 		if (enemy->hp.cur <= 0)
@@ -41,6 +41,22 @@ void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 			enemy->anim.done = DEATH;
 			Mix_PlayChannel(1, doom->sounds->mcEnemyDeath, 0);
 		}
+	}
+}
+
+static void       aggro_enemies(t_doom *doom, t_enemy *enemy_hit)
+{
+   int		ec;
+   t_enemy	*enemy;
+
+	enemy = doom->mdl->enemy_first;
+	ec = doom->mdl->enemy_count;
+	while (ec--)
+	{
+    	if (enemy->ai.aggro == 0 && check_location(doom, enemy->x,
+			enemy->y) == check_location(doom, enemy_hit->x, enemy_hit->y))
+    		enemy->ai.aggro = 1;
+    	enemy = enemy->next;
 	}
 }
 
@@ -59,17 +75,19 @@ void				deal_damage(t_doom *doom, int enemy_id)
 	while (ec--)
 	{
 		update_enemy_status(doom, enemy, enemy_id);
+		if (enemy->id == enemy_id)
+			aggro_enemies(doom, enemy);
 		enemy = enemy->next;
 	}
 }
 
 int					player_shoots(t_doom *doom)
 {
-	int		enemy_who_was_hit;
+	int		enemy_id;
 	double	rad;
 
 	rad = deg_to_rad(doom->mdl->player.rot) - M_PI;
-	enemy_who_was_hit = -1;
+	enemy_id = -1;
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
 	doom->mdl->player.bullet_pos.y = doom->mdl->player.y;
 	doom->minimap->player_ray_color = 0xffff0000;
@@ -78,15 +96,15 @@ int					player_shoots(t_doom *doom)
 								[doom->mdl->player.weap_id].cooldown;
 	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur--;
 	while (check_location(doom, doom->mdl->player.bullet_pos.x,
-			doom->mdl->player.bullet_pos.y) != -1 && enemy_who_was_hit < 0)
+			doom->mdl->player.bullet_pos.y) != -1 && enemy_id < 0)
 	{
 		doom->mdl->player.bullet_pos.x += 1 * -cos(rad);
 		doom->mdl->player.bullet_pos.y += 1 * -sin(rad);
-		enemy_who_was_hit = check_hit(doom);
-		if (enemy_who_was_hit >= 0)
+		enemy_id = check_hit(doom);
+		if (enemy_id >= 0)
 		{
 			doom->minimap->player_ray_color = 0xff00ff00;
-			deal_damage(doom, enemy_who_was_hit);
+			deal_damage(doom, enemy_id);
 		}
 	}
 	return (0);

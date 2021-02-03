@@ -15,12 +15,6 @@ static char *extension_num_path(char *folder, char c, char *extension)
 	return (path);
 }
 
-static int	sprite_amounts(int category)
-{
-	if (category == FRONT_ATTACK)
-		return (1);
-}
-
 static int	load_ranged_sprite(t_doom *doom, char *path, int i)
 {
 	if (!(doom->sprites->txt_ranged_front_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))

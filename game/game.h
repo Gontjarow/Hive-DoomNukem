@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 19:16:29 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/03 15:59:42 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ t_pickup		*delete_first(t_doom *doom);
 t_pickup		*delete_node(t_pickup *cur, t_pickup *prev, t_pickup *pickup);
 
 void			update_player_tail(t_doom *doom, double rad);
-void			rotate_enemy_towards_player(t_doom *doom);
-void			move_enemy_towards_player(t_doom *doom);
-void			enemy_update_cooldown(t_doom *doom);
+void			rotate_enemy_towards_player(t_doom *doom, t_enemy *enemy);
+void			move_enemy_towards_player(t_doom *doom, t_enemy *enemy);
+void			enemy_update_cooldown(t_doom *doom, t_enemy *enemy);
 void			enemy_shoot_the_player(t_doom *doom, t_enemy *enemy);
 void			handle_enemy_ai(t_doom *doom);
-void			handle_enemy_shooting(t_doom *doom);
+void			handle_enemy_shooting(t_doom *doom, t_enemy *enemy);
 void			handle_enemy_movement(t_enemy *enemy, t_doom *doom, t_point old);
 void			ai_assignment(t_doom *doom);
 int				check_hit_on_player(t_doom *doom, t_enemy *enemy);
@@ -75,7 +75,6 @@ int				enemy_collision(t_doom *doom, t_enemy *enemy);
 int				calc_distance(t_enemy *enemy, t_doom *doom);
 
 void			animation_switch(t_enemy *enemy, t_doom *doom);
-void			handle_enemy_animation(t_doom *doom);
 void			init_enemy_sprite(t_doom *doom);
 
 #endif
