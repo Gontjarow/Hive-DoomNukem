@@ -95,7 +95,7 @@ SDL_Surface		*get_bricks(t_doom *doom)
 
 	if (!bricks)
 	{
-		bricks = load_texture(doom, "img/bluebricks.png");
+		bricks = load_texture(doom, "img/border.png");
 		if (bricks == NULL)
 			ft_die("Fatal error: Could not load texture!");
 	}

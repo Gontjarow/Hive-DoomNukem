@@ -71,9 +71,9 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 			continue;
 		}
 
-		//! Don't begin/end drawing from outside of the current render section.
-		x1 = clamp(x1, section->left, section->right);
-		x2 = clamp(x2, section->left, section->right);
+		//! Begin/end at the shortest possible range within the render section.
+		x1 = max(x1, section->left);
+		x2 = min(x2, section->right);
 
 		//! One more clip into the player's view-cone.
 		t_xy_line wall_segment;
@@ -92,9 +92,6 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		yawed_floor.start.y = GAME_MIDHEIGHT - (floor + wall_segment.start.y * doom->game->world->player.yaw) * scale.start.y;
 		yawed_floor.stop.y = GAME_MIDHEIGHT - (floor + wall_segment.stop.y * doom->game->world->player.yaw) * scale.stop.y;
 
-		//! Begin/end at the shortest possible range within the render section.
-		x1 = max(x1, section->left);
-		x2 = min(x2, section->right);
 
 		// Debug info for specific walls
 		int colors[256] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x0};
@@ -108,6 +105,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 		int orig_x1 = GAME_MIDWIDTH + (wall.start.x * scale.start.x);
 
+		// Apply perspective to the original line segment.
 		t_xy_line scaled_preclip = line(
 			wall_preclip.start.x * scale.start.y,
 			wall_preclip.start.y * scale.start.y,
@@ -117,20 +115,33 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 		// This wall's per-pixel ratio is based on the length
 		// of the original wall segment, regardless of any clipping.
-		double per_pixel = bricks->w / line_mag(scaled_preclip);
+		double texture_step = bricks->w / line_mag(scaled_preclip);
+
+		double wall_step = 1 / line_mag(scaled_preclip);
 
 		// todo: distance always begins from 0, meaning
 		// todo: the left-most vertical line on-screen will be
 		// todo: the left-most side of the texture,
 		// todo: regardless of where the wall originates.
 		// note: this causes the texture to slide horizontally.
+
+		// note: when orig_x1 is behind the near-clipping plane, the value is huge.
+		// if (vertex == 0 || vertex == 2) printf("vertex %-2i orig=%-8i x=%-8i start %-8.2f scaled %-8.2f\n", vertex, orig_x1, x1, wall.start.x, wall.start.x * scale.start.x);
+		if (vertex == 0) printf("1x %.2f, 1y %.2f, 2x %.2f, 2y %.2f\n", scale.start.x, scale.start.y, scale.stop.x, scale.stop.y);
+
 		int x = x1;
 		while (x < x2)
 		{
-			int distance = (x - x1);
-			int tex_x = distance * per_pixel;
-			int y_start = yawed_ceil.start.y + (distance * ceil_angle);
-			int y_stop = yawed_floor.start.y + (distance * floor_angle);
+			int horizontal = (x - x1);
+
+			// Account for X starting from outside the screen:
+			// For example: x1 = 0, orig_x1 = -10
+			// Start from:             0   + ( 0 -   -10  ) = 10
+			int wall_distance = horizontal + (x1 - orig_x1);
+
+			int tex_x = (texture_step * wall_distance);
+			int y_start = yawed_ceil.start.y + (horizontal * ceil_angle);
+			int y_stop = yawed_floor.start.y + (horizontal * floor_angle);
 			vertical_wall(x, tex_x, vec2(y_start, y_stop), bricks);
 
 			++x;
