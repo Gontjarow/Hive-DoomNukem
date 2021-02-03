@@ -24,6 +24,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 	t_xy_line wall;
 	t_xy_line scale;
 
+	SDL_Surface *bricks = get_bricks(doom);
+
 	vertex = 0;
 	while (vertex < sector->vertex_count)
 	{
@@ -112,7 +114,10 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 			y_start = clamp(y_start, y_top[x], y_bot[x]);
 			y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
-			vertical_line(x, y_start, y_stop, colors[vertex]);
+			// vertical_line(x, y_start, y_stop, colors[vertex]);
+
+			int tex_x = (x - x1) * (double)bricks->w / (x2 - x1);
+			vertical_wall(x, tex_x, vec2(y_start, y_stop), bricks);
 
 			++x;
 		}

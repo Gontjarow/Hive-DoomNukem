@@ -136,12 +136,15 @@ typedef struct	s_world
 
 double			*get_zbuffer();
 t_world			*get_world();
+SDL_Surface		*get_bricks(t_doom *doom);
 t_world			*load_world(t_world *world);
 
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			drawline(t_xy_line line, SDL_Surface *surface);
 void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
 void			vertical_line(int column, int start, int end, int color);
+void			vertical_wall(int screen_x, int tex_x, t_xy range, SDL_Surface *tex);
+void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range);
 
 void			render_frame(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot);

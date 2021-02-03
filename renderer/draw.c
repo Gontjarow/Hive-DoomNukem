@@ -1,6 +1,6 @@
 #include "renderer.h"
 
-void		drawline(t_xy_line line, SDL_Surface *surface)
+void			drawline(t_xy_line line, SDL_Surface *surface)
 {
 	t_xy	length;
 	t_xy	ratio;
@@ -24,7 +24,7 @@ void		drawline(t_xy_line line, SDL_Surface *surface)
 	}
 }
 
-void		draw_box(t_xy center, int radius, int color, SDL_Surface *surface)
+void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface)
 {
 	center.x = center.x - radius;
 	center.y = center.y - radius;
@@ -35,7 +35,7 @@ void		draw_box(t_xy center, int radius, int color, SDL_Surface *surface)
 		set_pixel(surface, center.x + x, center.y + y, color);
 }
 
-void		vertical_line(int column, int start, int end, int color)
+void			vertical_line(int column, int start, int end, int color)
 {
 	int *pixel;
 	int draw;
@@ -52,7 +52,72 @@ void		vertical_line(int column, int start, int end, int color)
 	}
 }
 
-double		*get_zbuffer()
+static unsigned	texture_pixel(SDL_Surface *tex, int x, int y)
+{
+	unsigned	*sprite;
+	unsigned	pixel;
+	unsigned	size;
+
+	sprite = tex->pixels;
+	pixel = tex->w * y + x;
+	size = tex->w * tex->h;
+	if ((pixel < size) && ((sprite[pixel] >> 6) != BYTE_TRANSPARENT))
+		return(sprite[pixel]);
+	else
+		return (COLOR_TRANSPARENT);
+}
+
+void			vertical_wall(int screen_x, int tex_x, t_xy range, SDL_Surface *tex)
+{
+	unsigned	*pixels;
+	unsigned	color;
+	double		y_step;
+	double		tex_y;
+
+	tex_y = 0;
+	y_step = tex->h / (range.y - range.x);
+	if (range.x < 0)
+	{
+		tex_y += y_step * -range.x;
+		range.x = 0;
+	}
+	pixels = doom_ptr()->game->buff->pixels;
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		color = texture_pixel(tex, tex_x, tex_y);
+		if (color != COLOR_TRANSPARENT)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+		tex_y += y_step;
+		range.x++;
+	}
+}
+
+void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
+{
+	unsigned	*pixels;
+	unsigned	color;
+	double		y_step;
+	double		tex_y;
+
+	tex_y = 0;
+	y_step = (double)enemy->active_sprite->h / (range.y - range.x);
+	if (range.x < 0)
+	{
+		tex_y += y_step * -range.x;
+		range.x = 0;
+	}
+	pixels = doom_ptr()->game->buff->pixels;
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
+		if (color != COLOR_TRANSPARENT)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+		tex_y += y_step;
+		range.x++;
+	}
+}
+
+double			*get_zbuffer()
 {
 	static double *zbuffer = NULL;
 
@@ -61,7 +126,7 @@ double		*get_zbuffer()
 	return (zbuffer);
 }
 
-int			zbuffer_ok(int index, double depth)
+int				zbuffer_ok(int index, double depth)
 {
 	double *zbuffer;
 

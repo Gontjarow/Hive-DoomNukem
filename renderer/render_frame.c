@@ -88,6 +88,21 @@ t_world			*get_world()
 	return (world);
 }
 
+// Temporary until walls have their own textures:
+SDL_Surface		*get_bricks(t_doom *doom)
+{
+	static SDL_Surface *bricks = NULL;
+
+	if (!bricks)
+	{
+		bricks = load_texture(doom, "img/bluebricks.png");
+		if (bricks == NULL)
+			ft_die("Fatal error: Could not load texture!");
+	}
+
+	return (bricks);
+}
+
 t_world			*load_world(t_world *world)
 {
     t_model *mdl = get_model();
@@ -140,46 +155,6 @@ t_world			*load_world(t_world *world)
 	world->player.sector_id = room_id_from_polymap(mdl->poly_map, mdl->player.x, mdl->player.y);
     print_data(world);
     return (world);
-}
-
-unsigned		sprite_pixel(t_enemy *enemy, int x, int y)
-{
-	unsigned	*sprite;
-	unsigned	pixel;
-	unsigned	size;
-
-	sprite = enemy->active_sprite->pixels;
-	pixel = enemy->active_sprite->w * y + x;
-	size = enemy->active_sprite->w * enemy->active_sprite->h;
-	if ((pixel < size) && ((sprite[pixel] >> 6) != BYTE_TRANSPARENT))
-		return(sprite[pixel]);
-	else
-		return (COLOR_TRANSPARENT);
-}
-
-void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
-{
-	unsigned	*pixels;
-	unsigned	color;
-	double		y_step;
-	double		tex_y;
-
-	tex_y = 0;
-	y_step = (double)enemy->active_sprite->h / (range.y - range.x);
-	if (range.x < 0)
-	{
-		tex_y += y_step * -range.x;
-		range.x = 0;
-	}
-	pixels = doom_ptr()->game->buff->pixels;
-	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
-	{
-		color = sprite_pixel(enemy, tex_x, tex_y);
-		if (color != COLOR_TRANSPARENT)
-			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
-		tex_y += y_step;
-		range.x++;
-	}
 }
 
 void			render_frame(t_doom *doom)
