@@ -143,13 +143,14 @@ void		game_render(t_doom *doom)
 	handle_enemy_ai(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
-	// wire_frame(doom);
 	render_frame(doom);
 	render_game_hud(doom);
-	static int i = 0;
-	draw_visible(0,0,doom->sprites->txt_boss_back_walk[(i / 4)],doom->game->buff);
-	i++;
-	if (i == 24)
-		i = 0;
+	/*
+	static SDL_Surface *flip = NULL;
+	if (!flip)
+		flip = flip_horizontal(doom->sprites->txt_ranged_side_idle);
+	draw_surface(0,0,doom->sprites->txt_ranged_side_idle, doom->game->buff);
+	draw_surface(doom->sprites->txt_ranged_side_idle->w * 2,0, flip, doom->game->buff);
+	*/
 	SDL_UpdateWindowSurface(doom->game->win);
 }

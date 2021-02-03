@@ -122,6 +122,18 @@ int 	set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color)
 	return (1);
 }
 
+uint32_t	get_pixel(SDL_Surface *surface, int x, int y)
+{
+	uint32_t *pix;
+
+	pix = (uint32_t*)surface->pixels;
+	if (x > surface->w || y > surface->h)
+	{
+		puts("Returning 0 pixel!");
+		return (0);
+	}
+	return (pix[(y * surface->w) + x]);
+}
 
 void 	set_pixel(SDL_Surface *buff, int x, int y, uint32_t color)
 {

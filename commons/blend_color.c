@@ -42,9 +42,9 @@ uint32_t 	invert_color(uint32_t color)
 	t_argb	invert;
 
 	invert = new_32_argb(color);
-	invert.r = 255 - invert.r;
-	invert.g = 255 - invert.g;
-	invert.b = 255 - invert.b;
+	invert.r = 255 - invert.r; // 255 - 128 = 128
+	invert.g = 255 - invert.g; // 255 - 64 = 192
+	invert.b = 255 - invert.b; // 255 - 192 = 64
 	return (argb_32_uint(invert));
 }
 

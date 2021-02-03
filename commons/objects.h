@@ -319,8 +319,8 @@ void					debug_model_pickups(void);
  * from texture.c
  * */
 
+SDL_Surface 			*flip_horizontal(SDL_Surface *surf);
 SDL_Surface				*load_xpm(char *path);
-uint32_t 				get_exact_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface				*xpm2surface(char *path);
 SDL_Surface				*load_texture(t_doom *doom, char *path);
 
@@ -344,6 +344,7 @@ void					draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
 void					flood_buffer(SDL_Surface *buff, uint32_t color);
 void					set_protected_color(uint32_t color);
 int 					set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
+uint32_t				get_pixel(SDL_Surface *surface, int x, int y);
 void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
 
 /*
