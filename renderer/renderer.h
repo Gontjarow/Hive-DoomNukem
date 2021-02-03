@@ -145,12 +145,15 @@ void			vertical_line(int column, int start, int end, int color);
 
 void			render_frame(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot);
+void			render_enemies(t_doom *doom);
 
 /*
 ** Math is fun, okay? ⤵️
 */
 
 double			clamp(double n, double min, double max);
+double			max(double a, double b);
+double			min(double a, double b);
 
 void			vec2p(const char *name, t_xy v);
 t_xy			vec2(double x, double y);

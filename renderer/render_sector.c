@@ -91,8 +91,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		yawed_floor.stop.y = GAME_MIDHEIGHT - (floor + wall_segment.stop.y * doom->game->world->player.yaw) * scale.stop.y;
 
 		//! Begin/end at the shortest possible range within the render section.
-		x1 = ft_maxi(x1, section->left);
-		x2 = ft_mini(x2, section->right);
+		x1 = max(x1, section->left);
+		x2 = min(x2, section->right);
 
 		// Debug info for specific walls
 		int colors[256] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x0};
