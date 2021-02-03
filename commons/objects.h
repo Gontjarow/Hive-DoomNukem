@@ -292,12 +292,17 @@ typedef struct			s_image
 	int					endian;
 }						t_image;
 
+# define 				TABLE_SIZE	28
+enum 					e_alphabet_types { SCANCODES, CHARS };
 
 /*
- * from alphabet.c
+ * from alphabet.c and alphabet_table.c
  * */
 
 void 					print_glyph_str(const char *str, SDL_Surface *buff, int x, int y);
+int						propose_character(char c, char *buff, int *i, int table_index);
+void					*get_alphabet_tables(int type);
+int						table_index(char c);
 
 /*
  * from debug_console.c

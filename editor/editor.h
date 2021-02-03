@@ -429,4 +429,10 @@ int						is_clockwise_convex_polygon(t_room *room);
 void					delete_portals_by_room(t_room *room, t_model *mdl);
 void					delete_portal(t_wall *portal, t_model *mdl);
 
+/*
+ * from ask_to_save.c
+ * */
+
+char					*ask_to_save(t_doom *doom);
+
 #endif
