@@ -12,6 +12,13 @@
 
 #include "doom-nukem.h"
 
+void			init_player_z(t_doom *doom)
+{
+	int			room_id;
+
+	room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x, doom->mdl->player.y);
+	doom->mdl->player.z = room_by_id(room_id)->floor_height + doom->mdl->player.height;
+}
 
 void			validate_player_position(t_doom *doom, t_coord old)
 {

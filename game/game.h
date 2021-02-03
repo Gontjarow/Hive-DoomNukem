@@ -60,6 +60,7 @@ void			game_print_numbers(const char *str, t_doom *doom, int x, int y);
 void			init_hud(t_doom *doom);
 void			render_game_hud(t_doom *doom);
 void			handle_game_hud(t_doom *doom);
+void 			init_player_z(t_doom *doom);
 void			validate_player_position(t_doom *doom, t_coord old);
 t_pickup		*delete_first(t_doom *doom);
 t_pickup		*delete_node(t_pickup *cur, t_pickup *prev, t_pickup *pickup);

@@ -141,6 +141,7 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
     	ft_putendl("Warning: Failed to capture mouse to window!");
     SDL_UpdateWindowSurface(doom->game->win);
     Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+    init_player_z(doom);
 }
 
 static void	start_editor_from_menu(t_doom *doom, int argc, char **argv)
