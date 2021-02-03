@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 19:46:06 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/01 18:58:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,25 @@ unsigned int		check_location(t_doom *doom, int x, int y)
 	return ((int)(pixels[location]));
 }
 
+void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
+{
+	if (enemy->id == id && enemy->hp.cur > 0)
+	{
+		if (enemy->stun_cd == 0)
+			enemy->stun_time = 10;
+		enemy->anim.done = HURT;
+		enemy->ai.aggro = 1;
+		enemy->hp.cur -=
+		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
+		if (enemy->hp.cur <= 0)
+		{
+			enemy->hp.cur = 0;
+			enemy->anim.done = DEATH;
+			Mix_PlayChannel(1, doom->sounds->mcEnemyDeath, 0);
+		}
+	}
+}
+
 void				deal_damage(t_doom *doom, int enemy_id)
 {
 	t_enemy	*enemy;
@@ -39,21 +58,7 @@ void				deal_damage(t_doom *doom, int enemy_id)
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
-		if (enemy->id == enemy_id && enemy->hp.cur > 0)
-		{
-			if (enemy->stun_cd == 0)
-				enemy->stun_time = 10;
-			enemy->anim.done = HURT;
-			enemy->ai.aggro = 1;
-			enemy->hp.cur -=
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
-			if (enemy->hp.cur <= 0)
-			{
-				enemy->hp.cur = 0;
-				enemy->anim.done = DEATH;
-				Mix_PlayChannel(1, doom->sounds->mcEnemyDeath, 0);
-			}
-		}
+		update_enemy_status(doom, enemy, enemy_id);
 		enemy = enemy->next;
 	}
 }
@@ -63,8 +68,7 @@ int					player_shoots(t_doom *doom)
 	int		enemy_who_was_hit;
 	double	rad;
 
-	rad = deg_to_rad(doom->mdl->player.rot);
-	rad = rad - M_PI;
+	rad = deg_to_rad(doom->mdl->player.rot) - M_PI;
 	enemy_who_was_hit = -1;
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
 	doom->mdl->player.bullet_pos.y = doom->mdl->player.y;

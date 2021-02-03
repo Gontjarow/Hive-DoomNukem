@@ -27,6 +27,8 @@ static int	load_ranged_sprite(t_doom *doom, char *path, int i)
 		return (-1);
 	if (!(doom->sprites->txt_ranged_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
 		return (-1);
+	if (!(doom->sprites->txt_ranged_back_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
+		return (-1);
 	if (!(doom->sprites->txt_ranged_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 7)))
 		return (-1);
 	i = '0';
@@ -36,6 +38,8 @@ static int	load_ranged_sprite(t_doom *doom, char *path, int i)
 		doom->sprites->txt_ranged_front_walk[i - 48] = load_texture(doom, path);
 		path = extension_num_path("img/sprites/ranged/side/walk_", i + 1, ".png");
 		doom->sprites->txt_ranged_side_walk[i - 48] = load_texture(doom, path);
+		path = extension_num_path("img/sprites/ranged/back/walk_", i + 1, ".png");
+		doom->sprites->txt_ranged_back_walk[i - 48] = load_texture(doom, path);
 		i++;
 	}
 	i = '0';
@@ -49,6 +53,7 @@ static int	load_ranged_sprite(t_doom *doom, char *path, int i)
 	doom->sprites->txt_ranged_side_attack = load_texture(doom, "img/sprites/ranged/side/attack_1.png");
 	doom->sprites->txt_ranged_front_idle = load_texture(doom, "img/sprites/ranged/front/idle.png");
 	doom->sprites->txt_ranged_side_idle = load_texture(doom, "img/sprites/ranged/side/idle.png");
+	doom->sprites->txt_ranged_back_idle = load_texture(doom, "img/sprites/ranged/back/idle.png");
 	return (1);
 }
 
@@ -95,6 +100,8 @@ static int	load_melee_sprite(t_doom *doom, char *path, int i)
 		return (-1);
 	if (!(doom->sprites->txt_melee_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
 		return (-1);
+	if (!(doom->sprites->txt_melee_back_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
+		return (-1);
 	if (!(doom->sprites->txt_melee_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
 		return (-1);
 	i = '0';
@@ -113,6 +120,8 @@ static int	load_melee_sprite(t_doom *doom, char *path, int i)
 		doom->sprites->txt_melee_front_walk[i - 48] = load_texture(doom, path);
 		path = extension_num_path("img/sprites/melee/side/walk_", i + 1, ".png");
 		doom->sprites->txt_melee_side_walk[i - 48] = load_texture(doom, path);
+		path = extension_num_path("img/sprites/melee/back/walk_", i + 1, ".png");
+		doom->sprites->txt_melee_back_walk[i - 48] = load_texture(doom, path);
 		i++;
 	}
 	i = '0';
@@ -124,6 +133,7 @@ static int	load_melee_sprite(t_doom *doom, char *path, int i)
 	}
 	doom->sprites->txt_melee_front_idle = load_texture(doom, "img/sprites/melee/front/idle.png");
 	doom->sprites->txt_melee_side_idle = load_texture(doom, "img/sprites/melee/side/idle.png");
+	doom->sprites->txt_melee_back_idle = load_texture(doom, "img/sprites/melee/back/idle.png");
 	return (1);
 }
 
@@ -137,7 +147,9 @@ static int	load_boss_sprite(t_doom *doom, char *path, int i)
 		return (-1);
 	if (!(doom->sprites->txt_boss_side_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
 		return (-1);
-	if (!(doom->sprites->txt_boss_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 10)))
+	if (!(doom->sprites->txt_boss_back_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
+		return (-1);
+	if (!(doom->sprites->txt_boss_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 9)))
 		return (-1);
 	if (!(doom->sprites->txt_boss_back_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
 		return (-1);
@@ -172,6 +184,8 @@ static int	load_boss_sprite(t_doom *doom, char *path, int i)
 		doom->sprites->txt_boss_front_walk[i - 48] = load_texture(doom, path);
 		path = extension_num_path("img/sprites/boss/side/walk_", i + 1, ".png");
 		doom->sprites->txt_boss_side_walk[i - 48] = load_texture(doom, path);
+		path = extension_num_path("img/sprites/boss/back/walk_", i + 1, ".png");
+		doom->sprites->txt_boss_back_walk[i - 48] = load_texture(doom, path);
 		i++;
 	}
 	i = '0';
@@ -183,6 +197,7 @@ static int	load_boss_sprite(t_doom *doom, char *path, int i)
 	}
 	doom->sprites->txt_boss_front_idle = load_texture(doom, "img/sprites/boss/front/idle.png");
 	doom->sprites->txt_boss_side_idle = load_texture(doom, "img/sprites/boss/side/idle.png");
+	doom->sprites->txt_boss_back_idle = load_texture(doom, "img/sprites/boss/back/idle.png");
 	return (1);
 }
 
@@ -212,6 +227,7 @@ int			load_pickup_sprite(t_doom *doom)
 	doom->sprites->txt_health_pickup = load_texture(doom, "img/pickups/health.png");
 	doom->sprites->txt_smg_ammo_pickup = load_texture(doom, "img/pickups/smgammo.png");
 	doom->sprites->txt_assault_ammo_pickup = load_texture(doom, "img/pickups/akammo.png");
+	doom->sprites->txt_key_hud = load_texture(doom, "img/pickups/key.png");
 	return (1);
 }
 

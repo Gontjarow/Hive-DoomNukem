@@ -436,7 +436,6 @@ void			render_frame(t_doom *doom)
 				y_start = clamp(y_start, y_top[x], y_bot[x]);
 				y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
 				vertical_line(x, y_start, y_stop, 0xff00ff);
-				//printf("victory\n");
 				++x;
 			}
 		}
@@ -446,6 +445,5 @@ void			render_frame(t_doom *doom)
 			drawline(debug, doom->game->buff);
 
 		//linep("eline", debug);
-
 	}
 }
