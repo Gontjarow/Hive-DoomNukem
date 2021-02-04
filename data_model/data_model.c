@@ -21,6 +21,9 @@ void		init_model(t_doom *doom)
 	doom->mdl->enemies = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!doom->mdl->enemies)
 		ft_die("Fatal error: Mallocing enemies struct failed at init_model.");
+	doom->mdl->effects = (t_effect*)malloc(sizeof(t_effect));
+	if (!doom->mdl->effects)
+		ft_die("Fatal error: Mallocing effects struct failed at init_model.");
 	doom->mdl->pickups = (t_pickup*)malloc(sizeof(t_pickup));
 	if (!doom->mdl->pickups)
 		ft_die("Fatal error: Mallocing pickups struct failed at init_model.");
@@ -39,11 +42,13 @@ void		init_model(t_doom *doom)
 	doom->mdl->portal_first = NULL;
 	doom->mdl->enemy_first = NULL;
 	doom->mdl->pickup_first = NULL;
+	doom->mdl->effect_first = NULL;
 	doom->mdl->wall_count = 0;
 	doom->mdl->room_count = 0;
 	doom->mdl->portal_count = 0;
 	doom->mdl->enemy_count = 0;
 	doom->mdl->pickup_count = 0;
+	doom->mdl->effect_count = 0;
 
 	// Initializing the player variables. Strongly related to the ../game/* functions!
 	doom->mdl->player.x = -1;
@@ -84,13 +89,17 @@ void 		destroy_model(t_doom *doom)
 	free(doom->mdl->portals);
 	free(doom->mdl->walls);
 	free(doom->mdl->rooms);
+	free(doom->mdl->effects);
+	free(doom->mdl->pickups);
 	if (doom->mdl->chain != NULL)
 		free(doom->mdl->chain);
 	doom->mdl->chain = NULL;
+	doom->mdl->enemy_first = NULL;
+	doom->mdl->portal_first = NULL;
 	doom->mdl->wall_first = NULL;
 	doom->mdl->room_first = NULL;
-	doom->mdl->portal_first = NULL;
-	doom->mdl->enemy_first = NULL;
+	doom->mdl->effect_first = NULL;
+	doom->mdl->pickup_first = NULL;
 	doom->mdl->parent = NULL;
 	free(doom->mdl);
 	doom->mdl = NULL;

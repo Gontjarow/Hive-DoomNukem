@@ -25,6 +25,7 @@ t_mapfile	*init_mapfile(void)
 	map->portal_string = NULL;
 	map->wall_string = NULL;
 	map->room_string = NULL;
+	map->effect_string = NULL;
 	map->pickup_string = NULL;
 	map->chain_string = NULL;
 	map->was_filled = 0;
@@ -45,6 +46,8 @@ void 	destroy_mapfile(t_mapfile *map)
 		free(map->portal_string);
 	if (map->enemy_string != NULL)
 		free(map->enemy_string);
+	if (map->effect_string != NULL)
+		free(map->effect_string);
 	if (map->pickup_string != NULL)
 		free(map->pickup_string);
 	map->join_string = NULL;
@@ -53,6 +56,8 @@ void 	destroy_mapfile(t_mapfile *map)
 	map->portal_string = NULL;
 	map->wall_string = NULL;
 	map->room_string = NULL;
+	map->effect_string = NULL;
+	map->pickup_string = NULL;
 	free(map);
 }
 
@@ -81,6 +86,9 @@ int		write_mapfile(char *map_path, t_mapfile *map)
 		write(opened, new_line, 1);
 		if (mdl->enemy_count > 0)
 			write(opened, map->enemy_string, ft_strlen(map->enemy_string));
+		write(opened, new_line, 1);
+		if (mdl->effect_count > 0)
+			write(opened, map->effect_string, ft_strlen(map->effect_string));
 		write(opened, new_line, 1);
 		if (mdl->pickup_count > 0)
 			write(opened, map->pickup_string, ft_strlen(map->pickup_string));

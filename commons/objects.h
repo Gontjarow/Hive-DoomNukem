@@ -169,6 +169,18 @@ typedef struct 			s_room
 	struct s_room		*next;
 }						t_room;
 
+enum 	e_effect_types { EFFECT_EXIT, EFFECT_KEY, EFFECT_LIGHT };
+
+typedef struct			s_effect
+{
+	int					id;
+	int 				type_id;
+	struct s_point		loc;
+	struct s_point		target;
+	int 				target_id;
+	struct s_effect		*next;
+}						t_effect;
+
 enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON };
 # define PICKING_RADIUS 10
 
@@ -313,6 +325,7 @@ void		 			debug_model_enemies(void);
 void 					debug_model_walls(void);
 void					debug_model_rooms(void);
 void					debug_model_portals(void);
+void					debug_model_effects(void);
 void					debug_model_pickups(void);
 
 /*

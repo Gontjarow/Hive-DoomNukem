@@ -1,10 +1,12 @@
 #include "doom-nukem.h"
 
+//[Player] spawn.x = 100 | spawn.y = 100 |  rot = 90
+//[Enemy] id = 0 | x = 335 | y = 278 | rot = 7 | hp = 100 | wep.type_id = 0
+//[Portal] id = 0 | start.x = 335 | start.y = 278 | end.x = 389 | end.y = 310
 //[Wall] id = 0 | start.x = 335 | start.y = 278 | end.x = 389 | end.y = 310
 //[Room] id = 0 | first_wall_id = 0 | wall_count = 3 | floor_height = 1000 | roof_height = 1300
-//[Portal] id = 0 | start.x = 335 | start.y = 278 | end.x = 389 | end.y = 310
-//[Enemy] id = 0 | x = 335 | y = 278 | rot = 7 | hp = 100 | wep.type_id = 0
-//[Player] spawn.x = 100 | spawn.y = 100 |  rot = 90
+//[Pickup] id = 0 | loc.x = 0 | loc.y = 0 | flavor = 0 | weapon_type_id = 0
+//[Effect] id = 0 | type_id = 0 | loc.x = 0 | loc.y = 0 | target.x = 0 | target.y = 0 | target_id = 0
 
 void	update_player_string(t_model *mdl, t_mapfile *map)
 {
@@ -63,6 +65,18 @@ void	add_wall_to_string(t_wall *wall, t_mapfile *map)
 	if (!map->wall_string)
 		map->wall_string = ft_strnew(1);
 	map->wall_string = ft_strjoin(map->wall_string, map->join_string);
+	free(map->join_string);
+	map->join_string = NULL;
+}
+
+void	add_effect_to_string(t_effect *effect, t_mapfile *map)
+{
+	map->join_string = ft_strnew(255);
+	sprintf(map->join_string, "[Effect] id = %d | type_id = %d | loc.x = %d | loc.y = %d | target.x = %d | target.y = %d | target_id = %d\n",
+			effect->id, effect->type_id, effect->loc.x, effect->loc.y, effect->target.x, effect->target.y, effect->target_id);
+	if (!map->effect_string)
+		map->effect_string = ft_strnew(1);
+	map->effect_string = ft_strjoin(map->effect_string, map->join_string);
 	free(map->join_string);
 	map->join_string = NULL;
 }

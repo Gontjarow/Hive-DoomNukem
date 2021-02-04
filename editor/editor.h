@@ -42,6 +42,10 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define COLOR_HEALTH_PICKUP	0xff00ff00
 # define COLOR_AMMO_PICKUP		0xffffff00
 # define COLOR_WEAPON_PICKUP	0xffffffff
+# define COLOR_EFFECT_EXIT		0xff00ff00
+# define COLOR_EFFECT_KEY		0xffffff00
+# define COLOR_EFFECT_LIGHT		0xffffffff
+# define EDT_TRIANGLE_SIZE		16
 # define PICKUP_RADIUS			16
 # define HEIGHT_STEPPING		10
 # define FLOOR_MIN				0
@@ -78,11 +82,13 @@ typedef struct 			s_linedraw
     t_point				portal_b_loc;
 }						t_linedraw;
 
-enum 					e_logic_type {PLAYER, ENEMY};
+enum 					e_logic_type { PLAYER, ENEMY };
+enum 					e_logic_plant_dirs { UPWARD, DOWNWARD };
 
 typedef struct 			s_logic
 {
 	int 				plant_type;
+	int					plant_dir;
 	logic_void			swap_type;
 	logic_xy			plant;
 	int 				planted_ticks;
@@ -216,7 +222,7 @@ t_2d_layer      		*editor_front_buffer(void);
 SDL_Surface     		*mixing_surface();
 
 /*
- * from square_to_buffer.c
+ * from square_to_buffer.c, circle_to_buffer.c, triangle_to_buffer.c
  * */
 
 void					preserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
@@ -229,15 +235,14 @@ void					number_to_buffer(SDL_Surface *buff, t_point loc, int number, uint32_t c
 void					digit_to_buffer(SDL_Surface *buff, t_point xy, int digit, uint32_t color);
 void					digit_to_buffer_ptr(SDL_Surface *buff, t_point xy, int digit, uint32_t color, void (*render_fun)(t_line *line));
 
-/*
- * from circle_to_buffer.c
- * */
-
 void					preserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
 void					unpreserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					unmasked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t mask);
 void					masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t *avoid);
 void            		circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+
+void					unpreserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, uint32_t color);
+void					preserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, uint32_t color);
 
 /*
  * from linedraw.c
@@ -314,6 +319,10 @@ void 					select_middle_click(int x, int y);
  * from effect.c
  * */
 
+uint32_t				effect_colors(int type);
+void 					effect_swap_type(void);
+void					effect_plant(int x, int y);
+t_logic 				*effect_logic(void);
 void					effect_activate(t_state *state);
 void					effect_deactivate(t_state *state);
 void					effect_change_zoom(t_state *state);
