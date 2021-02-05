@@ -255,7 +255,6 @@ void		add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors
     x_start = find_nearest_x(bound_x, room);
     y = find_nearest_y(bound_y, room);
     x = x_start;
-    	//printf("add_room_polymap | x, y = %d, %d | bound_x, y = %d, %d\n", x, y, bound_x, bound_y);
     while (y < bound_y)
     {
         while (x < bound_x)
@@ -267,7 +266,6 @@ void		add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors
         x = x_start;
         y++;
     }
-		//printf("%x color from conv_colors[room->id]\n", conv_colors[room->id]);
 }
 
 void 		repaint_polymap(t_model *mdl)
