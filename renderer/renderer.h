@@ -11,7 +11,7 @@
 # define T_DIR 0.0
 # define T_POS 1.0
 
-# define NEAR_PLANE -1.01
+# define NEAR_PLANE -1.0
 # define EYE_HEIGHT 6
 # define WORLD_SCALE 10
 # define MAX_SECTOR_QUEUE 32
@@ -216,7 +216,7 @@ void			linep(const char *name, t_xy_line line);
 signed			line_is_zero(t_xy_line line);
 
 t_xy_line		line_add_offset(t_xy_line line, t_xy offset);
-t_xy_line		line_sub_offset(t_xy_line line, t_xy offset);
+t_xy_line		line_scale(t_xy_line line, t_xy scale);
 t_xy_line		line_rot(t_xy_line line, double angle);
 t_xy			line_norm(t_xy_line line);
 double			line_mag(t_xy_line line);

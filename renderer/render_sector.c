@@ -26,6 +26,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 	SDL_Surface *bricks = get_bricks(doom);
 
+	const t_xy debug_view_offset = vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100);
+
 	vertex = 0;
 	while (vertex < sector->vertex_count)
 	{
@@ -42,14 +44,14 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 		clip_to_bounds(wall, &wall, set_clip_bounds(
 			vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
-			vec2(GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
-			vec2(GAME_MIDWIDTH, NEAR_PLANE),
+			vec2(+GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
+			vec2(+GAME_MIDWIDTH, NEAR_PLANE),
 			vec2(-GAME_MIDWIDTH, NEAR_PLANE)));
 
 		//! Ignore zero-length walls.
 		if (line_is_zero(wall))
 		{
-			debug = line_add_offset(wall_preclip, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+			debug = line_add_offset(wall_preclip, debug_view_offset);
 			debug.color = 0xFF005A;
 			drawline(debug, doom->game->buff);
 			++vertex;
@@ -64,7 +66,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		//! Ignore impossible walls, or walls that are backwards.
 		if(x1 >= x2 || x2 < section->left || x1 > section->right)
 		{
-			debug = line_add_offset(wall_preclip, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+			debug = line_add_offset(wall_preclip, debug_view_offset);
 			debug.color = 0xFFA753;
 			drawline(debug, doom->game->buff);
 			++vertex;
@@ -119,27 +121,17 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 		double wall_step = 1 / line_mag(scaled_preclip);
 
-		// todo: distance always begins from 0, meaning
-		// todo: the left-most vertical line on-screen will be
-		// todo: the left-most side of the texture,
-		// todo: regardless of where the wall originates.
-		// note: this causes the texture to slide horizontally.
+		t_xy_line start_clip = line_xy(wall_preclip.start, wall_segment.start, 0x00ffff);
 
-		// note: when orig_x1 is behind the near-clipping plane, the value is huge.
-		// if (vertex == 0 || vertex == 2) printf("vertex %-2i orig=%-8i x=%-8i start %-8.2f scaled %-8.2f\n", vertex, orig_x1, x1, wall.start.x, wall.start.x * scale.start.x);
-		if (vertex == 0) printf("1x %.2f, 1y %.2f, 2x %.2f, 2y %.2f\n", scale.start.x, scale.start.y, scale.stop.x, scale.stop.y);
+		double clipped_ratio = line_mag(start_clip) / line_mag(wall_preclip);
 
 		int x = x1;
 		while (x < x2)
 		{
 			int horizontal = (x - x1);
+			int range = (x2 - x1);
+			int tex_x = ((range * clipped_ratio) * texture_step) + (horizontal * texture_step);
 
-			// Account for X starting from outside the screen:
-			// For example: x1 = 0, orig_x1 = -10
-			// Start from:             0   + ( 0 -   -10  ) = 10
-			int wall_distance = horizontal + (x1 - orig_x1);
-
-			int tex_x = (texture_step * wall_distance);
 			int y_start = yawed_ceil.start.y + (horizontal * ceil_angle);
 			int y_stop = yawed_floor.start.y + (horizontal * floor_angle);
 			vertical_wall(x, tex_x, vec2(y_start, y_stop), bricks);
@@ -152,17 +144,20 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 			drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,             GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
 			drawline(line_xy(vec2(GAME_MIDWIDTH,                   0), vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
 
-			debug = line_add_offset(wall_segment, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+			debug = line_add_offset(wall_segment, debug_view_offset);
 			debug.color = 0xffffff;
 			drawline(debug, doom->game->buff);
-			draw_box(vec2_add(wall_segment.start, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, debug.color, doom->game->buff);
-			draw_box(vec2_add(wall_segment.stop, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100)), 3, debug.color, doom->game->buff);
+			draw_box(vec2_add(wall_segment.start, debug_view_offset), 3, debug.color, doom->game->buff);
+			draw_box(vec2_add(wall_segment.stop, debug_view_offset), 3, debug.color, doom->game->buff);
 
 			// Proves 90 degree FOV
-			t_xy center = vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100);
+			t_xy center = debug_view_offset;
 			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90+45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
 			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90-45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
 			drawline(line_xy(vec2_add(center, vec2(-50,0)), vec2_add(center, vec2(50,0)), 0xff0000), doom->game->buff);
+
+			if (vertex == 0) drawline(line_add_offset(start_clip, debug_view_offset), doom->game->buff);
+
 		}
 
 		++vertex;

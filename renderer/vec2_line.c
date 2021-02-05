@@ -43,6 +43,15 @@ t_xy_line		line_add_offset(t_xy_line line, t_xy offset)
 	return (out);
 }
 
+t_xy_line		line_scale(t_xy_line line, t_xy scale)
+{
+	return (line_xy(
+		vec2(line.start.x * scale.x, line.start.y * scale.y),
+		vec2(line.stop.x * scale.x, line.stop.y * scale.y),
+		line.color
+	));
+}
+
 t_xy_line		line_rot(t_xy_line line, double angle)
 {
 	t_xy_line out;
