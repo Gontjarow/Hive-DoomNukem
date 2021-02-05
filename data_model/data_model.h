@@ -116,6 +116,7 @@ int 					singleton_manager(void **ptr, int type, int clear);
  * from mapfile.c
  * */
 
+int						stringify_mapfile(t_doom *doom, char *map_path);
 t_mapfile				*init_mapfile(void);
 void					destroy_mapfile(t_mapfile *map);
 int						write_mapfile(char *map_path, t_mapfile *map);

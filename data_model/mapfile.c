@@ -61,6 +61,113 @@ void 	destroy_mapfile(t_mapfile *map)
 	free(map);
 }
 
+int			stringify_mapfile(t_doom *doom, char *map_path)
+{
+	int		opened;
+	char	*line;
+	char 	*join;
+
+	if (doom->map == NULL)
+		doom->map = init_mapfile();
+	opened = open(map_path, O_RDONLY);
+	line = NULL;
+	if (opened > 1)
+	{
+		while (get_next_line(opened, &line))
+		{
+			if (ft_strlen(line) < 3) {
+				free(line);
+				continue;
+			}
+			if (ft_strnstr(line, "[Wall]", 6))
+			{
+				if (doom->map->wall_string == NULL)
+					doom->map->wall_string = ft_strnew(1);
+				join = doom->map->wall_string;
+				doom->map->wall_string = ft_strjoin(doom->map->wall_string, line);
+				free(join);
+				join = doom->map->wall_string;
+				doom->map->wall_string = ft_strjoin(doom->map->wall_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Room]", 6)) {
+				if (doom->map->room_string == NULL)
+					doom->map->room_string = ft_strnew(1);
+				join = doom->map->room_string;
+				doom->map->room_string = ft_strjoin(doom->map->room_string, line);
+				free(join);
+				join = doom->map->room_string;
+				doom->map->room_string = ft_strjoin(doom->map->room_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Portal]", 8)) {
+				if (doom->map->portal_string == NULL)
+					doom->map->portal_string = ft_strnew(1);
+				join = doom->map->portal_string;
+				doom->map->portal_string = ft_strjoin(doom->map->portal_string, line);
+				free(join);
+				join = doom->map->portal_string;
+				doom->map->portal_string = ft_strjoin(doom->map->portal_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Enemy]", 7)) {
+				if (doom->map->enemy_string == NULL)
+					doom->map->enemy_string = ft_strnew(1);
+				join = doom->map->enemy_string;
+				doom->map->enemy_string = ft_strjoin(doom->map->enemy_string, line);
+				free(join);
+				join = doom->map->enemy_string;
+				doom->map->enemy_string = ft_strjoin(doom->map->enemy_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Effect]", 8)) {
+				if (doom->map->effect_string == NULL)
+					doom->map->effect_string = ft_strnew(1);
+				join = doom->map->effect_string;
+				doom->map->effect_string = ft_strjoin(doom->map->effect_string, line);
+				free(join);
+				join = doom->map->effect_string;
+				doom->map->effect_string = ft_strjoin(doom->map->effect_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Pickup]", 8)) {
+				if (doom->map->pickup_string == NULL)
+					doom->map->pickup_string = ft_strnew(1);
+				join = doom->map->pickup_string;
+				doom->map->pickup_string = ft_strjoin(doom->map->pickup_string, line);
+				free(join);
+				join = doom->map->pickup_string;
+				doom->map->pickup_string = ft_strjoin(doom->map->pickup_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Player]", 8)){
+				if (doom->map->player_string == NULL)
+					doom->map->player_string = ft_strnew(1);
+				join = doom->map->player_string;
+				doom->map->player_string = ft_strjoin(doom->map->player_string, line);
+				free(join);
+				join = doom->map->player_string;
+				doom->map->player_string = ft_strjoin(doom->map->player_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Chain_to_mapfile]", 18)){
+				if (doom->map->chain_string == NULL)
+					doom->map->chain_string = ft_strnew(1);
+				join = doom->map->chain_string;
+				doom->map->chain_string = ft_strjoin(doom->map->chain_string, line);
+				free(join);
+				join = doom->map->chain_string;
+				doom->map->chain_string = ft_strjoin(doom->map->chain_string, "\n");
+				free(join);
+			}
+			free(line);
+		}
+		close(opened);
+		return (1);
+	}
+	return (0);
+}
+
 int		write_mapfile(char *map_path, t_mapfile *map)
 {
 	t_model		*mdl;

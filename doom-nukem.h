@@ -51,10 +51,8 @@ typedef struct			s_doom
 	int 				game_quit;
 	int					minimap_quit;
 	int 				menu_out_of_focus;
-	int 				map_data_initialized;
 	float				fps;
 	const Uint8* 		keystates;
-	uint32_t 			app_start;
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;

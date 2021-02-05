@@ -299,7 +299,7 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 		if (doom->map->was_filled)
 		{
 			destroy_mapfile(doom->map);
-			doom->map_data_initialized = 0;
+			doom->map = NULL;
 		}
 		SDL_RestoreWindow(doom->win);
 		doom->buff = SDL_GetWindowSurface(doom->win);

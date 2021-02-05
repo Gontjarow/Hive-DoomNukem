@@ -55,8 +55,7 @@ static void	init_doom(t_doom *doom)
 	doom->keystates = NULL;
 	doom->minimap = NULL;
 	doom->mdl = NULL;
-	doom->app_start = SDL_GetTicks();
-	doom->map_data_initialized = 0;
+	doom->map = NULL;
 }
 
 static int	destroy_and_quit(t_doom *doom)

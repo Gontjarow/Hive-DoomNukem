@@ -131,7 +131,10 @@ void			    destroy_edt(t_doom *doom)
 		else if (!write_mapfile(doom->edt->map_path, doom->edt->map))
 			ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
 		if (doom->edt->map != NULL)
+		{
 			destroy_mapfile(doom->edt->map);
+			doom->edt->map = NULL;
+		}
         doom->edt->map = NULL;
 	}
 	else if (doom->mdl->player.x == -1 || doom->mdl->player.y == -1)
@@ -148,20 +151,21 @@ void			    destroy_edt(t_doom *doom)
         if (!write_mapfile(doom->edt->map_path, doom->edt->map))
             ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
         if (doom->edt->map != NULL)
-            destroy_mapfile(doom->edt->map);
+		{
+			destroy_mapfile(doom->edt->map);
+			doom->map = NULL;
+		}
         doom->edt->map = NULL;
         SDL_Delay(500);
         doom->menu->update_argc_argv = 1;
         doom->menu->added_arg = ft_strdup(doom->edt->map_path);
         free(doom->edt->map_path);
     }
-	// TODO TECHNICAL DEBT, SEPARATE OUT OF THIS FUNCTION, PERHAPS INTO MENU ITEM WHICH KILLS EDITOR
-	if (doom->map_data_initialized && doom->map->was_filled)
+	//TODO SEPARATE INTO A FUNCTION?
+	if (doom->map->was_filled)
 	{
 		destroy_mapfile(doom->map);
-		doom->map_data_initialized = 0;
-		doom->map->was_filled = 0;
-			//ft_putendl("Destroyed mapfile by calling destroy_mapfile and setting map_data_initialized to 0");
+		doom->map = NULL;
 	}
 	SDL_FreeSurface(doom->edt->buff);
 	SDL_DestroyWindow(doom->edt->win);
