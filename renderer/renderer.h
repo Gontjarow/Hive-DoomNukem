@@ -158,6 +158,7 @@ double			clamp(double n, double min, double max);
 double			max(double a, double b);
 double			min(double a, double b);
 double			remap(double in, double old_min, double old_max, double new_min, double new_max);
+double			value_changed(int initialize, double value);
 
 void			vec2p(const char *name, t_xy v);
 t_xy			vec2(double x, double y);

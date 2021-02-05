@@ -26,3 +26,35 @@ double				min(double a, double b)
 	else
 		return (b);
 }
+
+double				remap(double in, double old_min, double old_max, double new_min, double new_max)
+{
+	double old_range = old_max - old_min;
+	double new_range = new_max - new_min;
+
+	return (new_min + (((in - old_min) * new_range) / old_range));
+}
+
+double			value_changed(int initialize, double value)
+{
+	static double previous = 0;
+	double difference;
+
+	if (initialize != 0)
+	{
+		previous = value;
+		return (0);
+	}
+	else
+	{
+		if (value == previous)
+			return (0);
+		else
+		{
+			printf("change %.24f %.24f\n", value, previous);
+			difference = value - previous;
+			previous = value;
+			return (difference);
+		}
+	}
+}
