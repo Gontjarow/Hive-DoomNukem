@@ -61,13 +61,13 @@ static unsigned	texture_pixel(SDL_Surface *tex, int x, int y)
 	sprite = tex->pixels;
 	pixel = tex->w * y + x;
 	size = tex->w * tex->h;
-	if ((pixel < size) && ((sprite[pixel] >> 6) != BYTE_TRANSPARENT))
+	if ((pixel < size) && ((sprite[pixel] >> 24) != BYTE_TRANSPARENT))
 		return(sprite[pixel]);
 	else
 		return (COLOR_TRANSPARENT);
 }
 
-void			vertical_wall(int screen_x, int tex_x, t_xy range, SDL_Surface *tex)
+void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex)
 {
 	unsigned	*pixels;
 	unsigned	color;
@@ -82,9 +82,10 @@ void			vertical_wall(int screen_x, int tex_x, t_xy range, SDL_Surface *tex)
 		range.x = 0;
 	}
 	pixels = doom_ptr()->game->buff->pixels;
+	tex_x = clamp(tex_x, 0, 1);
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
-		color = texture_pixel(tex, tex_x, tex_y);
+		color = texture_pixel(tex, tex_x * tex->w, tex_y);
 		if (color != COLOR_TRANSPARENT)
 			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
 		tex_y += y_step;

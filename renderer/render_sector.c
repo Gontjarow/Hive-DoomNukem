@@ -119,18 +119,21 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		// of the original wall segment, regardless of any clipping.
 		double texture_step = bricks->w / line_mag(scaled_preclip);
 
-		double wall_step = 1 / line_mag(scaled_preclip);
-
 		t_xy_line start_clip = line_xy(wall_preclip.start, wall_segment.start, 0x00ffff);
 
 		double clipped_ratio = line_mag(start_clip) / line_mag(wall_preclip);
+		double visible_ratio = line_mag(wall_segment) / line_mag(wall_preclip);
+
+		int range = (x2 - x1);
+		double iter_step = visible_ratio / range;
+
+		if (vertex == 0) printf("clipped %-8.10f visible %-8.10f iter_step %-8.8f\n", clipped_ratio, visible_ratio, iter_step);
 
 		int x = x1;
 		while (x < x2)
 		{
 			int horizontal = (x - x1);
-			int range = (x2 - x1);
-			int tex_x = ((range * clipped_ratio) * texture_step) + (horizontal * texture_step);
+			double tex_x = clipped_ratio + (horizontal * iter_step);
 
 			int y_start = yawed_ceil.start.y + (horizontal * ceil_angle);
 			int y_stop = yawed_floor.start.y + (horizontal * floor_angle);

@@ -143,7 +143,7 @@ void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			drawline(t_xy_line line, SDL_Surface *surface);
 void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
 void			vertical_line(int column, int start, int end, int color);
-void			vertical_wall(int screen_x, int tex_x, t_xy range, SDL_Surface *tex);
+void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex);
 void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range);
 
 void			render_frame(t_doom *doom);
@@ -157,6 +157,7 @@ void			render_enemies(t_doom *doom);
 double			clamp(double n, double min, double max);
 double			max(double a, double b);
 double			min(double a, double b);
+double			remap(double in, double old_min, double old_max, double new_min, double new_max);
 
 void			vec2p(const char *name, t_xy v);
 t_xy			vec2(double x, double y);
