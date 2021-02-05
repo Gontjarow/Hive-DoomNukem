@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   delete_room.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/05 17:15:54 by krusthol          #+#    #+#             */
+/*   Updated: 2021/02/05 17:21:18 by krusthol         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "doom-nukem.h"
 
 static void		reduce_remaining_fwids(t_room *after, int x, t_model *mdl)
 {
-	t_room	*room;
-	int 	rc;
+	t_room		*room;
+	int			rc;
 
 	room = mdl->room_first;
 	rc = mdl->room_count;
@@ -17,10 +29,10 @@ static void		reduce_remaining_fwids(t_room *after, int x, t_model *mdl)
 	}
 }
 
-static void 	link_two_rooms(t_room *a, t_room *b)
+static void		link_two_rooms(t_room *a, t_room *b)
 {
-	t_wall	*wall;
-	int		wc;
+	t_wall		*wall;
+	int			wc;
 
 	a->next = b;
 	wc = a->wall_count;
@@ -28,13 +40,12 @@ static void 	link_two_rooms(t_room *a, t_room *b)
 	while (--wc)
 		wall = wall->next;
 	wall->next = b->first_wall;
-		//puts("Is this correct?");
 }
 
-static void 	relink_after_last_room_deleted(t_room *room, t_model *mdl)
+static void		relink_after_last_room_deleted(t_room *room, t_model *mdl)
 {
-	t_wall	*wall;
-	int		wc;
+	t_wall		*wall;
+	int			wc;
 
 	room->next = mdl->rooms;
 	wc = room->wall_count;
@@ -42,25 +53,23 @@ static void 	relink_after_last_room_deleted(t_room *room, t_model *mdl)
 	while (--wc)
 		wall = wall->next;
 	wall->next = mdl->walls;
-		//puts("Is this correct?");
 }
 
-static void 	room_deletion_recalcs(t_model *mdl)
+static void		room_deletion_recalcs(t_model *mdl)
 {
+	mdl->room_count--;
 	recalc_wall_ids(mdl);
 	recalc_room_ids(mdl);
 	repaint_polymap(mdl);
 }
 
-void			delete_room(t_room *room, t_model *mdl)
+void			delete_room(t_room *room, int del_count, t_model *mdl)
 {
-	t_wall	*wall;
-	t_wall 	*tmp;
-	int 	wc;
-	int 	deleted_wall_count;
+	t_wall		*wall;
+	t_wall		*tmp;
+	int			wc;
 
 	wc = room->wall_count;
-	deleted_wall_count = wc;
 	wall = room->first_wall;
 	while (wc--)
 	{
@@ -68,8 +77,8 @@ void			delete_room(t_room *room, t_model *mdl)
 		wall = wall->next;
 		free(tmp);
 	}
-	reduce_remaining_fwids(room, deleted_wall_count, mdl);
-	mdl->wall_count -= deleted_wall_count;
+	reduce_remaining_fwids(room, del_count, mdl);
+	mdl->wall_count -= del_count;
 	if (mdl->room_first == room)
 	{
 		mdl->room_first = room->next;
@@ -79,7 +88,6 @@ void			delete_room(t_room *room, t_model *mdl)
 		link_two_rooms(room_by_id(room->id - 1), room->next);
 	else
 		relink_after_last_room_deleted(room_by_id(room->id - 1), mdl);
-	mdl->room_count--;
 	room_deletion_recalcs(mdl);
 	free(room);
 }

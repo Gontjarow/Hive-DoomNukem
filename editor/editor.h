@@ -58,6 +58,21 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define STRING_ENTER_MAPFILE	"input mapfile name with a..z and ."
 # define STRING_VALID_CHAR_INFO	"save and confirm with enter"
 # define STRING_CONFIRM_SAVING	"do you want to save changes to map"
+# define WARNING_NON_CONVEX		"WARNING: NON-CONVEX polygon detected!"
+# define WARNING_NON_CONVEX_CW	"WARNING: NON-CONVEX clockwise polygon detected!"
+# define WARNING_NON_CONVEX_CCW	"WARNING: NON-CONVEX COUNTER-CLOCKWISE polygon detected!"
+# define WARNING_NON_CONVEX_Q	"WARNING: NON-CONVEX polygon detected! Could be either clockwise or counter-clockwise?"
+# define WARNING_CCW			"WARNING: COUNTER-CLOCKWISE detected!"
+# define WARNING_NON_CLOSED		"WARNING: Rooms walls did not form a CLOSED room!"
+# define XPM_SINGLY				"img/edt/single_zoom.xpm"
+# define XPM_DOUBLY				"img/edt/double_zoom.xpm"
+# define XPM_TRIPLY				"img/edt/triple_zoom.xpm"
+# define XPM_QUADLY				"img/edt/quad_zoom.xpm"
+# define XPM_POLYDRAW			"img/edt/polydraw.xpm"
+# define XPM_SELECT				"img/edt/select.xpm"
+# define XPM_EFFECT				"img/edt/effect.xpm""
+# define XPM_PLANTING			"img/edt/planting.xpm"
+# define XPM_PICKUPS			"img/edt/pickups.xpm"
 
 typedef struct 			s_2d_layer
 {
@@ -187,11 +202,16 @@ int 					edt_handle_confirm_save(t_doom *doom);
  * */
 
 void					redraw_editor_to_backbuffer(uint32_t color);
-SDL_Surface				*zoom_xpm(int factor);
+void                	print_mode_info(t_gui *mode);
+
+/*
+ * from editor_xpm.c
+ * */
+
+SDL_Surface				*zoom_xpm(int zoom_factor);
 SDL_Surface				*mode_xpm(t_gui *mode);
 SDL_Surface 			*mousehelp_xpm(void);
 SDL_Surface 			*keyhelp_xpm(void);
-void                	print_mode_info(t_gui *mode);
 
 /*
  * from scrolling.c
@@ -206,7 +226,6 @@ void	 				handle_keyboard_scrolling(t_doom *doom);
  * from walls.c
  * */
 
-t_room					*room_by_wall_id(int id, t_model *mdl);
 void					wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
 void 					room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color);
 void					x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
@@ -421,7 +440,7 @@ void					find_visual_xy(t_room *room);
  * from delete_room.c
  * */
 
-void					delete_room(t_room *room, t_model *mdl);
+void					delete_room(t_room *room, int del_count, t_model *mdl);
 
 enum					e_clockwise_return_code { NEEDS_FLIPPING = 2 };
 
@@ -430,7 +449,7 @@ enum					e_clockwise_return_code { NEEDS_FLIPPING = 2 };
  * */
 
 void		 			flip_room(t_room *room, t_model *mdl);
-int						is_clockwise_convex_polygon(t_room *room);
+int						is_clockwise_convex_polygon(t_room *room, t_wall *wall, int wc);
 
 /*
  * from delete_portal.c
@@ -444,5 +463,18 @@ void					delete_portal(t_wall *portal, t_model *mdl);
  * */
 
 char					*ask_to_save(t_doom *doom);
+
+/*
+ * from room.c
+ * */
+
+void					flip_room(t_room *room, t_model *mdl);
+t_room					*room_by_wall_id(int id, t_model *mdl);
+
+/*
+ * from portal.c
+ * */
+
+int						portal_belongs_to_room(t_wall *portal, t_room *room);
 
 #endif

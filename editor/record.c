@@ -85,25 +85,20 @@ int			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_cou
 		mdl->rooms->first_wall = room_first_wall;
 	}
 	mdl->rooms->first_wall_id = mdl->rooms->first_wall->id;
-	can_be_recorded = is_clockwise_convex_polygon(mdl->rooms);
+	can_be_recorded = is_clockwise_convex_polygon(mdl->rooms, mdl->rooms->first_wall, mdl->rooms->wall_count);
 	add_room_polymap(mdl->rooms, mdl->poly_map, get_conv_colors());
-		//show_editor_polymap(mdl->poly_map, get_debug_convs());
-		//puts("Added room polymap!");
 	mdl->rooms->next = next_room;
 	mdl->rooms = next_room;
 	if (!can_be_recorded)
 	{
-		//ft_putendl("Would be OUTRIGHT COOL to undo the room from the records here!");
-		delete_room(room_by_id(mdl->room_count - 1), mdl);
+		delete_room(room_by_id(mdl->room_count - 1),
+			room_by_id(mdl->room_count - 1)->wall_count, mdl);
 		Mix_PlayChannel(-1, doom_ptr()->sounds->mcPlop, 0);
 		get_state()->gui->change_zoom(get_state());
 		return (0);
 	}
 	else if (can_be_recorded == NEEDS_FLIPPING)
-	{
-		//ft_putendl("Would be FLIPPING NICE to flip the room point order here!");
 		flip_room(room_by_id(mdl->room_count - 1), mdl);
-	}
 	return (1);
 }
 

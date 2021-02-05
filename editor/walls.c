@@ -1,22 +1,5 @@
 #include "doom-nukem.h"
 
-t_room				*room_by_wall_id(int id, t_model *mdl)
-{
-    t_room *room;
-    int     rc;
-
-    room = mdl->room_first;
-    rc = mdl->room_count;
-    while (rc--)
-    {
-        if (room->first_wall_id + room->wall_count > id)
-            return (room);
-        room = room->next;
-    }
-    ft_die("Fatal error: Could not find room_by_wall_id");
-    return (NULL);
-}
-
 static unsigned int code_from_point(t_point *point, SDL_Surface *buff)
 {
 	unsigned int 	code;

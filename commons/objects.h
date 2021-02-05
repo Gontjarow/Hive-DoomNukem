@@ -364,6 +364,7 @@ void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
  * from rotation_math.c
  */
 
+double					angle_abc(t_point a, t_point b, t_point c);
 int			 			tail_degree_rot(t_point location, t_point *tail);
 
 /*

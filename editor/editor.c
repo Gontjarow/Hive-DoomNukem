@@ -162,7 +162,7 @@ void			    destroy_edt(t_doom *doom)
         free(doom->edt->map_path);
     }
 	//TODO SEPARATE INTO A FUNCTION?
-	if (doom->map->was_filled)
+	if (doom->map != NULL && doom->map->was_filled)
 	{
 		destroy_mapfile(doom->map);
 		doom->map = NULL;
