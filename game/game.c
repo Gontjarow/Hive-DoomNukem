@@ -145,6 +145,7 @@ void		game_render(t_doom *doom)
 		update_minimap(doom);
 	render_frame(doom);
 	render_game_hud(doom);
+
 	/*
 	static SDL_Surface *flip = NULL;
 	if (!flip)

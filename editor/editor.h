@@ -118,12 +118,12 @@ typedef struct 			s_status
 	void                *data;
 }						t_status;
 
-typedef struct 			s_gui // Mode_Polydraw() .... infinite amount of Mode_Somethings() which all define their own
-{							  // interactions etc. for example Mode_Placement()
+typedef struct 			s_gui
+{
     gui_event			activate;
     gui_event			deactivate;
     gui_event			change_zoom;
-	gui_click  			left_click; // Function pointer to polydraw_leftclick
+	gui_click  			left_click;
 	gui_click			middle_click;
 	gui_click			right_click;
 	gui_motion			motion;
@@ -319,6 +319,7 @@ void 					select_middle_click(int x, int y);
  * from effect.c
  * */
 
+int						effect_dirs(int type);
 uint32_t				effect_colors(int type);
 void 					effect_swap_type(void);
 void					effect_plant(int x, int y);

@@ -527,27 +527,22 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 		map_string(map->player_string, mdl, player_spec());
 	if (map->chain_string)
 		map_chain_to_model(map->chain_string, mdl);
-	//ft_putendl("Attempting to convert player from map to model at map_to_model");
 	//debug_model_player();
 	if (map->wall_string)
 		map_string(map->wall_string, mdl, wall_spec());
-	//ft_putendl("Attempting to convert walls from map to model at map_to_model");
 	//debug_model_walls();
 	if (map->room_string)
 		map_string(map->room_string, mdl, room_spec());
-	//ft_putendl("Attempting to convert rooms from map to model at map_to_model");
 	//debug_model_rooms();
 	if (map->portal_string)
 		map_string(map->portal_string, mdl, portal_spec());
-	//ft_putendl("Attempting to convert portals from map to model at map_to_model");
 	//debug_model_portals();
 	if (map->enemy_string)
 		map_string(map->enemy_string, mdl, enemy_spec());
-	//ft_putendl("Attempting to convert enemies from map to model at map_to_model");
 	//debug_model_enemies();
 	if (map->effect_string)
-		map_string(map->effect_string, mdl, pickup_spec());
-	debug_model_effects();
+		map_string(map->effect_string, mdl, effect_spec());
+	//debug_model_effects();
 	if (map->pickup_string)
 		map_string(map->pickup_string, mdl, pickup_spec());
 	if (!map->wall_string && !map->room_string && !map->portal_string

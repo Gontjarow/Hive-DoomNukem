@@ -244,8 +244,8 @@ void			render_frame(t_doom *doom)
 
 		t_xy a = vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
 		t_xy b = vec2( GAME_MIDWIDTH, -GAME_WIN_HEIGHT);
-		t_xy c = vec2( GAME_MIDWIDTH,           -1.01);
-		t_xy d = vec2(-GAME_MIDWIDTH,           -1.01);
+		t_xy c = vec2( GAME_MIDWIDTH,           -0.01);
+		t_xy d = vec2(-GAME_MIDWIDTH,           -0.01);
 		t_xy_line *bounds = set_clip_bounds(a, b, c, d);
 
 		clip_to_bounds(wall, &wall, bounds);

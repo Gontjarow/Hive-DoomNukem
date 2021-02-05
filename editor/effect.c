@@ -25,7 +25,7 @@ static void 	effect_plant_exit(int x, int y)
 	if (mdl->effect_count == 1)
 		mdl->effect_first = mdl->effects;
 	mdl->effects = new_effect;
-	debug_model_effects();
+	//debug_model_effects();
 }
 
 static void 	effect_plant_key(int x, int y)
@@ -36,6 +36,13 @@ static void 	effect_plant_key(int x, int y)
 static void 	effect_plant_light(int x, int y)
 {
 	//plant light effector
+}
+
+int				effect_dirs(int type)
+{
+	static int	dirs[3] = { DOWNWARD, UPWARD, DOWNWARD };
+
+	return (dirs[type]);
 }
 
 uint32_t		effect_colors(int type)

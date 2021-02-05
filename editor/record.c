@@ -162,6 +162,7 @@ void		create_strings_from_model(t_model *mdl, t_mapfile *map)
 	t_room		*room;
 	t_wall		*wall_or_portal;
 	t_pickup	*pickup;
+	t_effect	*effect;
 
 	update_player_string(mdl, map);
 	if (map->chain_string)
@@ -193,6 +194,13 @@ void		create_strings_from_model(t_model *mdl, t_mapfile *map)
 	{
 		add_portal_to_string(wall_or_portal, map);
 		wall_or_portal = wall_or_portal->next;
+	}
+	count = mdl->effect_count;
+	effect = mdl->effect_first;
+	while (count--)
+	{
+		add_effect_to_string(effect, map);
+		effect = effect->next;
 	}
 	count = mdl->pickup_count;
 	pickup = mdl->pickup_first;

@@ -131,6 +131,7 @@ void					add_enemy_to_string(t_enemy *enemy, t_mapfile *map);
 void					add_wall_to_string(t_wall *wall, t_mapfile *map);
 void					add_portal_to_string(t_wall *portal, t_mapfile *map);
 void					add_room_to_string(t_room *room, t_mapfile *map);
+void					add_effect_to_string(t_effect *effect, t_mapfile *map);
 void					add_pickup_to_string(t_pickup *pickup, t_mapfile *map);
 
 /*

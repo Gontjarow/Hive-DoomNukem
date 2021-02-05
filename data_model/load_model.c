@@ -296,6 +296,7 @@ static void init_mapdata(t_doom *doom)
 	doom->map->wall_string = NULL;
 	doom->map->room_string = NULL;
 	doom->map->pickup_string = NULL;
+	doom->map->effect_string = NULL;
 	doom->map->was_filled = 0;
 	doom->map_data_initialized = 1;
 }
@@ -306,7 +307,7 @@ void 		destroy_mapdata(t_doom *doom)
 		free(doom->map->join_string);
 	if (doom->map->player_string != NULL)
 		free(doom->map->player_string);
-	if (doom->map->player_string != NULL)
+	if (doom->map->chain_string != NULL)
 		free(doom->map->chain_string);
 	if (doom->map->wall_string != NULL)
 		free(doom->map->wall_string);
@@ -316,6 +317,10 @@ void 		destroy_mapdata(t_doom *doom)
 		free(doom->map->portal_string);
 	if (doom->map->enemy_string != NULL)
 		free(doom->map->enemy_string);
+	if (doom->map->pickup_string != NULL)
+		free(doom->map->pickup_string);
+	if (doom->map->effect_string != NULL)
+		free(doom->map->effect_string);
 	doom->map->join_string = NULL;
 	doom->map->enemy_string = NULL;
 	doom->map->player_string = NULL;
@@ -323,6 +328,8 @@ void 		destroy_mapdata(t_doom *doom)
 	doom->map->wall_string = NULL;
 	doom->map->room_string = NULL;
 	doom->map->pickup_string = NULL;
+	doom->map->effect_string = NULL;
+	doom->map->chain_string = NULL;
 	free(doom->map);
 	doom->map = NULL;
 	doom->map_data_initialized = 0;
@@ -386,6 +393,16 @@ static int	stringify_mapfile(t_doom *doom, char *map_path)
 				free(join);
 				join = doom->map->enemy_string;
 				doom->map->enemy_string = ft_strjoin(doom->map->enemy_string, "\n");
+				free(join);
+			}
+			else if (ft_strnstr(line, "[Effect]", 8)) {
+				if (doom->map->effect_string == NULL)
+					doom->map->effect_string = ft_strnew(1);
+				join = doom->map->effect_string;
+				doom->map->effect_string = ft_strjoin(doom->map->effect_string, line);
+				free(join);
+				join = doom->map->effect_string;
+				doom->map->effect_string = ft_strjoin(doom->map->effect_string, "\n");
 				free(join);
 			}
 			else if (ft_strnstr(line, "[Pickup]", 8)) {
