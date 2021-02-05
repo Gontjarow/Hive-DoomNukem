@@ -6,11 +6,37 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/10 16:23:13 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/09/11 14:07:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/05 18:05:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
+
+SDL_Surface			*flip_horizontal(SDL_Surface *surf)
+{
+	SDL_Surface		*flipped;
+	uint32_t		color;
+	int				x;
+	int				y;
+
+	flipped = SDL_CreateRGBSurface(0, surf->w, surf->h,
+		surf->format->BitsPerPixel, surf->format->Rmask, surf->format->Gmask,
+		surf->format->Bmask, surf->format->Amask);
+	if (flipped == NULL)
+		ft_die("Fatal error:"
+		"Could not SDL_CreateRGBSurface at flip_horizontal!");
+	y = -1;
+	while (y++ < surf->h)
+	{
+		x = -1;
+		while (x++ < surf->w)
+		{
+			color = get_pixel(surf, surf->w - x, y);
+			set_pixel(flipped, x, y, color);
+		}
+	}
+	return (flipped);
+}
 
 static void		validate_file(char *path)
 {
@@ -26,9 +52,9 @@ static void		validate_file(char *path)
 ** This function makes it possible to get the exact pixel from a x,y coordinate on a surface
 */
 
-Uint32			get_exact_pixel(SDL_Surface *surface, int x, int y)
+Uint32			get_pixel(SDL_Surface *surface, int x, int y)
 {
-	if (surface->w < x || surface->h < y)
+	if (surface->w <= x || surface->h <= y)
 		return (0);
 	return (((Uint32 *)surface->pixels)[y * surface->w + x]);
 }

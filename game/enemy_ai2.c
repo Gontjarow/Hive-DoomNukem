@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/03 20:51:07 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/05 20:41:47 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ void		ai_assignment(t_doom *doom)
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
-		if (enemy->ai.type_id == 0)
+		if (enemy->ai.type_id == RANGED)
 			ai_ranged(doom, enemy);
-		else if (enemy->ai.type_id == 1)
+		else if (enemy->ai.type_id == MELEE)
 			ai_melee(doom, enemy);
-		else if (enemy->ai.type_id == 2)
+		else if (enemy->ai.type_id == BOSS)
 			ai_boss(doom, enemy);
 		enemy = enemy->next;
 	}
@@ -78,28 +78,32 @@ void		check_aggro(t_doom *doom, t_enemy *enemy)
 
 static void		check_sprite_orient(t_doom *doom, t_enemy *enemy)
 {
-	float	angleBetween;
-	t_coord	dif;
+	t_xy	delta;
+	float	angle;
 
-	dif.x = enemy->x - doom->mdl->player.x;
-	dif.y = enemy->y - doom->mdl->player.y;
-
-	angleBetween = atan2(dif.y, dif.x);
-	if (angleBetween >= 1.0 && angleBetween < 2.0)
+	if (enemy->hp.cur > 0)
 	{
-		enemy->anim.orient = FRONT;
-	}
-	else if (angleBetween >= 0.3 && angleBetween < 0.9)
-	{
-		enemy->anim.orient = LEFT;
-	}
-	else if (angleBetween <= -0.5 && angleBetween > -0.8)
-	{
-        enemy->anim.orient = RIGHT;
-	}
-	else
-	{
-		enemy->anim.orient = BACK;
+		delta.y = enemy->y - doom->mdl->player.y;
+		delta.x = enemy->x - doom->mdl->player.x;
+		delta = vec2_norm(delta);
+		angle = (atan2(delta.y, delta.x) * 180 / M_PI) + doom->mdl->player.rot;
+		printf("Angle between: %0.2f\n", angle);
+		if (angle >= -45 && angle <= 45)
+		{
+			enemy->anim.orient = FRONT;
+		}
+		else if (angle > 30 && angle <= 135)
+		{
+			enemy->anim.orient = RIGHT;
+		}
+		else if (angle < -45 && angle >= -135)
+		{
+			enemy->anim.orient = LEFT;
+		}
+		else
+		{
+			enemy->anim.orient = BACK;
+		}
 	}
 }
 
@@ -115,7 +119,7 @@ void		handle_enemy_ai(t_doom *doom)
 	while (ec--)
 	{
 		enemy_update_cooldown(doom, enemy);
-		// check_sprite_orient(doom, enemy);
+		// check_sprite_orient(doom, enemy);		// WIP
 		animation_switch(enemy, doom);
 		check_aggro(doom, enemy);
 		if (enemy->ai.aggro == ACTIVE)

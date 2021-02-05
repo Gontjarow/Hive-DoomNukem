@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/02/03 18:24:10 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/05 17:08:26 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "doom-nukem.h"
 
 enum	e_enemy_aggro { INACTIVE, ACTIVE };
+enum	e_enemy_type { RANGED, MELEE, BOSS };
 enum 	e_sprite_orient { FRONT, LEFT, RIGHT, BACK };
 enum	e_sprite_state { DEATH, IDLE, MOVE, ATTACK, HURT };
 enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
@@ -209,29 +210,38 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_ranged_front_attack;
 	struct SDL_Surface	*txt_ranged_front_idle;
 	struct SDL_Surface	**txt_ranged_front_walk;
-	struct SDL_Surface	*txt_ranged_side_attack;
-	struct SDL_Surface	*txt_ranged_side_idle;
-	struct SDL_Surface	**txt_ranged_side_walk;
+	struct SDL_Surface	*txt_ranged_left_attack;
+	struct SDL_Surface	*txt_ranged_right_attack;
+	struct SDL_Surface	*txt_ranged_left_idle;
+	struct SDL_Surface	*txt_ranged_right_idle;
+	struct SDL_Surface	**txt_ranged_left_walk;
+	struct SDL_Surface	**txt_ranged_right_walk;
 	struct SDL_Surface	**txt_ranged_back_walk;
 	struct SDL_Surface	*txt_ranged_back_idle;
 	struct SDL_Surface	**txt_ranged_death;
 
 	struct SDL_Surface	**txt_melee_front_attack;
 	struct SDL_Surface	**txt_melee_front_walk;
-	struct SDL_Surface	**txt_melee_side_attack;
-	struct SDL_Surface	**txt_melee_side_walk;
+	struct SDL_Surface	**txt_melee_left_attack;
+	struct SDL_Surface	**txt_melee_right_attack;
+	struct SDL_Surface	**txt_melee_left_walk;
+	struct SDL_Surface	**txt_melee_right_walk;
 	struct SDL_Surface	*txt_melee_front_idle;
-	struct SDL_Surface	*txt_melee_side_idle;
+	struct SDL_Surface	*txt_melee_left_idle;
+	struct SDL_Surface	*txt_melee_right_idle;
 	struct SDL_Surface	**txt_melee_back_walk;
 	struct SDL_Surface	*txt_melee_back_idle;
 	struct SDL_Surface	**txt_melee_death;
 
 	struct SDL_Surface	**txt_boss_front_attack;
 	struct SDL_Surface	**txt_boss_front_walk;
-	struct SDL_Surface	**txt_boss_side_attack;
-	struct SDL_Surface	**txt_boss_side_walk;
+	struct SDL_Surface	**txt_boss_left_attack;
+	struct SDL_Surface	**txt_boss_right_attack;
+	struct SDL_Surface	**txt_boss_left_walk;
+	struct SDL_Surface	**txt_boss_right_walk;
 	struct SDL_Surface	*txt_boss_front_idle;
-	struct SDL_Surface	*txt_boss_side_idle;
+	struct SDL_Surface	*txt_boss_left_idle;
+	struct SDL_Surface	*txt_boss_right_idle;
 	struct SDL_Surface	**txt_boss_back_walk;
 	struct SDL_Surface	*txt_boss_back_idle;
 	struct SDL_Surface	**txt_boss_death;
@@ -300,7 +310,8 @@ void					debug_model_pickups(void);
  * from texture.c
  * */
 
-uint32_t 				get_exact_pixel(SDL_Surface *surface, int x, int y);
+uint32_t 				get_pixel(SDL_Surface *surface, int x, int y);
+SDL_Surface				*flip_horizontal(SDL_Surface *surf);
 SDL_Surface				*xpm2surface(char *path);
 SDL_Surface				*load_texture(t_doom *doom, char *path);
 

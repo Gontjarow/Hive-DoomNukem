@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/03 15:59:42 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/05 17:51:52 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,12 @@ int				enemy_collision(t_doom *doom, t_enemy *enemy);
 int				calc_distance(t_enemy *enemy, t_doom *doom);
 
 void			animation_switch(t_enemy *enemy, t_doom *doom);
+void			animate_ranged_back_walk(t_enemy *enemy, t_doom *doom);
+void			animate_ranged_front_walk(t_enemy *enemy, t_doom *doom);
+void			animate_ranged_side_walk(t_enemy *enemy, t_doom *doom);
+void			animate_ranged_death(t_enemy *enemy, t_doom *doom);
+void			animate_ranged_front_attack(t_enemy *enemy, t_doom *doom);
+void			animate_ranged_side_attack(t_enemy *enemy, t_doom *doom);
 void			init_enemy_sprite(t_doom *doom);
 
 #endif
