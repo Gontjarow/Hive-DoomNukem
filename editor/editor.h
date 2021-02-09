@@ -70,7 +70,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define XPM_QUADLY				"img/edt/quad_zoom.xpm"
 # define XPM_POLYDRAW			"img/edt/polydraw.xpm"
 # define XPM_SELECT				"img/edt/select.xpm"
-# define XPM_EFFECT				"img/edt/effect.xpm""
+# define XPM_EFFECT				"img/edt/effect.xpm"
 # define XPM_PLANTING			"img/edt/planting.xpm"
 # define XPM_PICKUPS			"img/edt/pickups.xpm"
 

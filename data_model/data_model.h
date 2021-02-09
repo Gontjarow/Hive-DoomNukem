@@ -6,6 +6,7 @@
 typedef	struct 			s_doom t_doom;
 typedef struct 			SDL_Surface SDL_Surface;
 
+# define 				DEBUGGING_USE_FLAG "[No level exit defined] Infinite map suitable for debugging!\n"
 # define 				TOKEN_FIELD_LIMIT 16
 # define				TOKEN_KEY_LIMIT 16
 # define 				WAV_PLOP "wav/plop.wav"

@@ -183,27 +183,45 @@ int		write_mapfile(char *map_path, t_mapfile *map)
 	if (opened > 1)
 	{
 		if (mdl->wall_count > 0)
+		{
 			write(opened, map->wall_string, ft_strlen(map->wall_string));
-		write(opened, new_line, 1);
+			write(opened, new_line, 1);
+		}
 		if (mdl->room_count > 0)
+		{
 			write(opened, map->room_string, ft_strlen(map->room_string));
-		write(opened, new_line, 1);
+			write(opened, new_line, 1);
+		}
 		if (mdl->portal_count > 0)
+		{
 			write(opened, map->portal_string, ft_strlen(map->portal_string));
-		write(opened, new_line, 1);
+			write(opened, new_line, 1);
+		}
 		if (mdl->enemy_count > 0)
+		{
 			write(opened, map->enemy_string, ft_strlen(map->enemy_string));
-		write(opened, new_line, 1);
+			write(opened, new_line, 1);
+		}
 		if (mdl->effect_count > 0)
+		{
 			write(opened, map->effect_string, ft_strlen(map->effect_string));
-		write(opened, new_line, 1);
+			write(opened, new_line, 1);
+		}
+		else
+			ft_putendl("Warning: No level exit defined for map! Map is infinite and flagged as suitable for debugging.");
 		if (mdl->pickup_count > 0)
+		{
 			write(opened, map->pickup_string, ft_strlen(map->pickup_string));
-		write(opened, new_line, 1);
+			write(opened, new_line, 1);
+		}
 		if (map->chain_string)
+		{
 			write(opened, map->chain_string, ft_strlen(map->chain_string));
-		write(opened, new_line, 1);
+			write(opened, new_line, 1);
+		}
 		write(opened, map->player_string, ft_strlen(map->player_string));
+		if (mdl->effect_count == 0)
+			write(opened, DEBUGGING_USE_FLAG, ft_strlen(DEBUGGING_USE_FLAG));
 		ft_putstr("Hive-DoomNukem: write_mapfile saved mapdata to mapfile: ");
 		ft_putendl(map_path);
 		close(opened);
