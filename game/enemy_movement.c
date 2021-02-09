@@ -83,9 +83,9 @@ void			rotate_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 		p.x = enemy->x + 10 * -cos(rad);
 		p.y = enemy->y + 10 * -sin(rad);
 		orient = orientation(doom, enemy, p.x, p.y);
-		if (orient == 1)
+		if (orient == 1 && !doom->mdl->player.invis)
 			rotate_left(doom, enemy);
-		else if (orient == 2)
+		else if (orient == 2 && !doom->mdl->player.invis)
 			rotate_right(doom, enemy);
 	}
 }

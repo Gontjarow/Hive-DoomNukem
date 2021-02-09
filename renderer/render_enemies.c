@@ -65,11 +65,12 @@ void			render_enemies(t_doom *doom)
 			int yawed_start_floor = GAME_MIDHEIGHT - (floor + eline.start.y * world->player.yaw) * scale.start.y;
 			//Debugging orient for animations
 			{
-				int new_orient = check_sprite_facing(enemy, get_model());
+				//print_orient(enemy);
+				/*int new_orient = check_sprite_facing(enemy, get_model());
 				if (new_orient != enemy->anim.orient) {
 					enemy->anim.orient = new_orient;
 					print_orient(enemy);
-				}
+				}*/
 			}
 			int x = left;
 			if (x < 0)

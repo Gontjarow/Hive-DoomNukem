@@ -101,8 +101,10 @@ void			animate_attack(t_enemy *enemy, t_doom *doom)
 	{
 		if (enemy->anim.orient == FRONT || enemy->anim.orient == -1)
 			animate_ranged_front_attack(enemy, doom);
-		else
+		else if (enemy->anim.orient == LEFT || enemy->anim.orient == RIGHT)
 			animate_ranged_side_attack(enemy, doom);
+		else
+			enemy->active_sprite = doom->sprites->txt_ranged_back_idle;
 	}
 	else if (enemy->ai.type_id == MELEE)
 	{
