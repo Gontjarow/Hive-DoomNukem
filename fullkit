@@ -1,0 +1,37 @@
+[Wall] id = 0 | start.x = 341 | start.y = 463 | end.x = 499 | end.y = 306
+[Wall] id = 1 | start.x = 499 | start.y = 306 | end.x = 741 | end.y = 216
+[Wall] id = 2 | start.x = 741 | start.y = 216 | end.x = 1204 | end.y = 192
+[Wall] id = 3 | start.x = 1204 | start.y = 192 | end.x = 1379 | end.y = 260
+[Wall] id = 4 | start.x = 1379 | start.y = 260 | end.x = 1414 | end.y = 555
+[Wall] id = 5 | start.x = 1414 | start.y = 555 | end.x = 1134 | end.y = 704
+[Wall] id = 6 | start.x = 1134 | start.y = 704 | end.x = 577 | end.y = 722
+[Wall] id = 7 | start.x = 577 | start.y = 722 | end.x = 311 | end.y = 600
+[Wall] id = 8 | start.x = 311 | start.y = 600 | end.x = 341 | end.y = 463
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 9 | floor_height = 100 | roof_height = 120
+
+[Enemy] id = 0 | x = 973 | y = 324 | rot = 156 | hp = 100 | wep.type_id = 1 | ai.type_id = 2 | sprite_id = 0
+[Enemy] id = 1 | x = 1090 | y = 575 | rot = 141 | hp = 100 | wep.type_id = 1 | ai.type_id = 2 | sprite_id = 0
+[Enemy] id = 2 | x = 973 | y = 465 | rot = 188 | hp = 100 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 3 | x = 793 | y = 352 | rot = 322 | hp = 100 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 4 | x = 814 | y = 586 | rot = 90 | hp = 100 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 5 | x = 947 | y = 551 | rot = 175 | hp = 100 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 6 | x = 760 | y = 468 | rot = 185 | hp = 100 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 7 | x = 1169 | y = 288 | rot = 299 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 8 | x = 1283 | y = 306 | rot = 26 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 9 | x = 1162 | y = 432 | rot = 135 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 10 | x = 1313 | y = 538 | rot = 18 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 11 | x = 1337 | y = 470 | rot = 248 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 12 | x = 1302 | y = 442 | rot = 257 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 13 | x = 1238 | y = 573 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Pickup] id = 0 | loc.x = 509 | loc.y = 430 | flavor = 1 | weapon_type_id = 2
+[Pickup] id = 1 | loc.x = 496 | loc.y = 501 | flavor = 1 | weapon_type_id = 2
+[Pickup] id = 2 | loc.x = 501 | loc.y = 578 | flavor = 1 | weapon_type_id = 2
+[Pickup] id = 3 | loc.x = 558 | loc.y = 469 | flavor = 1 | weapon_type_id = 3
+[Pickup] id = 4 | loc.x = 564 | loc.y = 513 | flavor = 1 | weapon_type_id = 3
+[Pickup] id = 5 | loc.x = 564 | loc.y = 613 | flavor = 1 | weapon_type_id = 3
+[Pickup] id = 6 | loc.x = 464 | loc.y = 455 | flavor = 2 | weapon_type_id = 2
+
+[Player] spawn.x = 425 | spawn.y = 502 | rot = 109
+[No level exit defined] Infinite map suitable for debugging!

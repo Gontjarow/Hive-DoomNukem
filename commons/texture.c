@@ -97,7 +97,7 @@ SDL_Surface			*load_texture(t_doom *doom, char *path)
 	free_s = IMG_Load(path);
 	if (free_s)
 	{
-		ret_s = SDL_ConvertSurfaceFormat(free_s, doom->buff->format->format, 0);
+		ret_s = SDL_ConvertSurfaceFormat(free_s, SDL_PIXELFORMAT_ARGB8888, 0);
 		SDL_FreeSurface(free_s);
 		return (ret_s);
 	}
