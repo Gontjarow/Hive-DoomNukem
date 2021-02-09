@@ -1,5 +1,17 @@
 #include "doom-nukem.h"
 
+static void		print_orient(t_enemy *enemy)
+{
+	if (enemy->anim.orient == FRONT)
+		puts("Enemy orient is FRONT!");
+	else if (enemy->anim.orient == BACK)
+		puts("Enemy orient is BACK!");
+	else if (enemy->anim.orient == LEFT)
+		puts("Enemy orient is LEFT!");
+	else if (enemy->anim.orient == RIGHT)
+		puts("Enemy orient is RIGHT!");
+}
+
 void			render_enemies(t_doom *doom)
 {
     t_world *world = doom->game->world;
@@ -51,7 +63,14 @@ void			render_enemies(t_doom *doom)
 
 			int yawed_start_ceil  = GAME_MIDHEIGHT - (ceil  + eline.start.y * world->player.yaw) * scale.start.y;
 			int yawed_start_floor = GAME_MIDHEIGHT - (floor + eline.start.y * world->player.yaw) * scale.start.y;
-
+			//Debugging orient for animations
+			{
+				int new_orient = check_sprite_facing(enemy, get_model());
+				if (new_orient != enemy->anim.orient) {
+					enemy->anim.orient = new_orient;
+					print_orient(enemy);
+				}
+			}
 			int x = left;
 			if (x < 0)
 				x -= x;

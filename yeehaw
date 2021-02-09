@@ -1,0 +1,71 @@
+[Wall] id = 0 | start.x = 521 | start.y = 508 | end.x = 612 | end.y = 414
+[Wall] id = 1 | start.x = 612 | start.y = 414 | end.x = 938 | end.y = 348
+[Wall] id = 2 | start.x = 938 | start.y = 348 | end.x = 1198 | end.y = 438
+[Wall] id = 3 | start.x = 1198 | start.y = 438 | end.x = 1167 | end.y = 683
+[Wall] id = 4 | start.x = 1167 | start.y = 683 | end.x = 826 | end.y = 775
+[Wall] id = 5 | start.x = 826 | start.y = 775 | end.x = 692 | end.y = 682
+[Wall] id = 6 | start.x = 692 | start.y = 682 | end.x = 521 | end.y = 508
+[Wall] id = 0 | start.x = 521 | start.y = 508 | end.x = 612 | end.y = 414
+[Wall] id = 1 | start.x = 612 | start.y = 414 | end.x = 938 | end.y = 348
+[Wall] id = 2 | start.x = 938 | start.y = 348 | end.x = 1198 | end.y = 438
+[Wall] id = 3 | start.x = 1198 | start.y = 438 | end.x = 1167 | end.y = 683
+[Wall] id = 4 | start.x = 1167 | start.y = 683 | end.x = 826 | end.y = 775
+[Wall] id = 5 | start.x = 826 | start.y = 775 | end.x = 692 | end.y = 682
+[Wall] id = 6 | start.x = 692 | start.y = 682 | end.x = 521 | end.y = 508
+[Wall] id = 0 | start.x = 521 | start.y = 508 | end.x = 612 | end.y = 414
+[Wall] id = 1 | start.x = 612 | start.y = 414 | end.x = 938 | end.y = 348
+[Wall] id = 2 | start.x = 938 | start.y = 348 | end.x = 1198 | end.y = 438
+[Wall] id = 3 | start.x = 1198 | start.y = 438 | end.x = 1167 | end.y = 683
+[Wall] id = 4 | start.x = 1167 | start.y = 683 | end.x = 826 | end.y = 775
+[Wall] id = 5 | start.x = 826 | start.y = 775 | end.x = 692 | end.y = 682
+[Wall] id = 6 | start.x = 692 | start.y = 682 | end.x = 521 | end.y = 508
+[Wall] id = 0 | start.x = 521 | start.y = 508 | end.x = 612 | end.y = 414
+[Wall] id = 1 | start.x = 612 | start.y = 414 | end.x = 938 | end.y = 348
+[Wall] id = 2 | start.x = 938 | start.y = 348 | end.x = 1198 | end.y = 438
+[Wall] id = 3 | start.x = 1198 | start.y = 438 | end.x = 1167 | end.y = 683
+[Wall] id = 4 | start.x = 1167 | start.y = 683 | end.x = 826 | end.y = 775
+[Wall] id = 5 | start.x = 826 | start.y = 775 | end.x = 692 | end.y = 682
+[Wall] id = 6 | start.x = 692 | start.y = 682 | end.x = 521 | end.y = 508
+[Wall] id = 0 | start.x = 521 | start.y = 508 | end.x = 612 | end.y = 414
+[Wall] id = 1 | start.x = 612 | start.y = 414 | end.x = 938 | end.y = 348
+[Wall] id = 2 | start.x = 938 | start.y = 348 | end.x = 1198 | end.y = 438
+[Wall] id = 3 | start.x = 1198 | start.y = 438 | end.x = 1167 | end.y = 683
+[Wall] id = 4 | start.x = 1167 | start.y = 683 | end.x = 826 | end.y = 775
+[Wall] id = 5 | start.x = 826 | start.y = 775 | end.x = 692 | end.y = 682
+[Wall] id = 6 | start.x = 692 | start.y = 682 | end.x = 521 | end.y = 508
+[Wall] id = 0 | start.x = 521 | start.y = 508 | end.x = 612 | end.y = 414
+[Wall] id = 1 | start.x = 612 | start.y = 414 | end.x = 938 | end.y = 348
+[Wall] id = 2 | start.x = 938 | start.y = 348 | end.x = 1198 | end.y = 438
+[Wall] id = 3 | start.x = 1198 | start.y = 438 | end.x = 1167 | end.y = 683
+[Wall] id = 4 | start.x = 1167 | start.y = 683 | end.x = 826 | end.y = 775
+[Wall] id = 5 | start.x = 826 | start.y = 775 | end.x = 692 | end.y = 682
+[Wall] id = 6 | start.x = 692 | start.y = 682 | end.x = 521 | end.y = 508
+[Wall] id = 0 | start.x = 521 | start.y = 508 | end.x = 612 | end.y = 414
+[Wall] id = 1 | start.x = 612 | start.y = 414 | end.x = 938 | end.y = 348
+[Wall] id = 2 | start.x = 938 | start.y = 348 | end.x = 1198 | end.y = 438
+[Wall] id = 3 | start.x = 1198 | start.y = 438 | end.x = 1167 | end.y = 683
+[Wall] id = 4 | start.x = 1167 | start.y = 683 | end.x = 826 | end.y = 775
+[Wall] id = 5 | start.x = 826 | start.y = 775 | end.x = 692 | end.y = 682
+[Wall] id = 6 | start.x = 692 | start.y = 682 | end.x = 521 | end.y = 508
+[Wall] id = 0 | start.x = 521 | start.y = 508 | end.x = 612 | end.y = 414
+[Wall] id = 1 | start.x = 612 | start.y = 414 | end.x = 938 | end.y = 348
+[Wall] id = 2 | start.x = 938 | start.y = 348 | end.x = 1198 | end.y = 438
+[Wall] id = 3 | start.x = 1198 | start.y = 438 | end.x = 1167 | end.y = 683
+[Wall] id = 4 | start.x = 1167 | start.y = 683 | end.x = 826 | end.y = 775
+[Wall] id = 5 | start.x = 826 | start.y = 775 | end.x = 692 | end.y = 682
+[Wall] id = 6 | start.x = 692 | start.y = 682 | end.x = 521 | end.y = 508
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 7 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 7 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 7 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 7 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 7 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 7 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 7 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 7 | floor_height = 100 | roof_height = 120
+
+[Enemy] id = 0 | x = 1003 | y = 536 | rot = 169 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1003 | y = 536 | rot = 169 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Player] spawn.x = 712 | spawn.y = 472 | rot = 360
+[No level exit defined] Infinite map suitable for debugging!

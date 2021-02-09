@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/02 17:47:55 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/09 18:24:10 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void		update_minimap(t_doom *doom)
 	/*
 		This is a test for the game HUD - by MS
 	*/
-	//handle_game_hud(doom);
+	// handle_game_hud(doom);
 	// handle_player_health_bar(doom);
 	// print_minimap_single_sprite(doom, doom->mdl->player.active_health_bar); // Sprite and animation display test for game rendering - by MS
 	// print_minimap_single_sprite(doom, doom->mdl->enemy_first->active_sprite);

@@ -127,9 +127,9 @@ uint32_t	get_pixel(SDL_Surface *surface, int x, int y)
 	uint32_t *pix;
 
 	pix = (uint32_t*)surface->pixels;
-	if (x > surface->w || y > surface->h)
+	if (x >= surface->w || y >= surface->h)
 	{
-		puts("Returning 0 pixel!");
+		//puts("Returning 0 pixel!");
 		return (0);
 	}
 	return (pix[(y * surface->w) + x]);

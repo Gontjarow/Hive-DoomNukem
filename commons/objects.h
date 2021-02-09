@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/02/02 17:41:42 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/05 17:08:26 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 # define CROUCH_HEIGHT 10
 # define STAND_HEIGHT 20
 
-enum 	e_sprite_categories { FRONT_ATTACK };
-enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
+enum	e_enemy_aggro { INACTIVE, ACTIVE };
+enum	e_enemy_type { RANGED, MELEE, BOSS };
+enum 	e_sprite_orient { FRONT, LEFT, RIGHT, BACK };
+enum	e_sprite_state { DEATH, IDLE, MOVE, ATTACK, HURT };
 enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
-enum	e_collision_directions { FRONT, LEFT, BACK, RIGHT };
 enum	e_enemy_points { FRONTLEFT, FRONTRIGHT, BACKLEFT, BACKRIGHT };
 
 typedef struct			s_xy t_xy;
@@ -102,6 +103,7 @@ typedef struct 			s_player
 	int					reload_time;
 	int					weap_id;
 	int					shooting;
+	int					invis;
 	struct SDL_Surface	*active_health_bar;
 	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
@@ -126,6 +128,7 @@ typedef struct			s_animation
 	SDL_Surface 		**surfaces;
 	int 				frames;
 	int 				current;
+	int					orient;
 	int					done;
 }						t_animation;
 
@@ -237,29 +240,38 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_ranged_front_attack;
 	struct SDL_Surface	*txt_ranged_front_idle;
 	struct SDL_Surface	**txt_ranged_front_walk;
-	struct SDL_Surface	*txt_ranged_side_attack;
-	struct SDL_Surface	*txt_ranged_side_idle;
-	struct SDL_Surface	**txt_ranged_side_walk;
+	struct SDL_Surface	*txt_ranged_left_attack;
+	struct SDL_Surface	*txt_ranged_right_attack;
+	struct SDL_Surface	*txt_ranged_left_idle;
+	struct SDL_Surface	*txt_ranged_right_idle;
+	struct SDL_Surface	**txt_ranged_left_walk;
+	struct SDL_Surface	**txt_ranged_right_walk;
 	struct SDL_Surface	**txt_ranged_back_walk;
 	struct SDL_Surface	*txt_ranged_back_idle;
 	struct SDL_Surface	**txt_ranged_death;
 
 	struct SDL_Surface	**txt_melee_front_attack;
 	struct SDL_Surface	**txt_melee_front_walk;
-	struct SDL_Surface	**txt_melee_side_attack;
-	struct SDL_Surface	**txt_melee_side_walk;
+	struct SDL_Surface	**txt_melee_left_attack;
+	struct SDL_Surface	**txt_melee_right_attack;
+	struct SDL_Surface	**txt_melee_left_walk;
+	struct SDL_Surface	**txt_melee_right_walk;
 	struct SDL_Surface	*txt_melee_front_idle;
-	struct SDL_Surface	*txt_melee_side_idle;
+	struct SDL_Surface	*txt_melee_left_idle;
+	struct SDL_Surface	*txt_melee_right_idle;
 	struct SDL_Surface	**txt_melee_back_walk;
 	struct SDL_Surface	*txt_melee_back_idle;
 	struct SDL_Surface	**txt_melee_death;
 
 	struct SDL_Surface	**txt_boss_front_attack;
 	struct SDL_Surface	**txt_boss_front_walk;
-	struct SDL_Surface	**txt_boss_side_attack;
-	struct SDL_Surface	**txt_boss_side_walk;
+	struct SDL_Surface	**txt_boss_left_attack;
+	struct SDL_Surface	**txt_boss_right_attack;
+	struct SDL_Surface	**txt_boss_left_walk;
+	struct SDL_Surface	**txt_boss_right_walk;
 	struct SDL_Surface	*txt_boss_front_idle;
-	struct SDL_Surface	*txt_boss_side_idle;
+	struct SDL_Surface	*txt_boss_left_idle;
+	struct SDL_Surface	*txt_boss_right_idle;
 	struct SDL_Surface	**txt_boss_back_walk;
 	struct SDL_Surface	*txt_boss_back_idle;
 	struct SDL_Surface	**txt_boss_death;

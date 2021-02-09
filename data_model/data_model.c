@@ -76,6 +76,7 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.hp.cur = 100;
 	doom->mdl->player.hp.max = 100;
 	doom->mdl->player.shooting = 0;
+	doom->mdl->player.invis = 0;
 	doom->mdl->player.room_id = -1;
 	doom->mdl->player.room = NULL;
 	init_player_weapon(doom);

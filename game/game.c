@@ -123,9 +123,16 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 void		game_render(t_doom *doom)
 {
 	static int mix_i = 0;
+	static int lock_i = 0;
 
-	if (doom->keystates[SDL_SCANCODE_ESCAPE])
-		printf("ESC key pressed!\n");
+	if (doom->keystates[SDL_SCANCODE_I] && !lock_i)
+	{
+		doom->mdl->player.invis == 0 ? printf("Invisibility on %d!\n", (doom->mdl->player.invis = 1)) : printf(
+				"Invisibility off %d!\n", (doom->mdl->player.invis = 0));
+		lock_i = 1;
+	}
+	if (lock_i && !doom->keystates[SDL_SCANCODE_I])
+		lock_i = 0;
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);

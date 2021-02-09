@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 18:36:40 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/09 18:24:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void		ai_ranged(t_doom *doom, t_enemy *enemy)
 	enemy->ai.max_dis = 400;
 	enemy->ai.mov_speed = 10;
 	enemy->hp.cur = 100;
-	enemy->ai.aggro = 0;
+	enemy->ai.aggro = INACTIVE;
 	enemy->ai.dmg = 10;
 }
 
@@ -28,7 +28,7 @@ void		ai_melee(t_doom *doom, t_enemy *enemy)
 	enemy->ai.max_dis = 300;
 	enemy->ai.mov_speed = 15;
 	enemy->hp.cur = 50;
-	enemy->ai.aggro = 0;
+	enemy->ai.aggro = INACTIVE;
 	enemy->ai.dmg = 20;
 }
 
@@ -38,7 +38,7 @@ void		ai_boss(t_doom *doom, t_enemy *enemy)
 	enemy->ai.max_dis = 200;
 	enemy->ai.mov_speed = 5;
 	enemy->hp.cur = 1000;
-	enemy->ai.aggro = 0;
+	enemy->ai.aggro = INACTIVE;
 	enemy->ai.dmg = 5;
 }
 
@@ -53,23 +53,118 @@ void		ai_assignment(t_doom *doom)
 	enemy = doom->mdl->enemy_first;
 	while (ec--)
 	{
-		if (enemy->ai.type_id == 0)
+		if (enemy->ai.type_id == RANGED)
 			ai_ranged(doom, enemy);
-		else if (enemy->ai.type_id == 1)
+		else if (enemy->ai.type_id == MELEE)
 			ai_melee(doom, enemy);
-		else if (enemy->ai.type_id == 2)
+		else if (enemy->ai.type_id == BOSS)
 			ai_boss(doom, enemy);
 		enemy = enemy->next;
 	}
 }
 
+void		check_aggro(t_doom *doom, t_enemy *enemy)
+{
+	int dist;
+
+	if (check_location(doom, doom->mdl->player.x, doom->mdl->player.y)
+		== check_location(doom, enemy->x, enemy->y))
+	{
+		dist = calc_distance(enemy, doom);
+		if (dist <= enemy->ai.max_dis)
+			enemy->ai.aggro = ACTIVE;
+	}
+}
+
+static void		check_sprite_orient(t_doom *doom, t_enemy *enemy)
+{
+	int		offset;
+	t_xy	delta;
+	float	angle;
+
+	if (enemy->hp.cur > 0)
+	{
+		delta.y = doom->mdl->player.y - enemy->y;
+		delta.x = doom->mdl->player.x - enemy->x;
+		// printf("Before Delta.x: %0.2f\tDelta.y: %0.2f\n", delta.x, delta.y);
+		// delta = vec2_norm(delta);
+		// printf("After Delta.x: %0.2f\tDelta.y: %0.2f\n", delta.x, delta.y);
+		// delta = vec2_rot(delta, -enemy->rot * DEG_TO_RAD);
+		// printf("Enemy rot: %d\n", enemy->rot);
+		angle = atan2(delta.y, delta.x);
+		// printf("Angle between: %0.2f\n", angle);
+		if (angle < 0)
+        	angle = fabs(angle);
+    	else
+        	angle = 2 * M_PI - angle;
+		angle *= (180 / M_PI);
+
+		printf("Before Angle between: %0.2f\n", angle);
+
+		offset = abs(180 - enemy->rot);
+		if (offset > 0 && offset <= 90)
+		{
+			angle -= offset;
+			printf("Oi\n");
+		}
+		else if (offset > 90 && offset <= 180)
+		{
+			angle -= 180;
+			printf("Tudo bom\n");
+		}
+		else if (offset > 180 && offset <= 270)
+		{
+			angle -= 180;
+			printf("Suave\n");
+		}
+		if (angle < 0)
+		{
+			angle += 360;
+		}
+		
+		printf("After Angle between: %0.2f\n", angle);
+		if ((angle >= 0 && angle <= 45) || (angle <= 360 && angle >= 315))
+		{
+			enemy->anim.orient = FRONT;
+		}
+		else if (angle < 315 && angle >= 225)
+		{
+			enemy->anim.orient = RIGHT;
+		}
+		else if (angle > 45 && angle <= 135)
+		{
+			enemy->anim.orient = LEFT;
+		}
+		else
+		{
+			enemy->anim.orient = BACK;
+		}
+	}
+}
+
 void		handle_enemy_ai(t_doom *doom)
 {
-	enemy_update_cooldown(doom);
-	rotate_enemy_towards_player(doom);
-	move_enemy_towards_player(doom);
-	handle_enemy_shooting(doom);
-	handle_enemy_animation(doom);
+	int		ec;
+	t_enemy *enemy;
+
+	ec = doom->mdl->enemy_count;
+	if (ec == 0)
+		return ;
+	enemy = doom->mdl->enemy_first;
+	while (ec--)
+	{
+		enemy_update_cooldown(doom, enemy);
+		// check_sprite_orient(doom, enemy);		// WIP
+		animation_switch(enemy, doom);
+		check_aggro(doom, enemy);
+		if (enemy->ai.aggro == ACTIVE)
+		{
+			rotate_enemy_towards_player(doom, enemy);
+			move_enemy_towards_player(doom, enemy);
+			handle_enemy_shooting(doom, enemy);
+		}
+		enemy = enemy->next;
+	}
 }
 
 
