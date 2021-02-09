@@ -140,3 +140,33 @@ int				zbuffer_ok(int index, double depth)
 	// printf("%f  %f\n", zbuffer[index], depth);
 	return (0);
 }
+
+// Temporary until walls have their own textures:
+SDL_Surface		*get_bricks_tex(t_doom *doom)
+{
+	static SDL_Surface *bricks = NULL;
+
+	if (!bricks)
+	{
+		bricks = load_texture(doom, "img/vertical.png");
+		if (bricks == NULL)
+			ft_die("Fatal error: Could not load texture!");
+	}
+
+	return (bricks);
+}
+
+// Temporary until walls have their own textures:
+SDL_Surface		*get_border_tex(t_doom *doom)
+{
+	static SDL_Surface *bricks = NULL;
+
+	if (!bricks)
+	{
+		bricks = load_texture(doom, "img/border.png");
+		if (bricks == NULL)
+			ft_die("Fatal error: Could not load texture!");
+	}
+
+	return (bricks);
+}

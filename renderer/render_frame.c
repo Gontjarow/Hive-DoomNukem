@@ -88,21 +88,6 @@ t_world			*get_world()
 	return (world);
 }
 
-// Temporary until walls have their own textures:
-SDL_Surface		*get_bricks(t_doom *doom)
-{
-	static SDL_Surface *bricks = NULL;
-
-	if (!bricks)
-	{
-		bricks = load_texture(doom, "img/bluebricks.png");
-		if (bricks == NULL)
-			ft_die("Fatal error: Could not load texture!");
-	}
-
-	return (bricks);
-}
-
 t_world			*load_world(t_world *world)
 {
     t_model *mdl = get_model();
