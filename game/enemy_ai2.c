@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/05 20:41:47 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/09 18:24:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,25 +78,60 @@ void		check_aggro(t_doom *doom, t_enemy *enemy)
 
 static void		check_sprite_orient(t_doom *doom, t_enemy *enemy)
 {
+	int		offset;
 	t_xy	delta;
 	float	angle;
 
 	if (enemy->hp.cur > 0)
 	{
-		delta.y = enemy->y - doom->mdl->player.y;
-		delta.x = enemy->x - doom->mdl->player.x;
-		delta = vec2_norm(delta);
-		angle = (atan2(delta.y, delta.x) * 180 / M_PI) + doom->mdl->player.rot;
-		printf("Angle between: %0.2f\n", angle);
-		if (angle >= -45 && angle <= 45)
+		delta.y = doom->mdl->player.y - enemy->y;
+		delta.x = doom->mdl->player.x - enemy->x;
+		// printf("Before Delta.x: %0.2f\tDelta.y: %0.2f\n", delta.x, delta.y);
+		// delta = vec2_norm(delta);
+		// printf("After Delta.x: %0.2f\tDelta.y: %0.2f\n", delta.x, delta.y);
+		// delta = vec2_rot(delta, -enemy->rot * DEG_TO_RAD);
+		// printf("Enemy rot: %d\n", enemy->rot);
+		angle = atan2(delta.y, delta.x);
+		// printf("Angle between: %0.2f\n", angle);
+		if (angle < 0)
+        	angle = fabs(angle);
+    	else
+        	angle = 2 * M_PI - angle;
+		angle *= (180 / M_PI);
+
+		printf("Before Angle between: %0.2f\n", angle);
+
+		offset = abs(180 - enemy->rot);
+		if (offset > 0 && offset <= 90)
+		{
+			angle -= offset;
+			printf("Oi\n");
+		}
+		else if (offset > 90 && offset <= 180)
+		{
+			angle -= 180;
+			printf("Tudo bom\n");
+		}
+		else if (offset > 180 && offset <= 270)
+		{
+			angle -= 180;
+			printf("Suave\n");
+		}
+		if (angle < 0)
+		{
+			angle += 360;
+		}
+		
+		printf("After Angle between: %0.2f\n", angle);
+		if ((angle >= 0 && angle <= 45) || (angle <= 360 && angle >= 315))
 		{
 			enemy->anim.orient = FRONT;
 		}
-		else if (angle > 30 && angle <= 135)
+		else if (angle < 315 && angle >= 225)
 		{
 			enemy->anim.orient = RIGHT;
 		}
-		else if (angle < -45 && angle >= -135)
+		else if (angle > 45 && angle <= 135)
 		{
 			enemy->anim.orient = LEFT;
 		}
