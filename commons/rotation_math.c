@@ -12,6 +12,47 @@
 
 #include "doom-nukem.h"
 
+int				check_sprite_facing(t_enemy *enemy, t_model *mdl)
+{
+	int		collides[4];
+	t_point	epts[4];
+	t_point	player_pt;
+	t_point enemy_pt;
+	int 	body;
+
+	player_pt.x = (int)mdl->player.x;
+	player_pt.y = (int)mdl->player.y;
+	enemy_pt.x = enemy->x;
+	enemy_pt.y = enemy->y;
+	body = 15;
+
+	epts[FRONTLEFT].x = enemy->x - (int)(body * cos(deg_to_rad(enemy->rot + 45)));
+	epts[FRONTLEFT].y = enemy->y - (int)(body * sin(deg_to_rad(enemy->rot + 45)));
+	epts[FRONTRIGHT].x = enemy->x - (int)(body * cos(deg_to_rad(enemy->rot - 45)));
+	epts[FRONTRIGHT].y = enemy->y - (int)(body * sin(deg_to_rad(enemy->rot - 45)));
+	epts[BACKLEFT].x = enemy->x + (int)(body * sin(deg_to_rad(enemy->rot - 45)));
+	epts[BACKLEFT].y = enemy->y + (int)(body * sin(deg_to_rad(enemy->rot - 45)));
+	epts[BACKRIGHT].x = enemy->x + (int)(body * sin(deg_to_rad(enemy->rot + 45)));
+	epts[BACKRIGHT].y = enemy->y + (int)(body * sin(deg_to_rad(enemy->rot + 45)));
+	collides[FRONT] = do_intersect(epts[FRONTLEFT], epts[FRONTRIGHT], player_pt, enemy_pt);
+	if (!collides[FRONT])
+		collides[LEFT] = do_intersect(epts[FRONTLEFT], epts[BACKLEFT], player_pt, enemy_pt);
+	else
+		return (FRONT);
+	if (!collides[FRONT] && !collides[LEFT])
+		collides[BACK] = do_intersect(epts[BACKLEFT], epts[BACKRIGHT], player_pt, enemy_pt);
+	else
+		return (LEFT);
+	if (!collides[FRONT] && !collides[LEFT] && !collides[BACK])
+		collides[RIGHT] = do_intersect(epts[FRONTRIGHT], epts[BACKRIGHT], player_pt, enemy_pt);
+	else
+		return (BACK);
+	if (collides[RIGHT])
+		return (RIGHT);
+	ft_putendl("Warning: Nothing collides as facing for enemy sprite.");
+	return (-1);
+}
+
 double			angle_abc(t_point a, t_point b, t_point c)
 {
 	t_point		ab;

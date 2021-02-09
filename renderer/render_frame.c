@@ -435,7 +435,17 @@ void			render_frame(t_doom *doom)
 
 				y_start = clamp(y_start, y_top[x], y_bot[x]);
 				y_stop  = clamp(y_stop, y_top[x], y_bot[x]);
-				vertical_line(x, y_start, y_stop, 0xff00ff);
+				int efacing = check_sprite_facing(enemy, get_model());
+				if (efacing == FRONT)
+					vertical_line(x, y_start, y_stop, 0xff00ff);
+				else if (efacing == BACK)
+					vertical_line(x, y_start, y_stop, 0xffffff);
+				else if (efacing == LEFT)
+					vertical_line(x, y_start, y_stop, 0xff0000);
+				else if (efacing == RIGHT)
+					vertical_line(x, y_start, y_stop, 0x0000ff);
+				else
+					vertical_line(x, y_start, y_stop, 0x000000);
 				++x;
 			}
 		}

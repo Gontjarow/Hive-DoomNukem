@@ -21,9 +21,12 @@
 enum 	e_sprite_categories { FRONT_ATTACK };
 enum	e_sprite_state {DEATH, IDLE, MOVE, ATTACK, HURT};
 enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
+enum	e_collision_directions { FRONT, LEFT, BACK, RIGHT };
+enum	e_enemy_points { FRONTLEFT, FRONTRIGHT, BACKLEFT, BACKRIGHT };
 
 typedef struct			s_xy t_xy;
 typedef struct 			s_doom t_doom;
+typedef struct 			s_model t_model;
 
 typedef struct	t_argb
 {
@@ -338,6 +341,16 @@ SDL_Surface				*xpm2surface(char *path);
 SDL_Surface				*load_texture(t_doom *doom, char *path);
 
 /*
+ * from line_intersect.c
+ * */
+
+int						imin(int a, int b);
+int						imax(int a, int b);
+int						on_segment(t_point p, t_point q, t_point r);
+int						point_orientation(t_point p, t_point q, t_point r);
+int						do_intersect(t_point p1, t_point q1, t_point p2, t_point q2);
+
+/*
  * from line.c and line_safe.c
  * */
 
@@ -364,6 +377,7 @@ void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
  * from rotation_math.c
  */
 
+int						check_sprite_facing(t_enemy *enemy, t_model *mdl);
 double					angle_abc(t_point a, t_point b, t_point c);
 int			 			tail_degree_rot(t_point location, t_point *tail);
 
