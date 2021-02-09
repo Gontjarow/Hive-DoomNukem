@@ -114,7 +114,7 @@ void		init_minimap(t_doom *doom)
 	if (!(doom->minimap = (t_minimap *)malloc(sizeof(t_minimap))))
 		return ;
 	doom->minimap->win = SDL_CreateWindow("Debug Minimap",
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED, 0,
 			MWIN_WIDTH, MWIN_HEIGHT, 0);
 	if (doom->minimap->win == NULL)
 		ft_die("Fatal error: Failed init of SDL_Window from minimap");
@@ -135,7 +135,7 @@ void		init_minimap(t_doom *doom)
 	//handle_game_hud(doom);
 
 	update_minimap(doom);
-	
+
 	// this wont be here in the future
 	ai_assignment(doom);
 }

@@ -11,9 +11,15 @@
 # define T_DIR 0.0
 # define T_POS 1.0
 
+# define NEAR_PLANE -1.0
 # define EYE_HEIGHT 6
 # define WORLD_SCALE 10
 # define MAX_SECTOR_QUEUE 32
+
+// For sprite drawing
+# define SPRITE_SCALE 2.5
+# define BYTE_TRANSPARENT 0xFF
+# define COLOR_TRANSPARENT 0xFF00FF
 
 // For line clipping
 # define LINE_SIDES_CROSS -1
@@ -128,33 +134,31 @@ typedef struct	s_world
 	t_camera	player;
 }				t_world;
 
-# include "model.h"
-
 double			*get_zbuffer();
 t_world			*get_world();
+SDL_Surface		*get_bricks(t_doom *doom);
 t_world			*load_world(t_world *world);
-
-void			sort_tri(t_face *face);
-void			swap_xyzw(t_xyzw *a, t_xyzw *b);
-t_xy			bb_min(t_face face);
-t_xy			bb_max(t_face face);
-double			edge(t_xy p, t_xy a, t_xy b);
-int				inside(t_xy p, t_face face);
-t_xyz			bary(t_xy p, t_face face);
 
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			drawline(t_xy_line line, SDL_Surface *surface);
-void			draw_tri(unsigned int *pixel, t_face face, int color);
-void			draw_tri_color(unsigned int *pixel, t_face face);
+void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
+void			vertical_line(int column, int start, int end, int color);
+void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex);
+void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range);
 
 void			render_frame(t_doom *doom);
-void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
+void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot);
+void			render_enemies(t_doom *doom);
 
 /*
 ** Math is fun, okay? ⤵️
 */
 
 double			clamp(double n, double min, double max);
+double			max(double a, double b);
+double			min(double a, double b);
+double			remap(double in, double old_min, double old_max, double new_min, double new_max);
+double			value_changed(int initialize, double value);
 
 void			vec2p(const char *name, t_xy v);
 t_xy			vec2(double x, double y);
@@ -199,22 +203,6 @@ t_xyzw			vec4_norm(t_xyzw v);
 double			vec4_dot(t_xyzw a, t_xyzw b);
 t_xyz			vec4_cross(t_xyzw a, t_xyzw b);
 
-void			mat4p(t_matrix m);
-t_matrix		identity_m();
-t_matrix		scale_m(double x, double y, double z);
-t_matrix		translate_m(double x, double y, double z);
-t_matrix		rotate_x(t_rad angle);
-t_matrix		rotate_y(t_rad angle);
-t_matrix		rotate_z(t_rad angle);
-t_matrix		multiply_m(t_matrix a, t_matrix b);
-t_xyzw			apply_m(t_matrix m, t_xyzw v);
-t_mesh			mesh_normalize(t_mesh mesh);
-
-t_matrix		project_pure_m();
-t_matrix		project_m(t_deg fov, double aspect, double znear, double zfar);
-t_matrix		lookat_m(t_xyz eye, t_xyz at, t_xyz up);
-t_matrix		window_m(double znear, double zfar);
-
 // Glorious vector/line functions
 double			vec2_projected_length(t_xy vec, t_xy normal);
 double			vec2_project_to_hypotenuse(t_xy adjescent, t_xy hypotenuse);
@@ -224,12 +212,13 @@ signed			vec2_point_side(t_xy point, t_xy start, t_xy end);
 
 t_xy_line		line(double ax, double ay, double bx, double by);
 t_xy_line		line_xy(t_xy start, t_xy stop, int color);
+t_xy_line		line_relative(t_xy start, t_xy stop, t_xy origin);
 
 void			linep(const char *name, t_xy_line line);
 signed			line_is_zero(t_xy_line line);
 
 t_xy_line		line_add_offset(t_xy_line line, t_xy offset);
-t_xy_line		line_sub_offset(t_xy_line line, t_xy offset);
+t_xy_line		line_scale(t_xy_line line, t_xy scale);
 t_xy_line		line_rot(t_xy_line line, double angle);
 t_xy			line_norm(t_xy_line line);
 double			line_mag(t_xy_line line);
@@ -237,8 +226,8 @@ void			clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane);
 
 t_xy_line		*set_clip_bounds(t_xy topl, t_xy topr, t_xy botr, t_xy botl);
 void			clip_to_bounds(t_xy_line in, t_xy_line *out, t_xy_line edge[4]);
+void			clip_to_cone(t_xy_line in, t_xy_line *out);
 
 t_xy_line		line_clamp(t_xy_line in, t_xy min, t_xy max);
-void			vec2_clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane);
 
 #endif

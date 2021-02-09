@@ -16,6 +16,14 @@ t_xy_line		line_xy(t_xy start, t_xy stop, int color)
 	return ((t_xy_line){start, stop, color});
 }
 
+t_xy_line		line_relative(t_xy start, t_xy stop, t_xy origin)
+{
+	return (line_xy(
+		vec2_sub(start, origin),
+		vec2_sub(stop, origin),
+		0xffffff));
+}
+
 signed			line_is_zero(t_xy_line line)
 {
 	return (
@@ -35,14 +43,13 @@ t_xy_line		line_add_offset(t_xy_line line, t_xy offset)
 	return (out);
 }
 
-t_xy_line		line_sub_offset(t_xy_line line, t_xy offset)
+t_xy_line		line_scale(t_xy_line line, t_xy scale)
 {
-	t_xy_line out;
-
-	out.start = vec2_sub(out.start, offset);
-	out.stop = vec2_sub(out.stop, offset);
-	out.color = line.color;
-	return (out);
+	return (line_xy(
+		vec2(line.start.x * scale.x, line.start.y * scale.y),
+		vec2(line.stop.x * scale.x, line.stop.y * scale.y),
+		line.color
+	));
 }
 
 t_xy_line		line_rot(t_xy_line line, double angle)
@@ -164,7 +171,7 @@ static t_xy		clip(t_xy p1, t_xy p2, t_xy line_pos, t_xy line_dir)
 // Let's decide that "right" (1) is "inside"
 // The left side will be moved to the clipping plane.
 
-void			vec2_clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane)
+void			clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane)
 {
 	t_xy	line_dir;
 	signed	p1_side;
@@ -212,10 +219,23 @@ t_xy_line		*set_clip_bounds(t_xy topl, t_xy topr, t_xy botr, t_xy botl)
 
 void			clip_to_bounds(t_xy_line in, t_xy_line *out, t_xy_line edge[4])
 {
-	vec2_clip_line(in, out, edge[0]);
-	vec2_clip_line(*out, out, edge[1]);
-	vec2_clip_line(*out, out, edge[2]);
-	vec2_clip_line(*out, out, edge[3]);
+	clip_line(in, out, edge[0]);
+	clip_line(*out, out, edge[1]);
+	clip_line(*out, out, edge[2]);
+	clip_line(*out, out, edge[3]);
+}
+
+void			clip_to_cone(t_xy_line in, t_xy_line *out)
+{
+	const t_xy	origin = vec2(0, 0);
+	const t_xy	normal = vec2(0, -1);
+	t_xy_line plane;
+
+	clip_line(in, out,
+		line_xy(origin, vec2_rot(normal, 135*DEG_TO_RAD), 0x00ffff));
+
+	clip_line(*out, out,
+		line_xy(vec2_rot(normal, 45*DEG_TO_RAD), origin, 0x00ffff));
 }
 
 t_xy_line		line_clamp(t_xy_line in, t_xy min, t_xy max)

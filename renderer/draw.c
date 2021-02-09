@@ -1,32 +1,6 @@
 #include "renderer.h"
 
-void		draw(unsigned int *pixel, t_xy start, t_xy end, int color)
-{
-	t_xy	dir;
-	t_xy	abs;
-	float	step;
-	int		i;
-	int		index;
-
-	dir = vec2_sub(end, start);
-	abs = vec2(fabs(dir.x), fabs(dir.y));
-	step = (abs.x > abs.y) ? abs.x : abs.y;
-	dir = vec2_div(dir, step);
-	i = 0;
-	while (i <= step)
-	{
-		index = (int)start.x + (int)start.y * GAME_WIN_WIDTH;
-		if ((int)start.x >= 0 && (int)start.x < GAME_WIN_WIDTH
-		&& ((int)start.y >= 0 && (int)start.y < GAME_WIN_HEIGHT)
-		&& (index >= 0 && index < GAME_WIN_WIDTH * GAME_WIN_HEIGHT))
-			pixel[index] = color;
-		start.x += dir.x;
-		start.y += dir.y;
-		++i;
-	}
-}
-
-void	drawline(t_xy_line line, SDL_Surface *surface)
+void			drawline(t_xy_line line, SDL_Surface *surface)
 {
 	t_xy	length;
 	t_xy	ratio;
@@ -50,7 +24,7 @@ void	drawline(t_xy_line line, SDL_Surface *surface)
 	}
 }
 
-void	draw_box(t_xy center, int radius, int color, SDL_Surface *surface)
+void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface)
 {
 	center.x = center.x - radius;
 	center.y = center.y - radius;
@@ -61,7 +35,90 @@ void	draw_box(t_xy center, int radius, int color, SDL_Surface *surface)
 		set_pixel(surface, center.x + x, center.y + y, color);
 }
 
-double		*get_zbuffer()
+void			vertical_line(int column, int start, int end, int color)
+{
+	int *pixel;
+	int draw;
+
+	pixel = (int*)doom_ptr()->game->buff->pixels;
+	start = clamp(start, 0, GAME_WIN_HEIGHT - 1);
+	end = clamp(end, 0, GAME_WIN_HEIGHT - 1);
+
+	// Always draw at least one pixel.
+	draw = 1 + (end - start);
+	while (draw-- > 0)
+	{
+		pixel[GAME_WIN_WIDTH * (start + draw) + column] = color;
+	}
+}
+
+static unsigned	texture_pixel(SDL_Surface *tex, int x, int y)
+{
+	unsigned	*sprite;
+	unsigned	pixel;
+	unsigned	size;
+
+	sprite = tex->pixels;
+	pixel = tex->w * y + x;
+	size = tex->w * tex->h;
+	if ((pixel < size) && ((sprite[pixel] >> 24) != BYTE_TRANSPARENT))
+		return(sprite[pixel]);
+	else
+		return (COLOR_TRANSPARENT);
+}
+
+void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex)
+{
+	unsigned	*pixels;
+	unsigned	color;
+	double		y_step;
+	double		tex_y;
+
+	tex_y = 0;
+	y_step = tex->h / (range.y - range.x);
+	if (range.x < 0)
+	{
+		tex_y += y_step * -range.x;
+		range.x = 0;
+	}
+	pixels = doom_ptr()->game->buff->pixels;
+	tex_x = clamp(tex_x, 0, 1);
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		color = texture_pixel(tex, tex_x * tex->w, tex_y);
+		if (color != COLOR_TRANSPARENT)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+		tex_y += y_step;
+		range.x++;
+	}
+}
+
+void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
+{
+	unsigned	*pixels;
+	unsigned	color;
+	double		y_step;
+	double		tex_y;
+
+	tex_y = 0;
+	y_step = (double)enemy->active_sprite->h / (range.y - range.x);
+	if (range.x < 0)
+	{
+		tex_y += y_step * -range.x;
+		range.x = 0;
+	}
+	pixels = doom_ptr()->game->buff->pixels;
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
+		if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+		tex_y += y_step;
+		range.x++;
+	}
+}
+
+double			*get_zbuffer()
 {
 	static double *zbuffer = NULL;
 
@@ -70,7 +127,7 @@ double		*get_zbuffer()
 	return (zbuffer);
 }
 
-int			zbuffer_ok(int index, double depth)
+int				zbuffer_ok(int index, double depth)
 {
 	double *zbuffer;
 
@@ -82,58 +139,4 @@ int			zbuffer_ok(int index, double depth)
 	}
 	// printf("%f  %f\n", zbuffer[index], depth);
 	return (0);
-}
-
-double		face_depth(t_xyz weight, t_face face)
-{
-	return (weight.x * face.vert[0].z
-		+ weight.y * face.vert[1].z
-		+ weight.z * face.vert[2].z);
-}
-
-// Fixed, exactly 3-vert triangle.
-// Note: wavefront.obj triangles have verts in counter-clockwise order.
-void		draw_tri(unsigned int *pixel, t_face face, int color)
-{
-	t_xy min = bb_min(face);
-	t_xy max = bb_max(face);
-
-	for (int y = min.y; y < max.y; ++y)
-	for (int x = min.x; x < max.x; ++x)
-	{
-		if (inside(vec2(x, y), face))
-		{
-			double depth = face_depth(bary(vec2(x, y), face), face);
-			if (zbuffer_ok(x + y * GAME_WIN_WIDTH, depth))
-				pixel[x + y * GAME_WIN_WIDTH] = color;
-		}
-		else
-		{
-			// pixel[x + y * GAME_WIN_WIDTH] = 0xFF0000;
-		}
-	}
-}
-
-void		draw_tri_color(unsigned int *pixel, t_face face)
-{
-	t_xy v0 = vec42(face.vert[0]);
-	t_xy v1 = vec42(face.vert[1]);
-	t_xy v2 = vec42(face.vert[2]);
-	t_xy min = bb_min(face);
-	t_xy max = bb_max(face);
-
-	for (int y = min.y; y < max.y; ++y)
-	for (int x = min.x; x < max.x; ++x)
-	{
-		double area2 = edge(v0, v1, v2);
-		t_xyz weight = bary(vec2(x, y), face);
-		if (weight.x <= 0 && weight.y <= 0 && weight.z <= 0)
-		{
-			weight = vec3_div(weight, area2);
-			int r = 255 * weight.x;
-			int g = 255 * weight.y;
-			int b = 255 * weight.z;
-			pixel[x + y * GAME_WIN_WIDTH] = (r << 16 | g << 8 | b);
-		}
-	}
 }
