@@ -93,6 +93,50 @@ void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex)
 	}
 }
 
+void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom)
+{
+	unsigned	*pixels;
+	unsigned	color;
+	t_xy		tex_pos;
+
+	pixels = doom_ptr()->game->buff->pixels;
+
+	// pixel in current FOV
+	t_xy current_pixel = floor_pos;
+
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		// player -> current_pixel
+		tex_pos = vec2_sub(current_pixel, vec32(doom->game->world->player.position));
+		// align with the global world (undo FOV rotation)
+		tex_pos = vec2_rot(tex_pos, -(doom->game->world->player.angle + M_PI));
+		// this pixel's location in the global world
+		tex_pos = vec2_add(tex_pos, vec32(doom->game->world->player.position));
+
+		// stick within texture coordinates
+		// note: global world corresponds with repeating texture space
+		tex_pos.x = fmod(tex_pos.x, tex->w);
+		tex_pos.y = fmod(tex_pos.y, tex->h);
+
+		// wrap around texture coordinates
+			 if (tex_pos.x < 0)       tex_pos.x += tex->w;
+		else if (tex_pos.x >= tex->w) tex_pos.x -= tex->w;
+
+			 if (tex_pos.y < 0)       tex_pos.y += tex->h;
+		else if (tex_pos.y >= tex->h) tex_pos.y -= tex->h;
+
+		ft_assert(0 <= tex_pos.x && tex_pos.x <= tex->w, "tex_pos 0<=X<=w");
+		ft_assert(0 <= tex_pos.y && tex_pos.y <= tex->h, "tex_pos 0<=Y<=h");
+
+		color = texture_pixel(tex, tex_pos.x, tex_pos.y);
+		if (color != COLOR_TRANSPARENT)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+
+		current_pixel.y++;
+		range.x++;
+	}
+}
+
 void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
 {
 	unsigned	*pixels;

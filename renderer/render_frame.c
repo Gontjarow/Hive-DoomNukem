@@ -144,7 +144,7 @@ t_world			*load_world(t_world *world)
 
 void			render_frame(t_doom *doom)
 {
-	// printf("\nFRAME START\n");
+	printf("\nFRAME START\n");
 	t_world	*world;
 	double	*zbuffer;
 

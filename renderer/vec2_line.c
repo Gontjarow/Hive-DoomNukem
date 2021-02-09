@@ -254,3 +254,11 @@ t_xy_line		line_clamp(t_xy_line in, t_xy min, t_xy max)
 
 	return (in);
 }
+
+t_xy			line_lerp(t_xy_line line, double t)
+{
+	ft_assert(0 <= t && t <= 1, "line_lerp must be [0, 1]");
+	return (vec2_add(
+		vec2_mul(line.start, t),
+		vec2_mul(line.stop, 1 - t)));
+}

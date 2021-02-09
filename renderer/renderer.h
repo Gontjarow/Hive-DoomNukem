@@ -145,6 +145,7 @@ void			drawline(t_xy_line line, SDL_Surface *surface);
 void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
 void			vertical_line(int column, int start, int end, int color);
 void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex);
+void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom);
 void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range);
 
 void			render_frame(t_doom *doom);
@@ -210,6 +211,7 @@ double			vec2_project_to_hypotenuse(t_xy adjescent, t_xy hypotenuse);
 double			vec2_point_line_distance(t_xy point, t_xy pos, t_xy dir);
 t_xy			vec2_point_to_line(t_xy point, t_xy line, t_xy dir);
 signed			vec2_point_side(t_xy point, t_xy start, t_xy end);
+t_xy			vec2_lerp(t_xy start, t_xy stop, double t);
 
 t_xy_line		line(double ax, double ay, double bx, double by);
 t_xy_line		line_xy(t_xy start, t_xy stop, int color);
@@ -224,6 +226,7 @@ t_xy_line		line_rot(t_xy_line line, double angle);
 t_xy			line_norm(t_xy_line line);
 double			line_mag(t_xy_line line);
 void			clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane);
+t_xy			line_lerp(t_xy_line line, double t);
 
 t_xy_line		*set_clip_bounds(t_xy topl, t_xy topr, t_xy botr, t_xy botl);
 void			clip_to_bounds(t_xy_line in, t_xy_line *out, t_xy_line edge[4]);

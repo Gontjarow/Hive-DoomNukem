@@ -82,7 +82,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		t_xy_line wall_segment;
 		clip_to_cone(wall, &wall_segment);
 
-		//! Calculate ceil/floor height and draw vertical lines left-to-right.
+		//! Calculate ceil/floor height and draw screen_x lines left-to-right.
 		calculate_vertical_scale(wall_segment, &scale);
 
 		double ceil = sector->ceil - doom->game->world->player.position.z;
@@ -106,41 +106,39 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		double ceil_angle = (yawed_ceil.stop.y - yawed_ceil.start.y) / (double)(x2 - x1);
 		double floor_angle = (yawed_floor.stop.y - yawed_floor.start.y) / (double)(x2 - x1);
 
-		int orig_x1 = GAME_MIDWIDTH + (wall.start.x * scale.start.x);
-
-		// Apply perspective to the original line segment.
-		t_xy_line scaled_preclip = line(
-			wall_preclip.start.x * scale.start.y,
-			wall_preclip.start.y * scale.start.y,
-			wall_preclip.stop.x  * scale.stop.y,
-			wall_preclip.stop.y  * scale.stop.y
-		);
-
-		// This wall's per-pixel ratio is based on the length
-		// of the original wall segment, regardless of any clipping.
-		double texture_step = bricks->w / line_mag(scaled_preclip);
-
 		t_xy_line start_clip = line_xy(wall_preclip.start, wall_segment.start, 0x00ffff);
 
 		double clipped_ratio = line_mag(start_clip) / line_mag(wall_preclip);
 		double visible_ratio = line_mag(wall_segment) / line_mag(wall_preclip);
 
-		int range = (x2 - x1);
-		double iter_step = visible_ratio / range;
+		double h_step = visible_ratio / (x2 - x1);
 
-		if (vertex == 0) printf("clipped %-8.10f visible %-8.10f iter_step %-8.8f\n", clipped_ratio, visible_ratio, iter_step);
+		// if (vertex == 0) printf("clipped %-8.10f visible %-8.10f h_step %-8.8f\n", clipped_ratio, visible_ratio, h_step);
 
-		int x = x1;
-		while (x < x2)
+		int screen_x = x1;
+		while (screen_x < x2)
 		{
-			int horizontal = (x - x1);
-			double tex_x = clipped_ratio + (horizontal * iter_step);
+			signed	horizontal = (screen_x - x1);
+			double	tex_x = clipped_ratio + (horizontal * h_step);
 
-			int y_start = yawed_ceil.start.y + (horizontal * ceil_angle);
-			int y_stop = yawed_floor.start.y + (horizontal * floor_angle);
-			vertical_wall(x, tex_x, vec2(y_start, y_stop), bricks);
+			signed	y_start = yawed_ceil.start.y + (horizontal * ceil_angle);
+			signed	y_stop = yawed_floor.start.y + (horizontal * floor_angle);
 
-			++x;
+			vertical_wall(screen_x,
+				tex_x,
+				vec2(y_start, y_stop),
+				bricks);
+
+			// if (vertex == 1 && GAME_MIDWIDTH-1 <= screen_x && screen_x <= GAME_MIDWIDTH+1)
+			if (vertex == 1)
+			{
+				vertical_floor(screen_x,
+					vec2_add(line_lerp(wall_segment, tex_x), vec2(0, y_stop)),
+					vec2(y_stop, GAME_WIN_HEIGHT),
+					border, doom);
+			}
+
+			++screen_x;
 		}
 
 		//! Debug view.
