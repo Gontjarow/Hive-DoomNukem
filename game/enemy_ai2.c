@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/09 18:24:28 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/09 19:55:41 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,59 +86,32 @@ static void		check_sprite_orient(t_doom *doom, t_enemy *enemy)
 	{
 		delta.y = doom->mdl->player.y - enemy->y;
 		delta.x = doom->mdl->player.x - enemy->x;
-		// printf("Before Delta.x: %0.2f\tDelta.y: %0.2f\n", delta.x, delta.y);
-		// delta = vec2_norm(delta);
-		// printf("After Delta.x: %0.2f\tDelta.y: %0.2f\n", delta.x, delta.y);
-		// delta = vec2_rot(delta, -enemy->rot * DEG_TO_RAD);
-		// printf("Enemy rot: %d\n", enemy->rot);
 		angle = atan2(delta.y, delta.x);
-		// printf("Angle between: %0.2f\n", angle);
 		if (angle < 0)
         	angle = fabs(angle);
     	else
         	angle = 2 * M_PI - angle;
 		angle *= (180 / M_PI);
-
-		printf("Before Angle between: %0.2f\n", angle);
-
-		offset = abs(180 - enemy->rot);
-		if (offset > 0 && offset <= 90)
-		{
+		offset = 180 - enemy->rot;
+		if ((offset > 0 && offset <= 90) || (offset > 90 && offset <= 180))
 			angle -= offset;
-			printf("Oi\n");
-		}
-		else if (offset > 90 && offset <= 180)
+		else if ((offset > -180 && offset <= -90) || (offset > -90 && offset < 0))
 		{
-			angle -= 180;
-			printf("Tudo bom\n");
-		}
-		else if (offset > 180 && offset <= 270)
-		{
-			angle -= 180;
-			printf("Suave\n");
+			offset = enemy->rot;
+			angle -= 180 - offset;
 		}
 		if (angle < 0)
-		{
 			angle += 360;
-		}
-		
-		printf("After Angle between: %0.2f\n", angle);
+		if (angle > 360)
+			angle -= 360;
 		if ((angle >= 0 && angle <= 45) || (angle <= 360 && angle >= 315))
-		{
 			enemy->anim.orient = FRONT;
-		}
 		else if (angle < 315 && angle >= 225)
-		{
 			enemy->anim.orient = RIGHT;
-		}
 		else if (angle > 45 && angle <= 135)
-		{
 			enemy->anim.orient = LEFT;
-		}
 		else
-		{
 			enemy->anim.orient = BACK;
-		}
 	}
 }
 
@@ -154,7 +127,7 @@ void		handle_enemy_ai(t_doom *doom)
 	while (ec--)
 	{
 		enemy_update_cooldown(doom, enemy);
-		// check_sprite_orient(doom, enemy);		// WIP
+		check_sprite_orient(doom, enemy);
 		animation_switch(enemy, doom);
 		check_aggro(doom, enemy);
 		if (enemy->ai.aggro == ACTIVE)
