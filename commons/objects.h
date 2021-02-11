@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/02/05 17:08:26 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/10 15:41:37 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct 			s_player
 	int					invis;
 	struct SDL_Surface	*active_health_bar;
 	struct SDL_Surface	*hud_num[10];
+	struct s_coord		safety_spot;
 	struct s_coord		bullet_pos;
 	struct s_weapon		weap_arr[10];
 	struct s_point		tail;

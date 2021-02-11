@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 19:07:33 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/10 17:37:03 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 	((double)doom->mdl->player.mov_speed)) * -cos(rad);
 	doom->mdl->player.y = doom->mdl->player.y + (signal *
 	((double)doom->mdl->player.mov_speed)) * -sin(rad);
+	doom->mdl->player.safety_spot.x = doom->mdl->player.x
+	+ (signal * ((double)doom->mdl->player.mov_speed + 10)) * -cos(rad);
+	doom->mdl->player.safety_spot.y = doom->mdl->player.y
+	+ (signal * ((double)doom->mdl->player.mov_speed + 10)) * -sin(rad);
 	update_player_tail(doom, rad);
 	handle_pickup(doom);
 }
@@ -58,6 +62,10 @@ static void		strafe(t_doom *doom, int signal)
 	(((double)doom->mdl->player.mov_speed)) * -cos(strafe_rad);
 	doom->mdl->player.y = doom->mdl->player.y +
 	(((double)doom->mdl->player.mov_speed)) * -sin(strafe_rad);
+	doom->mdl->player.safety_spot.x = doom->mdl->player.x
+	+ (((double)doom->mdl->player.mov_speed + 10)) * -cos(strafe_rad);
+	doom->mdl->player.safety_spot.y = doom->mdl->player.y
+	+ (((double)doom->mdl->player.mov_speed + 10)) * -sin(strafe_rad);
 	doom->mdl->player.rot = orig_rot;
 	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
 	handle_pickup(doom);
