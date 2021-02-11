@@ -15,6 +15,16 @@ t_xy_line		calculate_vertical_scale(t_xy_line segment, t_xy_line *out)
 }
 
 
+t_xy_line		calculate_yawed(double height, t_xy_line wall, t_xy_line scale, double yaw)
+{
+	t_xy_line out;
+
+	out.start.y = GAME_MIDHEIGHT - (height + wall.start.y * yaw) * scale.start.y;
+	out.stop.y = GAME_MIDHEIGHT - (height + wall.stop.y * yaw) * scale.stop.y;
+	return (out);
+}
+
+
 //! Render the walls of a sector to a section of the screen.
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot)
 {
@@ -82,18 +92,14 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		t_xy_line wall_segment;
 		clip_to_cone(wall, &wall_segment);
 
-		//! Calculate ceil/floor height and draw screen_x lines left-to-right.
+		//! Calculate ceil/floor height.
 		calculate_vertical_scale(wall_segment, &scale);
 
-		double ceil = sector->ceil - doom->game->world->player.position.z;
-		t_xy_line yawed_ceil;
-		yawed_ceil.start.y = GAME_MIDHEIGHT - (ceil + wall_segment.start.y * doom->game->world->player.yaw) * scale.start.y;
-		yawed_ceil.stop.y = GAME_MIDHEIGHT - (ceil + wall_segment.stop.y * doom->game->world->player.yaw) * scale.stop.y;
+		double ceil = sector->ceil - doom->game->world->player.position.z - EYE_HEIGHT;
+		t_xy_line yawed_ceil = calculate_yawed(ceil, wall_segment, scale, doom->game->world->player.yaw);
 
-		double floor = sector->floor - doom->game->world->player.position.z;
-		t_xy_line yawed_floor;
-		yawed_floor.start.y = GAME_MIDHEIGHT - (floor + wall_segment.start.y * doom->game->world->player.yaw) * scale.start.y;
-		yawed_floor.stop.y = GAME_MIDHEIGHT - (floor + wall_segment.stop.y * doom->game->world->player.yaw) * scale.stop.y;
+		double floor = sector->floor - doom->game->world->player.position.z - EYE_HEIGHT;
+		t_xy_line yawed_floor = calculate_yawed(floor, wall_segment, scale, doom->game->world->player.yaw);
 
 
 		// Debug info for specific walls
@@ -103,6 +109,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 			vertical_line(x2, GAME_MIDHEIGHT, GAME_WIN_HEIGHT-1, colors[vertex]);
 		}
 
+
+		//! Calculate wall angle/length.
 		double ceil_angle = (yawed_ceil.stop.y - yawed_ceil.start.y) / (double)(x2 - x1);
 		double floor_angle = (yawed_floor.stop.y - yawed_floor.start.y) / (double)(x2 - x1);
 
@@ -115,6 +123,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 		// if (vertex == 0) printf("clipped %-8.10f visible %-8.10f h_step %-8.8f\n", clipped_ratio, visible_ratio, h_step);
 
+		//! Draw vertical lines left-to-right.
 		int screen_x = x1;
 		while (screen_x < x2)
 		{
@@ -124,13 +133,43 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 			signed	y_start = yawed_ceil.start.y + (horizontal * ceil_angle);
 			signed	y_stop = yawed_floor.start.y + (horizontal * floor_angle);
 
-			vertical_wall(screen_x,
-				tex_x,
-				vec2(y_start, y_stop),
-				bricks);
+			// Todo: draw sky or ceiling
 
+			printf("neighbor: %i, x: %i, ceil %.0f floor %.0f, playerZ %f\n", 0, screen_x, ceil, floor, get_world()->player.position.z);
+			//! Draw wall
+			int neighbor = sector->neighbors[vertex];
+			if (neighbor == NO_NEIGHBOR)
+			{
+				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks);
+			}
+			else
+			{
+				t_sector	*connecting = &(get_world()->sectors[neighbor]);
+
+				double		connecting_ceil        = connecting->ceil - doom->game->world->player.position.z - EYE_HEIGHT;
+				t_xy_line	connecting_yawed_ceil  = calculate_yawed(connecting_ceil, wall_segment, scale, doom->game->world->player.yaw);
+
+				double		connecting_floor       = connecting->floor - doom->game->world->player.position.z - EYE_HEIGHT;
+				t_xy_line	connecting_yawed_floor = calculate_yawed(connecting_floor, wall_segment, scale, doom->game->world->player.yaw);
+				printf("neighbor: %i, x: %i, ceil %.0f floor %.0f\n", neighbor, screen_x, connecting_ceil, connecting_floor);
+
+				double		connecting_ceil_angle  = (connecting_yawed_ceil.stop.y - connecting_yawed_ceil.start.y) / (double)(x2 - x1);
+				double		connecting_floor_angle = (connecting_yawed_floor.stop.y - connecting_yawed_floor.start.y) / (double)(x2 - x1);
+
+				signed		connecting_y_start     = connecting_yawed_ceil.start.y + (horizontal * connecting_ceil_angle);
+				signed		connecting_y_stop      = connecting_yawed_floor.start.y + (horizontal * connecting_floor_angle);
+
+				connecting_y_start = clamp(connecting_y_start, *y_top, *y_bot);
+				connecting_y_stop =  clamp(connecting_y_stop, *y_top, *y_bot);
+
+				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), bricks);
+				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), bricks);
+			}
+
+
+			//! Draw floor/ground
 			// if (vertex == 1 && GAME_MIDWIDTH-1 <= screen_x && screen_x <= GAME_MIDWIDTH+1)
-			if (vertex == 1)
+			if (0 && vertex == 1)
 			{
 				vertical_floor(screen_x,
 					vec2_add(line_lerp(wall_segment, tex_x), vec2(0, y_stop)),

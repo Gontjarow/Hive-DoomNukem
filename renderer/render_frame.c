@@ -70,8 +70,8 @@ static void		print_data(t_world *world)
 
 t_world			*get_world()
 {
-	static t_world  *world = NULL;
-	t_model         *mdl;
+	static t_world	*world = NULL;
+	t_model			*mdl;
 
 	if (world == NULL)
 	{
@@ -83,9 +83,106 @@ t_world			*get_world()
 		ft_memset(&world->player, 0, sizeof(world->player));
 		world->player.position = vec3(mdl->player.x, mdl->player.y, 0);
 		world->player.position = vec3_div(world->player.position, WORLD_SCALE);
-		world->player.position.z = EYE_HEIGHT;
 	}
 	return (world);
+}
+
+// Portal related code
+
+static int		room_id_by_wall(t_wall *wall, t_model *mdl)
+{
+	t_room	*room;
+	int		rc;
+
+	room = mdl->room_first;
+	rc = mdl->room_count;
+	while (rc--)
+	{
+		if ((room->first_wall_id <= wall->id)
+		&& (room->first_wall_id + room->wall_count >= wall->id))
+			return (room->id);
+		room = room->next;
+	}
+	ft_die("Fatal error: Could not determine room_id_by_wall.");
+	return (-1);
+}
+
+// Find a wall whose start/end match the given portal.
+static t_wall	*match_connecting_wall(t_model *mdl, t_wall *portal)
+{
+	t_wall	*wall;
+	int 	wc;
+
+	wall = mdl->wall_first;
+	wc = mdl->wall_count;
+	while (wc--)
+	{
+		if ((wall->start.x == portal->start.x && wall->start.y == portal->start.y)
+		&& (wall->end.x == portal->end.x && wall->end.y == portal->end.y))
+			return (wall);
+		wall = wall->next;
+	}
+}
+
+// Find a wall whose start/end match the given portal,
+// but check opposite direction as well because the other room may be in a different order.
+static t_wall	*match_original_wall(t_model *mdl, t_wall *portal, t_wall *connecting)
+{
+	t_wall	*wall;
+	int 	wc;
+
+	wall = mdl->wall_first;
+	wc = mdl->wall_count;
+	while (wc--)
+	{
+		if ((wall->start.x == portal->start.x && wall->start.y == portal->start.y)
+		&& (wall->end.x == portal->end.x && wall->end.y == portal->end.y)
+		&& (connecting != wall))
+			return (wall);
+		if ((wall->end.x == portal->start.x && wall->end.y == portal->start.y)
+		&& (wall->start.x == portal->end.x && wall->start.y == portal->end.y)
+		&& (connecting != wall))
+			return (wall);
+		wall = wall->next;
+	}
+}
+
+static void		spawn_neighbors(t_world *world, t_model *mdl, t_wall *portal)
+{
+	t_sector	*sect;
+	t_wall		*original;
+	t_wall		*connecting;
+	int			room_a;
+	int			room_b;
+
+	connecting = match_connecting_wall(mdl, portal);
+	original = match_original_wall(mdl, portal, connecting);
+	room_a = room_id_by_wall(connecting, mdl);
+	room_b = room_id_by_wall(original, mdl);
+
+	int sect_wall; // Connect two neighbours, from a to b and b to a
+
+	sect_wall = connecting->id - room_by_id(room_a)->first_wall_id;
+	sect = &world->sectors[room_a];
+	sect->neighbors[sect_wall] = room_b;
+
+	sect_wall = original->id - room_by_id(room_b)->first_wall_id;
+	sect = &world->sectors[room_b];
+	sect->neighbors[sect_wall] = room_a;
+}
+
+static void		portals_to_neighbors(t_world *world, t_model *mdl)
+{
+	t_wall	*portal;
+	int		pc;
+
+	portal = mdl->portal_first;
+	pc = mdl->portal_count;
+	while (pc--)
+	{
+		spawn_neighbors(world, mdl, portal);
+		portal = portal->next;
+	}
 }
 
 t_world			*load_world(t_world *world)
@@ -100,9 +197,9 @@ t_world			*load_world(t_world *world)
         t_sector *sector = &world->sectors[room_index];
 
         // Sector init
-        sector->vertex_count = room->wall_count; // +1?
-        sector->floor = 0;
-        sector->ceil = 20;
+        sector->vertex_count = room->wall_count;
+        sector->floor = room->floor_height;
+        sector->ceil = room->roof_height;
 
         // Allocate fixed size blocks
 		// Note: sector->vertex has one extra index
@@ -116,7 +213,7 @@ t_world			*load_world(t_world *world)
         int vertex = 0;
         while (vertex < vertices)
         {
-            sector->neighbors[vertex++] = -1;
+            sector->neighbors[vertex++] = NO_NEIGHBOR;
         }
 
         // Copy vertex positions
@@ -138,6 +235,7 @@ t_world			*load_world(t_world *world)
     }
 	ft_memset(&world->player, 0, sizeof(world->player));
 	world->player.sector_id = room_id_from_polymap(mdl->poly_map, mdl->player.x, mdl->player.y);
+	portals_to_neighbors(world, mdl);
     print_data(world);
     return (world);
 }
@@ -155,7 +253,10 @@ void			render_frame(t_doom *doom)
 	world->player.position = vec3_div(vec3(
 		doom->mdl->player.x,
 		doom->mdl->player.y,
-		doom->mdl->player.height), WORLD_SCALE);
+		0), WORLD_SCALE);
+	world->player.sector_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x, doom->mdl->player.y);
+	world->player.position.z = world->sectors[world->player.sector_id].floor;
+
 	world->player.angle = doom->mdl->player.rot * DEG_TO_RAD;
 	world->player.sin = sin(world->player.angle);
 	world->player.cos = cos(world->player.angle);
@@ -174,21 +275,35 @@ void			render_frame(t_doom *doom)
 	// int rendered_sectors[world->sector_count];
 	// ft_memset(rendered_sectors, 0, sizeof(rendered_sectors));
 	t_section	queue[MAX_SECTOR_QUEUE];
-	t_section	*head = queue;
-	t_section	*tail = queue;
 
 	// First in queue will be the camera/player's sector.
-	queue[0].id = world->player.sector_id;
+	// queue[0].id = world->player.sector_id;
+	queue[0].id = 0;
 	queue[0].left = 0;
 	queue[0].right = GAME_WIN_WIDTH - 1;
 
+	queue[1].id = 1;
+	queue[1].left = 0;
+	queue[1].right = GAME_WIN_WIDTH - 1;
+
+	// Note: Always start from queue+0
+	// Note: Whenever a new sector needs to be rendered,
+	//       assign to *end, then ++end
+	// Note: If first == queue+MAX_SECTOR_QUEUE
+	//       or end == queue+MAX_SECTOR_QUEUE
+	//       set to 0 (circle back to beginning)
+	t_section	*first = queue+0;
+	t_section	*end   = queue+2;
+
 	// todo: queue loop
+	while (first != end)
 	{
 		// Easy access to current render data (sector to draw, section to draw into)
-		t_section	*section = &queue[0];
+		t_section	*section = first;
 		t_sector	*sector = &world->sectors[section->id];
 
 		render_sector(sector, section, doom, y_top, y_bot);
+		++first;
 	}
 
 	// enemies don't have a "current sector" so they must be drawn together.

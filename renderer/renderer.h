@@ -11,10 +11,13 @@
 # define T_DIR 0.0
 # define T_POS 1.0
 
-# define NEAR_PLANE -1.0
+# define NEAR_PLANE -0.01
 # define EYE_HEIGHT 6
 # define WORLD_SCALE 10
 # define MAX_SECTOR_QUEUE 32
+
+// For sector rendering
+# define NO_NEIGHBOR -1
 
 // For sprite drawing
 # define SPRITE_SCALE 10
