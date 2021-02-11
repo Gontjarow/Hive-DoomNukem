@@ -79,14 +79,12 @@ static void		copy_from_atlas(int x, int y, SDL_Surface *atlas, SDL_Surface *buff
 		{
 			from = (atlas->w * y) + x;
 			to = iter;
-				//printf("from %d,%d to %d, %d\n",x,y,iter % 128, iter / 128);
 			pix[0][to] = pix[1][from];
 			x++;
 			iter++;
 		}
 		y++;
 	}
-	puts("Nice!");
 }
 
 static int	load_melee_sprite(t_doom *doom, char *path, int i)
@@ -161,23 +159,6 @@ static int	load_boss_sprite(t_doom *doom, char *path, int i)
 		return (-1);
 	if (!(doom->sprites->txt_boss_death = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 9)))
 		return (-1);
-	//if (!(doom->sprites->txt_boss_back_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 6)))
-	//	return (-1);
-	//if (!(doom->sprites->txt_boss_back_walk_atlas = load_xpm("img/sprites/boss/back/walk.xpm")))
-	//	return (-1);
-	//printf("Loaded back walk atlas W: %d H: %d\n", doom->sprites->txt_boss_back_walk_atlas->w, doom->sprites->txt_boss_back_walk_atlas->h);
-	//i = '0';
-	//doom->sprites->txt_boss_back_walk[0] = SDL_CreateRGBSurfaceWithFormat(0, 128, 128, 32, SDL_PIXELFORMAT_ARGB32);
-	//copy_from_atlas(0, 0, doom->sprites->txt_boss_back_walk_atlas, doom->sprites->txt_boss_back_walk[0]);
-	//while (i < '6')
-	//{
-	//	doom->sprites->txt_boss_back_walk[(i - 48)] = SDL_CreateRGBSurfaceWithFormat(0, 128, 128, 32, SDL_PIXELFORMAT_ARGB32);
-	//	if (doom->sprites->txt_boss_back_walk[(i - 48)] == NULL)
-	//		ft_die("Fatal error: Could not malloc SDL_Surface for sprite");
-	//	copy_from_atlas(128 * (i - 48), 0, doom->sprites->txt_boss_back_walk_atlas, doom->sprites->txt_boss_back_walk[(i - 48)]);
-	//	i++;
-	//}
-
 	i = '0';
 	while (i < '2')
 	{

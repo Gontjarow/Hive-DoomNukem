@@ -48,18 +48,21 @@ typedef struct			s_model
 	struct s_wall		*portals;
 	struct s_effect		*effects;
 	struct s_pickup		*pickups;
+	struct s_rsrc		*rsrcs;
 	struct s_enemy		*enemy_first;
 	struct s_wall		*wall_first;
 	struct s_room		*room_first;
 	struct s_wall		*portal_first;
 	struct s_effect		*effect_first;
 	struct s_pickup		*pickup_first;
+	struct s_rsrc		*rsrc_first;
 	int 				wall_count;
 	int 				room_count;
 	int 				portal_count;
 	int 				enemy_count;
 	int					effect_count;
 	int 				pickup_count;
+	int					rsrc_count;
 	char 				*chain;
 } 						t_model;
 

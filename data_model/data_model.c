@@ -27,6 +27,7 @@ void		init_model(t_doom *doom)
 	doom->mdl->pickups = (t_pickup*)malloc(sizeof(t_pickup));
 	if (!doom->mdl->pickups)
 		ft_die("Fatal error: Mallocing pickups struct failed at init_model.");
+	doom->mdl->rsrcs = NULL;
 
 	// Mallocing the underlying polygon 2D map that holds room data and is used to tell
 	// and keep track of which room the player or any other point is belonging to instantly
@@ -43,12 +44,14 @@ void		init_model(t_doom *doom)
 	doom->mdl->enemy_first = NULL;
 	doom->mdl->pickup_first = NULL;
 	doom->mdl->effect_first = NULL;
+	doom->mdl->rsrc_first = NULL;
 	doom->mdl->wall_count = 0;
 	doom->mdl->room_count = 0;
 	doom->mdl->portal_count = 0;
 	doom->mdl->enemy_count = 0;
 	doom->mdl->pickup_count = 0;
 	doom->mdl->effect_count = 0;
+	doom->mdl->rsrc_count = 0;
 
 	// Initializing the player variables. Strongly related to the ../game/* functions!
 	doom->mdl->player.x = -1;
@@ -92,6 +95,8 @@ void 		destroy_model(t_doom *doom)
 	free(doom->mdl->rooms);
 	free(doom->mdl->effects);
 	free(doom->mdl->pickups);
+	if (doom->mdl->rsrcs != NULL)
+		free(doom->mdl->rsrcs);
 	if (doom->mdl->chain != NULL)
 		free(doom->mdl->chain);
 	doom->mdl->chain = NULL;
@@ -101,6 +106,7 @@ void 		destroy_model(t_doom *doom)
 	doom->mdl->room_first = NULL;
 	doom->mdl->effect_first = NULL;
 	doom->mdl->pickup_first = NULL;
+	doom->mdl->rsrc_first = NULL;
 	doom->mdl->parent = NULL;
 	free(doom->mdl);
 	doom->mdl = NULL;
