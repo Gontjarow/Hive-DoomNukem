@@ -19,19 +19,19 @@ static void	render_menu(t_menu *menu)
     selection_offset = 0;
     render_animation(menu->parent);
     menu->alphabet_scale = 2;
-    print_alphabet("doomed", menu->parent, 310, 29);
+    print_alphabet("doomed", menu->parent, 310, 24);
     menu->alphabet_scale = 1;
     print_alphabet("by", menu->parent, 650, 55);
     print_alphabet("ngontjar krusthol msuarez", menu->parent, 512 - 350, 29 + 29 + 29);
     menu->alphabet_scale = menu->selected == 0 ? 2 : 1;
     selection_offset = menu->selected ==  0 ? -14 : 0;
-    print_alphabet("play level", menu->parent, 512 - (140 * menu->alphabet_scale), 349 + selection_offset);
+    print_alphabet("play level", menu->parent, 512 - (140 * menu->alphabet_scale), 349 + selection_offset - 14);
     menu->alphabet_scale = menu->selected == 1 ? 2 : 1;
     selection_offset = menu->selected ==  1 ? -14 : 0;
-    print_alphabet("level editor", menu->parent, 512 - (168 * menu->alphabet_scale), 349 + 29 + 29 + selection_offset);
+    print_alphabet("level editor", menu->parent, 512 - (168 * menu->alphabet_scale), 349 + 29 + 29 + selection_offset - 14);
     menu->alphabet_scale = menu->selected == 2 ? 2 : 1;
     selection_offset = menu->selected ==  2 ? -14 : 0;
-    print_alphabet("quit", menu->parent, 512 - (56 * menu->alphabet_scale), 349 + 29 + 29 + 29 + 29 + selection_offset);
+    print_alphabet("quit", menu->parent, 512 - (56 * menu->alphabet_scale), 349 + 29 + 29 + 29 + 29 + selection_offset - 14);
 }
 
 void 		init_menu(t_doom *doom)
@@ -70,7 +70,8 @@ void 		init_menu(t_doom *doom)
     }
     else
         ft_die("Fatal error: Texture loading failure at init_menu.");
-    load_alphabet(doom->menu);
+    //load_alphabet(doom->menu);
+    load_alphabet_atlas(doom->menu);
     load_animation(doom->menu);
     Mix_PlayChannel( -1, doom->sounds->mcThunder, 0);
     render_menu(doom->menu);

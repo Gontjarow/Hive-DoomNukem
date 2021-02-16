@@ -17,6 +17,11 @@
 
 # define CROUCH_HEIGHT 10
 # define STAND_HEIGHT 20
+# define ALPHABET_SIZE 128
+# define ALPHABET_W 32
+# define ALPHABET_H 32
+# define ALPHABET_GRID_W 10
+# define ALPHABET_A_INDEX 33
 
 enum	e_enemy_aggro { INACTIVE, ACTIVE };
 enum	e_enemy_type { RANGED, MELEE, BOSS };
@@ -291,7 +296,7 @@ typedef struct			s_menu
 	int                 mousing_at;
 	struct s_animation	ani_thunder;
 	int 				esc_lock;
-	struct SDL_Surface	*alphabet[128];
+	struct SDL_Surface	*alphabet[ALPHABET_SIZE];
 	int 				alphabet_scale;
 	int                 update_argc_argv;
 	char                *added_arg;
@@ -336,6 +341,7 @@ enum 					e_alphabet_types { SCANCODES, CHARS };
 void 					print_glyph_str(const char *str, SDL_Surface *buff, int x, int y);
 int						propose_character(char c, char *buff, int *i, int table_index);
 void					*get_alphabet_tables(int type);
+void 					load_alphabet_atlas(t_menu *menu);
 int						table_index(char c);
 
 /*
@@ -413,5 +419,11 @@ uint32_t				invert_color(uint32_t color);
 
 void					load_resources(t_model *mdl);
 int						load_appended(t_doom *doom);
+
+/*
+ * from atlas.c
+ * */
+
+void					copy_from_atlas(int x, int y, SDL_Surface *atlas, SDL_Surface *buff);
 
 #endif
