@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/10 15:50:26 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/17 14:36:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ void		update_minimap(t_doom *doom)
 	print_minimap_player(doom);
 	print_minimap_enemies(doom);
 	print_minimap_pickups(doom);
-	set_pixel_safe(doom->minimap->buff, doom->mdl->player.safety_spot.x * doom->minimap->scale, doom->mdl->player.safety_spot.y * doom->minimap->scale, 0xFF0000);
 	/*
 		This is a test for the game HUD - by MS
 	*/

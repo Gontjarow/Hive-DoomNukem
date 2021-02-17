@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:07:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/11 18:18:14 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/17 14:39:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ static int		check_eight_pos_points(t_doom *doom)
 	loc_id[2].y = doom->mdl->player.y - 10;
 	loc_id[3].x = doom->mdl->player.x;
 	loc_id[3].y = doom->mdl->player.y + 10;
-
 	loc_id[4].x = doom->mdl->player.x + 7;
 	loc_id[4].y = doom->mdl->player.y - 7;
 	loc_id[5].x = doom->mdl->player.x - 7;

@@ -79,8 +79,6 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.invis = 0;
 	doom->mdl->player.room_id = -1;
 	doom->mdl->player.room = NULL;
-	doom->mdl->player.safety_spot.x = doom->mdl->player.x;
-	doom->mdl->player.safety_spot.y = doom->mdl->player.y;
 	init_player_weapon(doom);
 }
 
