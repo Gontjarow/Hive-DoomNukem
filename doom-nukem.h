@@ -56,6 +56,7 @@ typedef struct			s_doom
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
+	struct SDL_Surface	*font_atlas;
 	union SDL_Event		event;
 	struct s_mapfile	*map;
 	struct s_sounds		*sounds;

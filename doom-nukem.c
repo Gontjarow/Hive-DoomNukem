@@ -56,6 +56,7 @@ static void	init_doom(t_doom *doom)
 	doom->minimap = NULL;
 	doom->mdl = NULL;
 	doom->map = NULL;
+	doom->font_atlas = NULL;
 }
 
 static int	destroy_and_quit(t_doom *doom)
@@ -108,6 +109,13 @@ static void run_loops(t_doom *doom, int argc, char **argv)
 		game_render(doom);
 }
 
+static void init_img(void)
+{
+	if (!(IMG_Init(IMG_INIT_PNG)))
+		ft_die("Fatal error: IMG_INIT_PNG failure.");
+	//ft_putendl("IMG initialized!");
+}
+
 int			main(int argc, char *argv[])
 {
 	t_doom			doom;
@@ -118,6 +126,7 @@ int			main(int argc, char *argv[])
 	float 			acc_time;
 
 	init_doom(&doom);
+	init_img();
 	set_doom_singleton(&doom);
 	init_menu(&doom);
 	fps_cooldown = 100;

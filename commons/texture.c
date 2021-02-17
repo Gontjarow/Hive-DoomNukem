@@ -92,8 +92,6 @@ SDL_Surface			*load_texture(t_doom *doom, char *path)
 	SDL_Surface		*free_s;
 	SDL_Surface		*ret_s;
 
-	if (!(IMG_Init(IMG_INIT_PNG)))
-		ft_die("Fatal error: IMG_INIT_PNG failure.");
 	free_s = IMG_Load(path);
 	if (free_s)
 	{

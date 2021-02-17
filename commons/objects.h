@@ -418,7 +418,8 @@ uint32_t				invert_color(uint32_t color);
  * */
 
 void					load_resources(t_model *mdl);
-int						load_appended(t_doom *doom);
+int						load_appended_atlas(t_doom *doom);
+int						load_appended_map(t_doom *doom);
 
 /*
  * from atlas.c

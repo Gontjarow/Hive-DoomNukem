@@ -20,7 +20,7 @@
 
 # define EXECUTABLE_NAME "doom-nukem"
 // TODO CHANGE FROM DEFINES TO DYNAMIC IN EXECUTABLE NAME MAKE DOOM->EXEC_NAME FROM ARGV[0]
-# define OFFSET 10643296
+# define OFFSET 10645512
 // TODO FIX TO DYNAMIC OFFSET INSTEAD OF LS -LA HANDCALCULATED ONE
 
 void 		load_resources(t_model *mdl)
@@ -30,8 +30,33 @@ void 		load_resources(t_model *mdl)
 		//puts("Resources are uninitialized, can load resources!");
 }
 
+int 		load_appended_atlas(t_doom *doom)
+{
+	// TODO FILL OUT LOAD_APPENDED WITH AUTOMATIC LOADING OF ATLAS XPM FONT RESOURCE AFTER THE OFFSET BYTE
+	SDL_Surface	*test;
+	SDL_Surface *conv;
+	SDL_PixelFormat *fmt;
+	SDL_RWops	*opened;
+
+	opened = SDL_RWFromFile(EXECUTABLE_NAME, "rb");
+	if (!opened)
+		ft_putendl("Warning: Failed to create RWFromFile!");
+	SDL_RWseek(opened, OFFSET, RW_SEEK_SET);
+	test = IMG_LoadXPM_RW(opened);
+	if (!test)
+	{
+		printf("IMG_LoadXPM_RW: %s\n", IMG_GetError());
+		ft_die("Fatal error!");
+	}
+	fmt = SDL_AllocFormat(SDL_PIXELFORMAT_ARGB8888);
+	conv = SDL_ConvertSurface(test, fmt, 0);
+	SDL_FreeSurface(test);
+	SDL_FreeFormat(fmt);
+	doom->font_atlas = conv;
+}
+
 // TODO REMOVE AND EXTRACT PROOF OF CONCEPT IDEAS INTO FRESH WRITTEN NEW FUNCTION
-int			load_appended(t_doom *doom)
+int			load_appended_map(t_doom *doom)
 {
 	int		opened;
 	off_t	seeked;

@@ -78,10 +78,12 @@ void 				load_alphabet_atlas(t_menu *menu)
 	SDL_Surface		*atlas;
 	char			c;
 
+	load_appended_atlas(doom_ptr());
+	atlas = doom_ptr()->font_atlas;
 	set_alphabet_null(menu);
-	atlas = load_xpm("img/robo/robo_atlas.xpm");
+		//ft_putendl("Loading alphabet atlas!");
 	if (!atlas)
-		ft_die("Fatal error: Could not load font atlas for Robocop font.");
+		ft_die("Fatal error: Could not load font atlas for Robocop font. Font_atlas was NULL!");
 	c = 'a';
 	while (c <= 'z')
 	{
