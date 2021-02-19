@@ -17,7 +17,7 @@ static void	render_menu(t_menu *menu)
     int selection_offset;
 
     selection_offset = 0;
-    render_animation(menu->parent);
+    //render_animation(menu->parent);
     menu->alphabet_scale = 2;
     print_alphabet("doomed", menu->parent, 310, 24);
     menu->alphabet_scale = 1;
@@ -51,7 +51,7 @@ void 		init_menu(t_doom *doom)
     doom->menu->update_argc_argv = 0;
     doom->menu->added_arg = NULL;
     doom->menu->parent = doom;
-    doom->menu->thunder = load_texture(doom, IMG_THUNDER0);
+    doom->menu->thunder = NULL;
     if (doom->menu->thunder)
     {
         i = 0;
@@ -68,13 +68,9 @@ void 		init_menu(t_doom *doom)
             pixels[i++ + j] = reference[k++];
         }
     }
-    else
-        ft_die("Fatal error: Texture loading failure at init_menu.");
-    //load_alphabet(doom->menu);
     load_alphabet_atlas(doom->menu);
     load_animation(doom->menu);
     Mix_PlayChannel( -1, doom->sounds->mcThunder, 0);
-    render_menu(doom->menu);
 }
 
 void 		destroy_menu(t_doom *doom)
@@ -356,7 +352,7 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 	    cycle_repeat_lock--;
 	if (!cycle_repeat_lock)
     {
-	    cycle_animation(doom);
+	    //cycle_animation(doom);
 	    cycle_repeat_lock = ((int)doom->fps >> 4);
     }
 	if (doom->menu_out_of_focus)

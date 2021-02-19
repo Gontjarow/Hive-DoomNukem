@@ -20,8 +20,12 @@
 
 # define EXECUTABLE_NAME "doom-nukem"
 // TODO CHANGE FROM DEFINES TO DYNAMIC IN EXECUTABLE NAME MAKE DOOM->EXEC_NAME FROM ARGV[0]
-# define OFFSET 10645512
+# define OFFSET 10645720
+# define ATLAS_SIZE 65102
+# define THUNDER_SIZE 1060469
+# define TOTAL_SIZE 11771291
 // TODO FIX TO DYNAMIC OFFSET INSTEAD OF LS -LA HANDCALCULATED ONE
+// TODO FIX TO MEMORYMAPPED AREAS OF FILE WITH PREDEFINED BYTE SIZES
 
 void 		load_resources(t_model *mdl)
 {
@@ -33,26 +37,55 @@ void 		load_resources(t_model *mdl)
 int 		load_appended_atlas(t_doom *doom)
 {
 	// TODO FILL OUT LOAD_APPENDED WITH AUTOMATIC LOADING OF ATLAS XPM FONT RESOURCE AFTER THE OFFSET BYTE
-	SDL_Surface	*test;
-	SDL_Surface *conv;
-	SDL_PixelFormat *fmt;
-	SDL_RWops	*opened;
+	SDL_Surface		*test;
+	SDL_Surface		*conv;
+	SDL_PixelFormat	*fmt;
+	SDL_RWops		*opened;
+	SDL_RWops		*map_rw;
+	char			atlas_map[ATLAS_SIZE];
+	char 			thunder_map[THUNDER_SIZE];
 
+	// LOADING FONT ATLAS WITH SDL RWOPS METHOD
 	opened = SDL_RWFromFile(EXECUTABLE_NAME, "rb");
 	if (!opened)
 		ft_putendl("Warning: Failed to create RWFromFile!");
 	SDL_RWseek(opened, OFFSET, RW_SEEK_SET);
-	test = IMG_LoadXPM_RW(opened);
+	SDL_RWread(opened, (void*)atlas_map, sizeof(char), ATLAS_SIZE / sizeof(char));
+	//test = IMG_Load(&atlas_map);
+	map_rw = SDL_RWFromMem((void*)atlas_map, sizeof(atlas_map));
+	//SDL_RWseek(opened, ATLAS_SIZE, RW_SEEK_END);
+	test = IMG_LoadXPM_RW(map_rw);
 	if (!test)
 	{
 		printf("IMG_LoadXPM_RW: %s\n", IMG_GetError());
-		ft_die("Fatal error!");
+		ft_die("Fatal error loading atlas XPM!");
 	}
+	SDL_FreeRW(map_rw);
+
+	// LOADING THUNDER WITH THE SAME METHOD
+	SDL_RWseek(opened, OFFSET, RW_SEEK_SET);
+	SDL_RWseek(opened, ATLAS_SIZE, RW_SEEK_CUR);
+	SDL_RWread(opened, (void*)thunder_map, sizeof(char), THUNDER_SIZE / sizeof(char));
+	map_rw = SDL_RWFromMem((void*)thunder_map, sizeof(thunder_map));
+	if (doom->menu != NULL)
+		doom->menu->thunder = IMG_LoadXPM_RW(map_rw);
+	if (!doom->menu->thunder)
+	{
+		printf("IMG_LoadXPM_RW: %s\n", IMG_GetError());
+		ft_die("Fatal error loading thunder XPM!");
+	}
+	SDL_FreeRW(map_rw);
+	SDL_RWclose(opened);
+
+	// Converting surfaces to ARGB8888 format
 	fmt = SDL_AllocFormat(SDL_PIXELFORMAT_ARGB8888);
 	conv = SDL_ConvertSurface(test, fmt, 0);
 	SDL_FreeSurface(test);
-	SDL_FreeFormat(fmt);
 	doom->font_atlas = conv;
+	conv = SDL_ConvertSurface(doom->menu->thunder, fmt, 0);
+	SDL_FreeSurface(doom->menu->thunder);
+	doom->menu->thunder = conv;
+	SDL_FreeFormat(fmt);
 }
 
 // TODO REMOVE AND EXTRACT PROOF OF CONCEPT IDEAS INTO FRESH WRITTEN NEW FUNCTION

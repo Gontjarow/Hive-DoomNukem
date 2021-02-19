@@ -13,7 +13,6 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define 				WAV_STEAM0 "wav/steam/0.wav"
 # define 				WAV_SWORD "wav/sword.wav"
 # define				WAV_THUNDER "wav/thunder.wav"
-# define 				IMG_THUNDER0 "img/thunder/0.png"
 # define				WAV_PISTOLRLD "wav/pistolreload.wav" 
 # define				WAV_ASSAULTRLD "wav/assaultreload.wav"
 # define				WAV_SMGRLD "wav/smgreload.wav"
