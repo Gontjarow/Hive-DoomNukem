@@ -12,9 +12,11 @@
 
 #include "doom-nukem.h"
 
-// Surf refers to WHAT you want to draw
-// Buff refers to WHERE you want to draw it TO
-// X, Y refer to the X, Y location of the BUFF surface
+/* Surf refers to WHAT you want to draw
+ * Buff refers to WHERE you want to draw it TO
+ * X, Y refer to the X, Y location of the BUFF surface
+ * */
+
 void		draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
 	int *pix[2];

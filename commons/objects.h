@@ -23,24 +23,24 @@
 # define ALPHABET_GRID_W 10
 # define ALPHABET_A_INDEX 33
 
-enum	e_enemy_aggro { INACTIVE, ACTIVE };
-enum	e_enemy_type { RANGED, MELEE, BOSS };
-enum 	e_sprite_orient { FRONT, LEFT, RIGHT, BACK };
-enum	e_sprite_state { DEATH, IDLE, MOVE, ATTACK, HURT };
-enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
-enum	e_enemy_points { FRONTLEFT, FRONTRIGHT, BACKLEFT, BACKRIGHT };
+enum					e_enemy_aggro { INACTIVE, ACTIVE };
+enum					e_enemy_type { RANGED, MELEE, BOSS };
+enum 					e_sprite_orient { FRONT, LEFT, RIGHT, BACK };
+enum					e_sprite_state { DEATH, IDLE, MOVE, ATTACK, HURT };
+enum   				 	e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
+enum					e_enemy_points { FRONTLEFT, FRONTRIGHT, BACKLEFT, BACKRIGHT };
 
 typedef struct			s_xy t_xy;
 typedef struct 			s_doom t_doom;
 typedef struct 			s_model t_model;
 
-typedef struct	t_argb
+typedef struct			t_argb
 {
-	unsigned char a;
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
-}				t_argb;
+	unsigned char 		a;
+	unsigned char 		r;
+	unsigned char 		g;
+	unsigned char 		b;
+}						t_argb;
 
 typedef struct 			s_point
 {
@@ -300,7 +300,7 @@ typedef struct			s_menu
 	int 				alphabet_scale;
 	int                 update_argc_argv;
 	char                *added_arg;
-	SDL_Surface			*thunder;
+	SDL_Surface			*thunder[10];
 	struct s_doom		*parent;
 }						t_menu;
 
@@ -348,6 +348,8 @@ int						table_index(char c);
  * from debug_console.c
  * */
 
+void					ft_assert(int eval, const char *error_message);
+void					ft_die(const char *error_message);
 void 					debug_model_player(void);
 void		 			debug_model_enemies(void);
 void 					debug_model_walls(void);
@@ -426,5 +428,12 @@ int						load_appended_map(t_doom *doom);
  * */
 
 void					copy_from_atlas(int x, int y, SDL_Surface *atlas, SDL_Surface *buff);
+
+/*
+ * from doom_setup.c
+ * */
+
+void					init_doom(t_doom *doom, char *exec_name);
+int						destroy_doom_and_quit(t_doom *doom);
 
 #endif

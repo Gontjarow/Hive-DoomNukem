@@ -61,6 +61,7 @@ endif
 
 $(NAME): $(LIBFT_PATH)/libft.a $(OBJECTS)
 	@gcc $(OBJECTS) -o $(NAME) $(FLAGS)
+	@./append_script.sh
 	@echo "$(MSG)Done! (Shell: $(SHELL_NAME))$(END)"
 
 prod: $(LIBFT_PATH)/libft.a $(OBJECTS)

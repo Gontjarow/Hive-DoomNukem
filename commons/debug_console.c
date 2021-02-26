@@ -1,6 +1,21 @@
 #include "doom-nukem.h"
 #include <stdio.h>
 
+void	ft_die(const char *error_message)
+{
+	ft_putendl(error_message);
+	exit(0);
+}
+
+void	ft_assert(int eval, const char *error_message)
+{
+	if (eval == 0)
+	{
+		ft_putendl(error_message);
+		exit(0);
+	}
+}
+
 void 	debug_model_player(void)
 {
 	t_model	*mdl;

@@ -12,12 +12,27 @@
 
 #include "doom-nukem.h"
 
+static void    render_black_under_text(t_doom *doom)
+{
+	unsigned int	*pixels;
+	int 			i;
+	int 			cutoff;
+
+	i = 0;
+	pixels = doom->buff->pixels;
+	cutoff = (256 + 100) * WIN_WIDTH;
+	i += cutoff;
+	while (i < (1024 * 512))
+		pixels[i++] = 0xff000000;
+}
+
 static void	render_menu(t_menu *menu)
 {
     int selection_offset;
 
     selection_offset = 0;
-    //render_animation(menu->parent);
+    render_animation(menu->parent);
+    render_black_under_text(menu->parent);
     menu->alphabet_scale = 2;
     print_alphabet("doomed", menu->parent, 310, 24);
     menu->alphabet_scale = 1;
@@ -51,23 +66,9 @@ void 		init_menu(t_doom *doom)
     doom->menu->update_argc_argv = 0;
     doom->menu->added_arg = NULL;
     doom->menu->parent = doom;
-    doom->menu->thunder = NULL;
-    if (doom->menu->thunder)
-    {
-        i = 0;
-        k = 0;
-        pixels = doom->buff->pixels;
-        if (doom->menu->thunder->w > WIN_WIDTH || doom->menu->thunder->h > WIN_HEIGHT)
-            ft_die("Fatal error: Too large sized texture loaded to display on window at init_menu.");
-        reference = doom->menu->thunder->pixels;
-        j = (WIN_WIDTH - doom->menu->thunder->w) / 2 + ((WIN_HEIGHT - doom->menu->thunder->h) / 2 * WIN_WIDTH);
-        while (k < (doom->menu->thunder->w * doom->menu->thunder->h))
-        {
-            j = i == doom->menu->thunder->w ? j + WIN_WIDTH : j;
-            i = i == doom->menu->thunder->w ? 0 : i;
-            pixels[i++ + j] = reference[k++];
-        }
-    }
+    i = 0;
+    while (i < 10)
+    	doom->menu->thunder[i++] = NULL;
     load_alphabet_atlas(doom->menu);
     load_animation(doom->menu);
     Mix_PlayChannel( -1, doom->sounds->mcThunder, 0);
@@ -77,17 +78,20 @@ void 		destroy_menu(t_doom *doom)
 {
     int i;
 
+	i = 10;
+	while (i--)
+	{
+		if (doom->menu->thunder[i] != NULL)
+			SDL_FreeSurface(doom->menu->thunder[i]);
+		doom->menu->thunder[i] = NULL;
+	}
     i = doom->menu->ani_thunder.frames;
     while (i--)
-    {
-        SDL_FreeSurface(doom->menu->ani_thunder.surfaces[i]);
         doom->menu->ani_thunder.surfaces[i] = NULL;
-    }
     if (doom->menu->added_arg)
         free(doom->menu->added_arg);
     free(doom->menu->ani_thunder.surfaces);
     doom->menu->ani_thunder.surfaces = NULL;
-    SDL_FreeSurface(doom->menu->thunder);
     destroy_alphabet(doom->menu);
     free(doom->menu);
     doom->menu = NULL;
@@ -126,8 +130,6 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
     doom->menu_out_of_focus = 1;
     load_model(doom);
     doom->game->world = load_world(get_world());
-    // PLAYER X, Y IN MODEL IS -1 AND -1, CAUSING MINIMAP LINE OFF BUFFER?
-    //printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
     if (DEBUG == 1)
     {
 		init_minimap(doom);
@@ -179,60 +181,24 @@ static void select_if_mousing_at(t_doom *doom, int argc, char **argv)
         quit_program_from_menu(doom);
 }
 
-void    render_animation(t_doom *doom)
+void 	render_animation(t_doom *doom)
 {
-    unsigned int	*pixels;
-    unsigned int 	*reference;
-    SDL_Surface     *ani_surface;
-    int 			i;
-    int 			j;
-    int 			k;
-    int 			cutoff;
-
-    pixels = doom->buff->pixels;
-    if (doom->menu->ani_thunder.current == 10)
-        doom->menu->ani_thunder.current = 0;
-    ani_surface = doom->menu->ani_thunder.surfaces[doom->menu->ani_thunder.current];
-    i = 0;
-    k = 0;
-    reference = ani_surface->pixels;
-    j = (WIN_WIDTH - ani_surface->w) / 2 + ((WIN_HEIGHT - ani_surface->h) / 2 * WIN_WIDTH);
-    cutoff = 20 * WIN_WIDTH;
-    j += cutoff;
-    while (k < ((ani_surface->w * ani_surface->h) - cutoff))
-    {
-        j = i == ani_surface->w ? j + WIN_WIDTH : j;
-        i = i == ani_surface->w ? 0 : i;
-        pixels[i++ + j] = reference[k++];
-    }
+	draw_surface(0,100,doom->menu->ani_thunder.surfaces[doom->menu->ani_thunder.current], doom->buff);
 }
 
 void		load_animation(t_menu *menu)
 {
 	int i;
-	char *path;
-	char *join;
 
-	i = 0;
-	menu->ani_thunder.frames = 11;
+	menu->ani_thunder.frames = 10;
 	menu->ani_thunder.current = 0;
 	menu->ani_thunder.surfaces = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * menu->ani_thunder.frames);
 	if (menu->ani_thunder.surfaces == NULL)
 		ft_die("Fatal error: Could not malloc SDL_Surfaces in menu->ani_thunder.");
+	i = 0;
 	while (i < menu->ani_thunder.frames)
 	{
-		join = ft_itoa(i);
-		path = ft_strjoin("img/thunder/", join);
-		free(join);
-		join = path;
-		path = ft_strjoin(path, ".png");
-		free(join);
-		if (!(menu->ani_thunder.surfaces[i] = (SDL_Surface*)malloc(sizeof(SDL_Surface))))
-			ft_die("Fatal error: Could not malloc SDL_Surface in menu->ani_thunder->surfaces.");
-		menu->ani_thunder.surfaces[i] = load_texture(menu->parent, path);
-		free(path);
-		if (menu->ani_thunder.surfaces[i] == NULL)
-			ft_die("Fatal error: Could not load_texture for menu->ani_thunder->surfaces.");
+		menu->ani_thunder.surfaces[i] = menu->thunder[i];
 		i++;
 	}
 }
@@ -246,7 +212,7 @@ static void cycle_animation(t_doom *doom)
 
 void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 {
-    static int cycle_repeat_lock = 0;
+    static int cycle_repeat_lock = 16;
 
     if (cycle_repeat_lock)
         cycle_repeat_lock--;
@@ -343,7 +309,7 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 	}
 }
 
-void		main_menu_loop(t_doom *doom, int argc, char **argv)
+void		menu_render(t_doom *doom, int argc, char **argv)
 {
 	static int key_repeat_lock = 0;
 	static int cycle_repeat_lock = 0;
@@ -352,7 +318,7 @@ void		main_menu_loop(t_doom *doom, int argc, char **argv)
 	    cycle_repeat_lock--;
 	if (!cycle_repeat_lock)
     {
-	    //cycle_animation(doom);
+	    cycle_animation(doom);
 	    cycle_repeat_lock = ((int)doom->fps >> 4);
     }
 	if (doom->menu_out_of_focus)

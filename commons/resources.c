@@ -5,7 +5,7 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/11 13:14:13 by krusthol          #+#    #+#             */
+/*   Created: 2021/02/11 13:14:13 by krusthol          #+#    #+#             */
 /*   Updated: 2021/02/11 13:20:30 by krusthol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -19,13 +19,9 @@
 // 	Editor will have ways to preview and look at these texture resources
 
 # define EXECUTABLE_NAME "doom-nukem"
-// TODO CHANGE FROM DEFINES TO DYNAMIC IN EXECUTABLE NAME MAKE DOOM->EXEC_NAME FROM ARGV[0]
-# define OFFSET 10645720
+# define OFFSET	11000000
 # define ATLAS_SIZE 65102
-# define THUNDER_SIZE 1060469
-# define TOTAL_SIZE 11771291
-// TODO FIX TO DYNAMIC OFFSET INSTEAD OF LS -LA HANDCALCULATED ONE
-// TODO FIX TO MEMORYMAPPED AREAS OF FILE WITH PREDEFINED BYTE SIZES
+# define THUNDER_SIZE 540000
 
 void 		load_resources(t_model *mdl)
 {
@@ -34,61 +30,83 @@ void 		load_resources(t_model *mdl)
 		//puts("Resources are uninitialized, can load resources!");
 }
 
-int 		load_appended_atlas(t_doom *doom)
+void 		convert_thunder_frame(int i, SDL_PixelFormat *fmt, t_doom *doom)
 {
-	// TODO FILL OUT LOAD_APPENDED WITH AUTOMATIC LOADING OF ATLAS XPM FONT RESOURCE AFTER THE OFFSET BYTE
-	SDL_Surface		*test;
+	SDL_Surface		*conv;
+
+	conv = SDL_ConvertSurface(doom->menu->thunder[i], fmt, 0);
+	SDL_FreeSurface(doom->menu->thunder[i]);
+	doom->menu->thunder[i] = conv;
+}
+
+void 				load_thunder_frame(int i, SDL_RWops *opened, t_doom *doom)
+{
+	char 			*thunder_map;
+	SDL_RWops		*map_rw;
+	int 			seeks;
+
+	seeks = 0;
+	SDL_RWseek(opened, OFFSET, RW_SEEK_SET);
+	SDL_RWseek(opened, ATLAS_SIZE, RW_SEEK_CUR);
+	while (seeks++ < i)
+		SDL_RWseek(opened, THUNDER_SIZE, RW_SEEK_CUR);
+	thunder_map = (char*)malloc(sizeof(char)*THUNDER_SIZE);
+	if (!thunder_map)
+		ft_die("Fatal error: Could not malloc at load_appended_atlas.");
+	SDL_RWread(opened, (void*)thunder_map, sizeof(char), THUNDER_SIZE / sizeof(char));
+	map_rw = SDL_RWFromMem((void*)thunder_map, THUNDER_SIZE);
+	if (doom->menu != NULL)
+		doom->menu->thunder[i] = IMG_LoadXPM_RW(map_rw);
+	if (!doom->menu->thunder)
+		ft_die("Fatal error loading bundled thunder_frame XPM file! Incorrect offset or missing appendment!");
+	SDL_FreeRW(map_rw);
+	free(thunder_map);
+}
+
+static SDL_Surface 	*load_bundled_atlas(SDL_RWops *opened, t_doom *doom)
+{
+	SDL_Surface		*bundled_atlas;
+	char			atlas_map[ATLAS_SIZE];
+	SDL_RWops		*map_rw;
+
+	SDL_RWseek(opened, OFFSET, RW_SEEK_SET);
+	SDL_RWread(opened, (void*)atlas_map, sizeof(char), ATLAS_SIZE / sizeof(char));
+	map_rw = SDL_RWFromMem((void*)atlas_map, sizeof(atlas_map));
+	bundled_atlas = IMG_LoadXPM_RW(map_rw);
+	if (!bundled_atlas)
+		ft_die("Fatal error loading bundled robocop_font XPM file! Incorrect offset or missing appendment!");
+	SDL_FreeRW(map_rw);
+	return (bundled_atlas);
+}
+
+int 				load_appended_atlas(t_doom *doom)
+{
+	SDL_Surface		*bundled_atlas;
 	SDL_Surface		*conv;
 	SDL_PixelFormat	*fmt;
 	SDL_RWops		*opened;
-	SDL_RWops		*map_rw;
-	char			atlas_map[ATLAS_SIZE];
-	char 			thunder_map[THUNDER_SIZE];
+	int 			i;
 
-	// LOADING FONT ATLAS WITH SDL RWOPS METHOD
 	opened = SDL_RWFromFile(EXECUTABLE_NAME, "rb");
 	if (!opened)
 		ft_putendl("Warning: Failed to create RWFromFile!");
-	SDL_RWseek(opened, OFFSET, RW_SEEK_SET);
-	SDL_RWread(opened, (void*)atlas_map, sizeof(char), ATLAS_SIZE / sizeof(char));
-	//test = IMG_Load(&atlas_map);
-	map_rw = SDL_RWFromMem((void*)atlas_map, sizeof(atlas_map));
-	//SDL_RWseek(opened, ATLAS_SIZE, RW_SEEK_END);
-	test = IMG_LoadXPM_RW(map_rw);
-	if (!test)
-	{
-		printf("IMG_LoadXPM_RW: %s\n", IMG_GetError());
-		ft_die("Fatal error loading atlas XPM!");
-	}
-	SDL_FreeRW(map_rw);
-
-	// LOADING THUNDER WITH THE SAME METHOD
-	SDL_RWseek(opened, OFFSET, RW_SEEK_SET);
-	SDL_RWseek(opened, ATLAS_SIZE, RW_SEEK_CUR);
-	SDL_RWread(opened, (void*)thunder_map, sizeof(char), THUNDER_SIZE / sizeof(char));
-	map_rw = SDL_RWFromMem((void*)thunder_map, sizeof(thunder_map));
-	if (doom->menu != NULL)
-		doom->menu->thunder = IMG_LoadXPM_RW(map_rw);
-	if (!doom->menu->thunder)
-	{
-		printf("IMG_LoadXPM_RW: %s\n", IMG_GetError());
-		ft_die("Fatal error loading thunder XPM!");
-	}
-	SDL_FreeRW(map_rw);
+	bundled_atlas = load_bundled_atlas(opened, doom);
+	i = 0;
+	while (i < 10)
+		load_thunder_frame(i++, opened, doom);
 	SDL_RWclose(opened);
-
-	// Converting surfaces to ARGB8888 format
 	fmt = SDL_AllocFormat(SDL_PIXELFORMAT_ARGB8888);
-	conv = SDL_ConvertSurface(test, fmt, 0);
-	SDL_FreeSurface(test);
+	conv = SDL_ConvertSurface(bundled_atlas, fmt, 0);
+	SDL_FreeSurface(bundled_atlas);
 	doom->font_atlas = conv;
-	conv = SDL_ConvertSurface(doom->menu->thunder, fmt, 0);
-	SDL_FreeSurface(doom->menu->thunder);
-	doom->menu->thunder = conv;
+	i = 0;
+	while (i < 10)
+		convert_thunder_frame(i++, fmt, doom);
 	SDL_FreeFormat(fmt);
 }
 
-// TODO REMOVE AND EXTRACT PROOF OF CONCEPT IDEAS INTO FRESH WRITTEN NEW FUNCTION
+// This was used as an experimental feature but it taught me how to do bundling of assets to binary -krusthol
+// Set to return (0) by default to bypass any usages for now.
 int			load_appended_map(t_doom *doom)
 {
 	int		opened;
@@ -96,9 +114,10 @@ int			load_appended_map(t_doom *doom)
 	char	*line;
 	char 	*join;
 
+	return (0);
 	if (doom->map == NULL)
 		doom->map = init_mapfile();
-	opened = open(EXECUTABLE_NAME, O_RDONLY);
+	opened = open(doom->exec_name, O_RDONLY);
 	line = NULL;
 	if (opened > 1)
 	{
