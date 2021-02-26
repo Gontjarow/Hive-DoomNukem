@@ -23,4 +23,8 @@ if [ "$difference" -gt "$zero" ]; then
   cat img/thunder/7.xpm >> doom-nukem
   cat img/thunder/8.xpm >> doom-nukem
   cat img/thunder/9.xpm >> doom-nukem
+  cat wav/steam/0.wav >> doom-nukem
+  cat wav/thunder.wav >> doom-nukem
+  cat wav/sword.wav >> doom-nukem
+  cat wav/plop.wav >> doom-nukem
 fi
