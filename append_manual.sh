@@ -1,11 +1,14 @@
 #!/bin/sh
+envos=`uname -s`
 binsize=`ls -la doom-nukem | awk '{print $5}'`
 targetsize=11000000
 difference="$(($targetsize-$binsize))"
 zero=0
 if [ "$difference" -gt "$zero" ]; then
   echo "Appending to binary!"
-  truncate -s +$difference doom-nukem
+  $filemaker -n $difference padfile
+  cat padfile >> doom-nukem
+  rm padfile
   cat img/robo/robo_atlas.xpm >> doom-nukem
   cat img/thunder/0.xpm >> doom-nukem
   cat img/thunder/1.xpm >> doom-nukem
