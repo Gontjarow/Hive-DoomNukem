@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/11 19:53:38 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/20 20:52:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ void	load_sounds(t_doom *doom)
 		ft_die("Fatal error: SDL_mixer failed to load WAV_AMMOPICKUP!");
 	if (!(doom->sounds->mcWeaponPickup = Mix_LoadWAV(WAV_WEAPONPICKUP)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_WEAPONPICKUP!");
+	if (!(doom->sounds->mcLoading = Mix_LoadWAV(WAV_LOADINGSONG)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_LOADINGSONG!");
+	if (!(doom->sounds->mcBoss = Mix_LoadWAV(WAV_BOSS)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_BOSS!");
+	if (!(doom->sounds->mcBackground = Mix_LoadWAV(WAV_BACKGROUND)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_BACKGROUND!");
 	doom->sounds->footstep_delay = 0;
 }
 
@@ -71,6 +77,10 @@ void	destroy_sounds(t_doom *doom)
 	Mix_FreeChunk(doom->sounds->mcEnemyDeath);
 	Mix_FreeChunk(doom->sounds->mcHealthPickup);
 	Mix_FreeChunk(doom->sounds->mcAmmoPickup);
+	Mix_FreeChunk(doom->sounds->mcWeaponPickup);
+	Mix_FreeChunk(doom->sounds->mcBoss);
+	Mix_FreeChunk(doom->sounds->mcBackground);
+	Mix_FreeChunk(doom->sounds->mcLoading);
 	doom->sounds->mcThunder = NULL;
 	doom->sounds->mcSteam = NULL;
 	doom->sounds->mcPlop = NULL;
