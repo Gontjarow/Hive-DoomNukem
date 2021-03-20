@@ -64,6 +64,36 @@ static void		link_mdl_rooms(t_model *mdl)
     }
 }
 
+static void print_map_strings(t_mapfile *map)
+{
+	if (map->wall_string)
+		ft_putendl(map->wall_string);
+	if (map->room_string)
+		ft_putendl(map->room_string);
+	if (map->portal_string)
+		ft_putendl(map->portal_string);
+	if (map->enemy_string)
+		ft_putendl(map->enemy_string);
+	if (map->pickup_string)
+		ft_putendl(map->pickup_string);
+	if (map->effect_string)
+		ft_putendl(map->effect_string);
+	if (map->player_string)
+		ft_putendl(map->player_string);
+	if (map->chain_string)
+		ft_putendl(map->chain_string);
+	ft_putendl("Printed all map strings!");
+}
+
+static void create_model_appended(t_doom *doom)
+{
+	ft_putendl("Loaded appended mapfile data!");
+	print_map_strings(doom->map);
+	map_to_model(doom->map, doom->mdl);
+	link_mdl_rooms(doom->mdl);
+	expand_mdl_polygon_maps(doom->mdl);
+}
+
 static void	create_data_model(t_doom *doom, char *map_file_path)
 {
 	ft_putstr("Loaded mapfile data from file: ");
@@ -78,17 +108,16 @@ int			load_model(t_doom *doom)
 	init_model(doom);
 	if (!doom->edt_quit)
 	{
-			//ft_putendl("Load_model initiated with the editor loading.");
 		if (!doom->edt->map_supplied)
 		{
-				//ft_putendl("Skipped load_model, no map was supplied");
+//			if (!load_appended(doom))
+//				ft_putendl("Failed to load appended map file, tried because no map was supplied as argument.");
+//			else
+//				create_model_appended(doom);
 			return (1);
 		}
-		if (!stringify_mapfile(doom, doom->edt->map_path))
-		{
-				//ft_putendl("Warning: Failed to read mapfile, no model was loaded.");
-			return (1);
-		}
+		else if (!stringify_mapfile(doom, doom->edt->map_path))
+			return (0);
 		create_data_model(doom, doom->edt->map_path);
 	}
 	else if (!doom->game_quit)

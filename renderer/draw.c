@@ -52,7 +52,7 @@ void			vertical_line(int column, int start, int end, int color)
 	}
 }
 
-static unsigned	texture_pixel(SDL_Surface *tex, int x, int y)
+static unsigned	texture_pixel_debug(SDL_Surface *tex, int x, int y)
 {
 	unsigned	*sprite;
 	unsigned	pixel;
@@ -61,7 +61,22 @@ static unsigned	texture_pixel(SDL_Surface *tex, int x, int y)
 	sprite = tex->pixels;
 	pixel = tex->w * y + x;
 	size = tex->w * tex->h;
-	if ((pixel < size) && ((sprite[pixel] >> 24) != BYTE_TRANSPARENT))
+	if ((pixel < size))
+		return(sprite[pixel]);
+	else
+		return (COLOR_TRANSPARENT);
+}
+
+static uint32_t	texture_pixel(SDL_Surface *tex, int x, int y)
+{
+	uint32_t	*sprite;
+	uint32_t	pixel;
+	uint32_t	size;
+
+	sprite = (uint32_t*)tex->pixels;
+	pixel = tex->w * y + x;
+	size = tex->w * tex->h;
+	if ((pixel < size))
 		return(sprite[pixel]);
 	else
 		return (COLOR_TRANSPARENT);
@@ -139,6 +154,32 @@ void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex
 
 void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
 {
+	uint32_t	*pixels;
+	uint32_t	color;
+	double		y_step;
+	double		tex_y;
+
+	tex_y = 0;
+	y_step = (double)enemy->active_sprite->h / (range.y - range.x);
+	if (range.x < 0)
+	{
+		tex_y += y_step * -range.x;
+		range.x = 0;
+	}
+	pixels = (uint32_t*)doom_ptr()->game->buff->pixels;
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
+		//if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
+		if (color != COLOR_TRANSPARENT && color >> 24 != 0x00)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+		tex_y += y_step;
+		range.x++;
+	}
+}
+
+static void			vertical_sprite_debug(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
+{
 	unsigned	*pixels;
 	unsigned	color;
 	double		y_step;
@@ -155,6 +196,7 @@ void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
 		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
+		//if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
 		if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
 			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
 		tex_y += y_step;

@@ -51,7 +51,7 @@ static void draw_surface_with_alpha_blurred(int x, int y, SDL_Surface *surf, SDL
 		{
 			if (cel_shade)
 			{
-				if (pix[1][iter] >> 6 >= 0xff)
+				if (pix[1][iter] >> 24 >= 0xff)
 					pix[0][(y * buff->w) + x] = blend_argb_ratio(pix[1][iter], pix[0][(y * buff->w) + x], ratio - 0.15);
 				cel_shade--;
 				if (ratio == 0.48)
@@ -65,7 +65,7 @@ static void draw_surface_with_alpha_blurred(int x, int y, SDL_Surface *surf, SDL
 			{
 				double modi = -0.35;
 				int		dist = 1;
-				if ((pix[1][iter] >> 6) >= 0xff && ratio == 0.0)
+				if ((pix[1][iter] >> 24) >= 0xff && ratio == 0.0)
 				{
 					cel_shade = 1;
 					ratio = 0.5;
@@ -83,7 +83,7 @@ static void draw_surface_with_alpha_blurred(int x, int y, SDL_Surface *surf, SDL
 					//puts("shading end");
 					continue ;
 				}
-				if ((pix[1][iter] >> 6) >= 0xff) {
+				if ((pix[1][iter] >> 24) >= 0xff) {
 					pix[0][(y * buff->w) + x++] = pix[1][iter++];
 					//iter++;
 					//x++;
@@ -126,7 +126,7 @@ static void draw_surface_with_alpha_cel_shaded_black(int x, int y, SDL_Surface *
 		{
 			if (cel_shade)
 			{
-				if (pix[1][iter] >> 6 >= 0xff)
+				if (pix[1][iter] >> 24 >= 0xff)
 					pix[0][(y * buff->w) + x] = 0xff000000;
 				cel_shade--;
 				if (ratio == 0.48)
@@ -138,21 +138,21 @@ static void draw_surface_with_alpha_cel_shaded_black(int x, int y, SDL_Surface *
 			}
 			else
 			{
-				if ((pix[1][iter] >> 6) >= 0xff && ratio == 0.0)
+				if ((pix[1][iter] >> 24) >= 0xff && ratio == 0.0)
 				{
 					cel_shade = 1;
 					ratio = 0.5;
 					pix[0][(y * buff->w) + x - 1] = 0xff000000;
 					continue ;
 				}
-				if (x < limit_x - 3 && pix[1][iter + 1] >> 6 == 0x00 && ratio == 0.72)
+				if (x < limit_x - 3 && pix[1][iter + 1] >> 24 == 0x00 && ratio == 0.72)
 				{
 					cel_shade = 1;
 					ratio = 0.48;
 					pix[0][(y * buff->w) + x + 1] = 0xff000000;
 					continue ;
 				}
-				if ((pix[1][iter] >> 6) >= 0xff) {
+				if ((pix[1][iter] >> 24) >= 0xff) {
 					pix[0][(y * buff->w) + x++] = pix[1][iter++];
 				}
 				else
@@ -170,7 +170,7 @@ static void draw_surface_with_alpha_cel_shaded_black(int x, int y, SDL_Surface *
 
 static void draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
-	int *pix[2];
+	uint32_t *pix[2];
 	int i;
 	int iter;
 	int limit_x;
@@ -184,8 +184,8 @@ static void draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, 
 	i = x;
 	limit_x = x + surf->w;
 	limit_total = surf->w * surf->h;
-	pix[0] = (int*)buff->pixels;
-	pix[1] = (int*)surf->pixels;
+	pix[0] = (uint32_t*)buff->pixels;
+	pix[1] = (uint32_t*)surf->pixels;
 	while (iter < limit_total)
 	{
 		x = i;
@@ -195,7 +195,7 @@ static void draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, 
 			{
 				uint32_t new;
 				new = invert_color(pix[0][(y * buff->w) + x]);
-				if (pix[1][iter] >> 6 >= 0xff)
+				if (pix[1][iter] >> 24 != 0xff)
 					pix[0][(y * buff->w) + x] = blend_argb_ratio(new, pix[0][(y * buff->w) + x], 0.25);
 				cel_shade--;
 				if (ratio == 0.48)
@@ -207,7 +207,7 @@ static void draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, 
 			}
 			else
 			{
-				if ((pix[1][iter] >> 6) >= 0xff && ratio == 0.0)
+				if ((pix[1][iter] >> 24) != 0xff && ratio == 0.0)
 				{
 					cel_shade = 1;
 					ratio = 0.5;
@@ -218,7 +218,7 @@ static void draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, 
 					pix[0][(y * buff->w) + x - 2] = blend_argb_ratio(new, pix[0][(y * buff->w) + x - 2], 0.75);
 					continue ;
 				}
-				if (x < limit_x - 3 && pix[1][iter + 1] >> 6 == 0x00 && ratio == 0.72)
+				if (x < limit_x - 3 && pix[1][iter + 1] >> 24 == 0x00 && ratio == 0.72)
 				{
 					cel_shade = 1;
 					ratio = 0.48;
@@ -229,7 +229,7 @@ static void draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, 
 					pix[0][(y * buff->w) + x + 2] = blend_argb_ratio(new, pix[0][(y * buff->w) + x + 2], 0.75);
 					continue ;
 				}
-				if ((pix[1][iter] >> 6) >= 0xff) {
+				if ((pix[1][iter] >> 24) != 0xff) {
 					pix[0][(y * buff->w) + x++] = pix[1][iter++];
 				}
 				else
@@ -270,7 +270,7 @@ static void draw_surface_with_alpha_silhouette(int x, int y, SDL_Surface *surf, 
 		{
 			if (cel_shade)
 			{
-				if (pix[1][iter] >> 6 >= 0xff)
+				if (pix[1][iter] >> 24 >= 0xff)
 					pix[0][(y * buff->w) + x] = blend_argb_ratio(pix[1][iter], pix[0][(y * buff->w) + x], ratio);
 				cel_shade--;
 				if (ratio == 0.72)
@@ -286,21 +286,21 @@ static void draw_surface_with_alpha_silhouette(int x, int y, SDL_Surface *surf, 
 			}
 			else
 			{
-				if ((pix[1][iter] >> 6) >= 0xff && ratio == 0.0)
+				if ((pix[1][iter] >> 24) >= 0xff && ratio == 0.0)
 				{
 					cel_shade = 2;
 					ratio = 0.5;
 					//puts("shading begin");
 					continue ;
 				}
-				if (x < limit_x - 3 && pix[1][iter + 3] >> 6 == 0x00 && ratio == 0.72)
+				if (x < limit_x - 3 && pix[1][iter + 3] >> 24 == 0x00 && ratio == 0.72)
 				{
 					cel_shade = 2;
 					ratio = 0.48;
 					//puts("shading end");
 					continue ;
 				}
-				if ((pix[1][iter] >> 6) >= 0xff) {
+				if ((pix[1][iter] >> 24) >= 0xff) {
 					pix[0][(y * buff->w) + x++] = pix[1][iter++];
 					//iter++;
 					//x++;
@@ -319,7 +319,7 @@ static void draw_surface_with_alpha_silhouette(int x, int y, SDL_Surface *surf, 
 }
 static void draw_surface_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
-	int *pix[2];
+	uint32_t *pix[2];
 	int i;
 	int iter;
 	int limit_x;
@@ -329,14 +329,14 @@ static void draw_surface_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surfa
 	i = x;
 	limit_x = x + surf->w;
 	limit_total = surf->w * surf->h;
-	pix[0] = (int*)buff->pixels;
-	pix[1] = (int*)surf->pixels;
+	pix[0] = (uint32_t*)buff->pixels;
+	pix[1] = (uint32_t*)surf->pixels;
 	while (iter < limit_total)
 	{
 		x = i;
 		while (x < limit_x)
 		{
-			if ((pix[1][iter]) >> 6 < 0xff)
+			if ((pix[1][iter]) >> 24 != 0xff)
 			{
 				iter++;
 				x++;
@@ -374,11 +374,11 @@ void		handle_player_ammo_bar(t_doom *doom)
 		if (doom->mdl->player.reload_time == 0)
 		{
 			if (doom->mdl->player.weap_id == 0)
-				draw_surface_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_pistol_ammo_bar, doom->game->hud_location);
+				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_pistol_ammo_bar, doom->game->hud_location);
 			else if (doom->mdl->player.weap_id == 1)
-				draw_surface_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_smg_ammo_bar, doom->game->hud_location);
+				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_smg_ammo_bar, doom->game->hud_location);
 			else if (doom->mdl->player.weap_id == 2)
-				draw_surface_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_assault_ammo_bar, doom->game->hud_location);
+				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_assault_ammo_bar, doom->game->hud_location);
 			space -= 10;
 		}
 		i++;
@@ -396,7 +396,7 @@ void		handle_clip_bar(t_doom *doom)
 	i = 0;
 	while (i < clips)
 	{
-		draw_surface_ignore_alpha((WIN_WIDTH - 20) + space, WIN_HEIGHT - 80, doom->sprites->txt_clip_bar, doom->game->hud_location);
+		draw_surface((WIN_WIDTH - 20) + space, WIN_HEIGHT - 80, doom->sprites->txt_clip_bar, doom->game->hud_location);
 		space -= 20;
 		i++;
 	}

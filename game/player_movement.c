@@ -97,7 +97,7 @@ static void		apply_gravity(t_doom *doom)
 	}
 	else if ((int)doom->mdl->player.z > doom->mdl->player.room->roof_height)
 	{
-		puts("hit the roof with the head");
+			//puts("hit the roof with the head");
 		doom->mdl->player.z = doom->mdl->player.room->roof_height;
 		doom->mdl->player.z_velocity = 0.0;
 	}
