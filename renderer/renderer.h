@@ -11,10 +11,13 @@
 # define T_DIR 0.0
 # define T_POS 1.0
 
-# define NEAR_PLANE -1.0
+# define NEAR_PLANE -0.01
 # define EYE_HEIGHT 6
 # define WORLD_SCALE 10
 # define MAX_SECTOR_QUEUE 32
+
+// For sector rendering
+# define NO_NEIGHBOR -1
 
 // For sprite drawing
 # define SPRITE_SCALE 2.5
@@ -134,9 +137,17 @@ typedef struct	s_world
 	t_camera	player;
 }				t_world;
 
+typedef struct	s_queue
+{
+	t_section	array[MAX_SECTOR_QUEUE];
+	t_section	*front;
+	t_section	*rear;
+}				t_queue;
+
 double			*get_zbuffer();
 t_world			*get_world();
-SDL_Surface		*get_bricks(t_doom *doom);
+SDL_Surface		*get_bricks_tex(t_doom *doom);
+SDL_Surface		*get_border_tex(t_doom *doom);
 t_world			*load_world(t_world *world);
 
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
@@ -144,11 +155,16 @@ void			drawline(t_xy_line line, SDL_Surface *surface);
 void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
 void			vertical_line(int column, int start, int end, int color);
 void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex);
+void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom);
 void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range);
 
 void			render_frame(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot);
 void			render_enemies(t_doom *doom);
+
+t_queue			*get_queue();
+void			queue_add(int id, int left, int right);
+void			queue_pop();
 
 /*
 ** Math is fun, okay? ⤵️
@@ -209,6 +225,7 @@ double			vec2_project_to_hypotenuse(t_xy adjescent, t_xy hypotenuse);
 double			vec2_point_line_distance(t_xy point, t_xy pos, t_xy dir);
 t_xy			vec2_point_to_line(t_xy point, t_xy line, t_xy dir);
 signed			vec2_point_side(t_xy point, t_xy start, t_xy end);
+t_xy			vec2_lerp(t_xy start, t_xy stop, double t);
 
 t_xy_line		line(double ax, double ay, double bx, double by);
 t_xy_line		line_xy(t_xy start, t_xy stop, int color);
@@ -223,6 +240,7 @@ t_xy_line		line_rot(t_xy_line line, double angle);
 t_xy			line_norm(t_xy_line line);
 double			line_mag(t_xy_line line);
 void			clip_line(t_xy_line in, t_xy_line *out, t_xy_line plane);
+t_xy			line_lerp(t_xy_line line, double t);
 
 t_xy_line		*set_clip_bounds(t_xy topl, t_xy topr, t_xy botr, t_xy botl);
 void			clip_to_bounds(t_xy_line in, t_xy_line *out, t_xy_line edge[4]);

@@ -224,6 +224,13 @@ typedef struct 			s_sounds
 	int					footstep_delay;
 }						t_sounds;
 
+typedef struct 			s_rsrc
+{
+	struct SDL_Surface	*texture;
+	int					id;
+	struct s_rsrc		*next;
+}						t_rsrc;
+
 typedef struct 			s_sprites
 {
 	// HUD Sprites
@@ -402,5 +409,12 @@ int			 			tail_degree_rot(t_point location, t_point *tail);
 
 uint32_t				blend_argb_ratio(uint32_t foreground, uint32_t background, double ratio);
 uint32_t				invert_color(uint32_t color);
+
+/*
+ * from resources.c
+ * */
+
+void					load_resources(t_model *mdl);
+int						load_appended(t_doom *doom);
 
 #endif

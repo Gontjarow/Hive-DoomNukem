@@ -164,6 +164,7 @@ void 			edt_handle_next_input_loop(t_doom *doom)
 		free(doom->mdl->chain);
 	doom->mdl->chain = ft_strdup(&input);
 	draw_confirmation(&input, doom);
+	get_state()->saving_choice = 0;
 }
 
 static void		handle_regular_numbers(t_doom *doom)

@@ -98,3 +98,11 @@ t_xy	vec2_rot(t_xy v, double angle)
 		v.x * c + v.y * s
 	});
 }
+
+t_xy			vec2_lerp(t_xy start, t_xy stop, double t)
+{
+	ft_assert(0 <= t && t <= 1, "vec2_lerp must be [0, 1]");
+	return (vec2_add(
+		vec2_mul(start, t),
+		vec2_mul(stop, 1 - t)));
+}

@@ -52,7 +52,7 @@ void			vertical_line(int column, int start, int end, int color)
 	}
 }
 
-static unsigned	texture_pixel(SDL_Surface *tex, int x, int y)
+static unsigned	texture_pixel_debug(SDL_Surface *tex, int x, int y)
 {
 	unsigned	*sprite;
 	unsigned	pixel;
@@ -61,7 +61,22 @@ static unsigned	texture_pixel(SDL_Surface *tex, int x, int y)
 	sprite = tex->pixels;
 	pixel = tex->w * y + x;
 	size = tex->w * tex->h;
-	if ((pixel < size) && ((sprite[pixel] >> 24) != BYTE_TRANSPARENT))
+	if ((pixel < size))
+		return(sprite[pixel]);
+	else
+		return (COLOR_TRANSPARENT);
+}
+
+static uint32_t	texture_pixel(SDL_Surface *tex, int x, int y)
+{
+	uint32_t	*sprite;
+	uint32_t	pixel;
+	uint32_t	size;
+
+	sprite = (uint32_t*)tex->pixels;
+	pixel = tex->w * y + x;
+	size = tex->w * tex->h;
+	if ((pixel < size))
 		return(sprite[pixel]);
 	else
 		return (COLOR_TRANSPARENT);
@@ -93,7 +108,77 @@ void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex)
 	}
 }
 
+void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom)
+{
+	unsigned	*pixels;
+	unsigned	color;
+	t_xy		tex_pos;
+
+	pixels = doom_ptr()->game->buff->pixels;
+
+	// pixel in current FOV
+	t_xy current_pixel = floor_pos;
+
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		// player -> current_pixel
+		tex_pos = vec2_sub(current_pixel, vec32(doom->game->world->player.position));
+		// align with the global world (undo FOV rotation)
+		tex_pos = vec2_rot(tex_pos, -(doom->game->world->player.angle + M_PI));
+		// this pixel's location in the global world
+		tex_pos = vec2_add(tex_pos, vec32(doom->game->world->player.position));
+
+		// stick within texture coordinates
+		// note: global world corresponds with repeating texture space
+		tex_pos.x = fmod(tex_pos.x, tex->w);
+		tex_pos.y = fmod(tex_pos.y, tex->h);
+
+		// wrap around texture coordinates
+			 if (tex_pos.x < 0)       tex_pos.x += tex->w;
+		else if (tex_pos.x >= tex->w) tex_pos.x -= tex->w;
+
+			 if (tex_pos.y < 0)       tex_pos.y += tex->h;
+		else if (tex_pos.y >= tex->h) tex_pos.y -= tex->h;
+
+		ft_assert(0 <= tex_pos.x && tex_pos.x <= tex->w, "tex_pos 0<=X<=w");
+		ft_assert(0 <= tex_pos.y && tex_pos.y <= tex->h, "tex_pos 0<=Y<=h");
+
+		color = texture_pixel(tex, tex_pos.x, tex_pos.y);
+		if (color != COLOR_TRANSPARENT)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+
+		current_pixel.y++;
+		range.x++;
+	}
+}
+
 void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
+{
+	uint32_t	*pixels;
+	uint32_t	color;
+	double		y_step;
+	double		tex_y;
+
+	tex_y = 0;
+	y_step = (double)enemy->active_sprite->h / (range.y - range.x);
+	if (range.x < 0)
+	{
+		tex_y += y_step * -range.x;
+		range.x = 0;
+	}
+	pixels = (uint32_t*)doom_ptr()->game->buff->pixels;
+	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
+	{
+		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
+		//if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
+		if (color != COLOR_TRANSPARENT && color >> 24 != 0x00)
+			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+		tex_y += y_step;
+		range.x++;
+	}
+}
+
+static void			vertical_sprite_debug(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
 {
 	unsigned	*pixels;
 	unsigned	color;
@@ -111,6 +196,7 @@ void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
 		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
+		//if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
 		if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
 			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
 		tex_y += y_step;
@@ -139,4 +225,34 @@ int				zbuffer_ok(int index, double depth)
 	}
 	// printf("%f  %f\n", zbuffer[index], depth);
 	return (0);
+}
+
+// Temporary until walls have their own textures:
+SDL_Surface		*get_bricks_tex(t_doom *doom)
+{
+	static SDL_Surface *bricks = NULL;
+
+	if (!bricks)
+	{
+		bricks = load_texture(doom, "img/vertical.png");
+		if (bricks == NULL)
+			ft_die("Fatal error: Could not load texture!");
+	}
+
+	return (bricks);
+}
+
+// Temporary until walls have their own textures:
+SDL_Surface		*get_border_tex(t_doom *doom)
+{
+	static SDL_Surface *bricks = NULL;
+
+	if (!bricks)
+	{
+		bricks = load_texture(doom, "img/border.png");
+		if (bricks == NULL)
+			ft_die("Fatal error: Could not load texture!");
+	}
+
+	return (bricks);
 }
