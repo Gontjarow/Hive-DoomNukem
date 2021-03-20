@@ -137,6 +137,13 @@ typedef struct	s_world
 	t_camera	player;
 }				t_world;
 
+typedef struct	s_queue
+{
+	t_section	array[MAX_SECTOR_QUEUE];
+	t_section	*front;
+	t_section	*rear;
+}				t_queue;
+
 double			*get_zbuffer();
 t_world			*get_world();
 SDL_Surface		*get_bricks_tex(t_doom *doom);
@@ -154,6 +161,10 @@ void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range);
 void			render_frame(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot);
 void			render_enemies(t_doom *doom);
+
+t_queue			*get_queue();
+void			queue_add(int id, int left, int right);
+void			queue_pop();
 
 /*
 ** Math is fun, okay? ⤵️

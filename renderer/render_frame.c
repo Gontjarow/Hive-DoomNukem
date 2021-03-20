@@ -274,36 +274,19 @@ void			render_frame(t_doom *doom)
 	// Progressive rendering of neighboring sectors
 	// int rendered_sectors[world->sector_count];
 	// ft_memset(rendered_sectors, 0, sizeof(rendered_sectors));
-	t_section	queue[MAX_SECTOR_QUEUE];
 
 	// First in queue will be the camera/player's sector.
-	// queue[0].id = world->player.sector_id;
-	queue[0].id = 0;
-	queue[0].left = 0;
-	queue[0].right = GAME_WIN_WIDTH - 1;
-
-	queue[1].id = 1;
-	queue[1].left = 0;
-	queue[1].right = GAME_WIN_WIDTH - 1;
-
-	// Note: Always start from queue+0
-	// Note: Whenever a new sector needs to be rendered,
-	//       assign to *end, then ++end
-	// Note: If first == queue+MAX_SECTOR_QUEUE
-	//       or end == queue+MAX_SECTOR_QUEUE
-	//       set to 0 (circle back to beginning)
-	t_section	*first = queue+0;
-	t_section	*end   = queue+2;
+	queue_add(world->player.sector_id, 0, GAME_WIN_WIDTH);
 
 	// todo: queue loop
-	while (first != end)
+	while (get_queue()->front != get_queue()->rear)
 	{
 		// Easy access to current render data (sector to draw, section to draw into)
-		t_section	*section = first;
+		t_section	*section = get_queue()->front;
 		t_sector	*sector = &world->sectors[section->id];
 
 		render_sector(sector, section, doom, y_top, y_bot);
-		++first;
+		queue_pop();
 	}
 
 	// enemies don't have a "current sector" so they must be drawn together.
