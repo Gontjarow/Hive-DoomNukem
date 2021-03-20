@@ -2,6 +2,7 @@
 
 void		init_model(t_doom *doom)
 {
+	puts("MODEL BORN!!!");
 	// Mallocing model data type itself and linking parent pointer
 	doom->mdl = (t_model*)malloc(sizeof(t_model));
 	if (!doom->mdl)
@@ -82,6 +83,7 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.invis = 0;
 	doom->mdl->player.room_id = -1;
 	doom->mdl->player.room = NULL;
+		puts("PLAYER ROOM INITED TO NULL AND ID TO -1");
 	init_player_weapon(doom);
 }
 
@@ -111,4 +113,5 @@ void 		destroy_model(t_doom *doom)
 	free(doom->mdl);
 	doom->mdl = NULL;
 	singleton_manager(NULL, SINGLETON_MDL, 1);
+	puts("MODEL EVAPORATED!!!");
 }

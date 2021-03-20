@@ -40,7 +40,6 @@ int			player_collision_with_pickup(t_doom *doom, t_pickup *pickup)
 {
 	int		dx;
 	int		dy;
-	int		ec;
 	int		distance;
 
 	dx = (int)doom->mdl->player.x - pickup->loc.x;

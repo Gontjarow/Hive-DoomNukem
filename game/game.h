@@ -35,6 +35,7 @@ typedef struct			s_game
 	SDL_Surface			*hud_location;
 	int					cel_shade_hud;
 	int					show_info;
+	int					level_exit_reached;
 }						t_game;
 
 double			deg_to_rad(int deg);
@@ -43,6 +44,7 @@ unsigned int	check_location(t_doom *doom, int x, int y);
 int				player_shoots(t_doom *doom);
 int				player_collision_with_enemies(t_doom *doom);
 int				player_collision_with_pickup(t_doom *doom, t_pickup *pickup);
+int				player_collision_with_exit(t_doom *doom, t_effect *level_exit);
 int				check_hit(t_doom *doom);
 int				point_circle(double px, double py, double cx, double cy);
 int				line_point(t_doom *doom, t_coord p);

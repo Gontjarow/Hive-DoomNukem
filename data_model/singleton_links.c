@@ -41,9 +41,15 @@ t_model     *get_model(void)
 int 		singleton_manager(void **ptr, int type, int clear)
 {
 	static t_model	**mdl_singleton = NULL;
+	static t_model	**world_singleton = NULL;
 
 	if (!clear && type == SINGLETON_MDL)
 		mdl_singleton = ptr;
 	else if (clear && type == SINGLETON_MDL)
 		*mdl_singleton = NULL;
+
+	if (!clear && type == SINGLETON_WORLD)
+		world_singleton = ptr;
+	else if (clear && type == SINGLETON_WORLD)
+		*world_singleton = NULL;
 }

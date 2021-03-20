@@ -68,6 +68,15 @@ static void		print_data(t_world *world)
 	}
 }
 
+void			destroy_world(t_world *world)
+{
+	free(world->sectors);
+	world->sectors = NULL;
+	free(world);
+	singleton_manager(NULL, SINGLETON_WORLD, 1);
+	puts("WORLD EVAPORATED!!!");
+}
+
 t_world			*get_world()
 {
 	static t_world	*world = NULL;
@@ -75,12 +84,15 @@ t_world			*get_world()
 
 	if (world == NULL)
 	{
+		puts("WORLD DATA BORN!!!");
 		world = malloc(sizeof(*world));
 		mdl = get_model();
 		world->sectors = malloc(mdl->room_count * sizeof(t_sector));
 		ft_bzero(world->sectors, mdl->room_count * sizeof(t_sector));
 		world->sector_count = 0;
 		ft_memset(&world->player, 0, sizeof(world->player));
+		singleton_manager(&world, SINGLETON_WORLD, 0);
+
 	}
 	return (world);
 }

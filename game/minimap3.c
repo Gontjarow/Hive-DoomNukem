@@ -326,6 +326,16 @@ void			print_minimap_pickups(t_doom *doom)
 	int			pc;
 	t_pickup	*pickup;
 
+	// TODO SEPARATE TO PROPER FUNCTION
+	if (doom->mdl->effect_count > 0)
+	{
+		int x = doom->mdl->effect_first->loc.x * doom->minimap->scale;
+		int y = doom->mdl->effect_first->loc.y * doom->minimap->scale;
+		unpreserving_triangle_to_buffer(doom->minimap->buff, (t_point) {x, y}, DOWNWARD, COLOR_EFFECT_EXIT);
+	} else
+		puts("Cant minimap effects");
+
+
 	pc = doom->mdl->pickup_count;
 	if (pc == 0)
 		return ;

@@ -148,6 +148,7 @@ double			*get_zbuffer();
 t_world			*get_world();
 SDL_Surface		*get_bricks_tex(t_doom *doom);
 SDL_Surface		*get_border_tex(t_doom *doom);
+void			destroy_world(t_world *world);
 t_world			*load_world(t_world *world);
 
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);

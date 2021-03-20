@@ -40,10 +40,14 @@ void		init_game(t_doom *doom, int argc, char **argv)
 	doom->game->hud_location = NULL;
 	doom->game->cel_shade_hud = 0;
 	doom->game->show_info = 0;
+	doom->game->level_exit_reached = 0;
 }
 
 void		destroy_game(t_doom *doom)
 {
+	puts("DESTROYER OF THE WORLDS!!!!");
+	destroy_world(doom->game->world);
+	doom->game->world = NULL;
 	SDL_FreeSurface(doom->game->buff);
 	SDL_DestroyWindow(doom->game->win);
 	doom->game->win = NULL;
