@@ -31,7 +31,7 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define				WAV_BACKGROUND "wav/background.wav"
 # define				WAV_BOSS "wav/boss.wav"
 
-enum e_singleton_types { SINGLETON_MDL };
+enum e_singleton_types { SINGLETON_MDL, SINGLETON_WORLD };
 /*
 ** *
 ** Model struct (>Model<-View-Controller) - Game (Controller) modifies this with the input, logic code

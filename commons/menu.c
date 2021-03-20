@@ -139,11 +139,11 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
 		SDL_SetWindowPosition(doom->minimap->win, 0, 0);
 		SDL_RaiseWindow(doom->game->win);
 	}
-    else
-	{
-		if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
-			ft_putendl("Warning: Failed to capture mouse to window!");
-	}
+    // else
+	// {
+	// 	if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+	// 		ft_putendl("Warning: Failed to capture mouse to window!");
+	// }
     SDL_UpdateWindowSurface(doom->game->win);
     Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
     init_player_z(doom);
@@ -249,6 +249,29 @@ static void cycle_animation(t_doom *doom)
         doom->menu->ani_thunder.current = 0;
 }
 
+void		game_quit(t_doom *doom)
+{
+	if (DEBUG == 1)
+	{
+		doom->minimap_quit = 1;
+		destroy_minimap(doom);
+	}
+	doom->game_quit = 1;
+	destroy_game(doom);
+	destroy_model(doom);
+	doom->menu->esc_lock = 40;
+	if (doom->map->was_filled)
+	{
+		destroy_mapfile(doom->map);
+		doom->map = NULL;
+	}
+	SDL_RestoreWindow(doom->win);
+	doom->buff = SDL_GetWindowSurface(doom->win);
+	doom->menu_out_of_focus = 0;
+	Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+	SDL_SetRelativeMouseMode(SDL_FALSE);
+}
+
 void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 {
     static int cycle_repeat_lock = 0;
@@ -298,20 +321,7 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}
 	else if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
-	{
-		doom->game_quit = 1;
-		destroy_game(doom);
-		destroy_model(doom);
-		if (doom->map->was_filled)
-		{
-			destroy_mapfile(doom->map);
-			doom->map = NULL;
-		}
-		SDL_RestoreWindow(doom->win);
-		doom->buff = SDL_GetWindowSurface(doom->win);
-		doom->menu_out_of_focus = 0;
-		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
-	}
+		game_quit(doom);
 	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && doom->edt_quit && doom->game_quit && !doom->menu->esc_lock))
 	{
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
@@ -330,22 +340,9 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}
 	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->game_quit))
-	{
-		if (DEBUG == 1)
-		{
-			doom->minimap_quit = 1;
-			destroy_minimap(doom);
-		}
-		doom->game_quit = 1;
-		destroy_game(doom);
-		destroy_model(doom);
-		doom->menu->esc_lock = 40;
-		SDL_RestoreWindow(doom->win);
-		doom->buff = SDL_GetWindowSurface(doom->win);
-		doom->menu_out_of_focus = 0;
-		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
-		SDL_SetRelativeMouseMode(SDL_FALSE);
-	}
+		game_quit(doom);
+	else if (!doom->game_quit && doom->game->level_exit_reached)
+		game_quit(doom);
 }
 
 void		main_menu_loop(t_doom *doom, int argc, char **argv)

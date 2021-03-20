@@ -1,0 +1,24 @@
+[Wall] id = 0 | start.x = 225 | start.y = 193 | end.x = 866 | end.y = 193
+[Wall] id = 1 | start.x = 866 | start.y = 193 | end.x = 865 | end.y = 514
+[Wall] id = 2 | start.x = 865 | start.y = 514 | end.x = 224 | end.y = 512
+[Wall] id = 3 | start.x = 224 | start.y = 512 | end.x = 225 | end.y = 193
+[Wall] id = 4 | start.x = 866 | start.y = 193 | end.x = 1246 | end.y = 193
+[Wall] id = 5 | start.x = 1246 | start.y = 193 | end.x = 1248 | end.y = 513
+[Wall] id = 6 | start.x = 1248 | start.y = 513 | end.x = 865 | end.y = 514
+[Wall] id = 7 | start.x = 865 | start.y = 514 | end.x = 866 | end.y = 193
+[Wall] id = 8 | start.x = 1248 | start.y = 513 | end.x = 1540 | end.y = 576
+[Wall] id = 9 | start.x = 1540 | start.y = 576 | end.x = 671 | end.y = 576
+[Wall] id = 10 | start.x = 671 | start.y = 576 | end.x = 865 | end.y = 514
+[Wall] id = 11 | start.x = 865 | start.y = 514 | end.x = 1248 | end.y = 513
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 200
+[Room] id = 1 | first_wall_id = 4 | wall_count = 4 | floor_height = 150 | roof_height = 250
+[Room] id = 2 | first_wall_id = 8 | wall_count = 4 | floor_height = 200 | roof_height = 300
+
+[Portal] id = 0 | start.x = 865 | start.y = 514 | end.x = 866 | end.y = 193
+[Portal] id = 1 | start.x = 865 | start.y = 514 | end.x = 1248 | end.y = 513
+
+[Enemy] id = 0 | x = 1246 | y = 552 | rot = 200 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Player] spawn.x = 332 | spawn.y = 341 | rot = 360
+[No level exit defined] Infinite map suitable for debugging!

@@ -135,6 +135,8 @@ typedef struct	s_world
 	unsigned	sector_count;
 	t_sector	*sectors;
 	t_camera	player;
+	int			*screen_y_top;
+	int			*screen_y_bot;
 }				t_world;
 
 typedef struct	s_queue
@@ -148,6 +150,7 @@ double			*get_zbuffer();
 t_world			*get_world();
 SDL_Surface		*get_bricks_tex(t_doom *doom);
 SDL_Surface		*get_border_tex(t_doom *doom);
+void			destroy_world(t_world *world);
 t_world			*load_world(t_world *world);
 
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
@@ -159,7 +162,7 @@ void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex
 void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range);
 
 void			render_frame(t_doom *doom);
-void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot);
+void			render_sector(t_sector *sector, t_section *section, t_doom *doom);
 void			render_enemies(t_doom *doom);
 
 t_queue			*get_queue();

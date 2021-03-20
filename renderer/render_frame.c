@@ -68,6 +68,15 @@ static void		print_data(t_world *world)
 	}
 }
 
+void			destroy_world(t_world *world)
+{
+	free(world->sectors);
+	world->sectors = NULL;
+	free(world);
+	singleton_manager(NULL, SINGLETON_WORLD, 1);
+	puts("WORLD EVAPORATED!!!");
+}
+
 t_world			*get_world()
 {
 	static t_world	*world = NULL;
@@ -75,12 +84,15 @@ t_world			*get_world()
 
 	if (world == NULL)
 	{
+		puts("WORLD DATA BORN!!!");
 		world = malloc(sizeof(*world));
 		mdl = get_model();
 		world->sectors = malloc(mdl->room_count * sizeof(t_sector));
 		ft_bzero(world->sectors, mdl->room_count * sizeof(t_sector));
 		world->sector_count = 0;
 		ft_memset(&world->player, 0, sizeof(world->player));
+		singleton_manager(&world, SINGLETON_WORLD, 0);
+
 	}
 	return (world);
 }
@@ -232,10 +244,16 @@ t_world			*load_world(t_world *world)
 		++world->sector_count;
 		room = room->next;
 	}
-	ft_memset(&world->player, 0, sizeof(world->player));
+
+	ft_bzero(&world->player, sizeof(world->player));
+
+	world->screen_y_top = malloc(sizeof(int) * GAME_WIN_WIDTH);
+	world->screen_y_bot = malloc(sizeof(int) * GAME_WIN_WIDTH);
+
 	world->player.sector_id = room_id_from_polymap(mdl->poly_map, mdl->player.x, mdl->player.y);
 	portals_to_neighbors(world, mdl);
-	print_data(world);
+
+	// print_data(world);
 	return (world);
 }
 
@@ -261,13 +279,9 @@ void			render_frame(t_doom *doom)
 	world->player.yaw = clamp(doom->mdl->player.yaw, -M_PI/2, M_PI/2);
 
 	flood_buffer(doom->game->buff, 0x112233);
-	memset_f(zbuffer, INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
-
-	// Pixel coordinates for vertical drawing
-	int y_top[GAME_WIN_WIDTH];
-	int y_bot[GAME_WIN_WIDTH];
-	memset_i(y_top,                   0, GAME_WIN_WIDTH);
-	memset_i(y_bot, GAME_WIN_HEIGHT - 1, GAME_WIN_WIDTH);
+	memset_f(            zbuffer,       INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
+	memset_i(world->screen_y_top,              0, GAME_WIN_WIDTH);
+	memset_i(world->screen_y_bot, GAME_WIN_WIDTH, GAME_WIN_WIDTH);
 
 	// First in queue will be the camera/player's sector.
 	queue_add(world->player.sector_id, 0, GAME_WIN_WIDTH);
@@ -278,7 +292,7 @@ void			render_frame(t_doom *doom)
 		t_section	*section = get_queue()->front;
 		t_sector	*sector = &world->sectors[section->id];
 
-		render_sector(sector, section, doom, y_top, y_bot);
+		render_sector(sector, section, doom);
 		queue_pop();
 	}
 

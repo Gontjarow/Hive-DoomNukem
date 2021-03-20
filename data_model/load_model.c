@@ -96,11 +96,21 @@ static void create_model_appended(t_doom *doom)
 
 static void	create_data_model(t_doom *doom, char *map_file_path)
 {
+	puts("CREATE DATA BORN!!!!");
 	ft_putstr("Loaded mapfile data from file: ");
 	ft_putendl(map_file_path);
 	map_to_model(doom->map, doom->mdl);
 	link_mdl_rooms(doom->mdl);
 	expand_mdl_polygon_maps(doom->mdl);
+}
+
+static void assign_player_room(t_doom *doom)
+{
+	int location_id;
+
+	location_id = check_location(doom, doom->mdl->player.x, doom->mdl->player.y);
+	doom->mdl->player.room_id = location_id;
+	doom->mdl->player.room = room_by_id(location_id);
 }
 
 int			load_model(t_doom *doom)
@@ -128,6 +138,7 @@ int			load_model(t_doom *doom)
 			return (0);
 		create_data_model(doom, doom->game->map_path);
 		assign_enemy_cd(doom->mdl);
+		assign_player_room(doom);
 	}
 	return (1);
 }

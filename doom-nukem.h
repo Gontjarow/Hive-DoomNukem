@@ -42,7 +42,7 @@
 # define FPS 30
 # define TICKS_PER_FRAME 1000.0 / FPS
 
-# define DEBUG 0
+# define DEBUG 1
 
 typedef struct			s_doom
 {

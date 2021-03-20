@@ -68,10 +68,24 @@ static void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 	doom->mdl->pickup_count--;
 }
 
+static void		handle_level_exit(t_doom *doom)
+{
+	puts("Reached level exit!");
+	doom->game->level_exit_reached = 1;
+	doom->menu->update_argc_argv = 1;
+	if (doom->menu->added_arg)
+		free(doom->menu->added_arg);
+	doom->menu->added_arg = ft_strdup(doom->game->map_path);
+}
+
 void			handle_pickup(t_doom *doom)
 {
 	int			pc;
 	t_pickup	*pickup;
+
+	// TODO SEPARATE TO PROPER FUNCTION
+	if (get_model()->effect_count > 0 && player_collision_with_exit(doom, get_model()->effect_first))
+		handle_level_exit(doom);
 
 	pc = doom->mdl->pickup_count;
 	if (pc == 0)
@@ -94,3 +108,4 @@ void			handle_pickup(t_doom *doom)
 		pickup = pickup->next;
 	}
 }
+

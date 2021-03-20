@@ -79,3 +79,17 @@ int			check_hit(t_doom *doom)
 	}
 	return (-1);
 }
+
+int			player_collision_with_exit(t_doom *doom, t_effect *level_exit)
+{
+	int		dx;
+	int		dy;
+	int		distance;
+
+	dx = (int)doom->mdl->player.x - level_exit->loc.x;
+	dy = (int)doom->mdl->player.y - level_exit->loc.y;
+	distance = sqrt(dx * dx + dy * dy);
+	if ((distance < 10 + PICKING_RADIUS))
+		return (-1);
+	return (0);
+}
