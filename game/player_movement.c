@@ -101,8 +101,7 @@ static void		apply_gravity(t_doom *doom)
 		doom->mdl->player.z = doom->mdl->player.room->roof_height;
 		doom->mdl->player.z_velocity = 0.0;
 	}
-		//printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height,
-		// doom->mdl->player.height);
+		printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 }
 
 void			handle_player_movement(t_doom *doom)

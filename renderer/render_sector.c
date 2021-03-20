@@ -90,6 +90,9 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		x1 = max(x1, section->left);
 		x2 = min(x2, section->right);
 
+		int neighbor = sector->neighbors[vertex];
+		queue_add(neighbor, 0, GAME_WIN_WIDTH);
+
 		//! One more clip into the player's view-cone.
 		t_xy_line wall_segment;
 		clip_to_cone(wall, &wall_segment);
@@ -139,9 +142,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 			// Todo: draw sky or ceiling
 
-			printf("neighbor: %i, x: %i, ceil %.0f floor %.0f, playerZ %f\n", 0, screen_x, ceil, floor, get_world()->player.position.z);
+			// printf("neighbor: %i, x: %i, ceil %.0f floor %.0f, playerZ %f\n", 0, screen_x, ceil, floor, get_world()->player.position.z);
 			//! Draw wall
-			int neighbor = sector->neighbors[vertex];
 			if (neighbor == NO_NEIGHBOR)
 			{
 				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks);
@@ -155,7 +157,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 				double		connecting_floor       = connecting->floor - doom->game->world->player.position.z - EYE_HEIGHT;
 				t_xy_line	connecting_yawed_floor = calculate_yawed(connecting_floor, wall_segment, scale, doom->game->world->player.yaw);
-				printf("neighbor: %i, x: %i, ceil %.0f floor %.0f\n", neighbor, screen_x, connecting_ceil, connecting_floor);
+				// printf("neighbor: %i, x: %i, ceil %.0f floor %.0f\n", neighbor, screen_x, connecting_ceil, connecting_floor);
 
 				double		connecting_ceil_angle  = (connecting_yawed_ceil.stop.y - connecting_yawed_ceil.start.y) / (double)(x2 - x1);
 				double		connecting_floor_angle = (connecting_yawed_floor.stop.y - connecting_yawed_floor.start.y) / (double)(x2 - x1);

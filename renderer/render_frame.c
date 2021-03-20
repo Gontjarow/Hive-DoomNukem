@@ -122,6 +122,7 @@ static t_wall	*match_connecting_wall(t_model *mdl, t_wall *portal)
 			return (wall);
 		wall = wall->next;
 	}
+	return (NULL);
 }
 
 // Find a wall whose start/end match the given portal,
@@ -242,7 +243,7 @@ t_world			*load_world(t_world *world)
 
 void			render_frame(t_doom *doom)
 {
-	printf("\nFRAME START\n");
+	// printf("\nFRAME START\n");
 	t_world	*world;
 	double	*zbuffer;
 
@@ -253,9 +254,8 @@ void			render_frame(t_doom *doom)
 	world->player.position = vec3_div(vec3(
 		doom->mdl->player.x,
 		doom->mdl->player.y,
-		0), WORLD_SCALE);
+		doom->mdl->player.z), WORLD_SCALE);
 	world->player.sector_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x, doom->mdl->player.y);
-	world->player.position.z = world->sectors[world->player.sector_id].floor;
 
 	world->player.angle = doom->mdl->player.rot * DEG_TO_RAD;
 	world->player.sin = sin(world->player.angle);
