@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/17 14:36:21 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 00:17:51 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static void		apply_gravity(t_doom *doom)
 		doom->mdl->player.z = doom->mdl->player.room->roof_height;
 		doom->mdl->player.z_velocity = 0.0;
 	}
-		printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
+	// printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 }
 
 void			handle_player_movement(t_doom *doom)

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/22 18:38:20 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 00:37:41 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,3 @@ int			main(int argc, char *argv[])
 	}
 	return (destroy_and_quit(&doom));
 }
-
-
-
