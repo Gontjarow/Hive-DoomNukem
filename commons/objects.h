@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/02/17 14:35:34 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/20 20:50:24 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,9 @@ typedef struct 			s_sounds
 	struct Mix_Chunk	*mcHealthPickup;
 	struct Mix_Chunk	*mcAmmoPickup;
 	struct Mix_Chunk	*mcWeaponPickup;
+	struct Mix_Chunk	*mcBackground;
+	struct Mix_Chunk	*mcBoss;
+	struct Mix_Chunk	*mcLoading;
 	int					footstep_delay;
 }						t_sounds;
 

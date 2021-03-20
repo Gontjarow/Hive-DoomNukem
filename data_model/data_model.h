@@ -27,6 +27,9 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define				WAV_HEALTHPICKUP "wav/healthpickup.wav"
 # define				WAV_AMMOPICKUP "wav/ammopickup.wav"
 # define				WAV_WEAPONPICKUP "wav/weaponpickup.wav"
+# define 				WAV_LOADINGSONG "wav/loadingscreen.wav"
+# define				WAV_BACKGROUND "wav/background.wav"
+# define				WAV_BOSS "wav/boss.wav"
 
 enum e_singleton_types { SINGLETON_MDL };
 /*
