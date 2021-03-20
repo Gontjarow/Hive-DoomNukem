@@ -1,0 +1,37 @@
+[Wall] id = 0 | start.x = 233 | start.y = 491 | end.x = 349 | end.y = 396
+[Wall] id = 1 | start.x = 349 | start.y = 396 | end.x = 593 | end.y = 292
+[Wall] id = 2 | start.x = 593 | start.y = 292 | end.x = 801 | end.y = 282
+[Wall] id = 3 | start.x = 801 | start.y = 282 | end.x = 989 | end.y = 321
+[Wall] id = 4 | start.x = 989 | start.y = 321 | end.x = 1022 | end.y = 475
+[Wall] id = 5 | start.x = 1022 | start.y = 475 | end.x = 877 | end.y = 588
+[Wall] id = 6 | start.x = 877 | start.y = 588 | end.x = 532 | end.y = 623
+[Wall] id = 7 | start.x = 532 | start.y = 623 | end.x = 328 | end.y = 606
+[Wall] id = 8 | start.x = 328 | start.y = 606 | end.x = 233 | end.y = 491
+[Wall] id = 9 | start.x = 989 | start.y = 321 | end.x = 1131 | end.y = 182
+[Wall] id = 10 | start.x = 1131 | start.y = 182 | end.x = 1311 | end.y = 168
+[Wall] id = 11 | start.x = 1311 | start.y = 168 | end.x = 1536 | end.y = 245
+[Wall] id = 12 | start.x = 1536 | start.y = 245 | end.x = 1525 | end.y = 428
+[Wall] id = 13 | start.x = 1525 | start.y = 428 | end.x = 1346 | end.y = 548
+[Wall] id = 14 | start.x = 1346 | start.y = 548 | end.x = 1073 | end.y = 514
+[Wall] id = 15 | start.x = 1073 | start.y = 514 | end.x = 1022 | end.y = 475
+[Wall] id = 16 | start.x = 1022 | start.y = 475 | end.x = 989 | end.y = 321
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 9 | floor_height = 100 | roof_height = 120
+[Room] id = 1 | first_wall_id = 9 | wall_count = 8 | floor_height = 100 | roof_height = 120
+
+[Portal] id = 0 | start.x = 1022 | start.y = 475 | end.x = 989 | end.y = 321
+
+[Enemy] id = 0 | x = 419 | y = 519 | rot = 38 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 583 | y = 510 | rot = 343 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 2 | x = 713 | y = 392 | rot = 315 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 3 | x = 818 | y = 396 | rot = 48 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 4 | x = 874 | y = 488 | rot = 84 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 5 | x = 1171 | y = 346 | rot = 180 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 6 | x = 1228 | y = 261 | rot = 351 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 7 | x = 1371 | y = 279 | rot = 32 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 8 | x = 1384 | y = 384 | rot = 127 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 9 | x = 1271 | y = 434 | rot = 171 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Effect] id = 0 | type_id = 0 | loc.x = 1465 | loc.y = 320 | target.x = 0 | target.y = 0 | target_id = 0
+
+[Player] spawn.x = 442 | spawn.y = 433 | rot = 159
