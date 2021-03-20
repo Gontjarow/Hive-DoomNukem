@@ -49,10 +49,12 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define PICKUP_RADIUS			16
 # define HEIGHT_STEPPING		10
 # define FLOOR_MIN				0
-# define FLOOR_MAX				390
+# define FLOOR_DEFAULT			100
+# define FLOOR_MAX				750
 # define ROOF_MIN				0
-# define ROOF_MAX				400
-# define FLOOR_ROOF_DIFF_LIMIT	10
+# define ROOF_DEFAULT			200
+# define ROOF_MAX				800
+# define FLOOR_ROOF_DIFF_LIMIT	50
 # define GRID_START_SIZE		32
 # define DOUBLE_CLICK_COOLDOWN	24
 # define STRING_ENTER_MAPFILE	"input mapfile name with a..z and ."
