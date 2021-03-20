@@ -10,8 +10,8 @@ t_select 		*select_logic(void)
 		if (!logic)
 			ft_die("Fatal error: Could not malloc logic for planting at select_logic");
 		logic->selected_room_id = -1;
-		logic->last_floor = 100;
-		logic->last_roof = 120;
+		logic->last_floor = FLOOR_DEFAULT;
+		logic->last_roof = ROOF_DEFAULT;
 	}
 	return (logic);
 }

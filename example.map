@@ -7,8 +7,8 @@
 [Wall] id = 6 | start.x = 3040 | start.y = 786 | end.x = 1441 | end.y = 829
 [Wall] id = 7 | start.x = 1441 | start.y = 829 | end.x = 1439 | end.y = 64
 
-[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 120
-[Room] id = 1 | first_wall_id = 4 | wall_count = 4 | floor_height = 105 | roof_height = 130
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 200
+[Room] id = 1 | first_wall_id = 4 | wall_count = 4 | floor_height = 100 | roof_height = 200
 
 [Portal] id = 0 | start.x = 1441 | start.y = 829 | end.x = 1439 | end.y = 64
 

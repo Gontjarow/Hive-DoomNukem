@@ -160,7 +160,7 @@ void		create_strings_from_model(t_model *mdl, t_mapfile *map)
 	t_effect	*effect;
 
 	update_player_string(mdl, map);
-	if (map->chain_string)
+	if (mdl->chain)
 		update_chain_string(mdl, map);
 	count = mdl->enemy_count;
 	enemy = mdl->enemy_first;
