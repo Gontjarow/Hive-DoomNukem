@@ -54,8 +54,8 @@ void			render_enemies(t_doom *doom)
 
 			// TODO: [OLD NOTE by ngontjar]: Define enemy height in a sensible way.
 			//  [AFTER EDITING BY krusthol]: In my branch after merge I adjusted some of the values to clean up the visuals
-			double ceil = world->sectors[enemy_id].floor / WORLD_SCALE + EYE_HEIGHT - world->player.position.z;
-			double floor = world->sectors[enemy_id].floor / WORLD_SCALE - 0.5 - world->player.position.z;
+			double ceil = world->sectors[enemy_id].floor + EYE_HEIGHT - world->player.position.z;
+			double floor = world->sectors[enemy_id].floor - 0.5 - world->player.position.z;
 
 			//! Calculate ceil/floor height and draw vertical lines left-to-right.
 			scale.start.y = GAME_WIN_HEIGHT / -eline.start.y;

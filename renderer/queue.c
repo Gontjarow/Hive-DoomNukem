@@ -18,9 +18,6 @@ void			queue_add(int id, int left, int right)
 	queue->rear->right = right;
 	queue->rear++;
 
-	// Note: If rear == queue+MAX_SECTOR_QUEUE
-	//       set to 0 (circle back to beginning)
-
 	if (queue->rear == (queue->array + MAX_SECTOR_QUEUE))
 		queue->rear = queue->array;
 }
@@ -35,9 +32,6 @@ void			queue_pop()
 	queue->front->left = -1;
 	queue->front->right = -1;
 	queue->front++;
-
-	// Note: If front == queue+MAX_SECTOR_QUEUE
-	//       set to 0 (circle back to beginning)
 
 	if (queue->front == (queue->array + MAX_SECTOR_QUEUE))
 		queue->front = queue->array;
