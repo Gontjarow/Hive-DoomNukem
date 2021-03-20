@@ -137,11 +137,11 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
 		SDL_SetWindowPosition(doom->minimap->win, 0, 0);
 		SDL_RaiseWindow(doom->game->win);
 	}
-    else
-	{
-		if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
-			ft_putendl("Warning: Failed to capture mouse to window!");
-	}
+    // else
+	// {
+	// 	if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+	// 		ft_putendl("Warning: Failed to capture mouse to window!");
+	// }
     SDL_UpdateWindowSurface(doom->game->win);
     Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
     init_player_z(doom);

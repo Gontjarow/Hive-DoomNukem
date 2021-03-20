@@ -26,7 +26,7 @@ t_xy_line		calculate_yawed(double height, t_xy_line wall, t_xy_line scale, doubl
 
 
 //! Render the walls of a sector to a section of the screen.
-void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_top, int *y_bot)
+void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 {
 	t_xy_line debug;
 
@@ -92,8 +92,9 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 		int neighbor = sector->neighbors[vertex];
 		if (neighbor != NO_NEIGHBOR)
-			queue_add(neighbor, section->left, section->right);
-		t_sector	*connecting = &(get_world()->sectors[neighbor]);
+			queue_add(neighbor, x1, x2);
+		t_world		*world = get_world();
+		t_sector	*connecting = &(world->sectors[neighbor]);
 
 		//! One more clip into the player's view-cone.
 		t_xy_line wall_segment;
@@ -146,7 +147,12 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 			//! Draw wall
 			if (neighbor == NO_NEIGHBOR)
 			{
-				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks);
+				if (vertex != 1)
+					vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks);
+				else
+					vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), border);
+				world->screen_y_top[screen_x] = GAME_MIDHEIGHT;
+				world->screen_y_bot[screen_x] = GAME_MIDHEIGHT;
 			}
 			else
 			{
@@ -162,11 +168,15 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 				signed		connecting_y_start     = connecting_yawed_ceil.start.y + (horizontal * connecting_ceil_angle);
 				signed		connecting_y_stop      = connecting_yawed_floor.start.y + (horizontal * connecting_floor_angle);
 
-				connecting_y_start = clamp(connecting_y_start, *y_top, *y_bot);
-				connecting_y_stop =  clamp(connecting_y_stop, *y_top, *y_bot);
+				int top = world->screen_y_top[screen_x];
+				int bot = world->screen_y_bot[screen_x];
+				connecting_y_start = clamp(connecting_y_start, top, bot);
+				connecting_y_stop =  clamp(connecting_y_stop,  top, bot);
 
 				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), bricks);
 				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), bricks);
+				world->screen_y_top[screen_x] = connecting_y_start;
+				world->screen_y_bot[screen_x] = connecting_y_stop;
 			}
 
 

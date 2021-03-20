@@ -88,16 +88,35 @@ void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex)
 	unsigned	color;
 	double		y_step;
 	double		tex_y;
+	t_world		*world;
 
 	tex_y = 0;
 	y_step = tex->h / (range.y - range.x);
+
 	if (range.x < 0)
 	{
 		tex_y += y_step * -range.x;
 		range.x = 0;
 	}
+
+	world = get_world();
+	int top = world->screen_y_top[screen_x];
+	if (range.x < top) // Wall begins from above the "top" limit.
+	{
+		tex_y += y_step * (top - range.x);
+		range.x = top;
+	}
+
+	int bot = world->screen_y_bot[screen_x];
+	if (bot < range.y) // The "bot" limit comes before where the wall ends.
+	{
+		range.y = bot;
+	}
+
 	pixels = doom_ptr()->game->buff->pixels;
 	tex_x = clamp(tex_x, 0, 1);
+
+
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
 		color = texture_pixel(tex, tex_x * tex->w, tex_y);
@@ -230,29 +249,29 @@ int				zbuffer_ok(int index, double depth)
 // Temporary until walls have their own textures:
 SDL_Surface		*get_bricks_tex(t_doom *doom)
 {
-	static SDL_Surface *bricks = NULL;
+	static SDL_Surface *tex = NULL;
 
-	if (!bricks)
+	if (!tex)
 	{
-		bricks = load_texture(doom, "img/vertical.png");
-		if (bricks == NULL)
+		tex = load_texture(doom, "img/bluebricks.png");
+		if (tex == NULL)
 			ft_die("Fatal error: Could not load texture!");
 	}
 
-	return (bricks);
+	return (tex);
 }
 
 // Temporary until walls have their own textures:
 SDL_Surface		*get_border_tex(t_doom *doom)
 {
-	static SDL_Surface *bricks = NULL;
+	static SDL_Surface *tex = NULL;
 
-	if (!bricks)
+	if (!tex)
 	{
-		bricks = load_texture(doom, "img/border.png");
-		if (bricks == NULL)
+		tex = load_texture(doom, "img/border.png");
+		if (tex == NULL)
 			ft_die("Fatal error: Could not load texture!");
 	}
 
-	return (bricks);
+	return (tex);
 }
