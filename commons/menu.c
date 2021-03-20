@@ -156,6 +156,7 @@ static void	start_editor_from_menu(t_doom *doom, int argc, char **argv)
     doom->menu_out_of_focus = 1;
     if (!load_model(doom))
         ft_die("Fatal error: Could not load model when entering Editor from the main menu.");
+    load_resources(doom->mdl);
     get_state()->saving_choice = 1;
     redraw_editor_to_backbuffer(0xffffffff);
     SDL_UpdateWindowSurface(doom->edt->win);
