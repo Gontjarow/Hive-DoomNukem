@@ -155,7 +155,7 @@ void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
 		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
-		if (color != COLOR_TRANSPARENT)
+		if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
 			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
 		tex_y += y_step;
 		range.x++;

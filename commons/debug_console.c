@@ -117,6 +117,25 @@ void	debug_model_portals(void)
 	}
 }
 
+void	debug_model_effects(void)
+{
+	char 		**types = { "EFFECT_EXIT", "EFFECT_KEY", "EFFECT_LIGHT" };
+	t_effect	*effect;
+	int			ec;
+
+	if (get_model()->effect_count == 0)
+		return (ft_putendl("Outputting no data to console for model's effects, effect count was 0."));
+	ec = get_model()->effect_count;
+	effect = get_model()->effect_first;
+	puts("Outputting data for model's effects:");
+	while (ec--)
+	{
+		printf("[Effect] id = %d | type_id = %d (%s) | loc.x = %d | loc.y = %d | target.x = %d | target.y = %d | target_id = %d\n",
+			   effect->id, effect->type_id, &types[effect->type_id], effect->loc.x, effect->loc.y, effect->target.x, effect->target.y, effect->target_id);
+		effect = effect->next;
+	}
+}
+
 void	debug_model_pickups(void)
 {
 	char 		**flavors = { "PICKUP_HEALTH", "PICKUP_AMMO", "PICKUP_WEAPON" };

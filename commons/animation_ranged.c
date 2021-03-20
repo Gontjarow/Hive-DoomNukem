@@ -6,11 +6,30 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:00:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/27 15:31:03 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/05 18:34:46 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
+
+void		animate_ranged_back_walk(t_enemy *enemy, t_doom *doom)
+{
+	static SDL_Surface *frames[4] = { 0 };
+
+	if (frames[0] == 0)
+	{
+		frames[0] = doom->sprites->txt_ranged_back_walk[0];
+		frames[1] = doom->sprites->txt_ranged_back_walk[1];
+		frames[2] = doom->sprites->txt_ranged_back_walk[2];
+		frames[3] = doom->sprites->txt_ranged_back_walk[3];
+	}
+	if (enemy->anim_phase > 3)
+	{
+		enemy->anim_phase = 0;
+		enemy->anim.done = IDLE;
+	}
+	enemy->active_sprite = frames[enemy->anim_phase++];
+}
 
 void		animate_ranged_front_walk(t_enemy *enemy, t_doom *doom)
 {
@@ -34,13 +53,25 @@ void		animate_ranged_front_walk(t_enemy *enemy, t_doom *doom)
 void		animate_ranged_side_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
+	static int			last_orient = -1;
 
-	if (frames[0] == 0)
+	if (enemy->anim.orient != last_orient)
 	{
-		frames[0] = doom->sprites->txt_ranged_side_walk[0];
-		frames[1] = doom->sprites->txt_ranged_side_walk[1];
-		frames[2] = doom->sprites->txt_ranged_side_walk[2];
-		frames[3] = doom->sprites->txt_ranged_side_walk[3];
+		if (enemy->anim.orient == LEFT)
+		{
+			frames[0] = doom->sprites->txt_ranged_left_walk[0];
+			frames[1] = doom->sprites->txt_ranged_left_walk[1];
+			frames[2] = doom->sprites->txt_ranged_left_walk[2];
+			frames[3] = doom->sprites->txt_ranged_left_walk[3];
+		}
+		else
+		{
+			frames[0] = doom->sprites->txt_ranged_right_walk[0];
+			frames[1] = doom->sprites->txt_ranged_right_walk[1];
+			frames[2] = doom->sprites->txt_ranged_right_walk[2];
+			frames[3] = doom->sprites->txt_ranged_right_walk[3];
+		}
+		last_orient = enemy->anim.orient;
 	}
 	if (enemy->anim_phase > 3)
 	{
@@ -89,11 +120,21 @@ void		animate_ranged_front_attack(t_enemy *enemy, t_doom *doom)
 void		animate_ranged_side_attack(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[2] = { 0 };
+	static int			last_orient = -1;
 
-	if (frames[0] == 0)
+	if (enemy->anim.orient != last_orient)
 	{
-		frames[0] = doom->sprites->txt_ranged_side_idle;
-		frames[1] = doom->sprites->txt_ranged_side_attack;
+		if (enemy->anim.orient == LEFT)
+		{
+			frames[0] = doom->sprites->txt_ranged_left_idle;
+			frames[1] = doom->sprites->txt_ranged_left_attack;
+		}
+		else
+		{
+			frames[0] = doom->sprites->txt_ranged_right_idle;
+			frames[1] = doom->sprites->txt_ranged_right_attack;
+		}
+		last_orient = enemy->anim.orient;
 	}
 	if (enemy->anim_phase > 1)
 	{

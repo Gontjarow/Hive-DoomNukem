@@ -1,5 +1,17 @@
 #include "doom-nukem.h"
 
+static void		print_orient(t_enemy *enemy)
+{
+	if (enemy->anim.orient == FRONT)
+		puts("Enemy orient is FRONT!");
+	else if (enemy->anim.orient == BACK)
+		puts("Enemy orient is BACK!");
+	else if (enemy->anim.orient == LEFT)
+		puts("Enemy orient is LEFT!");
+	else if (enemy->anim.orient == RIGHT)
+		puts("Enemy orient is RIGHT!");
+}
+
 void			render_enemies(t_doom *doom)
 {
     t_world *world = doom->game->world;
@@ -40,8 +52,10 @@ void			render_enemies(t_doom *doom)
 
 			int enemy_id = room_id_from_polymap(doom->mdl->poly_map, enemy->x, enemy->y);
 
-			double floor = world->sectors[enemy_id].floor - world->player.position.z;
-			double ceil = floor + 20; // TODO: Define enemy height in a sensible way.
+			// TODO: [OLD NOTE by ngontjar]: Define enemy height in a sensible way.
+			//  [AFTER EDITING BY krusthol]: In my branch after merge I adjusted some of the values to clean up the visuals
+			double ceil = world->sectors[enemy_id].floor + 6 - world->player.position.z;
+			double floor = world->sectors[enemy_id].floor - 0.5 - world->player.position.z;
 
 			//! Calculate ceil/floor height and draw vertical lines left-to-right.
 			scale.start.y = GAME_WIN_HEIGHT / -eline.start.y;
@@ -49,7 +63,15 @@ void			render_enemies(t_doom *doom)
 
 			int yawed_start_ceil  = GAME_MIDHEIGHT - (ceil  + eline.start.y * world->player.yaw) * scale.start.y;
 			int yawed_start_floor = GAME_MIDHEIGHT - (floor + eline.start.y * world->player.yaw) * scale.start.y;
-
+			//Debugging orient for animations
+			{
+				//print_orient(enemy);
+				/*int new_orient = check_sprite_facing(enemy, get_model());
+				if (new_orient != enemy->anim.orient) {
+					enemy->anim.orient = new_orient;
+					print_orient(enemy);
+				}*/
+			}
 			int x = left;
 			if (x < 0)
 				x -= x;
@@ -63,7 +85,8 @@ void			render_enemies(t_doom *doom)
 
 		t_xy_line debug;
 		debug = line_add_offset(eline, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
-		drawline(debug, doom->game->buff);
+		if (doom->game->show_info)
+			drawline(debug, doom->game->buff);
 
 		enemy = enemy->next;
 	}

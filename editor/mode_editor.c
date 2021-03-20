@@ -9,7 +9,6 @@ t_gui	*mode_select(void)
 		select = (t_gui*)malloc(sizeof(t_gui));
 		if (!select)
 			ft_die("Fatal error: Could not malloc t_gui at mode_select.");
-		// TODO FLESH OUT
 		select->activate = select_activate;
 		select->deactivate = select_deactivate;
 		select->change_zoom = select_change_zoom;
@@ -32,7 +31,6 @@ t_gui	*mode_effect(void)
 		effect = (t_gui*)malloc(sizeof(t_gui));
 		if (!effect)
 			ft_die("Fatal error: Could not malloc t_gui at mode_effect.");
-		// TODO FLESH OUT
 		effect->activate = effect_activate;
 		effect->deactivate = effect_deactivate;
 		effect->change_zoom = effect_change_zoom;

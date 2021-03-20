@@ -64,7 +64,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		{
 			debug = line_add_offset(wall_preclip, debug_view_offset);
 			debug.color = 0xFF005A;
-			drawline(debug, doom->game->buff);
+			if (doom->game->show_info)
+				drawline(debug, doom->game->buff);
 			++vertex;
 			continue;
 		}
@@ -79,7 +80,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		{
 			debug = line_add_offset(wall_preclip, debug_view_offset);
 			debug.color = 0xFFA753;
-			drawline(debug, doom->game->buff);
+			if (doom->game->show_info)
+				drawline(debug, doom->game->buff);
 			++vertex;
 			continue;
 		}
@@ -103,7 +105,9 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 
 		// Debug info for specific walls
+
 		int colors[256] = {0xff6666, 0x66ff66, 0x6666ff, 0x666666, 0xffffff, 0x0};
+		if (doom->game->show_info)
 		{
 			vertical_line(x1,              0, GAME_MIDHEIGHT,    colors[vertex]);
 			vertical_line(x2, GAME_MIDHEIGHT, GAME_WIN_HEIGHT-1, colors[vertex]);
@@ -181,6 +185,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		}
 
 		//! Debug view.
+		if (doom->game->show_info)
 		{
 			drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,             GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
 			drawline(line_xy(vec2(GAME_MIDWIDTH,                   0), vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);

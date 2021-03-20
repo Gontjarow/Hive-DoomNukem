@@ -119,6 +119,8 @@ void 	unpreserving_cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, ui
 	unpreserve_render_line(&vert_line);
 }
 
+// TODO: FIX OVERLAPPING PIXELS NOT WORKING WITH PRESERVE/UNPRESERVE FOR CROSSES
+
 void 	preserving_cross_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color)
 {
 	t_line 		horz_line;

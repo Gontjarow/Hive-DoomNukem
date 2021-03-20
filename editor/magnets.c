@@ -1,13 +1,5 @@
 #include "doom-nukem.h"
 
-//  TODO FIX ERRORS WHEN PORTALIZING ON EDGE CASES
-//      FIX EDGE CASES FOR PORTAL A AND PORTAL B BY ID SELECTION LOGIC ->
-// 		COULD BE INCORRECT WHEN:
-// 			THE FIRST WALL OF A ROOM
-//              must iterate to last wall p
-// 			LAST WALL OF A ROOM
-//              easy, can fix by refering to previous wall and first_wall
-
 static void		set_portal_ids_to_linedraw_data(t_status *status, int id, int other_wall_id)
 {
 	t_linedraw  *data;

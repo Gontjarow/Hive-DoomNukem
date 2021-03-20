@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 15:01:29 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/15 15:23:50 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/01 18:41:53 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static int		enemy_collision_with_player(t_doom *doom, t_enemy *enemy)
 {
-	int		dx;
-	int		dy;
-	int		distance;
+	int			dx;
+	int			dy;
+	int			distance;
 
 	dx = enemy->x - (int)doom->mdl->player.x;
 	dy = enemy->y - (int)doom->mdl->player.y;
@@ -28,11 +28,11 @@ static int		enemy_collision_with_player(t_doom *doom, t_enemy *enemy)
 
 static int		enemy_collision_with_enemies(t_doom *doom, t_enemy *enemy)
 {
-	t_enemy *next_enemy;
-	int		dx;
-	int		dy;
-	int		ec2;
-	int		distance;
+	t_enemy		*next_enemy;
+	int			dx;
+	int			dy;
+	int			ec2;
+	int			distance;
 
 	ec2 = doom->mdl->enemy_count;
 	next_enemy = doom->mdl->enemy_first;
@@ -54,7 +54,7 @@ static int		enemy_collision_with_enemies(t_doom *doom, t_enemy *enemy)
 	return (0);
 }
 
-int			enemy_collision(t_doom *doom, t_enemy *enemy)
+int				enemy_collision(t_doom *doom, t_enemy *enemy)
 {
 	if (enemy_collision_with_enemies(doom, enemy) == -1)
 		return (-1);

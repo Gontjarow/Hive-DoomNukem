@@ -14,6 +14,57 @@ static void			map_chain_to_model(const char *str, t_model *mdl)
 	printf("Model set to chain to map \"%s\"\n", mdl->chain);
 }
 
+// 2x Effect spec functions
+static void			map_effect_to_model(const int *fields, t_model *mdl)
+{
+	t_effect	*new_effect;
+
+	mdl->effects->id = fields[0];
+	mdl->effects->type_id = fields[1];
+	mdl->effects->loc.x = fields[2];
+	mdl->effects->loc.y = fields[3];
+	mdl->effects->target.x = fields[4];
+	mdl->effects->target.y = fields[5];
+	mdl->effects->target_id = fields[6];
+	mdl->effect_count++;
+	if (mdl->effect_count == 1)
+		mdl->effect_first = mdl->effects;
+	new_effect = (t_effect*)malloc(sizeof(t_effect));
+	mdl->effects->next = new_effect;
+	mdl->effects = new_effect;
+	ft_putendl("Created an effect to model!");
+}
+
+static t_token		*effect_spec(void)
+{
+	static t_token	*spec = NULL;
+	int 			i;
+
+	if (!spec)
+	{
+		i = 0;
+		spec = (t_token *) malloc(sizeof(t_token));
+		spec->expected = 7;
+		spec->sur[0] = '[';
+		spec->sur[1] = ']';
+		spec->equ = '=';
+		spec->sep = '|';
+		spec->keys = (char**)malloc(sizeof(char*) * spec->expected);
+		while (i < spec->expected)
+			spec->keys[i++] = (char*)malloc(sizeof(char) * TOKEN_KEY_LIMIT);
+		ft_strcpy(spec->keys[0],"id");
+		ft_strcpy(spec->keys[1], "type_id");
+		ft_strcpy(spec->keys[2], "loc.x");
+		ft_strcpy(spec->keys[3], "loc.y");
+		ft_strcpy(spec->keys[4], "target.x");
+		ft_strcpy(spec->keys[5], "target.y");
+		ft_strcpy(spec->keys[6], "target_id");
+		spec->result_ptr = NULL;
+		spec->map_function = map_effect_to_model;
+	}
+	return (spec);
+}
+
 // 2x Pickup spec functions
 static void			map_pickup_to_model(const int *fields, t_model *mdl)
 {
@@ -476,28 +527,26 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 		map_string(map->player_string, mdl, player_spec());
 	if (map->chain_string)
 		map_chain_to_model(map->chain_string, mdl);
-	//ft_putendl("Attempting to convert player from map to model at map_to_model");
 	//debug_model_player();
 	if (map->wall_string)
 		map_string(map->wall_string, mdl, wall_spec());
-	//ft_putendl("Attempting to convert walls from map to model at map_to_model");
 	//debug_model_walls();
 	if (map->room_string)
 		map_string(map->room_string, mdl, room_spec());
-	//ft_putendl("Attempting to convert rooms from map to model at map_to_model");
 	//debug_model_rooms();
 	if (map->portal_string)
 		map_string(map->portal_string, mdl, portal_spec());
-	//ft_putendl("Attempting to convert portals from map to model at map_to_model");
 	//debug_model_portals();
 	if (map->enemy_string)
 		map_string(map->enemy_string, mdl, enemy_spec());
-	//ft_putendl("Attempting to convert enemies from map to model at map_to_model");
 	//debug_model_enemies();
+	if (map->effect_string)
+		map_string(map->effect_string, mdl, effect_spec());
+	//debug_model_effects();
 	if (map->pickup_string)
 		map_string(map->pickup_string, mdl, pickup_spec());
 	if (!map->wall_string && !map->room_string && !map->portal_string
-		&& !map->enemy_string && !map->player_string && !map->pickup_string)
+		&& !map->enemy_string && !map->player_string && !map->pickup_string && !map->effect_string)
 	{
 		ft_putendl("Warning: Empty map data strings at map_to_model");
 		doom_ptr()->map->was_filled = 0;
@@ -505,95 +554,3 @@ void 				map_to_model(t_mapfile *map, t_model *mdl)
 	}
 	doom_ptr()->map->was_filled = 1;
 }
-
-/* Unit tested version of map_to_model
-void 				map_to_model(t_mapfile *map, t_model *mdl)
-{
-	char *tmp;
-	char *unit_test;
-	char *unit_0 = "[Player] spawn.x = 100 | spawn.y = 100 |  rot = 90";
-	char *unit_1 = "[Wall] id = 0 | start.x = 335 | start.y = 278 | end.x = 389 | end.y = 310\n"
-				   "[Wall] id = 1 | start.x = 135 | start.y = 478 | end.x = 189 | end.y = 90\n"
-				   "[Wall] id = 2 | start.x = 635 | start.y = 578 | end.x = 789 | end.y = 290\n"
-				   "[Wall] id = 3 | start.x = 35 | start.y = 578 | end.x = 789 | end.y = 209\n"
-				   "[Wall] id = 4 | start.x = 63 | start.y = 58 | end.x = 79 | end.y = 29\n"
-				   "[Wall] id = 5 | start.x = 65 | start.y = 78 | end.x = 89 | end.y = 299";
-	char *unit_2 = "[Room] id = 0 | first_wall_id = 0 | wall_count = 3 | floor_height = 1000 | roof_height = 1300\n"
-				   "[Room] id = 1 | first_wall_id = 3 | wall_count = 3 | floor_height = 1000 | roof_height = 1300";
-	char *unit_3 = "[Portal] id = 0 | start.x = 335 | start.y = 278 | end.x = 389 | end.y = 310\n"
-				   "[Portal] id = 1 | start.x = 135 | start.y = 478 | end.x = 189 | end.y = 90";
-	char *unit_4 = "[Enemy] id = 0 | x = 335 | y = 278 | rot = 7 | hp = 100 | wep.type_id = 0\n"
-				   "[Enemy] id = 1 | x = 158 | y = 421 | rot = 187 | hp = 100 | wep.type_id = 0";
-
-	tmp = map->player_string;
-	unit_test = ft_strdup(unit_0);
-	//map->player_string = unit_test;
-	if (!map->player_string)
-		ft_die("Fatal error: map_to_model player data missing from mapfile.");
-	else
-	{
-		//ft_putendl("Attempting to convert player from map to model at map_to_model");
-		map_string(map->player_string, mdl, player_spec());
-		debug_model_player();
-	}
-	free(unit_test);
-	map->player_string = tmp;
-
-	tmp = map->wall_string;
-	unit_test = ft_strdup(unit_1);
-	//map->wall_string = unit_test;
-	if (map->wall_string)
-	{
-		//ft_putendl("Attempting to convert walls from map to model at map_to_model");
-		map_string(map->wall_string, mdl, wall_spec());
-		debug_model_walls();
-	}
-	free(unit_test);
-	map->wall_string = tmp;
-
-	tmp = map->room_string;
-	unit_test = ft_strdup(unit_2);
-	//map->room_string = unit_test;
-	if (map->room_string)
-	{
-		//ft_putendl("Attempting to convert rooms from map to model at map_to_model");
-		map_string(map->room_string, mdl, room_spec());
-		debug_model_rooms();
-	}
-	free(unit_test);
-	map->room_string = tmp;
-
-	tmp = map->portal_string;
-	unit_test = ft_strdup(unit_3);
-	//map->portal_string = unit_test;
-	if (map->portal_string)
-	{
-		//ft_putendl("Attempting to convert portals from map to model at map_to_model");
-		map_string(map->portal_string, mdl, portal_spec());
-		debug_model_portals();
-	}
-	free(unit_test);
-	map->portal_string = tmp;
-
-	tmp = map->enemy_string;
-	unit_test = ft_strdup(unit_4);
-	//map->enemy_string = unit_test;
-	if (map->enemy_string)
-	{
-		//ft_putendl("Attempting to convert enemies from map to model at map_to_model");
-		map_string(map->enemy_string, mdl, enemy_spec());
-		debug_model_enemies();
-	}
-	free(unit_test);
-	map->enemy_string = tmp;
-
-	if (!map->wall_string && !map->room_string && !map->portal_string
-			&& !map->enemy_string && !map->player_string)
-	{
-		ft_putendl("Warning: Empty map data strings at map_to_model");
-		doom_ptr()->map->was_filled = 0;
-		return ;
-	}
-}
-*/
-

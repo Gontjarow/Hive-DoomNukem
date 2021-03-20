@@ -21,6 +21,9 @@ void		init_model(t_doom *doom)
 	doom->mdl->enemies = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!doom->mdl->enemies)
 		ft_die("Fatal error: Mallocing enemies struct failed at init_model.");
+	doom->mdl->effects = (t_effect*)malloc(sizeof(t_effect));
+	if (!doom->mdl->effects)
+		ft_die("Fatal error: Mallocing effects struct failed at init_model.");
 	doom->mdl->pickups = (t_pickup*)malloc(sizeof(t_pickup));
 	if (!doom->mdl->pickups)
 		ft_die("Fatal error: Mallocing pickups struct failed at init_model.");
@@ -39,25 +42,29 @@ void		init_model(t_doom *doom)
 	doom->mdl->portal_first = NULL;
 	doom->mdl->enemy_first = NULL;
 	doom->mdl->pickup_first = NULL;
+	doom->mdl->effect_first = NULL;
 	doom->mdl->wall_count = 0;
 	doom->mdl->room_count = 0;
 	doom->mdl->portal_count = 0;
 	doom->mdl->enemy_count = 0;
 	doom->mdl->pickup_count = 0;
+	doom->mdl->effect_count = 0;
 
 	// Initializing the player variables. Strongly related to the ../game/* functions!
 	doom->mdl->player.x = -1;
 	doom->mdl->player.y = -1;
+	doom->mdl->player.z = -1;
+	doom->mdl->player.z_velocity = 0.0;
 	doom->mdl->player.yaw = 0.0;
 	doom->mdl->player.rot_horizontal = 0;
 	doom->mdl->player.rot_vertical = 0;
 	doom->mdl->player.is_jumping = 0;
 	doom->mdl->player.is_crouching = 0;
 	doom->mdl->player.is_running = 0;
-	doom->mdl->player.height = 100;
-	doom->mdl->player.min_speed = 15;	// crouched
-	doom->mdl->player.mov_speed = 30;	// walking
-	doom->mdl->player.max_speed = 60;	// running
+	doom->mdl->player.height = STAND_HEIGHT;
+	doom->mdl->player.min_speed = 5;	// crouched
+	doom->mdl->player.mov_speed = 10;	// walking
+	doom->mdl->player.max_speed = 20;	// running
 	doom->mdl->player.rot_speed = 5;
 	doom->mdl->player.run_lock = 0;
 	doom->mdl->player.crouch_lock = 0;
@@ -69,6 +76,9 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.hp.cur = 100;
 	doom->mdl->player.hp.max = 100;
 	doom->mdl->player.shooting = 0;
+	doom->mdl->player.invis = 0;
+	doom->mdl->player.room_id = -1;
+	doom->mdl->player.room = NULL;
 	init_player_weapon(doom);
 }
 
@@ -80,13 +90,17 @@ void 		destroy_model(t_doom *doom)
 	free(doom->mdl->portals);
 	free(doom->mdl->walls);
 	free(doom->mdl->rooms);
+	free(doom->mdl->effects);
+	free(doom->mdl->pickups);
 	if (doom->mdl->chain != NULL)
 		free(doom->mdl->chain);
 	doom->mdl->chain = NULL;
+	doom->mdl->enemy_first = NULL;
+	doom->mdl->portal_first = NULL;
 	doom->mdl->wall_first = NULL;
 	doom->mdl->room_first = NULL;
-	doom->mdl->portal_first = NULL;
-	doom->mdl->enemy_first = NULL;
+	doom->mdl->effect_first = NULL;
+	doom->mdl->pickup_first = NULL;
 	doom->mdl->parent = NULL;
 	free(doom->mdl);
 	doom->mdl = NULL;

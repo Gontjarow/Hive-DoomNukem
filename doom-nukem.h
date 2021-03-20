@@ -39,7 +39,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 33
+# define FPS 50
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 1
@@ -51,10 +51,8 @@ typedef struct			s_doom
 	int 				game_quit;
 	int					minimap_quit;
 	int 				menu_out_of_focus;
-	int 				map_data_initialized;
 	float				fps;
 	const Uint8* 		keystates;
-	uint32_t 			app_start;
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;

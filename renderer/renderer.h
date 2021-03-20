@@ -20,7 +20,7 @@
 # define NO_NEIGHBOR -1
 
 // For sprite drawing
-# define SPRITE_SCALE 10
+# define SPRITE_SCALE 2.5
 # define BYTE_TRANSPARENT 0xFF
 # define COLOR_TRANSPARENT 0xFF00FF
 

@@ -100,6 +100,25 @@ void		draw_enemy(t_enemy *enemy, t_state *state)
 	update_tail((void*)enemy, ENEMY);
 }
 
+void	 	draw_effect(t_effect *effect, t_state *state)
+{
+	int		relative_x;
+	int		relative_y;
+
+	if (!((effect->loc.x >= state->scroll_x) &&
+		  (effect->loc.x <= state->scroll_x + (state->zoom_factor * EDT_WIN_WIDTH)) &&
+		  (effect->loc.y >= state->scroll_y) &&
+		  (effect->loc.y <= state->scroll_y + (state->zoom_factor * EDT_WIN_HEIGHT))))
+		return ;
+	relative_x = effect->loc.x;
+	relative_y = effect->loc.y;
+	relative_x -= state->scroll_x;
+	relative_y -= state->scroll_y;
+	relative_x /= state->zoom_factor;
+	relative_y /= state->zoom_factor;
+	unpreserving_triangle_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y},
+		effect_dirs(effect->type_id), effect_colors(effect->type_id));
+}
 
 void	 	draw_pickup(t_pickup *pickup, t_state *state)
 {
@@ -198,6 +217,7 @@ void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 {
 	t_enemy		*enemy;
 	t_pickup	*pickup;
+	t_effect	*effect;
 	int 		count;
 
 	editor_back_buffer()->rendering_on = 1;
@@ -221,6 +241,16 @@ void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 		{
 			draw_pickup(pickup, state);
 			pickup = pickup->next;
+		}
+	}
+	if (mdl->effect_count != 0)
+	{
+		count = mdl->effect_count;
+		effect = mdl->effect_first;
+		while (count--)
+		{
+			draw_effect(effect, state);
+			effect = effect->next;
 		}
 	}
 	//puts("Drawing plantings to back buffer!");

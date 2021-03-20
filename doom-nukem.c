@@ -55,8 +55,7 @@ static void	init_doom(t_doom *doom)
 	doom->keystates = NULL;
 	doom->minimap = NULL;
 	doom->mdl = NULL;
-	doom->app_start = SDL_GetTicks();
-	doom->map_data_initialized = 0;
+	doom->map = NULL;
 }
 
 static int	destroy_and_quit(t_doom *doom)
@@ -146,8 +145,8 @@ int			main(int argc, char *argv[])
 		{
 			acc_time = ((float)SDL_GetTicks() - (float)time_between) / 1000.0f;
 			doom.fps = (float)frames_between / acc_time;
-			ft_putnbr((int)doom.fps);
-			ft_putendl(" fps");
+			//ft_putnbr((int)doom.fps);
+			//ft_putendl(" fps");
 			fps_cooldown = 100;
 			time_between = SDL_GetTicks();
 			frames_between = 0;

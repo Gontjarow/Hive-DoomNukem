@@ -42,6 +42,10 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define COLOR_HEALTH_PICKUP	0xff00ff00
 # define COLOR_AMMO_PICKUP		0xffffff00
 # define COLOR_WEAPON_PICKUP	0xffffffff
+# define COLOR_EFFECT_EXIT		0xff00ff00
+# define COLOR_EFFECT_KEY		0xffffff00
+# define COLOR_EFFECT_LIGHT		0xffffffff
+# define EDT_TRIANGLE_SIZE		16
 # define PICKUP_RADIUS			16
 # define HEIGHT_STEPPING		10
 # define FLOOR_MIN				0
@@ -54,6 +58,21 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define STRING_ENTER_MAPFILE	"input mapfile name with a..z and ."
 # define STRING_VALID_CHAR_INFO	"save and confirm with enter"
 # define STRING_CONFIRM_SAVING	"do you want to save changes to map"
+# define WARNING_NON_CONVEX		"WARNING: NON-CONVEX polygon detected!"
+# define WARNING_NON_CONVEX_CW	"WARNING: NON-CONVEX clockwise polygon detected!"
+# define WARNING_NON_CONVEX_CCW	"WARNING: NON-CONVEX COUNTER-CLOCKWISE polygon detected!"
+# define WARNING_NON_CONVEX_Q	"WARNING: NON-CONVEX polygon detected! Could be either clockwise or counter-clockwise?"
+# define WARNING_CCW			"WARNING: COUNTER-CLOCKWISE detected!"
+# define WARNING_NON_CLOSED		"WARNING: Rooms walls did not form a CLOSED room!"
+# define XPM_SINGLY				"img/edt/single_zoom.xpm"
+# define XPM_DOUBLY				"img/edt/double_zoom.xpm"
+# define XPM_TRIPLY				"img/edt/triple_zoom.xpm"
+# define XPM_QUADLY				"img/edt/quad_zoom.xpm"
+# define XPM_POLYDRAW			"img/edt/polydraw.xpm"
+# define XPM_SELECT				"img/edt/select.xpm"
+# define XPM_EFFECT				"img/edt/effect.xpm"
+# define XPM_PLANTING			"img/edt/planting.xpm"
+# define XPM_PICKUPS			"img/edt/pickups.xpm"
 
 typedef struct 			s_2d_layer
 {
@@ -78,11 +97,13 @@ typedef struct 			s_linedraw
     t_point				portal_b_loc;
 }						t_linedraw;
 
-enum 					e_logic_type {PLAYER, ENEMY};
+enum 					e_logic_type { PLAYER, ENEMY };
+enum 					e_logic_plant_dirs { UPWARD, DOWNWARD };
 
 typedef struct 			s_logic
 {
 	int 				plant_type;
+	int					plant_dir;
 	logic_void			swap_type;
 	logic_xy			plant;
 	int 				planted_ticks;
@@ -112,12 +133,12 @@ typedef struct 			s_status
 	void                *data;
 }						t_status;
 
-typedef struct 			s_gui // Mode_Polydraw() .... infinite amount of Mode_Somethings() which all define their own
-{							  // interactions etc. for example Mode_Placement()
+typedef struct 			s_gui
+{
     gui_event			activate;
     gui_event			deactivate;
     gui_event			change_zoom;
-	gui_click  			left_click; // Function pointer to polydraw_leftclick
+	gui_click  			left_click;
 	gui_click			middle_click;
 	gui_click			right_click;
 	gui_motion			motion;
@@ -181,11 +202,16 @@ int 					edt_handle_confirm_save(t_doom *doom);
  * */
 
 void					redraw_editor_to_backbuffer(uint32_t color);
-SDL_Surface				*zoom_xpm(int factor);
+void                	print_mode_info(t_gui *mode);
+
+/*
+ * from editor_xpm.c
+ * */
+
+SDL_Surface				*zoom_xpm(int zoom_factor);
 SDL_Surface				*mode_xpm(t_gui *mode);
 SDL_Surface 			*mousehelp_xpm(void);
 SDL_Surface 			*keyhelp_xpm(void);
-void                	print_mode_info(t_gui *mode);
 
 /*
  * from scrolling.c
@@ -200,7 +226,6 @@ void	 				handle_keyboard_scrolling(t_doom *doom);
  * from walls.c
  * */
 
-t_room					*room_by_wall_id(int id, t_model *mdl);
 void					wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
 void 					room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color);
 void					x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
@@ -216,7 +241,7 @@ t_2d_layer      		*editor_front_buffer(void);
 SDL_Surface     		*mixing_surface();
 
 /*
- * from square_to_buffer.c
+ * from square_to_buffer.c, circle_to_buffer.c, triangle_to_buffer.c
  * */
 
 void					preserving_square_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
@@ -229,15 +254,14 @@ void					number_to_buffer(SDL_Surface *buff, t_point loc, int number, uint32_t c
 void					digit_to_buffer(SDL_Surface *buff, t_point xy, int digit, uint32_t color);
 void					digit_to_buffer_ptr(SDL_Surface *buff, t_point xy, int digit, uint32_t color, void (*render_fun)(t_line *line));
 
-/*
- * from circle_to_buffer.c
- * */
-
 void					preserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t mask);
 void					unpreserving_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
 void					unmasked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t mask);
 void					masked_circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color, uint32_t *avoid);
 void            		circle_to_buffer(SDL_Surface *buff, t_point xy, int radius, uint32_t color);
+
+void					unpreserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, uint32_t color);
+void					preserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, uint32_t color);
 
 /*
  * from linedraw.c
@@ -314,6 +338,11 @@ void 					select_middle_click(int x, int y);
  * from effect.c
  * */
 
+int						effect_dirs(int type);
+uint32_t				effect_colors(int type);
+void 					effect_swap_type(void);
+void					effect_plant(int x, int y);
+t_logic 				*effect_logic(void);
 void					effect_activate(t_state *state);
 void					effect_deactivate(t_state *state);
 void					effect_change_zoom(t_state *state);
@@ -411,7 +440,7 @@ void					find_visual_xy(t_room *room);
  * from delete_room.c
  * */
 
-void					delete_room(t_room *room, t_model *mdl);
+void					delete_room(t_room *room, int del_count, t_model *mdl);
 
 enum					e_clockwise_return_code { NEEDS_FLIPPING = 2 };
 
@@ -420,7 +449,7 @@ enum					e_clockwise_return_code { NEEDS_FLIPPING = 2 };
  * */
 
 void		 			flip_room(t_room *room, t_model *mdl);
-int						is_clockwise_convex_polygon(t_room *room);
+int						is_clockwise_convex_polygon(t_room *room, t_wall *wall, int wc);
 
 /*
  * from delete_portal.c
@@ -428,5 +457,24 @@ int						is_clockwise_convex_polygon(t_room *room);
 
 void					delete_portals_by_room(t_room *room, t_model *mdl);
 void					delete_portal(t_wall *portal, t_model *mdl);
+
+/*
+ * from ask_to_save.c
+ * */
+
+char					*ask_to_save(t_doom *doom);
+
+/*
+ * from room.c
+ * */
+
+void					flip_room(t_room *room, t_model *mdl);
+t_room					*room_by_wall_id(int id, t_model *mdl);
+
+/*
+ * from portal.c
+ * */
+
+int						portal_belongs_to_room(t_wall *portal, t_room *room);
 
 #endif

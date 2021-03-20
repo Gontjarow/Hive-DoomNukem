@@ -237,6 +237,7 @@ void			edt_keystate_input(t_doom *doom)
 		debug_model_enemies();
 		debug_model_walls();
 		debug_model_rooms();
+		debug_model_effects();
 		lock_w = 1;
 	}
 

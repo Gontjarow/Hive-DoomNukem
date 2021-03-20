@@ -6,6 +6,7 @@
 typedef	struct 			s_doom t_doom;
 typedef struct 			SDL_Surface SDL_Surface;
 
+# define 				DEBUGGING_USE_FLAG "[No level exit defined] Infinite map suitable for debugging!\n"
 # define 				TOKEN_FIELD_LIMIT 16
 # define				TOKEN_KEY_LIMIT 16
 # define 				WAV_PLOP "wav/plop.wav"
@@ -41,21 +42,23 @@ typedef struct			s_model
 	struct s_doom		*parent;
 	struct SDL_Surface  *poly_map;
 	struct s_player		player;
-	int 				current_portal;
 	struct s_enemy		*enemies;
 	struct s_wall		*walls;
 	struct s_room		*rooms;
 	struct s_wall		*portals;
+	struct s_effect		*effects;
 	struct s_pickup		*pickups;
 	struct s_enemy		*enemy_first;
 	struct s_wall		*wall_first;
 	struct s_room		*room_first;
 	struct s_wall		*portal_first;
+	struct s_effect		*effect_first;
 	struct s_pickup		*pickup_first;
 	int 				wall_count;
 	int 				room_count;
 	int 				portal_count;
 	int 				enemy_count;
+	int					effect_count;
 	int 				pickup_count;
 	char 				*chain;
 } 						t_model;
@@ -66,6 +69,7 @@ typedef struct 			s_mapfile
 	char 				*room_string;
 	char 				*portal_string;
 	char 				*enemy_string;
+	char 				*effect_string;
 	char 				*pickup_string;
 	char 				*player_string;
 	char 				*chain_string;
@@ -113,6 +117,7 @@ int 					singleton_manager(void **ptr, int type, int clear);
  * from mapfile.c
  * */
 
+int						stringify_mapfile(t_doom *doom, char *map_path);
 t_mapfile				*init_mapfile(void);
 void					destroy_mapfile(t_mapfile *map);
 int						write_mapfile(char *map_path, t_mapfile *map);
@@ -128,6 +133,7 @@ void					add_enemy_to_string(t_enemy *enemy, t_mapfile *map);
 void					add_wall_to_string(t_wall *wall, t_mapfile *map);
 void					add_portal_to_string(t_wall *portal, t_mapfile *map);
 void					add_room_to_string(t_room *room, t_mapfile *map);
+void					add_effect_to_string(t_effect *effect, t_mapfile *map);
 void					add_pickup_to_string(t_pickup *pickup, t_mapfile *map);
 
 /*

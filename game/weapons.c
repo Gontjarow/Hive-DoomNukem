@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/29 18:57:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/01 19:00:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,5 @@ void		player_update_weapons(t_doom *doom)
 	if (doom->mdl->player.shoot_cd > 0)
 		doom->mdl->player.shoot_cd--;
 	if (doom->mdl->player.reload_time > 0)
-	{
-		// printf("Reloading...\n");
 		doom->mdl->player.reload_time--;
-	}
 }

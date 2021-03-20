@@ -1,5 +1,9 @@
 #include "doom-nukem.h"
 
+// TODO CONSIDER USING PROTECTION TO CHECK FOR LINE INTERSECTIONS
+// 		POSSIBLE YAGNI, WOULD NOT BE RELIABLE, NEEDS MATHEMATICAL CHECK INSTEAD
+//		INSTEAD, CONSIDER CHECKING CONFLICTS IN EXPAND_POLYMAP, WITH A TRESHHOLD
+
 /* trigger_protection() is a notifier function called by set_pixel_safe() when
  * overwriting to a buffer over a set_protected_color() has occured. Triggers
  * are accumulated by the calls 'trigger_protection(0)'. Decoupled from this,
@@ -7,9 +11,6 @@
  * can implement a periodic or event based check wheter overwriting happened
  * by invoking 'trigger_protection(1)'. If yes, this protection ATM (stc)
  * calls a clean slate for editor back buffer by a wipe and a walls redraw  */
-// TODO CONSIDER USING PROTECTION TO CHECK FOR LINE INTERSECTIONS
-// 		POSSIBLE YAGNI, WOULD NOT BE RELIABLE, NEEDS MATHEMATICAL CHECK INSTEAD
-//		INSTEAD, CONSIDER CHECKING CONFLICTS IN EXPAND_POLYMAP, WITH A TRESHHOLD
 
 void 				trigger_protection(int clear)
 {
@@ -20,7 +21,6 @@ void 				trigger_protection(int clear)
 		if (triggers == 0)
 			return ;
 		triggers = 0;
-		//ft_putendl("Triggered clearance commisioned.");
 		wipe_editor_back_buffer(0xff000000);
 		x_walls_to_buffer(get_model()->wall_count, get_model()->wall_first, editor_back_buffer()->buff, 0xffffffff);
 		return ;
@@ -30,7 +30,6 @@ void 				trigger_protection(int clear)
 
 void		 		edt_cycle_mode(t_state *state)
 {
-	//ft_putendl("Deactivating GUI mode");
 	state->gui->deactivate(state);
 	if (state->gui == mode_polydraw())
 		state->gui = mode_select();
@@ -42,13 +41,11 @@ void		 		edt_cycle_mode(t_state *state)
 		state->gui = mode_effect();
 	else if (state->gui == mode_effect())
 		state->gui = mode_polydraw();
-	//ft_putendl("Activating GUI mode");
 	state->gui->activate(state);
 }
 
 void				edt_outward_zoom(void)
 {
-	//printf("Zoomed editor outward\n");
 	if (get_state()->zoom_factor < 4)
 		get_state()->zoom_factor *= 2;
 	get_state()->confine_skip = 0;
@@ -59,7 +56,6 @@ void				edt_outward_zoom(void)
 
 void				edt_inward_zoom(void)
 {
-	//printf("Zoomed editor inward\n");
 	if (get_state()->zoom_factor > 1)
 		get_state()->zoom_factor /= 2;
 	get_state()->confine_skip = 0;
@@ -84,7 +80,7 @@ t_state				*get_state(void)
 		state = (t_state*)malloc(sizeof(t_state));
 		if (!state)
 			ft_die("Fatal error: Could not malloc state struct at get_state");
-		state->gui = mode_planting();//Usually mode_polydraw()
+		state->gui = mode_polydraw();
 		state->zoom_factor = 1;
 		state->scroll_x = 0;
 		state->scroll_y = 0;
@@ -97,10 +93,7 @@ t_state				*get_state(void)
 		state->gui->activate(state);
 		state->cooldown = 0;
 		state->saving_choice = 1;
-		//print_mode_info(state->gui);
-		//draw_scroll_bars_to_backbuffer(state);
 	}
-	//printf("States address returned: %p\n", (void*)state);
 	return (state);
 }
 

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 15:46:17 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/15 15:16:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/02/01 19:16:38 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,21 @@ int			player_collision_with_enemies(t_doom *doom)
 			return (-1);
 		enemy = enemy->next;
 	}
+	return (0);
+}
+
+int			player_collision_with_pickup(t_doom *doom, t_pickup *pickup)
+{
+	int		dx;
+	int		dy;
+	int		ec;
+	int		distance;
+
+	dx = (int)doom->mdl->player.x - pickup->loc.x;
+	dy = (int)doom->mdl->player.y - pickup->loc.y;
+	distance = sqrt(dx * dx + dy * dy);
+	if ((distance < 10 + PICKING_RADIUS))
+		return (-1);
 	return (0);
 }
 
