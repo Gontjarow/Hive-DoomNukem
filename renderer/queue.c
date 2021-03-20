@@ -2,19 +2,9 @@
 
 t_queue			*get_queue()
 {
-	static t_queue queue = {{0}, queue.array, queue.array + 1};
+	static t_queue queue = {{0}, queue.array, queue.array};
 
 	return (&queue);
-}
-
-static t_queue	*init_queue()
-{
-	t_queue *queue;
-
-	queue = get_queue();
-
-	queue->front = queue->array;
-	queue->rear = queue->front + 1;
 }
 
 void			queue_add(int id, int left, int right)
@@ -24,8 +14,8 @@ void			queue_add(int id, int left, int right)
 	queue = get_queue();
 
 	queue->rear->id = id;
-	queue->rear->left = 0;
-	queue->rear->right = GAME_WIN_WIDTH - 1;
+	queue->rear->left = left;
+	queue->rear->right = right;
 	queue->rear++;
 
 	// Note: If rear == queue+MAX_SECTOR_QUEUE

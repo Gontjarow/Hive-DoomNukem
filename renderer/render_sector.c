@@ -92,6 +92,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 		int neighbor = sector->neighbors[vertex];
 		queue_add(neighbor, 0, GAME_WIN_WIDTH);
+		t_sector	*connecting = &(get_world()->sectors[neighbor]);
 
 		//! One more clip into the player's view-cone.
 		t_xy_line wall_segment;
@@ -100,10 +101,10 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 		//! Calculate ceil/floor height.
 		calculate_vertical_scale(wall_segment, &scale);
 
-		double ceil = sector->ceil - doom->game->world->player.position.z - EYE_HEIGHT;
+		double ceil = sector->ceil / WORLD_SCALE - doom->game->world->player.position.z;
 		t_xy_line yawed_ceil = calculate_yawed(ceil, wall_segment, scale, doom->game->world->player.yaw);
 
-		double floor = sector->floor - doom->game->world->player.position.z - EYE_HEIGHT;
+		double floor = sector->floor / WORLD_SCALE - doom->game->world->player.position.z;
 		t_xy_line yawed_floor = calculate_yawed(floor, wall_segment, scale, doom->game->world->player.yaw);
 
 
@@ -142,7 +143,6 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 
 			// Todo: draw sky or ceiling
 
-			// printf("neighbor: %i, x: %i, ceil %.0f floor %.0f, playerZ %f\n", 0, screen_x, ceil, floor, get_world()->player.position.z);
 			//! Draw wall
 			if (neighbor == NO_NEIGHBOR)
 			{
@@ -150,12 +150,10 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom, int *y_
 			}
 			else
 			{
-				t_sector	*connecting = &(get_world()->sectors[neighbor]);
-
-				double		connecting_ceil        = connecting->ceil - doom->game->world->player.position.z - EYE_HEIGHT;
+				double		connecting_ceil        = connecting->ceil / WORLD_SCALE - doom->game->world->player.position.z;
 				t_xy_line	connecting_yawed_ceil  = calculate_yawed(connecting_ceil, wall_segment, scale, doom->game->world->player.yaw);
 
-				double		connecting_floor       = connecting->floor - doom->game->world->player.position.z - EYE_HEIGHT;
+				double		connecting_floor       = connecting->floor / WORLD_SCALE - doom->game->world->player.position.z;
 				t_xy_line	connecting_yawed_floor = calculate_yawed(connecting_floor, wall_segment, scale, doom->game->world->player.yaw);
 				// printf("neighbor: %i, x: %i, ceil %.0f floor %.0f\n", neighbor, screen_x, connecting_ceil, connecting_floor);
 

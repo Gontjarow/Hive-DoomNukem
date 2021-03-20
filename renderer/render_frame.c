@@ -81,8 +81,6 @@ t_world			*get_world()
 		ft_bzero(world->sectors, mdl->room_count * sizeof(t_sector));
 		world->sector_count = 0;
 		ft_memset(&world->player, 0, sizeof(world->player));
-		world->player.position = vec3(mdl->player.x, mdl->player.y, 0);
-		world->player.position = vec3_div(world->player.position, WORLD_SCALE);
 	}
 	return (world);
 }
@@ -224,7 +222,7 @@ t_world			*load_world(t_world *world)
 		int walls = sector->vertex_count; //room->wall_count;
 		while (i < walls)
 		{
-			sector->vertex[i++] = vec2_div(vec2(wall->start.x, wall->start.y), WORLD_SCALE); // why are these (X/Y) flipped?
+			sector->vertex[i++] = vec2_div(vec2(wall->start.x, wall->start.y), WORLD_SCALE);
 			wall = wall->next;
 		}
 		sector->vertex[i] = sector->vertex[0];
@@ -271,14 +269,9 @@ void			render_frame(t_doom *doom)
 	memset_i(y_top,                   0, GAME_WIN_WIDTH);
 	memset_i(y_bot, GAME_WIN_HEIGHT - 1, GAME_WIN_WIDTH);
 
-	// Progressive rendering of neighboring sectors
-	// int rendered_sectors[world->sector_count];
-	// ft_memset(rendered_sectors, 0, sizeof(rendered_sectors));
-
 	// First in queue will be the camera/player's sector.
 	queue_add(world->player.sector_id, 0, GAME_WIN_WIDTH);
 
-	// todo: queue loop
 	while (get_queue()->front != get_queue()->rear)
 	{
 		// Easy access to current render data (sector to draw, section to draw into)
