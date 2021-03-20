@@ -110,10 +110,10 @@ int			load_model(t_doom *doom)
 	{
 		if (!doom->edt->map_supplied)
 		{
-			if (!load_appended(doom))
-				ft_putendl("Failed to load appended map file, tried because no map was supplied as argument.");
-			else
-				create_model_appended(doom);
+//			if (!load_appended(doom))
+//				ft_putendl("Failed to load appended map file, tried because no map was supplied as argument.");
+//			else
+//				create_model_appended(doom);
 			return (1);
 		}
 		else if (!stringify_mapfile(doom, doom->edt->map_path))
