@@ -73,4 +73,6 @@ void		handle_player_action(t_doom *doom)
 		player_run(doom);
 	if (doom->keystates[SDL_SCANCODE_P])
 		debug_model_effects();
+	if (doom->keystates[SDL_SCANCODE_C])
+		debug_model_chain();
 }

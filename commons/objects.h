@@ -352,6 +352,8 @@ void					debug_model_rooms(void);
 void					debug_model_portals(void);
 void					debug_model_effects(void);
 void					debug_model_pickups(void);
+void					debug_model_chain(void);
+
 
 /*
  * from texture.c

@@ -126,7 +126,13 @@ void			handle_player_movement(t_doom *doom)
 		rotating_left_right(doom, -1);
 	if (doom->keystates[SDL_SCANCODE_RIGHT])
 		rotating_left_right(doom, 1);
-	if (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN])
+	if (doom->keystates[SDL_SCANCODE_LSHIFT] && (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN]))
+	{
+		doom->mdl->player.z = doom->keystates[SDL_SCANCODE_UP] ? doom->mdl->player.z + 1 : doom->mdl->player.z - 1;
+		ft_putnbr(doom->mdl->player.z);
+		ft_putendl(" player Z position");
+	}
+	else if (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN])
 	{
 		doom->mdl->player.height = doom->keystates[SDL_SCANCODE_UP] ? doom->mdl->player.height + 1 : doom->mdl->player.height - 1;
 		ft_putnbr(doom->mdl->player.height);
