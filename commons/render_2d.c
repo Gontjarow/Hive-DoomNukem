@@ -113,10 +113,12 @@ void		render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_sc
 	int rect_x[2];
 	int rect_y[2];
 	static int unveiler = 64;
+	static int reached_end = 0;
 
 	if (reset)
 	{
 		unveiler = 64;
+		reached_end = 0;
 		typewrite("reset", NULL, 0, 0);
 		return ;
 	}
@@ -126,9 +128,23 @@ void		render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_sc
 	rect_x[1] = GAME_WIN_WIDTH;
 	rect_y[1] = GAME_WIN_HEIGHT - unveiler;
 	if (unveiler < GAME_WIN_HEIGHT)
-		unveiler++;
-	if (unveiler > GAME_WIN_HEIGHT)
+		unveiler ++;
+	else if (unveiler > GAME_WIN_HEIGHT)
 		unveiler = GAME_WIN_HEIGHT;
-	draw_rect_color(rect_x, rect_y, 0xff000000, doom->game->buff);
-	typewrite(label, doom->game->buff, 45, 40);
+	if (unveiler == GAME_WIN_HEIGHT && !reached_end)
+	{
+		reached_end = 1;
+		typewrite("reset", NULL, 0, 0);
+	}
+	else
+	{
+		draw_rect_color(rect_x, rect_y, 0xff000000, doom->game->buff);
+	}
+	if (reached_end)
+	{
+		print_glyph_str(label, doom->game->buff, 45, 40);
+		typewrite("press space to begin", doom->game->buff, 45, 445);
+	}
+	else
+		typewrite(label, doom->game->buff, 45, 40);
 }
