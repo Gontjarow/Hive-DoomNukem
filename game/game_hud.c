@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 18:43:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 17:01:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,13 +342,13 @@ void		handle_player_ammo_bar(t_doom *doom)
 	{
 		if (doom->mdl->player.reload_time == 0)
 		{
-			if (doom->mdl->player.weap_id == 0)
+			if (doom->mdl->player.weap_id == PISTOL)
 				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_pistol_ammo_bar, doom->game->hud_location);
-			else if (doom->mdl->player.weap_id == 1)
-				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_smg_ammo_bar, doom->game->hud_location);
-			else if (doom->mdl->player.weap_id == 2)
+			else if (doom->mdl->player.weap_id == SHOTGUN)
+				draw_surface((WIN_WIDTH - 10) + (space - 10), WIN_HEIGHT - 40, doom->sprites->txt_shotgun_ammo_bar, doom->game->hud_location);
+			else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
 				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_assault_ammo_bar, doom->game->hud_location);
-			space -= 10;
+			space -= doom->mdl->player.weap_id == SHOTGUN ? 20 : 10;
 		}
 		i++;
 	}
@@ -373,11 +373,11 @@ void		handle_clip_bar(t_doom *doom)
 
 void		handle_weapon_bar_shaded(t_doom *doom)
 {
-	if (doom->mdl->player.weap_id == 0)
+	if (doom->mdl->player.weap_id == PISTOL)
 		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 150, 0, doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
-	else if (doom->mdl->player.weap_id == 1)
+	else if (doom->mdl->player.weap_id == SHOTGUN)
 		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 240, 0, doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
-	else if (doom->mdl->player.weap_id == 2)
+	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
 		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 250, 0, doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
 }
 
@@ -385,11 +385,11 @@ void		handle_weapon_bar(t_doom *doom)
 {
 	if (doom->game->cel_shade_hud)
 		return (handle_weapon_bar_shaded(doom));
-	if (doom->mdl->player.weap_id == 0)
+	if (doom->mdl->player.weap_id == PISTOL)
 		draw_surface_ignore_alpha(WIN_WIDTH - 150, 0, doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
-	else if (doom->mdl->player.weap_id == 1)
+	else if (doom->mdl->player.weap_id == SHOTGUN)
 		draw_surface_ignore_alpha(WIN_WIDTH - 240, 0, doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
-	else if (doom->mdl->player.weap_id == 2)
+	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
 		draw_surface_ignore_alpha(WIN_WIDTH - 250, 0, doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
 }
 

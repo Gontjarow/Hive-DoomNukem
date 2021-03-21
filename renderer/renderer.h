@@ -160,6 +160,7 @@ void			vertical_line(int column, int start, int end, int color);
 void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth);
 void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom);
 void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range, double depth);
+void			vertical_shade(int column, int start, int end, int color);
 
 void			render_frame(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom);

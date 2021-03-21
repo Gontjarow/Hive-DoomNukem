@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/03 18:00:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 18:46:35 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,18 @@ void				deal_damage(t_doom *doom, int enemy_id)
 	}
 }
 
+int					player_shoots_shotgun(t_doom *doom)		//WIP
+{
+	doom->mdl->player.rot -= 10;
+	player_shoots(doom);
+	doom->mdl->player.rot += 10;
+	player_shoots(doom);
+	doom->mdl->player.rot += 10;
+	player_shoots(doom);
+	doom->mdl->player.rot -= 10;
+	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur += 2;
+}
+
 int					player_shoots(t_doom *doom)
 {
 	int		enemy_id;
@@ -106,6 +118,7 @@ int					player_shoots(t_doom *doom)
 		enemy_id = check_hit(doom);
 		if (enemy_id >= 0)
 		{
+			printf("enemy got hit!\n");
 			if (DEBUG == 1)
 				doom->minimap->player_ray_color = 0xff00ff00;
 			deal_damage(doom, enemy_id);
