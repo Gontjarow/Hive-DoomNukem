@@ -34,6 +34,7 @@ void		init_game(t_doom *doom, int argc, char **argv)
 	{
 		doom->game->map_path = argv[1];
 		doom->game->map_supplied = 1;
+		printf("argv[1] set to game->map_path = %s\n", argv[1]);
 	}
 	else
 		ft_die("Fatal error: No map specified as argument to load Play Level.");

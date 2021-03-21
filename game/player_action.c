@@ -54,6 +54,23 @@ static void	player_run(t_doom *doom)
 	}
 }
 
+static void	experimental_elevator(int active)
+{
+	static int 	original_height = -1;
+
+	if (active && original_height == -1)
+	{
+		original_height = get_model()->room_first->floor_height;
+	}
+	else if (active)
+	{
+		get_model()->room_first->floor_height = get_model()->room_first->floor_height + 8;
+		get_model()->room_first->floor_height = get_model()->room_first->floor_height > 750 ? 750 : get_model()->room_first->floor_height;
+	}
+	else
+		get_model()->room_first->floor_height = original_height;
+}
+
 void		handle_player_action(t_doom *doom)
 {
 	if (doom->keystates[SDL_SCANCODE_SPACE])
@@ -70,6 +87,11 @@ void		handle_player_action(t_doom *doom)
 		player_run(doom);
 	if (doom->keystates[SDL_SCANCODE_P])
 		debug_model_effects();
-	if (doom->keystates[SDL_SCANCODE_C])
+	if (doom->keystates[SDL_SCANCODE_L])
 		debug_model_chain();
+	if (doom->keystates[SDL_SCANCODE_E])
+		experimental_elevator(1);
+	if (doom->keystates[SDL_SCANCODE_R])
+		experimental_elevator(0);
+
 }
