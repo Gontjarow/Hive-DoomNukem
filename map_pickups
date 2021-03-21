@@ -8,7 +8,7 @@
 [Wall] id = 7 | start.x = 577 | start.y = 722 | end.x = 311 | end.y = 600
 [Wall] id = 8 | start.x = 311 | start.y = 600 | end.x = 341 | end.y = 463
 
-[Room] id = 0 | first_wall_id = 0 | wall_count = 9 | floor_height = 100 | roof_height = 120
+[Room] id = 0 | first_wall_id = 0 | wall_count = 9 | floor_height = 100 | roof_height = 160
 
 [Enemy] id = 0 | x = 973 | y = 324 | rot = 156 | hp = 100 | wep.type_id = 1 | ai.type_id = 2 | sprite_id = 0
 [Enemy] id = 1 | x = 1090 | y = 575 | rot = 141 | hp = 100 | wep.type_id = 1 | ai.type_id = 2 | sprite_id = 0

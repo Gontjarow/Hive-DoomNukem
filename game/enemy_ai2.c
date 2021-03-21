@@ -17,7 +17,7 @@ void		ai_ranged(t_doom *doom, t_enemy *enemy)
 	enemy->ai.min_dis = 200;
 	enemy->ai.max_dis = 400;
 	enemy->ai.mov_speed = 10;
-	enemy->hp.cur = 100;
+	//enemy->hp.cur = 100;
 	enemy->ai.aggro = INACTIVE;
 	enemy->ai.dmg = 10;
 }
@@ -27,7 +27,7 @@ void		ai_melee(t_doom *doom, t_enemy *enemy)
 	enemy->ai.min_dis = 40;
 	enemy->ai.max_dis = 300;
 	enemy->ai.mov_speed = 15;
-	enemy->hp.cur = 50;
+	//enemy->hp.cur = 50;
 	enemy->ai.aggro = INACTIVE;
 	enemy->ai.dmg = 20;
 }
@@ -37,7 +37,8 @@ void		ai_boss(t_doom *doom, t_enemy *enemy)
 	enemy->ai.min_dis = 70;
 	enemy->ai.max_dis = 200;
 	enemy->ai.mov_speed = 5;
-	enemy->hp.cur = 1000;
+	//enemy->hp.cur = 1000;
+	//puts("DO I OVERWRITE OR NO?");
 	enemy->ai.aggro = INACTIVE;
 	enemy->ai.dmg = 5;
 }

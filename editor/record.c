@@ -124,7 +124,22 @@ void	record_player(t_point location, t_point *tail, t_model *mdl)
 		//puts("Player planted!");
 }
 
-t_enemy	*record_enemy(t_point location, t_point *tail, t_model *mdl)
+static void		assign_max_hp_by_type(t_enemy *enemies)
+{
+	if (enemies->ai.type_id == 2)
+	{
+		enemies->hp.max = 1000;
+		return ;
+	}
+	if (enemies->ai.type_id == 1)
+	{
+		enemies->hp.max = 50;
+		return ;
+	}
+	enemies->hp.max = 100;
+}
+
+t_enemy			*record_enemy(t_point location, t_point *tail, t_model *mdl)
 {
 	t_enemy	*added_enemy;
 	t_enemy	*new_enemy;
@@ -134,10 +149,11 @@ t_enemy	*record_enemy(t_point location, t_point *tail, t_model *mdl)
 	mdl->enemies->x = location.x;
 	mdl->enemies->y = location.y;
 	mdl->enemies->wep.type_id = get_state()->selected_weapon_type;
-	mdl->enemies->hp.max = 100;
+	mdl->enemies->ai.type_id = get_state()->selected_ai_type;
+	assign_max_hp_by_type(mdl->enemies);
 	mdl->enemies->rot = degree_rot((t_point){location.x, location.y}, tail);
 		//printf("Enemy rot value is %d\n", mdl->enemies->rot);
-	mdl->enemies->ai.type_id = get_state()->selected_ai_type;
+
 	//mdl->enemies->sprite_id = get_state()->selected_sprite_id;
 	new_enemy = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!new_enemy)

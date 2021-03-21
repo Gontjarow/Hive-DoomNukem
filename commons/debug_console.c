@@ -154,3 +154,9 @@ void	debug_model_pickups(void)
 		pickups = pickups->next;
 	}
 }
+
+void	debug_model_chain(void)
+{
+	if (get_model()->chain)
+		printf("Chain_to_map: [%s]\n", get_model()->chain);
+}

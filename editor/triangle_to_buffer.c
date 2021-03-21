@@ -5,7 +5,12 @@ void			unpreserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, u
 	t_line 		horz_line;
 	t_line 		left_line;
 	t_line 		right_line;
+	int 		tri_size;
 
+	if (!doom_ptr()->edt_quit)
+		tri_size = EDT_TRIANGLE_SIZE / get_state()->zoom_factor;
+	else
+		tri_size = EDT_TRIANGLE_SIZE;
 	horz_line.buff = buff;
 	left_line.buff = buff;
 	right_line.buff = buff;
@@ -15,16 +20,16 @@ void			unpreserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, u
 
 	if (dir == DOWNWARD)
 	{
-		horz_line.x1 = xy.x - EDT_TRIANGLE_SIZE / 2;
-		horz_line.y1 = xy.y - EDT_TRIANGLE_SIZE;
-		horz_line.x2 = xy.x + EDT_TRIANGLE_SIZE / 2;
-		horz_line.y2 = xy.y - EDT_TRIANGLE_SIZE;
+		horz_line.x1 = xy.x - tri_size / 2;
+		horz_line.y1 = xy.y - tri_size;
+		horz_line.x2 = xy.x + tri_size / 2;
+		horz_line.y2 = xy.y - tri_size;
 	}
 	else if (dir == UPWARD)
 	{
-		horz_line.x1 = xy.x - EDT_TRIANGLE_SIZE / 2;
+		horz_line.x1 = xy.x - tri_size / 2;
 		horz_line.y1 = xy.y;
-		horz_line.x2 = xy.x + EDT_TRIANGLE_SIZE / 2;
+		horz_line.x2 = xy.x + tri_size / 2;
 		horz_line.y2 = xy.y;
 	}
 	left_line.x1 = horz_line.x1;
@@ -40,8 +45,8 @@ void			unpreserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, u
 	}
 	else if (dir == UPWARD)
 	{
-		left_line.y2 = xy.y - EDT_TRIANGLE_SIZE;
-		right_line.y2 = xy.y - EDT_TRIANGLE_SIZE;
+		left_line.y2 = xy.y - tri_size;
+		right_line.y2 = xy.y - tri_size;
 	}
 	unpreserve_render_line(&horz_line);
 	unpreserve_render_line(&left_line);
@@ -53,7 +58,12 @@ void			preserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, uin
 	t_line 		horz_line;
 	t_line 		left_line;
 	t_line 		right_line;
+	int			tri_size;
 
+	if (!doom_ptr()->edt_quit)
+		tri_size = EDT_TRIANGLE_SIZE / get_state()->zoom_factor;
+	else
+		tri_size = EDT_TRIANGLE_SIZE;
 	horz_line.buff = buff;
 	left_line.buff = buff;
 	right_line.buff = buff;
@@ -63,16 +73,16 @@ void			preserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, uin
 
 	if (dir == DOWNWARD)
 	{
-		horz_line.x1 = xy.x - EDT_TRIANGLE_SIZE / 2;
-		horz_line.y1 = xy.y - EDT_TRIANGLE_SIZE;
-		horz_line.x2 = xy.x + EDT_TRIANGLE_SIZE / 2;
-		horz_line.y2 = xy.y - EDT_TRIANGLE_SIZE;
+		horz_line.x1 = xy.x - tri_size / 2;
+		horz_line.y1 = xy.y - tri_size;
+		horz_line.x2 = xy.x + tri_size / 2;
+		horz_line.y2 = xy.y - tri_size;
 	}
 	else if (dir == UPWARD)
 	{
-		horz_line.x1 = xy.x - EDT_TRIANGLE_SIZE / 2;
+		horz_line.x1 = xy.x - tri_size / 2;
 		horz_line.y1 = xy.y;
-		horz_line.x2 = xy.x + EDT_TRIANGLE_SIZE / 2;
+		horz_line.x2 = xy.x + tri_size / 2;
 		horz_line.y2 = xy.y;
 	}
 	left_line.x1 = horz_line.x1;
@@ -88,8 +98,8 @@ void			preserving_triangle_to_buffer(SDL_Surface *buff, t_point xy, int dir, uin
 	}
 	else if (dir == UPWARD)
 	{
-		left_line.y2 = xy.y - EDT_TRIANGLE_SIZE;
-		right_line.y2 = xy.y - EDT_TRIANGLE_SIZE;
+		left_line.y2 = xy.y - tri_size;
+		right_line.y2 = xy.y - tri_size;
 	}
 	preserve_render_line(&horz_line);
 	preserve_render_line(&left_line);

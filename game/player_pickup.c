@@ -75,7 +75,8 @@ static void		handle_level_exit(t_doom *doom)
 	doom->menu->update_argc_argv = 1;
 	if (doom->menu->added_arg)
 		free(doom->menu->added_arg);
-	doom->menu->added_arg = ft_strdup(doom->game->map_path);
+	doom->menu->added_arg = ft_strdup(doom->mdl->chain);
+	printf("Set added_arg to [%s]\n", doom->mdl->chain);
 }
 
 void			handle_pickup(t_doom *doom)
