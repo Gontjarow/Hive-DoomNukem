@@ -44,6 +44,7 @@ void 		init_menu(t_doom *doom)
 
     if (!(doom->menu = (t_menu*)malloc(sizeof(t_menu))))
         ft_die("Fatal error: Failed mallocing doom->menu at init_menu.");
+    puts("MENU IS BORN!!!");
     doom->menu->alphabet_scale = 1;
     doom->menu->selected = 1;
     doom->menu->mousing_at = -1;
@@ -94,6 +95,7 @@ void 		destroy_menu(t_doom *doom)
     destroy_alphabet(doom->menu);
     free(doom->menu);
     doom->menu = NULL;
+    puts("MENU IS GONE!!!");
 }
 
 static int ms_since(double milliseconds, double *compared_to)
