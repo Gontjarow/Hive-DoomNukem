@@ -82,7 +82,7 @@ static uint32_t	texture_pixel(SDL_Surface *tex, int x, int y)
 		return (COLOR_TRANSPARENT);
 }
 
-void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex)
+void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth)
 {
 	unsigned	*pixels;
 	unsigned	color;
@@ -113,15 +113,18 @@ void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex)
 		range.y = bot;
 	}
 
+	double *zbuffer = get_zbuffer();
 	pixels = doom_ptr()->game->buff->pixels;
 	tex_x = clamp(tex_x, 0, 1);
-
 
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
 		color = texture_pixel(tex, tex_x * tex->w, tex_y);
 		if (color != COLOR_TRANSPARENT)
+		{
 			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+			zbuffer[GAME_WIN_WIDTH * (int)range.x + screen_x] = depth;
+		}
 		tex_y += y_step;
 		range.x++;
 	}
@@ -171,7 +174,7 @@ void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex
 	}
 }
 
-void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
+void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range, double depth)
 {
 	uint32_t	*pixels;
 	uint32_t	color;
@@ -185,19 +188,27 @@ void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
 		tex_y += y_step * -range.x;
 		range.x = 0;
 	}
+
+	double *zbuffer = get_zbuffer();
 	pixels = (uint32_t*)doom_ptr()->game->buff->pixels;
+
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
 		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
-		//if (color != COLOR_TRANSPARENT && color << 24 != 0x00)
 		if (color != COLOR_TRANSPARENT && color >> 24 != 0x00)
-			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+		{
+			if (zbuffer_ok(GAME_WIN_WIDTH * (int)range.x + screen_x, depth))
+			{
+				pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+				zbuffer[GAME_WIN_WIDTH * (int)range.x + screen_x] = depth;
+			}
+		}
 		tex_y += y_step;
 		range.x++;
 	}
 }
 
-static void			vertical_sprite_debug(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
+static void		vertical_sprite_debug(t_enemy *enemy, int screen_x, int tex_x, t_xy range)
 {
 	unsigned	*pixels;
 	unsigned	color;
@@ -237,12 +248,11 @@ int				zbuffer_ok(int index, double depth)
 	double *zbuffer;
 
 	zbuffer = get_zbuffer();
-	if (zbuffer[index] > depth)
+	if (zbuffer[index] < depth)
 	{
-		zbuffer[index] = depth;
 		return (1);
 	}
-	// printf("%f  %f\n", zbuffer[index], depth);
+	// printf("buffer: %f, test: %f\n", zbuffer[index], depth);
 	return (0);
 }
 
