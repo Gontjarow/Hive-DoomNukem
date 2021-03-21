@@ -127,11 +127,12 @@ int			main(int argc, char *argv[])
 	while (!doom.quit)
 	{
 		doom.frame_start = SDL_GetTicks();
-	    if (argc == 1 && doom.menu->update_argc_argv)
+	    if (doom.menu->update_argc_argv) // put if argc == 1 if problems , back
         {
 	        argc = 2;
 	        argv[1] = doom.menu->added_arg;
 	        doom.menu->update_argc_argv = 0;
+	        printf("\n\n\nUPDATED ARGV[1]\n\n\nNOW [%s]\n", argv[1]);
         }
 		doom.keystates = SDL_GetKeyboardState(NULL);
 		distribute_inputs(&doom, argc, argv);

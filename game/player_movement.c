@@ -79,25 +79,27 @@ static void		apply_gravity(t_doom *doom)
 	doom->mdl->player.z += doom->mdl->player.z_velocity;
 	if ((int)doom->mdl->player.z > doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
-		//puts("reducing height!");
+		puts("reducing height!");
 		doom->mdl->player.z_velocity -= 0.25;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height
 		&& doom->mdl->player.z_velocity == 0.0)
 	{
-			//puts("bouncing up from the crouch!");
-		doom->mdl->player.z += 1.0;
+		puts("bouncing up from the crouch!");
+		//doom->mdl->player.z += 1.0;
+		doom->mdl->player.z += 0.5;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
-			//puts("hit the floor with the feet!");
+		puts("hit the floor with the feet!");
+		printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 		doom->mdl->player.z = doom->mdl->player.room->floor_height + doom->mdl->player.height;
 		doom->mdl->player.z_velocity = 0.0;
 		doom->mdl->player.is_jumping = 0;
 	}
 	else if ((int)doom->mdl->player.z > doom->mdl->player.room->roof_height)
 	{
-			//puts("hit the roof with the head");
+		puts("hit the roof with the head");
 		doom->mdl->player.z = doom->mdl->player.room->roof_height;
 		doom->mdl->player.z_velocity = 0.0;
 	}
@@ -134,7 +136,13 @@ void			handle_player_movement(t_doom *doom)
 		rotating_left_right(doom, -1);
 	if (doom->keystates[SDL_SCANCODE_RIGHT])
 		rotating_left_right(doom, 1);
-	if (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN])
+	if (doom->keystates[SDL_SCANCODE_LSHIFT] && (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN]))
+	{
+		doom->mdl->player.z = doom->keystates[SDL_SCANCODE_UP] ? doom->mdl->player.z + 5 : doom->mdl->player.z - 5;
+		ft_putnbr(doom->mdl->player.z);
+		ft_putendl(" player Z position");
+	}
+	else if (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN])
 	{
 		doom->mdl->player.height = doom->keystates[SDL_SCANCODE_UP] ? doom->mdl->player.height + 1 : doom->mdl->player.height - 1;
 		ft_putnbr(doom->mdl->player.height);

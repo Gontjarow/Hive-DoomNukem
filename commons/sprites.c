@@ -247,6 +247,15 @@ void		load_ammo_bars(t_doom *doom)
 	doom->sprites->txt_clip_bar = load_texture(doom, "img/sprites/hud/ammobar/cliptest.png");
 }
 
+static void load_loading_screen(t_doom *doom)
+{
+	doom->sprites->txt_loading_0 = load_texture(doom, "img/loading/first_chapter.png");
+	doom->sprites->txt_loading_1 = load_texture(doom, "img/loading/second_chapter.png");
+	doom->sprites->txt_loading_2 = load_texture(doom, "img/loading/third_chapter.png");
+	doom->sprites->txt_loading_3 = load_texture(doom, "img/loading/ending.png");
+	puts("LOADING SCREEN IMAGES LOADED TO MEMORY");
+}
+
 int			load_sprites(t_doom *doom)
 {
 	char	i;
@@ -264,6 +273,7 @@ int			load_sprites(t_doom *doom)
 	load_pickup_sprite(doom);
 	load_health_bars(doom, path, i);
 	load_ammo_bars(doom);
+	load_loading_screen(doom);
 	return (1);
 }
 

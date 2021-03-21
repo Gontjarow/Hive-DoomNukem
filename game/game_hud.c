@@ -317,37 +317,6 @@ static void draw_surface_with_alpha_silhouette(int x, int y, SDL_Surface *surf, 
 		y++;
 	}
 }
-static void draw_surface_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
-{
-	uint32_t *pix[2];
-	int i;
-	int iter;
-	int limit_x;
-	int limit_total;
-
-	iter = 0;
-	i = x;
-	limit_x = x + surf->w;
-	limit_total = surf->w * surf->h;
-	pix[0] = (uint32_t*)buff->pixels;
-	pix[1] = (uint32_t*)surf->pixels;
-	while (iter < limit_total)
-	{
-		x = i;
-		while (x < limit_x)
-		{
-			if ((pix[1][iter]) >> 24 != 0xff)
-			{
-				iter++;
-				x++;
-				continue;
-			}
-			pix[0][(y * buff->w) + x++] = pix[1][iter++];
-		}
-		y++;
-	}
-}
-
 
 void		handle_player_health_bar(t_doom *doom)
 {
