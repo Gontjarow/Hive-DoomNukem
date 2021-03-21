@@ -180,6 +180,10 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), bricks, depth);
 				world->screen_y_top[screen_x] = connecting_y_start;
 				world->screen_y_bot[screen_x] = connecting_y_stop;
+
+				SDL_Surface *surface = doom_ptr()->game->buff;
+				draw_box(vec2(screen_x, world->screen_y_top[screen_x]), 1, 0xff0000, surface);
+				draw_box(vec2(screen_x, world->screen_y_bot[screen_x]), 1, 0xff0000, surface);
 			}
 
 
@@ -191,8 +195,10 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				// 	vec2_add(line_lerp(wall_segment, tex_x), vec2(0, y_stop)),
 				// 	vec2(y_stop, GAME_WIN_HEIGHT),
 				// 	border, doom);
-				vertical_line(screen_x, 0, y_start, 0x00000f);
-				vertical_line(screen_x, y_stop, GAME_WIN_HEIGHT, 0x00000f);
+				// vertical_line(screen_x, 0, y_start, 0xffffff);
+				// vertical_line(screen_x, y_stop, GAME_WIN_HEIGHT, 0xffffff);
+				// world->screen_y_top[screen_x]
+				// world->screen_y_bot[screen_x]
 			}
 
 			++screen_x;

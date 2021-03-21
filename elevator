@@ -1,0 +1,16 @@
+[Wall] id = 0 | start.x = 120 | start.y = 101 | end.x = 417 | end.y = 96
+[Wall] id = 1 | start.x = 417 | start.y = 96 | end.x = 417 | end.y = 366
+[Wall] id = 2 | start.x = 417 | start.y = 366 | end.x = 123 | end.y = 363
+[Wall] id = 3 | start.x = 123 | start.y = 363 | end.x = 120 | end.y = 101
+[Wall] id = 4 | start.x = 417 | start.y = 96 | end.x = 739 | end.y = 9
+[Wall] id = 5 | start.x = 739 | start.y = 9 | end.x = 751 | end.y = 536
+[Wall] id = 6 | start.x = 751 | start.y = 536 | end.x = 417 | end.y = 366
+[Wall] id = 7 | start.x = 417 | start.y = 366 | end.x = 417 | end.y = 96
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 200 | roof_height = 300
+[Room] id = 1 | first_wall_id = 4 | wall_count = 4 | floor_height = 0 | roof_height = 100
+
+[Portal] id = 0 | start.x = 417 | start.y = 366 | end.x = 417 | end.y = 96
+
+[Player] spawn.x = 211 | spawn.y = 241 | rot = 360
+[No level exit defined] Infinite map suitable for debugging!

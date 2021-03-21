@@ -130,6 +130,32 @@ void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, d
 	}
 }
 
+void			vertical_shade(int column, int start, int end, int color)
+{
+	static const int mask = 0b111111101111111011111110;
+	static int shade = GAME_MIDHEIGHT / 8;
+	int *pixel;
+	int draw;
+	int drawn;
+
+	pixel = (int*)doom_ptr()->game->buff->pixels;
+	start = clamp(start, 0, GAME_WIN_HEIGHT - 1);
+	end = clamp(end, 0, GAME_WIN_HEIGHT - 1);
+
+	draw = 1 + (end - start);
+	drawn = 0;
+	while (draw-- > 0)
+	{
+		pixel[GAME_WIN_WIDTH * (start + draw) + column] = color;
+		if (++drawn == shade)
+		{
+			color &= mask;
+			color >>= 1;
+			drawn = 0;
+		}
+	}
+}
+
 void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom)
 {
 	unsigned	*pixels;
