@@ -87,7 +87,7 @@ static void		apply_gravity(t_doom *doom)
 	{
 		puts("bouncing up from the crouch!");
 		//doom->mdl->player.z += 1.0;
-		doom->mdl->player.z_velocity += 0.05;
+		doom->mdl->player.z += 0.5;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{

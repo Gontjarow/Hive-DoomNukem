@@ -83,11 +83,17 @@ static void	experimental_elevator(int active, int hard_reset)
 	}
 	else if (active)
 	{
-		get_model()->room_first->floor_height = get_model()->room_first->floor_height + 2;
+		get_model()->room_first->floor_height++;
+		get_model()->room_first->roof_height++;
 		get_model()->room_first->floor_height = get_model()->room_first->floor_height > 750 ? 750 : get_model()->room_first->floor_height;
-		get_model()->room_first->roof_height = get_model()->room_first->roof_height + 2;
 		get_model()->room_first->roof_height = get_model()->room_first->roof_height > 800 ? 800 : get_model()->room_first->roof_height;
 		update_world(get_world());
+		if (get_model()->player.room_id == get_model()->room_first->id)
+		{
+			get_model()->player.z++;
+			get_model()->player.z = get_model()->player.z > get_model()->player.room->floor_height + get_model()->player.height ?
+									get_model()->player.room->floor_height + get_model()->player.height : get_model()->player.z;
+		}
 	}
 	else if (hard_reset)
 	{
@@ -98,11 +104,17 @@ static void	experimental_elevator(int active, int hard_reset)
 	}
 	else if (!active)
 	{
-		get_model()->room_first->floor_height = get_model()->room_first->floor_height - 2;
+		get_model()->room_first->floor_height--;
+		get_model()->room_first->roof_height--;
 		get_model()->room_first->floor_height = get_model()->room_first->floor_height < 0 ? 0 : get_model()->room_first->floor_height;
-		get_model()->room_first->roof_height = get_model()->room_first->roof_height - 2;
 		get_model()->room_first->roof_height = get_model()->room_first->roof_height < 50 ? 50 : get_model()->room_first->roof_height;
 		update_world(get_world());
+		if (get_model()->player.room_id == get_model()->room_first->id)
+		{
+			get_model()->player.z--;
+			get_model()->player.z = get_model()->player.z < get_model()->player.room->floor_height + get_model()->player.height ?
+									get_model()->player.room->floor_height + get_model()->player.height : get_model()->player.z;
+		}
 	}
 
 }
