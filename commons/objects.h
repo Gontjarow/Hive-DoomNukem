@@ -246,6 +246,12 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_smg_ammo_pickup;
 	struct SDL_Surface	*txt_assault_ammo_pickup;
 
+	// Loading Screen Sprites
+	struct SDL_Surface	*txt_loading_0;
+	struct SDL_Surface	*txt_loading_1;
+	struct SDL_Surface	*txt_loading_2;
+	struct SDL_Surface	*txt_loading_3;
+
 	// Underlying data holders, invididually named for readability
 	struct SDL_Surface	*txt_ranged_front_attack;
 	struct SDL_Surface	*txt_ranged_front_idle;
@@ -384,6 +390,14 @@ void					careful_render_line(t_line *l);
 void					preserve_render_line(t_line *l);
 void					unpreserve_render_line(t_line *l);
 void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
+
+/*
+ * from render_2d.c
+ * */
+
+void					draw_rect_color(int x[2], int y[2], unsigned int color, SDL_Surface *buff);
+void					draw_surface_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
+void					render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_screen, int reset);
 
 /*
  * from pixel.c

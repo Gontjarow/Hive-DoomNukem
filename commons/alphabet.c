@@ -162,6 +162,7 @@ static void render_glyph(char c, SDL_Surface *buff, int x, int y)
 	}
 }
 
+// TODO CONVERT UPPERCASE TO LOWERCASE
 void 	print_glyph_str(const char *str, SDL_Surface *buff, int x, int y)
 {
 	while (*str)

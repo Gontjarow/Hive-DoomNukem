@@ -42,6 +42,8 @@ void		init_game(t_doom *doom, int argc, char **argv)
 	doom->game->cel_shade_hud = 0;
 	doom->game->show_info = 0;
 	doom->game->level_exit_reached = 0;
+	doom->game->show_loading = 1;
+	render_loading_screen(doom, NULL, NULL, 1);
 }
 
 void		destroy_game(t_doom *doom)
@@ -125,9 +127,8 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 	SDL_Delay(1000);
 }
 
-void		game_render(t_doom *doom)
+static void handle_player_invis_toggle(t_doom *doom)
 {
-	static int mix_i = 0;
 	static int lock_i = 0;
 
 	if (doom->keystates[SDL_SCANCODE_I] && !lock_i)
@@ -138,6 +139,40 @@ void		game_render(t_doom *doom)
 	}
 	if (lock_i && !doom->keystates[SDL_SCANCODE_I])
 		lock_i = 0;
+}
+
+static void render_chapter_screen(t_doom *doom, int chapter)
+{
+	if (chapter == 0)
+		render_loading_screen(doom, "first chapter", doom->sprites->txt_loading_0, 0);
+	else if (chapter == 1)
+		render_loading_screen(doom, "second chapter", doom->sprites->txt_loading_1, 0);
+	else if (chapter == 2)
+		render_loading_screen(doom, "third chapter", doom->sprites->txt_loading_2, 0);
+}
+
+void		game_render(t_doom *doom)
+{
+	static int mix_i = 0;
+	static int chapter = 0;
+
+	// TODO: Remove invis toggling ? Experimental feature cutting off from shipped build propably
+	handle_player_invis_toggle(doom);
+
+	if (doom->game->show_loading)
+	{
+		render_chapter_screen(doom, chapter);
+		if (doom->keystates[SDL_SCANCODE_SPACE])
+		{
+			doom->game->show_loading = 0;
+			chapter++;
+			puts("CHAPTER ADVANCED!!!");
+		}
+		if (DEBUG == 1)
+			update_minimap(doom);
+		SDL_UpdateWindowSurface(doom->game->win);
+		return ;
+	}
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);
@@ -157,13 +192,5 @@ void		game_render(t_doom *doom)
 		update_minimap(doom);
 	render_frame(doom);
 	render_game_hud(doom);
-
-	/*
-	static SDL_Surface *flip = NULL;
-	if (!flip)
-		flip = flip_horizontal(doom->sprites->txt_ranged_side_idle);
-	draw_surface(0,0,doom->sprites->txt_ranged_side_idle, doom->game->buff);
-	draw_surface(doom->sprites->txt_ranged_side_idle->w * 2,0, flip, doom->game->buff);
-	*/
 	SDL_UpdateWindowSurface(doom->game->win);
 }

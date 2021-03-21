@@ -36,6 +36,7 @@ typedef struct			s_game
 	int					cel_shade_hud;
 	int					show_info;
 	int					level_exit_reached;
+	int					show_loading;
 }						t_game;
 
 double			deg_to_rad(int deg);
