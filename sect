@@ -1,0 +1,30 @@
+[Wall] id = 0 | start.x = 576 | start.y = 383 | end.x = 737 | end.y = 383
+[Wall] id = 1 | start.x = 737 | start.y = 383 | end.x = 736 | end.y = 546
+[Wall] id = 2 | start.x = 736 | start.y = 546 | end.x = 576 | end.y = 545
+[Wall] id = 3 | start.x = 576 | start.y = 545 | end.x = 576 | end.y = 383
+[Wall] id = 4 | start.x = 737 | start.y = 383 | end.x = 903 | end.y = 164
+[Wall] id = 5 | start.x = 903 | start.y = 164 | end.x = 1261 | end.y = 214
+[Wall] id = 6 | start.x = 1261 | start.y = 214 | end.x = 1270 | end.y = 581
+[Wall] id = 7 | start.x = 1270 | start.y = 581 | end.x = 988 | end.y = 697
+[Wall] id = 8 | start.x = 988 | start.y = 697 | end.x = 768 | end.y = 621
+[Wall] id = 9 | start.x = 768 | start.y = 621 | end.x = 736 | end.y = 546
+[Wall] id = 10 | start.x = 736 | start.y = 546 | end.x = 737 | end.y = 383
+[Wall] id = 11 | start.x = 576 | start.y = 545 | end.x = 407 | end.y = 709
+[Wall] id = 12 | start.x = 407 | start.y = 709 | end.x = 171 | end.y = 680
+[Wall] id = 13 | start.x = 171 | start.y = 680 | end.x = 108 | end.y = 480
+[Wall] id = 14 | start.x = 108 | start.y = 480 | end.x = 175 | end.y = 313
+[Wall] id = 15 | start.x = 175 | start.y = 313 | end.x = 396 | end.y = 260
+[Wall] id = 16 | start.x = 396 | start.y = 260 | end.x = 576 | end.y = 383
+[Wall] id = 17 | start.x = 576 | start.y = 383 | end.x = 576 | end.y = 545
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 200
+[Room] id = 1 | first_wall_id = 4 | wall_count = 7 | floor_height = 0 | roof_height = 300
+[Room] id = 2 | first_wall_id = 11 | wall_count = 7 | floor_height = 0 | roof_height = 300
+
+[Portal] id = 0 | start.x = 736 | start.y = 546 | end.x = 737 | end.y = 383
+[Portal] id = 1 | start.x = 576 | start.y = 383 | end.x = 576 | end.y = 545
+
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Player] spawn.x = 348 | spawn.y = 475 | rot = 360
+[No level exit defined] Infinite map suitable for debugging!
