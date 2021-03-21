@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 19:00:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 17:01:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[0].reload_sound = doom->sounds->mcPistolRld;
 	doom->mdl->player.weap_arr[0].weap_img = load_texture(doom, "img/weapons/colt.png");
 	doom->mdl->player.weap_arr[0].do_own = 1;
-	doom->mdl->player.weap_arr[1].ammo_cur = 30;
+	doom->mdl->player.weap_arr[1].ammo_cur = 5;
 	doom->mdl->player.weap_arr[1].ammo_res = 5;
-	doom->mdl->player.weap_arr[1].ammo_max = 30;
-	doom->mdl->player.weap_arr[1].cooldown = 2;
+	doom->mdl->player.weap_arr[1].ammo_max = 5;
+	doom->mdl->player.weap_arr[1].cooldown = 25;
 	doom->mdl->player.weap_arr[1].dmg = 25;
-	doom->mdl->player.weap_arr[1].reload_time = 25;
-	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcSmgShot;
-	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcSmgRld;
-	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/mp5.png");
+	doom->mdl->player.weap_arr[1].reload_time = 160;
+	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcShotgunShot;
+	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcShotgunRld;
+	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/shotgun.png");
 	doom->mdl->player.weap_arr[1].do_own = 0;
 	doom->mdl->player.weap_arr[2].ammo_cur = 40;
 	doom->mdl->player.weap_arr[2].ammo_res = 3;
@@ -53,18 +53,18 @@ static void	player_swap_weapons(t_doom *doom)
 {
 	if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[0].do_own == 1 && doom->mdl->player.weap_id != 0)
 	{
-		doom->mdl->player.weap_id = 0;
-		Mix_PlayChannel(-1, doom->sounds->mcPistolRld, 0);
+		doom->mdl->player.weap_id = PISTOL;
+		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
 	}
 	if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[1].do_own == 1 && doom->mdl->player.weap_id != 1)
 	{
-		doom->mdl->player.weap_id = 1;
-		Mix_PlayChannel(-1, doom->sounds->mcSmgRld, 0);
+		doom->mdl->player.weap_id = SHOTGUN;
+		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
 	}
 	if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[2].do_own == 1 && doom->mdl->player.weap_id != 2)
 	{
-		doom->mdl->player.weap_id = 2;
-		Mix_PlayChannel(-1, doom->sounds->mcAssaultRld, 0);
+		doom->mdl->player.weap_id = ASSAULT_RIFLE;
+		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
 	}
 }
 
@@ -73,7 +73,7 @@ static void	handle_ammo_calc(t_doom *doom)
 	int dif;
 	int rest;
 
-	if (doom->mdl->player.weap_id == 0)	// pistol has infinite ammo
+	if (doom->mdl->player.weap_id == PISTOL)	// pistol has infinite ammo
 	{
 		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur = 12;
 		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res = 1;

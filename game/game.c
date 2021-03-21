@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/20 20:59:34 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 17:07:27 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,14 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 	SDL_Delay(1000);
 }
 
+static void	dispatch_player_shots(t_doom *doom)
+{
+	// if (doom->mdl->player.weap_id == SHOTGUN)	// WIP
+	// 	player_shoots_shotgun(doom);
+	// else
+		player_shoots(doom);
+}
+
 void		game_render(t_doom *doom)
 {
 	static int mix_i = 0;
@@ -148,7 +156,7 @@ void		game_render(t_doom *doom)
 			mix_i++;
 			if (mix_i > 7)
 				mix_i = 0;
-			player_shoots(doom);
+			dispatch_player_shots(doom);
 		}
 	}
 	handle_enemy_ai(doom);
