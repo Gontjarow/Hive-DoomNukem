@@ -9,17 +9,17 @@
 [Wall] id = 8 | start.x = 482 | start.y = 837 | end.x = 483 | end.y = 540
 [Wall] id = 9 | start.x = 483 | start.y = 540 | end.x = 484 | end.y = 352
 
-[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 200
-[Room] id = 1 | first_wall_id = 4 | wall_count = 6 | floor_height = 750 | roof_height = 800
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 450 | roof_height = 550
+[Room] id = 1 | first_wall_id = 4 | wall_count = 6 | floor_height = 400 | roof_height = 600
 
 [Portal] id = 0 | start.x = 483 | start.y = 540 | end.x = 484 | end.y = 352
 
-[Enemy] id = 0 | x = 1089 | y = 233 | rot = 169 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
-[Enemy] id = 1 | x = 1111 | y = 557 | rot = 198 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
-[Enemy] id = 2 | x = 936 | y = 735 | rot = 200 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
-[Enemy] id = 3 | x = 950 | y = 375 | rot = 191 | hp = 50 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
-[Enemy] id = 4 | x = 906 | y = 540 | rot = 188 | hp = 50 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
-[Enemy] id = 5 | x = 1077 | y = 439 | rot = 143 | hp = 1000 | wep.type_id = 1 | ai.type_id = 2 | sprite_id = 0
+//[Enemy] id = 0 | x = 1089 | y = 233 | rot = 169 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+//[Enemy] id = 1 | x = 1111 | y = 557 | rot = 198 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+//[Enemy] id = 2 | x = 936 | y = 735 | rot = 200 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+//[Enemy] id = 3 | x = 950 | y = 375 | rot = 191 | hp = 50 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+//[Enemy] id = 4 | x = 906 | y = 540 | rot = 188 | hp = 50 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+//[Enemy] id = 5 | x = 1077 | y = 439 | rot = 143 | hp = 1000 | wep.type_id = 1 | ai.type_id = 2 | sprite_id = 0
 
 [Player] spawn.x = 414 | spawn.y = 453 | rot = 360
 [No level exit defined] Infinite map suitable for debugging!

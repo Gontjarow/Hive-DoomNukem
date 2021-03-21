@@ -95,6 +95,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 			queue_add(neighbor, x1, x2);
 		t_world		*world = get_world();
 		t_sector	*connecting = &(world->sectors[neighbor]);
+		SDL_Surface	*surface = doom_ptr()->game->buff;
 
 		//! One more clip into the player's view-cone.
 		t_xy_line wall_segment;
@@ -147,18 +148,26 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 
 			// Todo: draw sky or ceiling
 
+			// vertical_line(screen_x, world->screen_y_top[screen_x], y_start, 0xff0000);
+
+			int top = world->screen_y_top[screen_x];
+			int bot = world->screen_y_bot[screen_x];
+
 			//! Draw wall
 			if (neighbor == NO_NEIGHBOR)
 			{
-				if (vertex != 1)
-					vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks, depth);
-				else
-					vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), border, depth);
-				world->screen_y_top[screen_x] = GAME_MIDHEIGHT;
-				world->screen_y_bot[screen_x] = GAME_MIDHEIGHT;
+				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks, depth);
+
+				//! wall ceil floor
+				vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
+				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
 			}
 			else
 			{
+				//! portal ceil floor
+				vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
+				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
+
 				double		connecting_ceil        = connecting->ceil - doom->game->world->player.position.z;
 				t_xy_line	connecting_yawed_ceil  = calculate_yawed(connecting_ceil, wall_segment, scale, doom->game->world->player.yaw);
 
@@ -171,32 +180,19 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				signed		connecting_y_start     = connecting_yawed_ceil.start.y + (horizontal * connecting_ceil_angle);
 				signed		connecting_y_stop      = connecting_yawed_floor.start.y + (horizontal * connecting_floor_angle);
 
-				int top = world->screen_y_top[screen_x];
-				int bot = world->screen_y_bot[screen_x];
-				connecting_y_start = clamp(connecting_y_start, top, bot);
-				connecting_y_stop =  clamp(connecting_y_stop,  top, bot);
-
 				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), bricks, depth);
 				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), bricks, depth);
-				world->screen_y_top[screen_x] = connecting_y_start;
-				world->screen_y_bot[screen_x] = connecting_y_stop;
+
+				if (connecting_y_start > top) world->screen_y_top[screen_x] = connecting_y_start;
+				if (connecting_y_stop  < bot) world->screen_y_bot[screen_x] = connecting_y_stop;
 			}
 
-
-			//! Draw floor/ground
-			// if (vertex == 1 && GAME_MIDWIDTH-1 <= screen_x && screen_x <= GAME_MIDWIDTH+1)
-			// if (vertex == 1)
-			{
-				// vertical_floor(screen_x,
-				// 	vec2_add(line_lerp(wall_segment, tex_x), vec2(0, y_stop)),
-				// 	vec2(y_stop, GAME_WIN_HEIGHT),
-				// 	border, doom);
-				vertical_line(screen_x, 0, y_start, 0x00000f);
-				vertical_line(screen_x, y_stop, GAME_WIN_HEIGHT, 0x00000f);
-			}
+			// draw_box(vec2(screen_x, world->screen_y_top[screen_x]), 1, colors[section->id], surface);
+			// draw_box(vec2(screen_x, world->screen_y_bot[screen_x]), 1, colors[section->id], surface);
 
 			++screen_x;
 		}
+
 
 		//! Debug view.
 		if (doom->game->show_info)
