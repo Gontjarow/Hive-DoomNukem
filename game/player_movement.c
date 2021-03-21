@@ -79,25 +79,27 @@ static void		apply_gravity(t_doom *doom)
 	doom->mdl->player.z += doom->mdl->player.z_velocity;
 	if ((int)doom->mdl->player.z > doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
-		//puts("reducing height!");
+		puts("reducing height!");
 		doom->mdl->player.z_velocity -= 0.25;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height
 		&& doom->mdl->player.z_velocity == 0.0)
 	{
-			//puts("bouncing up from the crouch!");
-		doom->mdl->player.z += 1.0;
+		puts("bouncing up from the crouch!");
+		//doom->mdl->player.z += 1.0;
+		doom->mdl->player.z_velocity += 0.05;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
-			//puts("hit the floor with the feet!");
+		puts("hit the floor with the feet!");
+		printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 		doom->mdl->player.z = doom->mdl->player.room->floor_height + doom->mdl->player.height;
 		doom->mdl->player.z_velocity = 0.0;
 		doom->mdl->player.is_jumping = 0;
 	}
 	else if ((int)doom->mdl->player.z > doom->mdl->player.room->roof_height)
 	{
-			//puts("hit the roof with the head");
+		puts("hit the roof with the head");
 		doom->mdl->player.z = doom->mdl->player.room->roof_height;
 		doom->mdl->player.z_velocity = 0.0;
 	}

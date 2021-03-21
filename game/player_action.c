@@ -54,21 +54,57 @@ static void	player_run(t_doom *doom)
 	}
 }
 
-static void	experimental_elevator(int active)
+static void update_world(t_world *world)
 {
-	static int 	original_height = -1;
+	t_model *mdl = get_model();
+	t_room *room = mdl->room_first;
+	int room_index = 0;
+	int rooms = mdl->room_count;
 
-	if (active && original_height == -1)
+	while (~--rooms)
 	{
-		original_height = get_model()->room_first->floor_height;
+		t_sector *sector = &world->sectors[room_index];
+		sector->floor = room->floor_height / WORLD_SCALE;
+		sector->ceil = room->roof_height / WORLD_SCALE;
+		++room_index;
+		room = room->next;
+	}
+}
+
+static void	experimental_elevator(int active, int hard_reset)
+{
+	static int 	original_floor = -1;
+	static int	original_roof = -1;
+
+	if (active && original_floor == -1 && original_roof == -1)
+	{
+		original_floor = get_model()->room_first->floor_height;
+		original_roof = get_model()->room_first->roof_height;
 	}
 	else if (active)
 	{
-		get_model()->room_first->floor_height = get_model()->room_first->floor_height + 8;
+		get_model()->room_first->floor_height = get_model()->room_first->floor_height + 2;
 		get_model()->room_first->floor_height = get_model()->room_first->floor_height > 750 ? 750 : get_model()->room_first->floor_height;
+		get_model()->room_first->roof_height = get_model()->room_first->roof_height + 2;
+		get_model()->room_first->roof_height = get_model()->room_first->roof_height > 800 ? 800 : get_model()->room_first->roof_height;
+		update_world(get_world());
 	}
-	else
-		get_model()->room_first->floor_height = original_height;
+	else if (hard_reset)
+	{
+		get_model()->room_first->floor_height = original_floor;
+		get_model()->room_first->roof_height = original_roof;
+		update_world(get_world());
+		puts("EXPERIMENTAL ELEVATOR RESET TO ORIGINAL VALUES");
+	}
+	else if (!active)
+	{
+		get_model()->room_first->floor_height = get_model()->room_first->floor_height - 2;
+		get_model()->room_first->floor_height = get_model()->room_first->floor_height < 0 ? 0 : get_model()->room_first->floor_height;
+		get_model()->room_first->roof_height = get_model()->room_first->roof_height - 2;
+		get_model()->room_first->roof_height = get_model()->room_first->roof_height < 50 ? 50 : get_model()->room_first->roof_height;
+		update_world(get_world());
+	}
+
 }
 
 void		handle_player_action(t_doom *doom)
@@ -89,9 +125,10 @@ void		handle_player_action(t_doom *doom)
 		debug_model_effects();
 	if (doom->keystates[SDL_SCANCODE_L])
 		debug_model_chain();
-	if (doom->keystates[SDL_SCANCODE_E])
-		experimental_elevator(1);
-	if (doom->keystates[SDL_SCANCODE_R])
-		experimental_elevator(0);
-
+	if (doom->keystates[SDL_SCANCODE_U])
+		experimental_elevator(1, 0);
+	if (doom->keystates[SDL_SCANCODE_J])
+		experimental_elevator(0, 0);
+	if (doom->keystates[SDL_SCANCODE_N])
+		experimental_elevator(0, 1);
 }
