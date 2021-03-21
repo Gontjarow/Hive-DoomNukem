@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/18 17:30:17 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 01:47:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,11 @@ static void	player_run(t_doom *doom)
 	{
 		doom->mdl->player.run_lock = 1;
 		doom->mdl->player.is_running = 1;
-		while (doom->mdl->player.mov_speed != doom->mdl->player.max_speed)
-			doom->mdl->player.mov_speed++;
 	}
 	else
 	{
 		doom->mdl->player.is_running = 0;
 		doom->mdl->player.run_lock = 0;
-		while (doom->mdl->player.mov_speed != 30)
-			doom->mdl->player.mov_speed--;
 	}
 }
 
@@ -62,12 +58,13 @@ void		handle_player_action(t_doom *doom)
 {
 	if (doom->keystates[SDL_SCANCODE_SPACE])
 		player_jumps(doom);
-	if (doom->keystates[SDL_SCANCODE_LCTRL] && !doom->mdl->player.crouch_lock)
+	if (doom->keystates[SDL_SCANCODE_LCTRL] && !doom->mdl->player.crouch_lock
+		&& !doom->mdl->player.is_jumping)
 		player_crouch(doom);
 	if (!doom->keystates[SDL_SCANCODE_LCTRL] && doom->mdl->player.crouch_lock)
 		player_crouch(doom);
 	if (doom->keystates[SDL_SCANCODE_LSHIFT] && !doom->mdl->player.run_lock
-		&& !doom->mdl->player.crouch_lock)
+		&& !doom->mdl->player.crouch_lock && !doom->mdl->player.is_jumping)
 		player_run(doom);
 	if (!doom->keystates[SDL_SCANCODE_LSHIFT] && doom->mdl->player.run_lock)
 		player_run(doom);

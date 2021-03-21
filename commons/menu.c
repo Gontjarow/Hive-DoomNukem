@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:44:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/01/11 18:25:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 00:39:42 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,8 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
     doom->menu_out_of_focus = 1;
     load_model(doom);
     doom->game->world = load_world(get_world());
+    init_enemy_sprite(doom);
+	ai_assignment(doom);
     // PLAYER X, Y IN MODEL IS -1 AND -1, CAUSING MINIMAP LINE OFF BUFFER?
     //printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
     if (DEBUG == 1)

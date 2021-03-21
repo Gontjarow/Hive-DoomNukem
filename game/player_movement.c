@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/17 14:36:21 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 01:52:36 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,15 @@ static void		apply_gravity(t_doom *doom)
 		doom->mdl->player.z = doom->mdl->player.room->roof_height;
 		doom->mdl->player.z_velocity = 0.0;
 	}
-		//printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
+	// printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
+}
+
+static void		apply_velocity(t_doom *doom)
+{
+	if (doom->mdl->player.is_running && doom->mdl->player.mov_speed != doom->mdl->player.max_speed)
+		doom->mdl->player.mov_speed += 1;
+	else if (!doom->mdl->player.is_running && doom->mdl->player.mov_speed > 10)
+		doom->mdl->player.mov_speed -= 1;
 }
 
 void			handle_player_movement(t_doom *doom)
@@ -156,4 +164,5 @@ void			handle_player_movement(t_doom *doom)
 		lock_m = 0;
 	validate_player_position(doom, old);
 	apply_gravity(doom);
+	apply_velocity(doom);
 }
