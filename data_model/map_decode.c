@@ -75,6 +75,14 @@ static void			map_pickup_to_model(const int *fields, t_model *mdl)
 	mdl->pickups->loc.y = fields[2];
 	mdl->pickups->flavor = fields[3];
 	mdl->pickups->weapon_type_id = fields[4];
+	if (mdl->pickups->flavor == PICKUP_HEALTH)
+		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_health_pickup;
+	else if (mdl->pickups->weapon_type_id == ASSAULT_RIFLE)
+		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_assault_ammo_pickup;
+	else if (mdl->pickups->weapon_type_id == SMG)
+		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_smg_ammo_pickup;
+	else
+		mdl->pickups->active_sprite = NULL;
 	mdl->pickup_count++;
 	if (mdl->pickup_count == 1)
 		mdl->pickup_first = mdl->pickups;
