@@ -1,28 +1,22 @@
 #include "doom-nukem.h"
 
-void			*memset_f(void *b, double c, size_t len)
+void			*memset_f(void *b, double c, size_t count)
 {
 	double *p;
 
-	p = (double*)b;
-	while (len > 0)
-	{
-		*(p++) = (double)c;
-		len--;
-	}
+	p = (double *)b;
+	while (count-- > 0)
+		*(p++) = c;
 	return (b);
 }
 
-void			*memset_i(void *b, int c, size_t len)
+void			*memset_i(void *b, int c, size_t count)
 {
 	int *p;
 
-	p = (int*)b;
-	while (len > 0)
-	{
+	p = (int *)b;
+	while (count-- > 0)
 		*(p++) = c;
-		len--;
-	}
 	return (b);
 }
 
@@ -33,6 +27,7 @@ void			zbuffer_to_window(t_doom *doom)
 
 	if (pixels == NULL)
 		pixels = malloc(GAME_WIN_WIDTH * GAME_WIN_HEIGHT * sizeof(*pixels));
+
 	zbuffer = get_zbuffer();
 
 	int i = 0;
@@ -265,7 +260,6 @@ void			render_frame(t_doom *doom)
 	double	*zbuffer;
 
 	world = doom->game->world;
-	zbuffer = get_zbuffer();
 
 	//! Convert model values to useful camera values.
 	world->player.position = vec3_div(vec3(
@@ -279,10 +273,11 @@ void			render_frame(t_doom *doom)
 	world->player.cos = cos(world->player.angle);
 	world->player.yaw = clamp(doom->mdl->player.yaw, -M_PI/2, M_PI/2);
 
-	flood_buffer(doom->game->buff, 0x112233);
-	memset_f(            zbuffer,       INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
+	zbuffer = get_zbuffer();
+	memset_f(            zbuffer,      -INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
 	memset_i(world->screen_y_top,              0, GAME_WIN_WIDTH);
 	memset_i(world->screen_y_bot, GAME_WIN_WIDTH, GAME_WIN_WIDTH);
+	flood_buffer(doom->game->buff, 0x112233);
 
 	// First in queue will be the camera/player's sector.
 	queue_add(world->player.sector_id, 0, GAME_WIN_WIDTH);
@@ -296,6 +291,9 @@ void			render_frame(t_doom *doom)
 		render_sector(sector, section, doom);
 		queue_pop();
 	}
+
+	// for (int i = 0; i < GAME_WIN_WIDTH * GAME_WIN_HEIGHT; ++i)
+	// 	printf("[%4i] = %f\n", i, zbuffer[i]);
 
 	// enemies don't have a "current sector" so they must be drawn together.
 	render_enemies(doom);

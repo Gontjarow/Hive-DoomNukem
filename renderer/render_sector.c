@@ -142,15 +142,18 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 			signed	y_start = yawed_ceil.start.y + (horizontal * ceil_angle);
 			signed	y_stop = yawed_floor.start.y + (horizontal * floor_angle);
 
+			t_xy len = vec2_sub(wall_segment.stop, wall_segment.start);
+			double depth = wall_segment.start.y + vec2_mul(len, (double)horizontal / (x2 - x1)).y;
+
 			// Todo: draw sky or ceiling
 
 			//! Draw wall
 			if (neighbor == NO_NEIGHBOR)
 			{
 				if (vertex != 1)
-					vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks);
+					vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks, depth);
 				else
-					vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), border);
+					vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), border, depth);
 				world->screen_y_top[screen_x] = GAME_MIDHEIGHT;
 				world->screen_y_bot[screen_x] = GAME_MIDHEIGHT;
 			}
@@ -173,8 +176,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				connecting_y_start = clamp(connecting_y_start, top, bot);
 				connecting_y_stop =  clamp(connecting_y_stop,  top, bot);
 
-				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), bricks);
-				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), bricks);
+				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), bricks, depth);
+				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), bricks, depth);
 				world->screen_y_top[screen_x] = connecting_y_start;
 				world->screen_y_bot[screen_x] = connecting_y_stop;
 			}
@@ -182,12 +185,14 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 
 			//! Draw floor/ground
 			// if (vertex == 1 && GAME_MIDWIDTH-1 <= screen_x && screen_x <= GAME_MIDWIDTH+1)
-			if (0 && vertex == 1)
+			// if (vertex == 1)
 			{
-				vertical_floor(screen_x,
-					vec2_add(line_lerp(wall_segment, tex_x), vec2(0, y_stop)),
-					vec2(y_stop, GAME_WIN_HEIGHT),
-					border, doom);
+				// vertical_floor(screen_x,
+				// 	vec2_add(line_lerp(wall_segment, tex_x), vec2(0, y_stop)),
+				// 	vec2(y_stop, GAME_WIN_HEIGHT),
+				// 	border, doom);
+				vertical_line(screen_x, 0, y_start, 0x00000f);
+				vertical_line(screen_x, y_stop, GAME_WIN_HEIGHT, 0x00000f);
 			}
 
 			++screen_x;

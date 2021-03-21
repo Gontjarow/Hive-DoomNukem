@@ -14,8 +14,7 @@ static void		print_orient(t_enemy *enemy)
 
 void			render_enemies(t_doom *doom)
 {
-    t_world *world = doom->game->world;
-    //! Render enemies.
+	t_world *world = doom->game->world;
 	// TODO: Z Buffer
 	signed	enemy_count = doom->mdl->enemy_count;
 	t_enemy	*enemy = doom->mdl->enemy_first;
@@ -43,7 +42,7 @@ void			render_enemies(t_doom *doom)
 			int left = GAME_MIDWIDTH + (int)(eline.start.x * scale.start.x);
 			int right = GAME_MIDWIDTH + (int)(eline.stop.x * scale.stop.x);
 
-			//! Ignore impossible walls.
+			//! Ignore impossible enemies.
 			if(left >= right || right < 0 || left >= GAME_WIN_WIDTH)
 			{
 				enemy = enemy->next;
@@ -77,8 +76,11 @@ void			render_enemies(t_doom *doom)
 				x -= x;
 			while (x < right && x < GAME_WIN_WIDTH)
 			{
+				signed	horizontal = (x - left);
+				t_xy	len = vec2_sub(eline.stop, eline.start);
+				double	depth = eline.start.y + vec2_mul(len, (double)horizontal / (right - left)).y;
 				int tex_x = (x - left) * (double)enemy->active_sprite->w / (right - left);
-				vertical_sprite(enemy, x, tex_x, vec2(yawed_start_ceil, yawed_start_floor));
+				vertical_sprite(enemy, x, tex_x, vec2(yawed_start_ceil, yawed_start_floor), depth);
 				++x;
 			}
 		}
