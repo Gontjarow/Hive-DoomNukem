@@ -1,0 +1,106 @@
+[Wall] id = 0 | start.x = 160 | start.y = 224 | end.x = 1376 | end.y = 224
+[Wall] id = 1 | start.x = 1376 | start.y = 224 | end.x = 1376 | end.y = 498
+[Wall] id = 2 | start.x = 1376 | start.y = 498 | end.x = 161 | end.y = 480
+[Wall] id = 3 | start.x = 161 | start.y = 480 | end.x = 160 | end.y = 224
+[Wall] id = 4 | start.x = 1376 | start.y = 224 | end.x = 1564 | end.y = 66
+[Wall] id = 5 | start.x = 1564 | start.y = 66 | end.x = 2056 | end.y = 72
+[Wall] id = 6 | start.x = 2056 | start.y = 72 | end.x = 2244 | end.y = 256
+[Wall] id = 7 | start.x = 2244 | start.y = 256 | end.x = 2248 | end.y = 530
+[Wall] id = 8 | start.x = 2248 | start.y = 530 | end.x = 2022 | end.y = 702
+[Wall] id = 9 | start.x = 2022 | start.y = 702 | end.x = 1576 | end.y = 694
+[Wall] id = 10 | start.x = 1576 | start.y = 694 | end.x = 1376 | end.y = 498
+[Wall] id = 11 | start.x = 1376 | start.y = 498 | end.x = 1376 | end.y = 224
+[Wall] id = 12 | start.x = 2022 | start.y = 702 | end.x = 2028 | end.y = 1210
+[Wall] id = 13 | start.x = 2028 | start.y = 1210 | end.x = 1566 | end.y = 1208
+[Wall] id = 14 | start.x = 1566 | start.y = 1208 | end.x = 1576 | end.y = 694
+[Wall] id = 15 | start.x = 1576 | start.y = 694 | end.x = 2022 | end.y = 702
+[Wall] id = 16 | start.x = 2244 | start.y = 256 | end.x = 2530 | end.y = 62
+[Wall] id = 17 | start.x = 2530 | start.y = 62 | end.x = 2778 | end.y = 58
+[Wall] id = 18 | start.x = 2778 | start.y = 58 | end.x = 2940 | end.y = 244
+[Wall] id = 19 | start.x = 2940 | start.y = 244 | end.x = 2934 | end.y = 590
+[Wall] id = 20 | start.x = 2934 | start.y = 590 | end.x = 2700 | end.y = 726
+[Wall] id = 21 | start.x = 2700 | start.y = 726 | end.x = 2326 | end.y = 726
+[Wall] id = 22 | start.x = 2326 | start.y = 726 | end.x = 2248 | end.y = 530
+[Wall] id = 23 | start.x = 2248 | start.y = 530 | end.x = 2244 | end.y = 256
+[Wall] id = 24 | start.x = 2028 | start.y = 1210 | end.x = 2028 | end.y = 1362
+[Wall] id = 25 | start.x = 2028 | start.y = 1362 | end.x = 1570 | end.y = 1360
+[Wall] id = 26 | start.x = 1570 | start.y = 1360 | end.x = 1566 | end.y = 1208
+[Wall] id = 27 | start.x = 1566 | start.y = 1208 | end.x = 2028 | end.y = 1210
+[Wall] id = 28 | start.x = 2934 | start.y = 590 | end.x = 3396 | end.y = 556
+[Wall] id = 29 | start.x = 3396 | start.y = 556 | end.x = 3796 | end.y = 704
+[Wall] id = 30 | start.x = 3796 | start.y = 704 | end.x = 3796 | end.y = 1168
+[Wall] id = 31 | start.x = 3796 | start.y = 1168 | end.x = 3240 | end.y = 1412
+[Wall] id = 32 | start.x = 3240 | start.y = 1412 | end.x = 2664 | end.y = 1188
+[Wall] id = 33 | start.x = 2664 | start.y = 1188 | end.x = 2700 | end.y = 726
+[Wall] id = 34 | start.x = 2700 | start.y = 726 | end.x = 2934 | end.y = 590
+[Wall] id = 35 | start.x = 3796 | start.y = 704 | end.x = 3935 | end.y = 708
+[Wall] id = 36 | start.x = 3935 | start.y = 708 | end.x = 3925 | end.y = 1176
+[Wall] id = 37 | start.x = 3925 | start.y = 1176 | end.x = 3796 | end.y = 1168
+[Wall] id = 38 | start.x = 3796 | start.y = 1168 | end.x = 3796 | end.y = 704
+[Wall] id = 39 | start.x = 3935 | start.y = 708 | end.x = 4058 | end.y = 709
+[Wall] id = 40 | start.x = 4058 | start.y = 709 | end.x = 4035 | end.y = 1188
+[Wall] id = 41 | start.x = 4035 | start.y = 1188 | end.x = 3925 | end.y = 1176
+[Wall] id = 42 | start.x = 3925 | start.y = 1176 | end.x = 3935 | end.y = 708
+[Wall] id = 43 | start.x = 4058 | start.y = 709 | end.x = 4209 | end.y = 709
+[Wall] id = 44 | start.x = 4209 | start.y = 709 | end.x = 4160 | end.y = 1214
+[Wall] id = 45 | start.x = 4160 | start.y = 1214 | end.x = 4035 | end.y = 1188
+[Wall] id = 46 | start.x = 4035 | start.y = 1188 | end.x = 4058 | end.y = 709
+[Wall] id = 47 | start.x = 4209 | start.y = 709 | end.x = 4333 | end.y = 709
+[Wall] id = 48 | start.x = 4333 | start.y = 709 | end.x = 4296 | end.y = 1233
+[Wall] id = 49 | start.x = 4296 | start.y = 1233 | end.x = 4160 | end.y = 1214
+[Wall] id = 50 | start.x = 4160 | start.y = 1214 | end.x = 4209 | end.y = 709
+[Wall] id = 51 | start.x = 4333 | start.y = 709 | end.x = 4470 | end.y = 708
+[Wall] id = 52 | start.x = 4470 | start.y = 708 | end.x = 4434 | end.y = 1239
+[Wall] id = 53 | start.x = 4434 | start.y = 1239 | end.x = 4296 | end.y = 1233
+[Wall] id = 54 | start.x = 4296 | start.y = 1233 | end.x = 4333 | end.y = 709
+[Wall] id = 55 | start.x = 4470 | start.y = 708 | end.x = 4669 | end.y = 1016
+[Wall] id = 56 | start.x = 4669 | start.y = 1016 | end.x = 4434 | end.y = 1239
+[Wall] id = 57 | start.x = 4434 | start.y = 1239 | end.x = 4470 | end.y = 708
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 200
+[Room] id = 1 | first_wall_id = 4 | wall_count = 8 | floor_height = 100 | roof_height = 200
+[Room] id = 2 | first_wall_id = 12 | wall_count = 4 | floor_height = 100 | roof_height = 200
+[Room] id = 3 | first_wall_id = 16 | wall_count = 8 | floor_height = 100 | roof_height = 200
+[Room] id = 4 | first_wall_id = 24 | wall_count = 4 | floor_height = 100 | roof_height = 200
+[Room] id = 5 | first_wall_id = 28 | wall_count = 7 | floor_height = 100 | roof_height = 200
+[Room] id = 6 | first_wall_id = 35 | wall_count = 4 | floor_height = 120 | roof_height = 220
+[Room] id = 7 | first_wall_id = 39 | wall_count = 4 | floor_height = 130 | roof_height = 230
+[Room] id = 8 | first_wall_id = 43 | wall_count = 4 | floor_height = 140 | roof_height = 240
+[Room] id = 9 | first_wall_id = 47 | wall_count = 4 | floor_height = 150 | roof_height = 250
+[Room] id = 10 | first_wall_id = 51 | wall_count = 4 | floor_height = 160 | roof_height = 260
+[Room] id = 11 | first_wall_id = 55 | wall_count = 3 | floor_height = 170 | roof_height = 270
+
+[Portal] id = 0 | start.x = 1376 | start.y = 498 | end.x = 1376 | end.y = 224
+[Portal] id = 1 | start.x = 1576 | start.y = 694 | end.x = 2022 | end.y = 702
+[Portal] id = 2 | start.x = 2248 | start.y = 530 | end.x = 2244 | end.y = 256
+[Portal] id = 3 | start.x = 1566 | start.y = 1208 | end.x = 2028 | end.y = 1210
+[Portal] id = 4 | start.x = 2700 | start.y = 726 | end.x = 2934 | end.y = 590
+[Portal] id = 5 | start.x = 3796 | start.y = 1168 | end.x = 3796 | end.y = 704
+[Portal] id = 6 | start.x = 3925 | start.y = 1176 | end.x = 3935 | end.y = 708
+[Portal] id = 7 | start.x = 4035 | start.y = 1188 | end.x = 4058 | end.y = 709
+[Portal] id = 8 | start.x = 4160 | start.y = 1214 | end.x = 4209 | end.y = 709
+[Portal] id = 9 | start.x = 4296 | start.y = 1233 | end.x = 4333 | end.y = 709
+[Portal] id = 10 | start.x = 4434 | start.y = 1239 | end.x = 4470 | end.y = 708
+
+[Enemy] id = 0 | x = 1300 | y = 370 | rot = 180 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 2034 | y = 122 | rot = 2 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 2 | x = 2002 | y = 662 | rot = 18 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 3 | x = 1790 | y = 1088 | rot = 31 | hp = 50 | wep.type_id = 2 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 4 | x = 1944 | y = 1036 | rot = 28 | hp = 50 | wep.type_id = 2 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 5 | x = 1652 | y = 1040 | rot = 32 | hp = 50 | wep.type_id = 2 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 6 | x = 3481 | y = 1240 | rot = 14 | hp = 100 | wep.type_id = 2 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 7 | x = 2891 | y = 1004 | rot = 12 | hp = 100 | wep.type_id = 2 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 8 | x = 3495 | y = 736 | rot = 8 | hp = 100 | wep.type_id = 2 | ai.type_id = 0 | sprite_id = 0
+
+[Effect] id = 0 | type_id = 0 | loc.x = 4625 | loc.y = 1020 | target.x = 0 | target.y = 0 | target_id = 0
+
+[Pickup] id = 0 | loc.x = 1353 | loc.y = 371 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 1 | loc.x = 2198 | loc.y = 376 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 2 | loc.x = 1788 | loc.y = 1314 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 3 | loc.x = 3735 | loc.y = 944 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 4 | loc.x = 2572 | loc.y = 117 | flavor = 1 | weapon_type_id = 2
+[Pickup] id = 5 | loc.x = 2721 | loc.y = 119 | flavor = 1 | weapon_type_id = 2
+
+[Chain_to_mapfile] third
+
+[Player] spawn.x = 194 | spawn.y = 365 | rot = 360
