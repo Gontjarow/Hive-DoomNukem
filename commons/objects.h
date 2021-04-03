@@ -22,7 +22,7 @@ enum	e_enemy_aggro { INACTIVE, ACTIVE };
 enum	e_enemy_type { RANGED, MELEE, BOSS };
 enum 	e_sprite_orient { FRONT, LEFT, RIGHT, BACK };
 enum	e_sprite_state { DEATH, IDLE, MOVE, ATTACK, HURT };
-enum    e_weapons { PISTOL, SMG, ASSAULT_RIFLE };
+enum    e_weapons { PISTOL = 1, SMG, ASSAULT_RIFLE };
 enum	e_enemy_points { FRONTLEFT, FRONTRIGHT, BACKLEFT, BACKRIGHT };
 
 typedef struct			s_xy t_xy;

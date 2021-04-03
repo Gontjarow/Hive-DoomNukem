@@ -29,7 +29,7 @@ void			render_pickups(t_doom *doom)
 			int left = GAME_MIDWIDTH + (int)(sprite.start.x * scale.start.x);
 			int right = GAME_MIDWIDTH + (int)(sprite.stop.x * scale.stop.x);
 
-			//! Ignore impossible enemies.
+			//! Ignore impossible.
 			if(left >= right || right < 0 || left >= GAME_WIN_WIDTH)
 			{
 				pickup = pickup->next;
@@ -38,8 +38,15 @@ void			render_pickups(t_doom *doom)
 
 			int pickup_id = room_id_from_polymap(doom->mdl->poly_map, pickup->loc.x, pickup->loc.y);
 
-			double ceil = world->sectors[pickup_id].floor + EYE_HEIGHT - world->player.position.z;
+			// Lower height for sprites based on type
 			double floor = world->sectors[pickup_id].floor - 0.5 - world->player.position.z;
+			double ceil;
+			if (pickup->flavor == PICKUP_HEALTH || pickup->flavor == PICKUP_AMMO)
+				ceil = world->sectors[pickup_id].floor + 2 - world->player.position.z;
+			else if (pickup->flavor == PICKUP_WEAPON)
+				ceil = world->sectors[pickup_id].floor + 1 - world->player.position.z;
+			else
+				ceil = world->sectors[pickup_id].floor + EYE_HEIGHT - world->player.position.z;
 
 			//! Calculate ceil/floor height and draw vertical lines left-to-right.
 			scale.start.y = GAME_WIN_HEIGHT / -sprite.start.y;
