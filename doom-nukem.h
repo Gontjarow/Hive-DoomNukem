@@ -52,6 +52,7 @@ typedef struct			s_doom
 	int					minimap_quit;
 	int 				menu_out_of_focus;
 	float				fps;
+	float				delta_time;
 	const Uint8* 		keystates;
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;

@@ -196,6 +196,7 @@ typedef struct 			s_pickup
 	struct s_point		loc;
 	int 				flavor;
 	int 				weapon_type_id;
+	SDL_Surface			*active_sprite;
 	struct s_pickup		*next;
 }						t_pickup;
 

@@ -127,13 +127,13 @@ int			main(int argc, char *argv[])
 	while (!doom.quit)
 	{
 		doom.frame_start = SDL_GetTicks();
-	    if (doom.menu->update_argc_argv) // put if argc == 1 if problems , back
-        {
-	        argc = 2;
-	        argv[1] = doom.menu->added_arg;
-	        doom.menu->update_argc_argv = 0;
-	        printf("\n\n\nUPDATED ARGV[1]\n\n\nNOW [%s]\n", argv[1]);
-        }
+		if (doom.menu->update_argc_argv) // put if argc == 1 if problems , back
+		{
+			argc = 2;
+			argv[1] = doom.menu->added_arg;
+			doom.menu->update_argc_argv = 0;
+			printf("\n\n\nUPDATED ARGV[1]\n\n\nNOW [%s]\n", argv[1]);
+		}
 		doom.keystates = SDL_GetKeyboardState(NULL);
 		distribute_inputs(&doom, argc, argv);
 		run_loops(&doom, argc, argv);
@@ -154,6 +154,7 @@ int			main(int argc, char *argv[])
 		}
  		SDL_UpdateWindowSurface(doom.win);
 		frame_ticks = SDL_GetTicks() - doom.frame_start;
+		doom.delta_time = frame_ticks / 1000.0f;
 		if (frame_ticks < TICKS_PER_FRAME)
 		{
 			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
