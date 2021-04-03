@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 15:59:35 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 17:28:37 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,20 +51,23 @@ void		init_player_weapon(t_doom *doom)
 
 static void	player_swap_weapons(t_doom *doom)
 {
-	if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[0].do_own == 1 && doom->mdl->player.weap_id != 0)
+	if (doom->mdl->player.reload_time == 0)
 	{
-		doom->mdl->player.weap_id = PISTOL;
-		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
-	}
-	if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[1].do_own == 1 && doom->mdl->player.weap_id != 1)
-	{
-		doom->mdl->player.weap_id = SHOTGUN;
-		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
-	}
-	if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[2].do_own == 1 && doom->mdl->player.weap_id != 2)
-	{
-		doom->mdl->player.weap_id = ASSAULT_RIFLE;
-		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+		if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[0].do_own == 1 && doom->mdl->player.weap_id != 0)
+		{
+			doom->mdl->player.weap_id = PISTOL;
+			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+		}
+		if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[1].do_own == 1 && doom->mdl->player.weap_id != 1)
+		{
+			doom->mdl->player.weap_id = SHOTGUN;
+			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+		}
+		if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[2].do_own == 1 && doom->mdl->player.weap_id != 2)
+		{
+			doom->mdl->player.weap_id = ASSAULT_RIFLE;
+			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+		}
 	}
 }
 

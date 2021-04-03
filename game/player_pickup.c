@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 19:16:08 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 17:04:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ static void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 static void		handle_level_exit(t_doom *doom)
 {
 	puts("Reached level exit!");
+	if (Mix_Playing(7))
+		Mix_HaltChannel(7);
 	doom->game->level_exit_reached = 1;
 	doom->menu->update_argc_argv = 1;
 	if (doom->menu->added_arg)
@@ -109,4 +111,3 @@ void			handle_pickup(t_doom *doom)
 		pickup = pickup->next;
 	}
 }
-
