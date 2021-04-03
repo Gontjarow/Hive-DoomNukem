@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/03/21 17:01:13 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 15:27:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,11 +343,11 @@ void		handle_player_ammo_bar(t_doom *doom)
 		if (doom->mdl->player.reload_time == 0)
 		{
 			if (doom->mdl->player.weap_id == PISTOL)
-				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_pistol_ammo_bar, doom->game->hud_location);
+				draw_surface_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_pistol_ammo_bar, doom->game->hud_location);
 			else if (doom->mdl->player.weap_id == SHOTGUN)
-				draw_surface((WIN_WIDTH - 10) + (space - 10), WIN_HEIGHT - 40, doom->sprites->txt_shotgun_ammo_bar, doom->game->hud_location);
+				draw_surface_ignore_alpha((WIN_WIDTH - 10) + (space - 10), WIN_HEIGHT - 45, doom->sprites->txt_shotgun_ammo_bar, doom->game->hud_location);
 			else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
-				draw_surface((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_assault_ammo_bar, doom->game->hud_location);
+				draw_surface_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_assault_ammo_bar, doom->game->hud_location);
 			space -= doom->mdl->player.weap_id == SHOTGUN ? 20 : 10;
 		}
 		i++;
@@ -365,7 +365,7 @@ void		handle_clip_bar(t_doom *doom)
 	i = 0;
 	while (i < clips)
 	{
-		draw_surface((WIN_WIDTH - 20) + space, WIN_HEIGHT - 80, doom->sprites->txt_clip_bar, doom->game->hud_location);
+		draw_surface_ignore_alpha((WIN_WIDTH - 20) + space, WIN_HEIGHT - 80, doom->sprites->txt_clip_bar, doom->game->hud_location);
 		space -= 20;
 		i++;
 	}
@@ -388,9 +388,9 @@ void		handle_weapon_bar(t_doom *doom)
 	if (doom->mdl->player.weap_id == PISTOL)
 		draw_surface_ignore_alpha(WIN_WIDTH - 150, 0, doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
 	else if (doom->mdl->player.weap_id == SHOTGUN)
-		draw_surface_ignore_alpha(WIN_WIDTH - 240, 0, doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
+		draw_surface_ignore_alpha(WIN_WIDTH - 260, 0, doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
 	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
-		draw_surface_ignore_alpha(WIN_WIDTH - 250, 0, doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
+		draw_surface_ignore_alpha(WIN_WIDTH - 260, 0, doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
 }
 
 void		handle_key_bar(t_doom *doom)
@@ -398,7 +398,7 @@ void		handle_key_bar(t_doom *doom)
 	/*
 		Placeholder to check if player owns a key to display it later on game hud
 	*/
-	draw_surface(WIN_WIDTH - 50, 300, doom->sprites->txt_key_hud, doom->game->hud_location);
+	// draw_surface(WIN_WIDTH - 50, 300, doom->sprites->txt_key_hud, doom->game->hud_location);
 }
 
 static void render_crosshair(t_model *mdl)

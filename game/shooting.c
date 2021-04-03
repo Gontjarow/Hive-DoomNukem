@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/03/21 18:46:35 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 15:30:46 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@ int					player_shoots(t_doom *doom)
 		enemy_id = check_hit(doom);
 		if (enemy_id >= 0)
 		{
-			printf("enemy got hit!\n");
 			if (DEBUG == 1)
 				doom->minimap->player_ray_color = 0xff00ff00;
 			deal_damage(doom, enemy_id);
