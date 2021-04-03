@@ -166,6 +166,7 @@ void			render_frame(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom);
 void			render_enemies(t_doom *doom);
 void			render_pickups(t_doom *doom);
+void			render_effectors(t_doom *doom);
 
 t_queue			*get_queue();
 void			queue_add(int id, int left, int right);

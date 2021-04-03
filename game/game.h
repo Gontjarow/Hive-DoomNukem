@@ -89,6 +89,7 @@ void			animate_ranged_side_walk(t_enemy *enemy, t_doom *doom);
 void			animate_ranged_death(t_enemy *enemy, t_doom *doom);
 void			animate_ranged_front_attack(t_enemy *enemy, t_doom *doom);
 void			animate_ranged_side_attack(t_enemy *enemy, t_doom *doom);
+void			animate_portals(t_doom *doom);
 void			init_enemy_sprite(t_doom *doom);
 
 #endif
