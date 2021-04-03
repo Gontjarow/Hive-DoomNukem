@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 15:08:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/05 18:32:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 18:22:37 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,29 @@ void			animate_idle(t_enemy *enemy, t_doom *doom)
 		else
 			enemy->active_sprite = doom->sprites->txt_boss_right_idle;
 	}
+}
+
+void			animate_portals(t_doom *doom)
+{
+	static SDL_Surface *frames[16] = { 0 };
+	int					i;
+
+	if (frames[0] == 0)
+	{
+		i = 0;
+		while (i < 16)
+		{
+			frames[i] = doom->sprites->txt_portal[i];
+			i++;
+		}
+		// frames[0] = doom->sprites->txt_portal[0];
+		// frames[1] = doom->sprites->txt_portal[1];
+		// frames[2] = doom->sprites->txt_portal[2];
+		// frames[3] = doom->sprites->txt_portal[3];
+	}
+	if (doom->sprites->portal_phase > 15)
+		doom->sprites->portal_phase = 0;
+	doom->sprites->active_portal = frames[doom->sprites->portal_phase++];
 }
 
 void			animation_switch(t_enemy *enemy, t_doom *doom)
