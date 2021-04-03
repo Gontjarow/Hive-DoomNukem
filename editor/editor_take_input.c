@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ask_to_save.c                                      :+:      :+:    :+:   */
+/*   editor_take_input.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "doom-nukem.h"
 
-static void				draw_confirmation(char *input, t_doom *doom)
+void				draw_confirmation(char *input, t_doom *doom)
 {
 	get_state()->gui->change_zoom(get_state());
 	flood_buffer(doom->edt->buff, 0xff000000);
@@ -25,7 +25,7 @@ static void				draw_confirmation(char *input, t_doom *doom)
 	print_glyph_str(input, editor_back_buffer()->buff, 922, 860);
 }
 
-static void				draw_input(t_doom *doom)
+void				draw_input(t_doom *doom)
 {
 	get_state()->gui->change_zoom(get_state());
 	flood_buffer(doom->edt->buff, 0xff000000);
@@ -36,7 +36,7 @@ static void				draw_input(t_doom *doom)
 	print_glyph_str(STRING_VALID_CHAR_INFO, doom->edt->buff, 90, 90);
 }
 
-static void				decide_table(int x, char *arr, int *i, t_doom *doom)
+void				decide_table(int x, char *arr, int *i, t_doom *doom)
 {
 	char				*chars;
 
@@ -59,7 +59,7 @@ static void				decide_table(int x, char *arr, int *i, t_doom *doom)
 	}
 }
 
-static void				keystate_input(char *arr, int *i, t_doom *doom)
+void				keystate_input(char *arr, int *i, t_doom *doom)
 {
 	SDL_Scancode		*alphabet;
 	int					detections;
@@ -79,30 +79,4 @@ static void				keystate_input(char *arr, int *i, t_doom *doom)
 	}
 	if (!detections)
 		propose_character(0, NULL, NULL, -1);
-}
-
-char					*ask_to_save(t_doom *doom)
-{
-	int					finished;
-	int					i;
-	static int			last_i = 0;
-	char				input[255];
-
-	draw_input(doom);
-	finished = 0;
-	while (finished < 255)
-		input[finished++] = '\0';
-	finished = 0;
-	i = 0;
-	while (!finished)
-	{
-		SDL_PumpEvents();
-		doom->keystates = SDL_GetKeyboardState(NULL);
-		if (doom->keystates[SDL_SCANCODE_RETURN])
-			finished = 1;
-		keystate_input(&input, &i, doom);
-		SDL_UpdateWindowSurface(doom_ptr()->edt->win);
-	}
-	draw_confirmation(&input, doom);
-	return (ft_strdup(&input));
 }

@@ -81,6 +81,9 @@ static void no_go(t_model *mdl, t_coord old)
 	mdl->player.y = old.y;
 }
 
+// TODO FINISH CROSSING_HEIGHTS CHECKS
+// 		CAN ALWAYS FALL DOWN TO LOWER HEIGHT ROOM
+// 		CAN NOT ALWAYS ENTER ROOM IF HEAD IS HITTING THE TOP CEILING OF THE OPENING
 static int check_crossing_heights(t_model *mdl, t_coord old, int room_test)
 {
 	t_room *room;
@@ -91,14 +94,15 @@ static int check_crossing_heights(t_model *mdl, t_coord old, int room_test)
 	while (i++ < room_test)
 		room = room->next;
 	assert(room->id == room_test);
-	if (mdl->player.z - room->floor_height > KNEE_HEIGHT)
+	if (mdl->player.z - mdl->player.height + KNEE_HEIGHT > room->floor_height)
 	{
-		puts("Knee test OK!");
+		//puts("Knee test OK!");
 		return (1);
 	}
 	else
 	{
-		puts("FAIL Knee test!");
+		//puts("FAIL Knee test!");
+		//printf("player.z - player.height = %d | room->floor_height = %d\n", (int)(mdl->player.z) - mdl->player.height, room->floor_height);
 		return (0);
 	}
 }
