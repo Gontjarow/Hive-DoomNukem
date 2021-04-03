@@ -296,4 +296,5 @@ void			render_frame(t_doom *doom)
 
 	// enemies don't have a "current sector" so they must be drawn together.
 	render_enemies(doom);
+	render_pickups(doom);
 }
