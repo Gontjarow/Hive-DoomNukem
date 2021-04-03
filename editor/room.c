@@ -52,18 +52,39 @@ void			flip_room(t_room *room, t_model *mdl)
 	if (walls == NULL)
 		ft_die("Fatal error: Could not malloc walls pointers at flip_room.");
 	walls[0] = room->first_wall;
+	//printf("flip_wall on walls[%d]\n", 0);
 	iter = room->first_wall;
 	i = room->wall_count;
 	while (--i > 0)
 	{
 		walls[i] = iter->next;
 		walls[i]->id = room->first_wall_id + i;
+		//printf("set walls[%d] to be wall_id[%d] | adjusted id to be [%d]\n", i, iter->next->id, walls[i]->id);
+		//printf("flip_wall on walls[%d]\n", i);
 		flip_wall(walls[i]);
 		iter = iter->next;
 	}
-	room->first_wall->next = walls[i];
+	room->first_wall = walls[0];
+	iter = room->first_wall;
 	while (i < room->wall_count - 1)
-		walls[i]->next = walls[i++ + 1];
-	walls[i]->next = mdl->walls;
+	{
+		iter->next = walls[++i];
+		iter = iter->next;
+	}
+	//printf("walls[%d]->next set mdl->walls\n", i);
+	iter->next = mdl->walls;
 	free(walls);
+
+	/*
+	int debug = 0;
+	t_wall *debug_wall;
+	debug_wall = room->first_wall;
+
+	while (debug < room->wall_count)
+	{
+		printf("debug_wall id %d\n", debug_wall->id);
+		debug_wall = debug_wall->next;
+		debug++;
+	}
+	*/
 }
