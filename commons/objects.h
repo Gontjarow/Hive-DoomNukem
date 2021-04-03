@@ -17,6 +17,7 @@
 
 # define CROUCH_HEIGHT 10
 # define STAND_HEIGHT 20
+# define KNEE_HEIGHT 11
 
 enum	e_enemy_aggro { INACTIVE, ACTIVE };
 enum	e_enemy_type { RANGED, MELEE, BOSS };
