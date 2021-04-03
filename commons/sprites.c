@@ -219,7 +219,7 @@ void		init_enemy_sprite(t_doom *doom)
 int			load_pickup_sprite(t_doom *doom)
 {
 	doom->sprites->txt_health_pickup = load_texture(doom, "img/pickups/health.png");
-	doom->sprites->txt_smg_ammo_pickup = load_texture(doom, "img/pickups/smgammo.png");
+	doom->sprites->txt_shotgun_ammo_pickup = load_texture(doom, "img/pickups/shotgunammo.png");
 	doom->sprites->txt_assault_ammo_pickup = load_texture(doom, "img/pickups/akammo.png");
 	doom->sprites->txt_key_hud = load_texture(doom, "img/pickups/key.png");
 	return (1);
@@ -237,6 +237,35 @@ void		load_health_bars(t_doom *doom, char *path, int i)
 		i++;
 	}
 	doom->sprites->txt_health_bar[10] = load_texture(doom, "img/sprites/hud/healthbar/health_10.png");
+}
+
+static int	load_portal_sprite(t_doom *doom, char *path, int i)
+{
+	doom->sprites->portal_phase = 0;
+	if (!(doom->sprites->txt_portal = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 16)))
+		return (-1);
+	i = 0;
+	while (i < 10)
+	{
+		path = extension_num_path("img/sprites/portal/portal_", i + '0', ".png");
+		doom->sprites->txt_portal[i] = load_texture(doom, path);
+		i++;
+	}
+	i = 0;
+	while (i < 6)
+	{
+		path = extension_num_path("img/sprites/portal/portal_1", i + '0', ".png");
+		doom->sprites->txt_portal[i + 10] = load_texture(doom, path);
+		i++;
+	}
+	// doom->sprites->txt_portal[10] = load_texture(doom, "img/sprites/portal/portal_10.png");
+	// doom->sprites->txt_portal[11] = load_texture(doom, "img/sprites/portal/portal_11.png");
+	// doom->sprites->txt_portal[12] = load_texture(doom, "img/sprites/portal/portal_12.png");
+	// doom->sprites->txt_portal[13] = load_texture(doom, "img/sprites/portal/portal_13.png");
+	// doom->sprites->txt_portal[14] = load_texture(doom, "img/sprites/portal/portal_14.png");
+	// doom->sprites->txt_portal[15] = load_texture(doom, "img/sprites/portal/portal_15.png");
+	// doom->sprites->txt_portal[16] = load_texture(doom, "img/sprites/portal/portal_16.png");
+	return (1);
 }
 
 void		load_ammo_bars(t_doom *doom)
@@ -274,55 +303,8 @@ int			load_sprites(t_doom *doom)
 	load_health_bars(doom, path, i);
 	load_ammo_bars(doom);
 	load_loading_screen(doom);
+	load_portal_sprite(doom, path, i);
 	return (1);
-}
-
-void			print_minimap_mult_sprite(t_doom *doom, SDL_Surface **sprite, int i)		//debugging only
-{
-	unsigned int	*pixels;
-	unsigned int	*ref;
-	int				x;
-	int				y;
-	int				k;
-	int				cut;
-
-	pixels = doom->minimap->buff->pixels;
-	ref = sprite[i]->pixels;
-	cut = 15 * MWIN_WIDTH;
-	y = (MWIN_WIDTH - sprite[i]->w) + ((MWIN_HEIGHT - sprite[i]->h) * MWIN_WIDTH) - cut;
-	y += cut;
-	x = 0;
-	k = 0;
-	while (k < ((sprite[i]->w * sprite[i]->h)))
-	{
-		y = x == sprite[i]->w ? y + MWIN_WIDTH : y;
-		x = x == sprite[i]->w ? 0 : x;
-		pixels[x++ + y] = ref[k++];
-	}
-}
-
-void		print_minimap_single_sprite(t_doom *doom, SDL_Surface *sprite)					//debugging only
-{
-	unsigned int	*pixels;
-	unsigned int	*ref;
-	int				x;
-	int				y;
-	int				k;
-	int				cut;
-
-	pixels = doom->minimap->buff->pixels;
- 	ref = sprite->pixels;
-	cut = 15 * MWIN_WIDTH;
-	y = (MWIN_WIDTH - sprite->w) + ((MWIN_HEIGHT - sprite->h) * MWIN_WIDTH) - cut;
-	y += cut;
-	x = 0;
-	k = 0;
-	while (k < ((sprite->w * sprite->h)))
-	{
-		y = x == sprite->w ? y + MWIN_WIDTH : y;
-		x = x == sprite->w ? 0 : x;
-		pixels[x++ + y] = ref[k++];
-	}
 }
 
 int			destroy_sprites(t_doom *doom)

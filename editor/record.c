@@ -133,10 +133,10 @@ static void		assign_max_hp_by_type(t_enemy *enemies)
 	}
 	if (enemies->ai.type_id == 1)
 	{
-		enemies->hp.max = 50;
+		enemies->hp.max = 40;
 		return ;
 	}
-	enemies->hp.max = 100;
+	enemies->hp.max = 75;
 }
 
 t_enemy			*record_enemy(t_point location, t_point *tail, t_model *mdl)

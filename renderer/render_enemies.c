@@ -80,7 +80,7 @@ void			render_enemies(t_doom *doom)
 				t_xy	len = vec2_sub(eline.stop, eline.start);
 				double	depth = eline.start.y + vec2_mul(len, (double)horizontal / (right - left)).y;
 				int tex_x = (x - left) * (double)enemy->active_sprite->w / (right - left);
-				vertical_sprite(enemy, x, tex_x, vec2(yawed_start_ceil, yawed_start_floor), depth);
+				vertical_sprite(enemy->active_sprite, x, tex_x, vec2(yawed_start_ceil, yawed_start_floor), depth);
 				++x;
 			}
 		}

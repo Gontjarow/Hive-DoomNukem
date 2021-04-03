@@ -1,0 +1,37 @@
+[Wall] id = 0 | start.x = 610 | start.y = 384 | end.x = 738 | end.y = 386
+[Wall] id = 1 | start.x = 738 | start.y = 386 | end.x = 738 | end.y = 548
+[Wall] id = 2 | start.x = 738 | start.y = 548 | end.x = 608 | end.y = 543
+[Wall] id = 3 | start.x = 608 | start.y = 543 | end.x = 610 | end.y = 384
+[Wall] id = 4 | start.x = 738 | start.y = 386 | end.x = 946 | end.y = 282
+[Wall] id = 5 | start.x = 946 | start.y = 282 | end.x = 1227 | end.y = 287
+[Wall] id = 6 | start.x = 1227 | start.y = 287 | end.x = 1298 | end.y = 470
+[Wall] id = 7 | start.x = 1298 | start.y = 470 | end.x = 1177 | end.y = 617
+[Wall] id = 8 | start.x = 1177 | start.y = 617 | end.x = 943 | end.y = 609
+[Wall] id = 9 | start.x = 943 | start.y = 609 | end.x = 738 | end.y = 548
+[Wall] id = 10 | start.x = 738 | start.y = 548 | end.x = 738 | end.y = 386
+[Wall] id = 11 | start.x = 1227 | start.y = 287 | end.x = 1168 | end.y = 41
+[Wall] id = 12 | start.x = 1168 | start.y = 41 | end.x = 1334 | end.y = 44
+[Wall] id = 13 | start.x = 1334 | start.y = 44 | end.x = 1446 | end.y = 359
+[Wall] id = 14 | start.x = 1446 | start.y = 359 | end.x = 1298 | end.y = 470
+[Wall] id = 15 | start.x = 1298 | start.y = 470 | end.x = 1227 | end.y = 287
+[Wall] id = 16 | start.x = 1177 | start.y = 617 | end.x = 1477 | end.y = 677
+[Wall] id = 17 | start.x = 1477 | start.y = 677 | end.x = 1388 | end.y = 841
+[Wall] id = 18 | start.x = 1388 | start.y = 841 | end.x = 973 | end.y = 783
+[Wall] id = 19 | start.x = 973 | start.y = 783 | end.x = 943 | end.y = 609
+[Wall] id = 20 | start.x = 943 | start.y = 609 | end.x = 1177 | end.y = 617
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 200
+[Room] id = 1 | first_wall_id = 4 | wall_count = 7 | floor_height = 100 | roof_height = 200
+[Room] id = 2 | first_wall_id = 11 | wall_count = 5 | floor_height = 100 | roof_height = 200
+[Room] id = 3 | first_wall_id = 16 | wall_count = 5 | floor_height = 100 | roof_height = 200
+
+[Portal] id = 0 | start.x = 738 | start.y = 548 | end.x = 738 | end.y = 386
+[Portal] id = 1 | start.x = 1298 | start.y = 470 | end.x = 1227 | end.y = 287
+[Portal] id = 2 | start.x = 943 | start.y = 609 | end.x = 1177 | end.y = 617
+
+[Enemy] id = 0 | x = 1225 | y = 85 | rot = 236 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Pickup] id = 0 | loc.x = 1114 | loc.y = 709 | flavor = 0 | weapon_type_id = 0
+
+[Player] spawn.x = 659 | spawn.y = 464 | rot = 360
+[No level exit defined] Infinite map suitable for debugging!

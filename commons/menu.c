@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:44:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/21 00:39:42 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 17:08:24 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,8 @@ void		game_quit(t_doom *doom)
 		doom->minimap_quit = 1;
 		destroy_minimap(doom);
 	}
+    if (Mix_Playing(7))
+        Mix_HaltChannel(7);
 	doom->game_quit = 1;
 	destroy_game(doom);
 	destroy_model(doom);

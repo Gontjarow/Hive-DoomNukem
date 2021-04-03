@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/21 16:58:50 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 18:21:23 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ typedef struct 			s_pickup
 	struct s_point		loc;
 	int 				flavor;
 	int 				weapon_type_id;
+	SDL_Surface			*active_sprite;
 	struct s_pickup		*next;
 }						t_pickup;
 
@@ -244,8 +245,13 @@ typedef struct 			s_sprites
 
 	// Pickup Sprites
 	struct SDL_Surface	*txt_health_pickup;
-	struct SDL_Surface	*txt_smg_ammo_pickup;
+	struct SDL_Surface	*txt_shotgun_ammo_pickup;
 	struct SDL_Surface	*txt_assault_ammo_pickup;
+
+	// Effector Sprites
+	struct SDL_Surface	**txt_portal;
+	struct SDL_Surface	*active_portal;
+	int					portal_phase;
 
 	// Loading Screen Sprites
 	struct SDL_Surface	*txt_loading_0;

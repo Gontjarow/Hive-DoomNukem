@@ -47,6 +47,7 @@ void			pickups_plant_health(int x, int y)
 	mdl->pickups->weapon_type_id = 0;
 	mdl->pickups->loc.x = relative.x;
 	mdl->pickups->loc.y = relative.y;
+	mdl->pickups->active_sprite = doom_ptr()->sprites->txt_health_pickup;
 	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
 	if (!new_pickup)
 		ft_die("Fatal error: Could not malloc new_pickup at pickups_plant_health!");
@@ -79,6 +80,12 @@ void			pickups_plant_ammo(int x, int y)
 	mdl->pickups->weapon_type_id = get_state()->selected_weapon_type;
 	mdl->pickups->loc.x = relative.x;
 	mdl->pickups->loc.y = relative.y;
+	if (mdl->pickups->weapon_type_id == ASSAULT_RIFLE)
+		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_assault_ammo_pickup;
+	else if (mdl->pickups->weapon_type_id == SHOTGUN)
+		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_shotgun_ammo_pickup;
+	else
+		mdl->pickups->active_sprite = NULL;
 	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
 	if (!new_pickup)
 		ft_die("Fatal error: Could not malloc new_pickup at pickups_plant_ammo!");
@@ -111,6 +118,7 @@ void			pickups_plant_weapon(int x, int y)
 	mdl->pickups->weapon_type_id = get_state()->selected_weapon_type;
 	mdl->pickups->loc.x = relative.x;
 	mdl->pickups->loc.y = relative.y;
+	mdl->pickups->active_sprite = NULL; // TODO: Where is this sprite?
 	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
 	if (!new_pickup)
 		ft_die("Fatal error: Could not malloc new_pickup at pickups_plant_weapon!");

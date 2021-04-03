@@ -128,7 +128,7 @@ void		render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_sc
 	rect_x[1] = GAME_WIN_WIDTH;
 	rect_y[1] = GAME_WIN_HEIGHT - unveiler;
 	if (unveiler < GAME_WIN_HEIGHT)
-		unveiler ++;
+		unveiler++;
 	else if (unveiler > GAME_WIN_HEIGHT)
 		unveiler = GAME_WIN_HEIGHT;
 	if (unveiler == GAME_WIN_HEIGHT && !reached_end)

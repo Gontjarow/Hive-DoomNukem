@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/03/21 18:44:52 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 17:28:37 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[0].ammo_res = 1;
 	doom->mdl->player.weap_arr[0].ammo_max = 12;
 	doom->mdl->player.weap_arr[0].cooldown = 10;
-	doom->mdl->player.weap_arr[0].dmg = 20;
+	doom->mdl->player.weap_arr[0].dmg = 15;
 	doom->mdl->player.weap_arr[0].reload_time = 20;
 	doom->mdl->player.weap_arr[0].fire_sound = doom->sounds->mcPistolShot;
 	doom->mdl->player.weap_arr[0].reload_sound = doom->sounds->mcPistolRld;
@@ -30,16 +30,16 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[1].ammo_res = 5;
 	doom->mdl->player.weap_arr[1].ammo_max = 5;
 	doom->mdl->player.weap_arr[1].cooldown = 25;
-	doom->mdl->player.weap_arr[1].dmg = 25;
+	doom->mdl->player.weap_arr[1].dmg = 40;
 	doom->mdl->player.weap_arr[1].reload_time = 160;
 	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcShotgunShot;
 	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcShotgunRld;
 	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/shotgun.png");
-	doom->mdl->player.weap_arr[1].do_own = 1; // Debug faster with Shotgun
-	doom->mdl->player.weap_arr[2].ammo_cur = 40;
+	doom->mdl->player.weap_arr[1].do_own = 0;
+	doom->mdl->player.weap_arr[2].ammo_cur = 30;
 	doom->mdl->player.weap_arr[2].ammo_res = 3;
-	doom->mdl->player.weap_arr[2].ammo_max = 40;
-	doom->mdl->player.weap_arr[2].cooldown = 2;
+	doom->mdl->player.weap_arr[2].ammo_max = 30;
+	doom->mdl->player.weap_arr[2].cooldown = 5;
 	doom->mdl->player.weap_arr[2].dmg = 30;
 	doom->mdl->player.weap_arr[2].reload_time = 35;
 	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcAssaultShot;
@@ -51,20 +51,23 @@ void		init_player_weapon(t_doom *doom)
 
 static void	player_swap_weapons(t_doom *doom)
 {
-	if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[0].do_own == 1 && doom->mdl->player.weap_id != 0)
+	if (doom->mdl->player.reload_time == 0)
 	{
-		doom->mdl->player.weap_id = PISTOL;
-		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
-	}
-	if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[1].do_own == 1 && doom->mdl->player.weap_id != 1)
-	{
-		doom->mdl->player.weap_id = SHOTGUN;
-		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
-	}
-	if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[2].do_own == 1 && doom->mdl->player.weap_id != 2)
-	{
-		doom->mdl->player.weap_id = ASSAULT_RIFLE;
-		Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+		if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[0].do_own == 1 && doom->mdl->player.weap_id != 0)
+		{
+			doom->mdl->player.weap_id = PISTOL;
+			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+		}
+		if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[1].do_own == 1 && doom->mdl->player.weap_id != 1)
+		{
+			doom->mdl->player.weap_id = SHOTGUN;
+			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+		}
+		if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[2].do_own == 1 && doom->mdl->player.weap_id != 2)
+		{
+			doom->mdl->player.weap_id = ASSAULT_RIFLE;
+			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+		}
 	}
 }
 

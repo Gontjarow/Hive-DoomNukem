@@ -1,0 +1,14 @@
+[Wall] id = 0 | start.x = 137 | start.y = 141 | end.x = 1117 | end.y = 143
+[Wall] id = 1 | start.x = 1117 | start.y = 143 | end.x = 1109 | end.y = 579
+[Wall] id = 2 | start.x = 1109 | start.y = 579 | end.x = 145 | end.y = 576
+[Wall] id = 3 | start.x = 145 | start.y = 576 | end.x = 137 | end.y = 141
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 200
+
+[Pickup] id = 0 | loc.x = 657 | loc.y = 287 | flavor = 1 | weapon_type_id = 1
+[Pickup] id = 1 | loc.x = 658 | loc.y = 339 | flavor = 1 | weapon_type_id = 2
+[Pickup] id = 3 | loc.x = 756 | loc.y = 286 | flavor = 2 | weapon_type_id = 1
+[Pickup] id = 4 | loc.x = 757 | loc.y = 340 | flavor = 2 | weapon_type_id = 2
+
+[Player] spawn.x = 224 | spawn.y = 341 | rot = 352
+[No level exit defined] Infinite map suitable for debugging!

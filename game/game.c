@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/21 18:37:28 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 17:13:51 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,12 +169,19 @@ void		game_render(t_doom *doom)
 
 	if (doom->game->show_loading)
 	{
+		if (!Mix_Playing(7))
+			Mix_PlayChannel(7, doom->sounds->mcLoading, -1);
 		render_chapter_screen(doom, chapter);
 		if (doom->keystates[SDL_SCANCODE_SPACE])
 		{
+			Mix_HaltChannel(7);
 			doom->game->show_loading = 0;
 			chapter++;
 			puts("CHAPTER ADVANCED!!!");
+			if (!Mix_Playing(7) && chapter != 3)
+				Mix_PlayChannel(7, doom->sounds->mcBackground, -1);
+			else
+				Mix_PlayChannel(7, doom->sounds->mcBoss, -1);
 		}
 		if (DEBUG == 1)
 			update_minimap(doom);
@@ -190,7 +197,7 @@ void		game_render(t_doom *doom)
 		{
 			Mix_PlayChannel(mix_i, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
 			mix_i++;
-			if (mix_i > 7)
+			if (mix_i > 6)
 				mix_i = 0;
 			dispatch_player_shots(doom);
 		}

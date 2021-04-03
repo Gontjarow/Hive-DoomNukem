@@ -200,7 +200,7 @@ void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex
 	}
 }
 
-void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range, double depth)
+void			vertical_sprite(SDL_Surface *active_sprite, int screen_x, int tex_x, t_xy range, double depth)
 {
 	uint32_t	*pixels;
 	uint32_t	color;
@@ -208,7 +208,7 @@ void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range, doub
 	double		tex_y;
 
 	tex_y = 0;
-	y_step = (double)enemy->active_sprite->h / (range.y - range.x);
+	y_step = (double)active_sprite->h / (range.y - range.x);
 	if (range.x < 0)
 	{
 		tex_y += y_step * -range.x;
@@ -220,7 +220,7 @@ void			vertical_sprite(t_enemy *enemy, int screen_x, int tex_x, t_xy range, doub
 
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
-		color = texture_pixel(enemy->active_sprite, tex_x, tex_y);
+		color = texture_pixel(active_sprite, tex_x, tex_y);
 		if (color != COLOR_TRANSPARENT && color >> 24 != 0x00)
 		{
 			if (zbuffer_ok(GAME_WIN_WIDTH * (int)range.x + screen_x, depth))
