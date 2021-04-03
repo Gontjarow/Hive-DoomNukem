@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/21 15:01:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 16:37:43 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	load_sounds(t_doom *doom)
 	if (!(doom->sounds->mcAssaultRld = Mix_LoadWAV(WAV_ASSAULTRLD)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_ASSAULTRLD!");
 	if (!(doom->sounds->mcShotgunRld = Mix_LoadWAV(WAV_SHOTGUNRLD)))
-		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGRLD!");
+		ft_die("Fatal error: SDL_mixer failed to load WAV_SHOTGUNRLD!");
 	if (!(doom->sounds->mcWalking = Mix_LoadWAV(WAV_WALKING)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_WALKING!");
 	if (!(doom->sounds->mcRunning = Mix_LoadWAV(WAV_RUNNING)))
@@ -43,7 +43,7 @@ void	load_sounds(t_doom *doom)
 	if (!(doom->sounds->mcAssaultShot = Mix_LoadWAV(WAV_ASSAULTSHOT)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_ASSAULTSHOT!");
 	if (!(doom->sounds->mcShotgunShot = Mix_LoadWAV(WAV_SHOTGUNSHOT)))
-		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGSHOT!");
+		ft_die("Fatal error: SDL_mixer failed to load WAV_SHOTGUNSHOT!");
 	if (!(doom->sounds->mcHealthPickup = Mix_LoadWAV(WAV_HEALTHPICKUP)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_HEALTHPICKUP!");
 	if (!(doom->sounds->mcAmmoPickup = Mix_LoadWAV(WAV_AMMOPICKUP)))

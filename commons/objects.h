@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/21 16:58:50 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 16:30:47 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,7 @@ typedef struct 			s_sprites
 
 	// Pickup Sprites
 	struct SDL_Surface	*txt_health_pickup;
-	struct SDL_Surface	*txt_smg_ammo_pickup;
+	struct SDL_Surface	*txt_shotgun_ammo_pickup;
 	struct SDL_Surface	*txt_assault_ammo_pickup;
 
 	// Loading Screen Sprites
