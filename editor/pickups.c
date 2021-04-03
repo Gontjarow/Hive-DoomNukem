@@ -83,9 +83,7 @@ void			pickups_plant_ammo(int x, int y)
 	if (mdl->pickups->weapon_type_id == ASSAULT_RIFLE)
 		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_assault_ammo_pickup;
 	else if (mdl->pickups->weapon_type_id == SHOTGUN)
-		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_shotgun_ammo_bar; // TODO: missing sprite
-	else if (mdl->pickups->weapon_type_id == PISTOL)
-		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_smg_ammo_pickup;
+		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_shotgun_ammo_pickup;
 	else
 		mdl->pickups->active_sprite = NULL;
 	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
