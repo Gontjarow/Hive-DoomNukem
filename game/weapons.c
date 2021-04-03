@@ -35,7 +35,7 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcShotgunShot;
 	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcShotgunRld;
 	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/shotgun.png");
-	doom->mdl->player.weap_arr[1].do_own = 0;
+	doom->mdl->player.weap_arr[1].do_own = 1; // Debug faster with Shotgun
 	doom->mdl->player.weap_arr[2].ammo_cur = 40;
 	doom->mdl->player.weap_arr[2].ammo_res = 3;
 	doom->mdl->player.weap_arr[2].ammo_max = 40;
