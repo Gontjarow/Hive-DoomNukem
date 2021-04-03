@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/03 18:00:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 15:30:46 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,18 @@ void				deal_damage(t_doom *doom, int enemy_id)
 			aggro_enemies(doom, enemy);
 		enemy = enemy->next;
 	}
+}
+
+int					player_shoots_shotgun(t_doom *doom)		//WIP
+{
+	doom->mdl->player.rot -= 10;
+	player_shoots(doom);
+	doom->mdl->player.rot += 10;
+	player_shoots(doom);
+	doom->mdl->player.rot += 10;
+	player_shoots(doom);
+	doom->mdl->player.rot -= 10;
+	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur += 2;
 }
 
 int					player_shoots(t_doom *doom)

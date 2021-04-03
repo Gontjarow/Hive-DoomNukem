@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/20 20:50:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 16:58:50 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ enum	e_enemy_aggro { INACTIVE, ACTIVE };
 enum	e_enemy_type { RANGED, MELEE, BOSS };
 enum 	e_sprite_orient { FRONT, LEFT, RIGHT, BACK };
 enum	e_sprite_state { DEATH, IDLE, MOVE, ATTACK, HURT };
-enum    e_weapons { PISTOL = 1, SMG, ASSAULT_RIFLE };
+enum    e_weapons { PISTOL, SHOTGUN, ASSAULT_RIFLE };
 enum	e_enemy_points { FRONTLEFT, FRONTRIGHT, BACKLEFT, BACKRIGHT };
 
 typedef struct			s_xy t_xy;
@@ -208,8 +208,8 @@ typedef struct 			s_sounds
 	struct Mix_Chunk	*mcSword;
 	struct Mix_Chunk	*mcPistolRld;
 	struct Mix_Chunk	*mcAssaultRld;
-	struct Mix_Chunk	*mcSmgRld;
-	struct Mix_Chunk	*mcSmgShot;
+	struct Mix_Chunk	*mcShotgunRld;
+	struct Mix_Chunk	*mcShotgunShot;
 	struct Mix_Chunk	*mcPistolShot;
 	struct Mix_Chunk	*mcAssaultShot;
 	struct Mix_Chunk	*mcWalking;
@@ -237,7 +237,7 @@ typedef struct 			s_sprites
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;
 	struct SDL_Surface	*txt_assault_ammo_bar;
-	struct SDL_Surface	*txt_smg_ammo_bar;
+	struct SDL_Surface	*txt_shotgun_ammo_bar;
 	struct SDL_Surface	*txt_pistol_ammo_bar;
 	struct SDL_Surface	*txt_clip_bar;
 	struct SDL_Surface	*txt_key_hud;

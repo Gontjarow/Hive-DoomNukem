@@ -25,6 +25,15 @@
 [Portal] id = 1 | start.x = 576 | start.y = 383 | end.x = 576 | end.y = 545
 
 [Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 0 | x = 1218 | y = 274 | rot = 116 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
 
 [Player] spawn.x = 348 | spawn.y = 475 | rot = 360
 [No level exit defined] Infinite map suitable for debugging!

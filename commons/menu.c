@@ -344,7 +344,12 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->game_quit))
 		game_quit(doom);
 	else if (!doom->game_quit && doom->game->level_exit_reached)
+	{
 		game_quit(doom);
+		puts("INSTANTLY RELOADING!!!");
+		start_game_from_menu(doom, argc, argv);
+		puts("INSANT RELOADING COMPLETED!!!");
+	}
 }
 
 void		main_menu_loop(t_doom *doom, int argc, char **argv)

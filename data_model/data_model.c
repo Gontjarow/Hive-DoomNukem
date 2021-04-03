@@ -72,7 +72,7 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.rot_speed = 5;
 	doom->mdl->player.run_lock = 0;
 	doom->mdl->player.crouch_lock = 0;
-	doom->mdl->player.weap_id = 0;
+	doom->mdl->player.weap_id = PISTOL;
 	doom->mdl->player.reload_time = 0;
 	doom->mdl->player.shoot_cd = 0;
 	doom->mdl->player.bullet_pos.x = 0.0;

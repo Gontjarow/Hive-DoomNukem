@@ -242,7 +242,7 @@ void		load_health_bars(t_doom *doom, char *path, int i)
 void		load_ammo_bars(t_doom *doom)
 {
 	doom->sprites->txt_pistol_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/pistolammo.png");
-	doom->sprites->txt_smg_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/smgammo.png");
+	doom->sprites->txt_shotgun_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/shotgunammo.png");
 	doom->sprites->txt_assault_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/assaultammo.png");
 	doom->sprites->txt_clip_bar = load_texture(doom, "img/sprites/hud/ammobar/cliptest.png");
 }

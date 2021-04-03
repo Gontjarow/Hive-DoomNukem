@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/20 20:52:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/03/21 15:01:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	load_sounds(t_doom *doom)
 		ft_die("Fatal error: SDL_mixer failed to load WAV_PISTOLSHOT!");
 	if (!(doom->sounds->mcAssaultRld = Mix_LoadWAV(WAV_ASSAULTRLD)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_ASSAULTRLD!");
-	if (!(doom->sounds->mcSmgRld = Mix_LoadWAV(WAV_SMGRLD)))
+	if (!(doom->sounds->mcShotgunRld = Mix_LoadWAV(WAV_SHOTGUNRLD)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGRLD!");
 	if (!(doom->sounds->mcWalking = Mix_LoadWAV(WAV_WALKING)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_WALKING!");
@@ -42,7 +42,7 @@ void	load_sounds(t_doom *doom)
 		ft_die("Fatal error: SDL_mixer failed to load WAV_ENEMYDEATH!");
 	if (!(doom->sounds->mcAssaultShot = Mix_LoadWAV(WAV_ASSAULTSHOT)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_ASSAULTSHOT!");
-	if (!(doom->sounds->mcSmgShot = Mix_LoadWAV(WAV_SMGSHOT)))
+	if (!(doom->sounds->mcShotgunShot = Mix_LoadWAV(WAV_SHOTGUNSHOT)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_SMGSHOT!");
 	if (!(doom->sounds->mcHealthPickup = Mix_LoadWAV(WAV_HEALTHPICKUP)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_HEALTHPICKUP!");
@@ -69,8 +69,8 @@ void	destroy_sounds(t_doom *doom)
 	Mix_FreeChunk(doom->sounds->mcPistolShot);
 	Mix_FreeChunk(doom->sounds->mcAssaultRld);
 	Mix_FreeChunk(doom->sounds->mcAssaultShot);
-	Mix_FreeChunk(doom->sounds->mcSmgRld);
-	Mix_FreeChunk(doom->sounds->mcSmgShot);
+	Mix_FreeChunk(doom->sounds->mcShotgunRld);
+	Mix_FreeChunk(doom->sounds->mcShotgunShot);
 	Mix_FreeChunk(doom->sounds->mcWalking);
 	Mix_FreeChunk(doom->sounds->mcRunning);
 	Mix_FreeChunk(doom->sounds->mcCrouching);
