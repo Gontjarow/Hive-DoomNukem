@@ -206,6 +206,7 @@ t_world			*load_world(t_world *world)
 		sector->vertex_count = room->wall_count;
 		sector->floor = room->floor_height / WORLD_SCALE;
 		sector->ceil = room->roof_height / WORLD_SCALE;
+		sector->has_ceiling = room->has_ceiling;
 
 		// Allocate fixed size blocks
 		// Note: sector->vertex has one extra index
@@ -276,7 +277,8 @@ void			render_frame(t_doom *doom)
 	memset_f(            zbuffer,      -INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
 	memset_i(world->screen_y_top,              0, GAME_WIN_WIDTH);
 	memset_i(world->screen_y_bot, GAME_WIN_WIDTH, GAME_WIN_WIDTH);
-	flood_buffer(doom->game->buff, 0x112233);
+	// flood_buffer(doom->game->buff, 0x112233);
+	render_sky(doom);
 
 	// First in queue will be the camera/player's sector.
 	queue_add(world->player.sector_id, 0, GAME_WIN_WIDTH);

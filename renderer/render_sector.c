@@ -146,10 +146,6 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 			t_xy len = vec2_sub(wall_segment.stop, wall_segment.start);
 			double depth = wall_segment.start.y + vec2_mul(len, (double)horizontal / (x2 - x1)).y;
 
-			// Todo: draw sky or ceiling
-
-			// vertical_line(screen_x, world->screen_y_top[screen_x], y_start, 0xff0000);
-
 			int top = world->screen_y_top[screen_x];
 			int bot = world->screen_y_bot[screen_x];
 
@@ -159,13 +155,15 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks, depth);
 
 				//! wall ceil floor
-				vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
+				if (sector->has_ceiling)
+					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
 				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
 			}
 			else
 			{
 				//! portal ceil floor
-				vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
+				if (sector->has_ceiling)
+					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
 				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
 
 				double		connecting_ceil        = connecting->ceil - doom->game->world->player.position.z;

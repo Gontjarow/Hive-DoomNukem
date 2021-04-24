@@ -110,6 +110,7 @@ typedef struct	s_sector
 	unsigned	vertex_count;
 	t_xy		*vertex;
 	signed		*neighbors;
+	int			has_ceiling;
 }				t_sector;
 
 typedef struct	s_section
@@ -150,6 +151,7 @@ double			*get_zbuffer();
 t_world			*get_world();
 SDL_Surface		*get_bricks_tex(t_doom *doom);
 SDL_Surface		*get_border_tex(t_doom *doom);
+SDL_Surface		*get_panorama_tex(t_doom *doom);
 void			destroy_world(t_world *world);
 t_world			*load_world(t_world *world);
 
@@ -163,6 +165,7 @@ void			vertical_sprite(SDL_Surface *active_sprite, int screen_x, int tex_x, t_xy
 void			vertical_shade(int column, int start, int end, int color);
 
 void			render_frame(t_doom *doom);
+void			render_sky(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom);
 void			render_enemies(t_doom *doom);
 void			render_pickups(t_doom *doom);
