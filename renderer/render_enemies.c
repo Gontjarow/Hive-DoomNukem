@@ -71,6 +71,13 @@ void			render_enemies(t_doom *doom)
 					print_orient(enemy);
 				}*/
 			}
+				// Debug seg fault
+				if (enemy->active_sprite == NULL)
+				{
+					ft_putendl("Active sprite was NULL in render_enemies!");
+					enemy = enemy->next;
+					continue;
+				}
 			int x = left;
 			if (x < 0)
 				x -= x;

@@ -93,7 +93,10 @@ static int check_crossing_heights(t_model *mdl, t_coord old, int room_test)
 	room = mdl->room_first;
 	while (i++ < room_test)
 		room = room->next;
-	assert(room->id == room_test);
+	if (room->id != room_test)
+	{
+		ft_putendl("Room->id != room_test !");
+	}
 	if (mdl->player.z - mdl->player.height + KNEE_HEIGHT > room->floor_height)
 	{
 		//puts("Knee test OK!");
