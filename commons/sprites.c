@@ -267,6 +267,21 @@ void		load_health_bars(t_doom *doom, char *path, int i)
 	doom->sprites->txt_health_bar[10] = load_texture(doom, "img/sprites/hud/healthbar/health_10.png");
 }
 
+void		load_fuel_bars(t_doom *doom, char *path, int i)
+{
+	if (!(doom->sprites->txt_fuel_bar = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 11)))
+		return ;
+	doom->sprites->txt_fuel_bar[0] = load_texture(doom, "img/sprites/hud/healthbar/health_0.png");
+	i = 1;
+	while (i < 10)
+	{
+		path = extension_num_path("img/sprites/hud/fuelbar/fuel_", i + '0', ".png");
+		doom->sprites->txt_fuel_bar[i] = load_texture(doom, path);
+		i++;
+	}
+	doom->sprites->txt_fuel_bar[10] = load_texture(doom, "img/sprites/hud/fuelbar/fuel_10.png");
+}
+
 static int	load_portal_sprite(t_doom *doom, char *path, int i)
 {
 	doom->sprites->portal_phase = 0;
@@ -324,6 +339,7 @@ int			load_sprites(t_doom *doom)
 	load_boss_sprite(doom, path, i);
 	load_pickup_sprite(doom);
 	load_health_bars(doom, path, i);
+	load_fuel_bars(doom, path, i);
 	load_ammo_bars(doom);
 	load_loading_screen(doom);
 	load_portal_sprite(doom, path, i);

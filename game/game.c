@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/04/03 17:13:51 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 19:55:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 
 static void	dispatch_player_shots(t_doom *doom)
 {
-	if (doom->mdl->player.weap_id == SHOTGUN)	// WIP
+	if (doom->mdl->player.weap_id == SHOTGUN)
 		player_shoots_shotgun(doom);
 	else
 		player_shoots(doom);
@@ -210,7 +210,7 @@ void		game_render(t_doom *doom)
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);
-	if (doom->mdl->player.shooting)
+	if (doom->mdl->player.shooting && !doom->mdl->player.is_running)
 	{
 		if (doom->mdl->player.shoot_cd == 0 && doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0 && doom->mdl->player.reload_time == 0)
 		{

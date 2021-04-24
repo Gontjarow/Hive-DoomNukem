@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 17:04:28 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 20:16:15 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ void			handle_pickup(t_doom *doom)
 	// TODO handle_effects
 	if (get_model()->effect_count > 0 && player_collision_with_exit(doom, get_model()->effect_first))
 		handle_level_exit(doom);
-
 	pc = doom->mdl->pickup_count;
 	if (pc == 0)
 		return ;

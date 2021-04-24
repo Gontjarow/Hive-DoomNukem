@@ -311,3 +311,18 @@ SDL_Surface		*get_border_tex(t_doom *doom)
 
 	return (tex);
 }
+
+// Temporary:
+SDL_Surface		*get_panorama_tex(t_doom *doom)
+{
+	static SDL_Surface *tex = NULL;
+
+	if (!tex)
+	{
+		tex = load_texture(doom, "img/panorama.jpg");
+		if (tex == NULL)
+			ft_die("Fatal error: Could not load texture!");
+	}
+
+	return (tex);
+}

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 20:39:48 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 21:15:03 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,20 +149,22 @@ int			main(int argc, char *argv[])
 		{
 			acc_time = ((float)SDL_GetTicks() - (float)time_between) / 1000.0f;
 			doom.fps = (float)frames_between / acc_time;
-			ft_putnbr((int)doom.fps);
-			ft_putendl(" fps");
+			// ft_putnbr((int)doom.fps);
+			// ft_putendl(" fps");
 			fps_cooldown = 100;
 			time_between = SDL_GetTicks();
 			frames_between = 0;
 		}
  		SDL_UpdateWindowSurface(doom.win);
 		frame_ticks = SDL_GetTicks() - doom.frame_start;
-		doom.delta_time = frame_ticks / 1000.0f;
-		doom.delta_anim = 0.07f / doom.delta_time;
 		if (frame_ticks < TICKS_PER_FRAME)
 		{
 			SDL_Delay(TICKS_PER_FRAME - frame_ticks);
 		}
+		frame_ticks = SDL_GetTicks() - doom.frame_start;
+		doom.delta_time = frame_ticks / 1000.0f;
+		doom.delta_anim = 0.07f / doom.delta_time;
+		printf("delta time: %f\n", doom.delta_time);
 	}
 	return (destroy_and_quit(&doom));
 }
