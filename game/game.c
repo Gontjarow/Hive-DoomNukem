@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/04/03 17:13:51 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 15:29:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ void		game_render(t_doom *doom)
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);
-	if (doom->mdl->player.shooting)
+	if (doom->mdl->player.shooting && !doom->mdl->player.is_running)
 	{
 		if (doom->mdl->player.shoot_cd == 0 && doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0 && doom->mdl->player.reload_time == 0)
 		{
