@@ -185,6 +185,7 @@ typedef struct			s_effect
 	struct s_point		loc;
 	struct s_point		target;
 	int 				target_id;
+	SDL_Surface			*active_sprite;
 	struct s_effect		*next;
 }						t_effect;
 

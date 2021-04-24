@@ -53,17 +53,17 @@ static void	player_swap_weapons(t_doom *doom)
 {
 	if (doom->mdl->player.reload_time == 0)
 	{
-		if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[0].do_own == 1 && doom->mdl->player.weap_id != 0)
+		if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[PISTOL].do_own && doom->mdl->player.weap_id != PISTOL)
 		{
 			doom->mdl->player.weap_id = PISTOL;
 			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
 		}
-		if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[1].do_own == 1 && doom->mdl->player.weap_id != 1)
+		if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[SHOTGUN].do_own && doom->mdl->player.weap_id != SHOTGUN)
 		{
 			doom->mdl->player.weap_id = SHOTGUN;
 			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
 		}
-		if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[2].do_own == 1 && doom->mdl->player.weap_id != 2)
+		if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[ASSAULT_RIFLE].do_own && doom->mdl->player.weap_id != ASSAULT_RIFLE)
 		{
 			doom->mdl->player.weap_id = ASSAULT_RIFLE;
 			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);

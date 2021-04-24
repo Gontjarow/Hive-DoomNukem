@@ -37,10 +37,10 @@ static void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 	t_pickup	*prev;
 	int			pc;
 
-	if (pickup->weapon_type_id - 1 == 0)
-		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res = 1;
+	if (pickup->weapon_type_id == PISTOL)
+		doom->mdl->player.weap_arr[pickup->weapon_type_id].ammo_res = 1;
 	else
-		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res += 1;
+		doom->mdl->player.weap_arr[pickup->weapon_type_id].ammo_res += 1;
 	pc = doom->mdl->pickup_count;
 	current = doom->mdl->pickup_first;
 	if (current->id == pickup->id)
@@ -57,7 +57,7 @@ static void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 	t_pickup	*prev;
 	int			pc;
 
-	doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].do_own = 1;
+	doom->mdl->player.weap_arr[pickup->weapon_type_id].do_own = 1;
 	pc = doom->mdl->pickup_count;
 	current = doom->mdl->pickup_first;
 	if (current->id == pickup->id)
@@ -102,11 +102,11 @@ void			handle_pickup(t_doom *doom)
 			handle_health_pickup(doom, pickup);
 		else if (pickup->flavor == PICKUP_AMMO &&
 		player_collision_with_pickup(doom, pickup) == -1 &&
-		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].ammo_res < 10)
+		doom->mdl->player.weap_arr[pickup->weapon_type_id].ammo_res < 10)
 			handle_ammo_pickup(doom, pickup);
 		else if (pickup->flavor == PICKUP_WEAPON &&
 		player_collision_with_pickup(doom, pickup) == -1 &&
-		doom->mdl->player.weap_arr[pickup->weapon_type_id - 1].do_own == 0)
+		doom->mdl->player.weap_arr[pickup->weapon_type_id].do_own == 0)
 			handle_weapon_pickup(doom, pickup);
 		pickup = pickup->next;
 	}

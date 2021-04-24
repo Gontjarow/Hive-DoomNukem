@@ -1,0 +1,35 @@
+[Wall] id = 0 | start.x = 273 | start.y = 62 | end.x = 1113 | end.y = 61
+[Wall] id = 1 | start.x = 1113 | start.y = 61 | end.x = 1390 | end.y = 323
+[Wall] id = 2 | start.x = 1390 | start.y = 323 | end.x = 1393 | end.y = 610
+[Wall] id = 3 | start.x = 1393 | start.y = 610 | end.x = 1081 | end.y = 847
+[Wall] id = 4 | start.x = 1081 | start.y = 847 | end.x = 236 | end.y = 835
+[Wall] id = 5 | start.x = 236 | start.y = 835 | end.x = 23 | end.y = 575
+[Wall] id = 6 | start.x = 23 | start.y = 575 | end.x = 25 | end.y = 279
+[Wall] id = 7 | start.x = 25 | start.y = 279 | end.x = 273 | end.y = 62
+[Wall] id = 8 | start.x = 1390 | start.y = 323 | end.x = 1535 | end.y = 477
+[Wall] id = 9 | start.x = 1535 | start.y = 477 | end.x = 1393 | end.y = 610
+[Wall] id = 10 | start.x = 1393 | start.y = 610 | end.x = 1390 | end.y = 323
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 8 | floor_height = 100 | roof_height = 200
+[Room] id = 1 | first_wall_id = 8 | wall_count = 3 | floor_height = 100 | roof_height = 200
+
+[Portal] id = 0 | start.x = 1393 | start.y = 610 | end.x = 1390 | end.y = 323
+
+[Enemy] id = 0 | x = 412 | y = 231 | rot = 315 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 392 | y = 602 | rot = 35 | hp = 100 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 2 | x = 1333 | y = 452 | rot = 360 | hp = 1000 | wep.type_id = 2 | ai.type_id = 2 | sprite_id = 0
+[Enemy] id = 3 | x = 1294 | y = 321 | rot = 355 | hp = 50 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+[Enemy] id = 4 | x = 1321 | y = 585 | rot = 5 | hp = 50 | wep.type_id = 1 | ai.type_id = 1 | sprite_id = 0
+
+[Effect] id = 0 | type_id = 0 | loc.x = 1510 | loc.y = 486 | target.x = 0 | target.y = 0 | target_id = 0
+
+[Pickup] id = 0 | loc.x = 753 | loc.y = 823 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 1 | loc.x = 743 | loc.y = 90 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 2 | loc.x = 575 | loc.y = 192 | flavor = 1 | weapon_type_id = 2
+[Pickup] id = 3 | loc.x = 577 | loc.y = 683 | flavor = 1 | weapon_type_id = 2
+[Pickup] id = 4 | loc.x = 1223 | loc.y = 203 | flavor = 1 | weapon_type_id = 1
+[Pickup] id = 5 | loc.x = 1215 | loc.y = 713 | flavor = 1 | weapon_type_id = 1
+
+[Chain_to_mapfile] fourth
+
+[Player] spawn.x = 74 | spawn.y = 435 | rot = 360

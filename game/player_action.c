@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/03/21 01:47:06 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 19:33:31 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ static void	player_crouch(t_doom *doom)
 	{
 		doom->mdl->player.crouch_lock = 1;
 		doom->mdl->player.is_crouching = 1;
-		doom->mdl->player.mov_speed = 5;
+		doom->mdl->player.mov_speed = doom->mdl->player.min_speed;
 		doom->mdl->player.height = CROUCH_HEIGHT;
 	}
 	else
 	{
 		doom->mdl->player.crouch_lock = 0;
 		doom->mdl->player.is_crouching = 0;
-		doom->mdl->player.mov_speed = 10;
+		doom->mdl->player.mov_speed = 800;
 		doom->mdl->player.height = STAND_HEIGHT;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/03/21 01:56:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 20:38:42 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct			s_doom
 	int 				menu_out_of_focus;
 	float				fps;
 	float				delta_time;
+	int					delta_anim;
 	const Uint8* 		keystates;
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;
