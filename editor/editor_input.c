@@ -83,6 +83,7 @@ static void 	handle_shifted_numbers(t_doom *doom)
 
 void			edt_keystate_input(t_doom *doom)
 {
+	static int	lock_q = 0;
 	static int	lock_w = 0;
 	static int	lock_e = 0;
 	static int	lock_r = 0;
@@ -102,6 +103,18 @@ void			edt_keystate_input(t_doom *doom)
 
 	handle_keyboard_scrolling(doom);
 
+	if (lock_q && !doom->keystates[SDL_SCANCODE_Q])
+		lock_q = 0;
+	else if (doom->keystates[SDL_SCANCODE_Q] && !lock_q)
+	{
+		get_state()->give_ceiling_to_rooms = !(get_state()->give_ceiling_to_rooms);
+		if (get_state()->give_ceiling_to_rooms)
+			printf("Editor assigning Rooms to have ceilings (toggled room->has_ceiling = 1)\n");
+		else
+			printf("Editor assigning Rooms to not have ceilings (toggled room->has_ceiling = 0)\n");
+		lock_q = 1;
+	}
+
 	if (lock_w && !doom->keystates[SDL_SCANCODE_W])
 		lock_w = 0;
 	else if (doom->keystates[SDL_SCANCODE_W] && !lock_w)
@@ -111,6 +124,8 @@ void			edt_keystate_input(t_doom *doom)
 		debug_model_walls();
 		debug_model_rooms();
 		debug_model_effects();
+		debug_model_chain();
+		debug_model_pickups();
 		lock_w = 1;
 	}
 

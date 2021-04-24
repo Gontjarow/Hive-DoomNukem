@@ -169,6 +169,7 @@ typedef struct 			s_state
     int 				grid_size;
     int 				cooldown;
     int 				saving_choice;
+    int                 give_ceiling_to_rooms;
 }						t_state;
 
 typedef struct 			s_editor

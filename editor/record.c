@@ -69,6 +69,7 @@ int			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_cou
 	mdl->rooms->roof_height = select_logic()->last_roof;
 	mdl->rooms->visual.x = -1;
 	mdl->rooms->visual.y = -1;
+	mdl->rooms->has_ceiling = get_state()->give_ceiling_to_rooms;
 	mdl->room_count++;
 	next_room = (t_room*)malloc(sizeof(t_room));
 	if (!next_room)
@@ -221,28 +222,3 @@ void		create_strings_from_model(t_model *mdl, t_mapfile *map)
 		pickup = pickup->next;
 	}
 }
-
-/* LEGACY
-
-void 	record_portal(t_editor *edt)
-{
-	t_wall *next_portal;
-
-	edt->portals->id = edt->portal_count;
-	edt->portals->start.x = edt->new_portal->start.x;
-	edt->portals->start.y = edt->new_portal->start.y;
-	edt->portals->end.x = edt->new_portal->end.x;
-	edt->portals->end.y = edt->new_portal->end.y;
-	// DEPRECEATED. REPLACED WITH CENTRAL CREATE_STRINGS_FROM_STATE
-	//expand_portal_string(edt);
-	next_portal = (t_wall*)malloc(sizeof(t_wall));
-	if (!next_portal)
-		ft_die("Fatal error: Could not malloc t_wall at record_portal.");
-	if (edt->portal_count == 0)
-		edt->portal_begin = edt->portals;
-	edt->portal_count++;
-	edt->portals->next = next_portal;
-	edt->portals = next_portal;
-	print_walls(edt);
-}
-*/

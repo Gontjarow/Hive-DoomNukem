@@ -57,8 +57,12 @@ void 	debug_model_walls(void)
 	wall = get_model()->wall_first;
 	while (wc--)
 	{
-		printf("Wall id: %d | start: %d %d | end: %d %d",
-			   wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
+		printf("Wall id: %d | start: %d %d | end: %d %d | texture_id: %d | active_sprite: ",
+			   wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y, wall->texture_id);
+		if (wall->active_sprite == NULL)
+			printf("NULL");
+		else
+			printf("SET");
 		if (wall->next == NULL)
 			printf(" | next: NULL\n");
 		else
@@ -93,8 +97,8 @@ void	debug_model_rooms(void)
 	puts("Outputting data for model's rooms:");
 	while (rc--)
 	{
-		printf("Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d\n",
-			   rooms->id, rooms->first_wall_id, rooms->wall_count, rooms->floor_height, rooms->roof_height);
+		printf("Room id: %d | first_wall_id: %d | wall_count: %d | floor_height: %d | roof_height: %d | has_ceiling: %d\n",
+			   rooms->id, rooms->first_wall_id, rooms->wall_count, rooms->floor_height, rooms->roof_height, rooms->has_ceiling);
 		rooms = rooms->next;
 	}
 }

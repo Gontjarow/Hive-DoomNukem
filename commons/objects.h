@@ -161,6 +161,8 @@ typedef struct 			s_wall
 	struct s_point		start;
 	struct s_point		end;
 	int 				id;
+	int					texture_id;
+	SDL_Surface			*active_sprite;
 	struct s_wall		*next;
 }						t_wall;
 
@@ -172,6 +174,7 @@ typedef struct 			s_room
 	int 				wall_count;
 	int 				floor_height;
 	int 				roof_height;
+	int					has_ceiling; 
 	t_point 			visual;
 	struct s_room		*next;
 }						t_room;
