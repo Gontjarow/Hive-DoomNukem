@@ -159,7 +159,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks, depth);
 
 				//! wall ceil floor
-				vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
+				// vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
 				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
 			}
 			else
