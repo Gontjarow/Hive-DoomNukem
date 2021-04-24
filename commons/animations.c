@@ -169,6 +169,26 @@ void			animate_idle(t_enemy *enemy, t_doom *doom)
 	}
 }
 
+static void		propagate_portal_active_sprites(t_model *mdl)
+{
+	t_effect	*effect;
+	int			ec;
+
+	if (mdl->effect_count < 1)
+		return ;
+	effect = mdl->effect_first;
+	ec = mdl->effect_count;
+	while (ec--)
+	{
+		if (effect->type_id == EFFECT_EXIT)
+		{
+			effect->active_sprite = doom_ptr()->sprites->active_portal;
+			return ;
+		}
+		effect = effect->next;
+	}	
+}
+
 void			animate_portals(t_doom *doom)
 {
 	static SDL_Surface *frames[16] = { 0 };
@@ -186,6 +206,7 @@ void			animate_portals(t_doom *doom)
 	if (doom->sprites->portal_phase > 15)
 		doom->sprites->portal_phase = 0;
 	doom->sprites->active_portal = frames[doom->sprites->portal_phase++];
+	propagate_portal_active_sprites(doom->mdl);
 }
 
 void			animation_switch(t_enemy *enemy, t_doom *doom)

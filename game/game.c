@@ -203,6 +203,7 @@ void		game_render(t_doom *doom)
 		}
 	}
 	handle_enemy_ai(doom);
+	animate_portals(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
 	render_frame(doom);
