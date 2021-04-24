@@ -33,7 +33,7 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	new_effect = (t_effect*)malloc(sizeof(t_effect));
 	mdl->effects->next = new_effect;
 	mdl->effects = new_effect;
-	ft_putendl("Created an effect to model!");
+	//ft_putendl("Created an effect to model!");
 }
 
 static t_token		*effect_spec(void)

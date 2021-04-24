@@ -167,8 +167,20 @@ void 	print_glyph_str(const char *str, SDL_Surface *buff, int x, int y)
 {
 	while (*str)
 	{
-		render_glyph(*str, buff, x, y);
+		if (*str != ' ')
+			render_glyph(*str, buff, x, y);
 		x += doom_ptr()->menu->alphabet[(int)*str]->w + 2;
+		str++;
+	}
+}
+
+void 	print_glyph_str_dymo(const char *str, SDL_Surface *buff, int x, int y)
+{
+	while (*str)
+	{
+		if (*str != ' ')
+			render_glyph(*str, buff, x, y);
+		x += doom_ptr()->menu->alphabet[(int)*str]->w;
 		str++;
 	}
 }

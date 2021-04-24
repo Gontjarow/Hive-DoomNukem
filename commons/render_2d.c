@@ -105,7 +105,7 @@ static void	typewrite(const char *str, SDL_Surface *buff, int x, int y)
 		part = ft_strnew(rounds);
 		part = ft_strncpy(part, order, rounds);
 	}
-	print_glyph_str(part, buff, x, y);
+	print_glyph_str_dymo(part, buff, x, y);
 }
 
 void		render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_screen, int reset)
@@ -129,7 +129,7 @@ void		render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_sc
 	rect_y[1] = GAME_WIN_HEIGHT - unveiler;
 	if (unveiler < GAME_WIN_HEIGHT)
 		unveiler++;
-	else if (unveiler > GAME_WIN_HEIGHT)
+	if (doom->chapter_index == 0)
 		unveiler = GAME_WIN_HEIGHT;
 	if (unveiler == GAME_WIN_HEIGHT && !reached_end)
 	{
@@ -137,13 +137,11 @@ void		render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_sc
 		typewrite("reset", NULL, 0, 0);
 	}
 	else
-	{
 		draw_rect_color(rect_x, rect_y, 0xff000000, doom->game->buff);
-	}
 	if (reached_end)
 	{
 		print_glyph_str(label, doom->game->buff, 45, 40);
-		typewrite("press space to begin", doom->game->buff, 45, 445);
+		typewrite("press enter to begin", doom->game->buff, 45, 445);
 	}
 	else
 		typewrite(label, doom->game->buff, 45, 40);

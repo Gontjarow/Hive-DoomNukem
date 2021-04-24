@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/03/21 00:37:41 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 20:39:48 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static void	init_doom(t_doom *doom)
 	doom->sprites = NULL;
 	load_sprites(doom);
 	doom->quit = 0;
+	doom->chapter_index = 0;
 	doom->edt_quit = 1;
 	doom->game_quit = 1;
 	doom->minimap_quit = 1;
@@ -80,6 +81,8 @@ static int	destroy_and_quit(t_doom *doom)
 
 static void distribute_inputs(t_doom *doom, int argc, char **argv)
 {
+	if (!doom->game_quit && doom->game->level_exit_reached)
+		window_and_menu_events(doom, argc, argv);
 	while (SDL_PollEvent(&doom->event) != 0)
 	{
 		if (doom->event.type == SDL_MOUSEMOTION && !doom->edt_quit &&
@@ -132,7 +135,7 @@ int			main(int argc, char *argv[])
 			argc = 2;
 			argv[1] = doom.menu->added_arg;
 			doom.menu->update_argc_argv = 0;
-			printf("\n\n\nUPDATED ARGV[1]\n\n\nNOW [%s]\n", argv[1]);
+			//printf("\nUPDATED ARGV[1]\nNOW [%s]\n\n", argv[1]);
 		}
 		doom.keystates = SDL_GetKeyboardState(NULL);
 		distribute_inputs(&doom, argc, argv);
@@ -155,6 +158,7 @@ int			main(int argc, char *argv[])
  		SDL_UpdateWindowSurface(doom.win);
 		frame_ticks = SDL_GetTicks() - doom.frame_start;
 		doom.delta_time = frame_ticks / 1000.0f;
+		doom.delta_anim = 0.07f / doom.delta_time;
 		if (frame_ticks < TICKS_PER_FRAME)
 		{
 			SDL_Delay(TICKS_PER_FRAME - frame_ticks);

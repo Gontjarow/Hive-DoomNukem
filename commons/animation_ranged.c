@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:00:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/05 18:34:46 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 20:42:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void		animate_ranged_back_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
+	static int			cd = 0;
+	// static int			cd_limit = 0;
 
 	if (frames[0] == 0)
 	{
@@ -28,12 +30,21 @@ void		animate_ranged_back_walk(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		// cd_limit = 0.07f / doom->delta_time;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_ranged_front_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
+	static int			cd = 0;
+	// static int			cd_limit = 0;
 
 	if (frames[0] == 0)
 	{
@@ -47,13 +58,22 @@ void		animate_ranged_front_walk(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		// cd_limit = 0.07f / doom->delta_time;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_ranged_side_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
 	static int			last_orient = -1;
+	static int			cd = 0;
+	// static int			cd_limit = 0;
 
 	if (enemy->anim.orient != last_orient)
 	{
@@ -78,12 +98,21 @@ void		animate_ranged_side_walk(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		// cd_limit = 0.07f / doom->delta_time;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface	*frames[7] = { 0 };
+	static int			cd = 0;
+	// static int			cd_limit = 0;
 	
 	if (frames[0] == 0)
 	{
@@ -95,14 +124,25 @@ void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 		frames[5] = doom->sprites->txt_ranged_death[5];
 		frames[6] = doom->sprites->txt_ranged_death[6];
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	if (enemy->anim_phase > 6)
+		enemy->anim_phase = 6;
+	enemy->active_sprite = frames[enemy->anim_phase];
 	if (enemy->anim_phase > 6)
 		enemy->anim.done = IDLE;
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		// cd_limit = 0.07f / doom->delta_time;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_ranged_front_attack(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface	*frames[2] = { 0 };
+	static int			cd = 0;
+	// static int			cd_limit = 0;
 
 	if (frames[0] == 0)
 	{
@@ -114,13 +154,22 @@ void		animate_ranged_front_attack(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		// cd_limit = 0.07f / doom->delta_time;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_ranged_side_attack(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[2] = { 0 };
 	static int			last_orient = -1;
+	static int			cd = 0;
+	// static int			cd_limit = 0;
 
 	if (enemy->anim.orient != last_orient)
 	{
@@ -141,5 +190,12 @@ void		animate_ranged_side_attack(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		// cd_limit = 0.07f / doom->delta_time;
+		enemy->anim_phase++;
+	}
+	cd++;
 }

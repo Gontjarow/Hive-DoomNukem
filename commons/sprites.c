@@ -278,11 +278,12 @@ void		load_ammo_bars(t_doom *doom)
 
 static void load_loading_screen(t_doom *doom)
 {
+	doom->sprites->txt_loading_none = load_texture(doom, "img/loading/chapter_none.png");
 	doom->sprites->txt_loading_0 = load_texture(doom, "img/loading/first_chapter.png");
 	doom->sprites->txt_loading_1 = load_texture(doom, "img/loading/second_chapter.png");
 	doom->sprites->txt_loading_2 = load_texture(doom, "img/loading/third_chapter.png");
-	doom->sprites->txt_loading_3 = load_texture(doom, "img/loading/ending.png");
-	puts("LOADING SCREEN IMAGES LOADED TO MEMORY");
+	doom->sprites->txt_loading_won = load_texture(doom, "img/loading/ending.png");
+	//puts("LOADING SCREEN IMAGES LOADED TO MEMORY");
 }
 
 int			load_sprites(t_doom *doom)

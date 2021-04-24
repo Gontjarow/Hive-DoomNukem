@@ -36,6 +36,7 @@ typedef struct			s_game
 	int					cel_shade_hud;
 	int					show_info;
 	int					level_exit_reached;
+	int					won_the_game;
 	int					show_loading;
 }						t_game;
 

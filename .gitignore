@@ -6,3 +6,4 @@ doom-nukem
 *.backup
 abc
 .vscode
+.DS_Store

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/03/21 01:56:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/03 20:38:42 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 50
+# define FPS 120
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 0
@@ -53,6 +53,8 @@ typedef struct			s_doom
 	int 				menu_out_of_focus;
 	float				fps;
 	float				delta_time;
+	int					delta_anim;
+	int					chapter_index;
 	const Uint8* 		keystates;
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;

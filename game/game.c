@@ -34,7 +34,7 @@ void		init_game(t_doom *doom, int argc, char **argv)
 	{
 		doom->game->map_path = argv[1];
 		doom->game->map_supplied = 1;
-		printf("argv[1] set to game->map_path = %s\n", argv[1]);
+		//printf("argv[1] set to game->map_path = %s\n", argv[1]);
 	}
 	else
 		ft_die("Fatal error: No map specified as argument to load Play Level.");
@@ -42,13 +42,14 @@ void		init_game(t_doom *doom, int argc, char **argv)
 	doom->game->cel_shade_hud = 0;
 	doom->game->show_info = 0;
 	doom->game->level_exit_reached = 0;
+	doom->game->won_the_game = 0;
 	doom->game->show_loading = 1;
 	render_loading_screen(doom, NULL, NULL, 1);
 }
 
 void		destroy_game(t_doom *doom)
 {
-	puts("DESTROYER OF THE WORLDS!!!!");
+	//puts("DESTROYER OF THE WORLDS!!!!");
 	destroy_world(doom->game->world);
 	doom->game->world = NULL;
 	SDL_FreeSurface(doom->game->buff);
@@ -151,7 +152,9 @@ static void handle_player_invis_toggle(t_doom *doom)
 
 static void render_chapter_screen(t_doom *doom, int chapter)
 {
-	if (chapter == 0)
+	if (chapter == -1)
+		render_loading_screen(doom, "level loaded and ready to play", doom->sprites->txt_loading_none, 0);
+	else if (chapter == 0)
 		render_loading_screen(doom, "first chapter", doom->sprites->txt_loading_0, 0);
 	else if (chapter == 1)
 		render_loading_screen(doom, "second chapter", doom->sprites->txt_loading_1, 0);
@@ -159,35 +162,42 @@ static void render_chapter_screen(t_doom *doom, int chapter)
 		render_loading_screen(doom, "third chapter", doom->sprites->txt_loading_2, 0);
 }
 
+static void handle_show_loading(t_doom *doom)
+{
+	if (!Mix_Playing(7))
+		Mix_PlayChannel(7, doom->sounds->mcLoading, -1);
+	if (doom->mdl->chain != NULL || doom->chapter_index > 0)
+		render_chapter_screen(doom, doom->chapter_index);
+	else
+		render_chapter_screen(doom, -1);
+	if (doom->keystates[SDL_SCANCODE_RETURN])
+	{
+		Mix_HaltChannel(7);
+		doom->game->show_loading = 0;
+		if (doom->mdl->chain != NULL || doom->chapter_index > 0)
+		{
+			puts("Advancing chapter index!");
+			doom->chapter_index++;
+		}			
+		if (!Mix_Playing(7) && doom->chapter_index != 3)
+			Mix_PlayChannel(7, doom->sounds->mcBackground, -1);
+		else if (!Mix_Playing(7) && doom->chapter_index == 3)
+			Mix_PlayChannel(7, doom->sounds->mcBoss, -1);
+	}
+	if (DEBUG == 1)
+		update_minimap(doom);
+	SDL_UpdateWindowSurface(doom->game->win);
+	return ;
+}
+
 void		game_render(t_doom *doom)
 {
 	static int mix_i = 0;
-	static int chapter = 0;
 
 	// TODO: Remove invis toggling ? Experimental feature cutting off from shipped build propably
 	handle_player_invis_toggle(doom);
-
 	if (doom->game->show_loading)
-	{
-		if (!Mix_Playing(7))
-			Mix_PlayChannel(7, doom->sounds->mcLoading, -1);
-		render_chapter_screen(doom, chapter);
-		if (doom->keystates[SDL_SCANCODE_SPACE])
-		{
-			Mix_HaltChannel(7);
-			doom->game->show_loading = 0;
-			chapter++;
-			puts("CHAPTER ADVANCED!!!");
-			if (!Mix_Playing(7) && chapter != 3)
-				Mix_PlayChannel(7, doom->sounds->mcBackground, -1);
-			else
-				Mix_PlayChannel(7, doom->sounds->mcBoss, -1);
-		}
-		if (DEBUG == 1)
-			update_minimap(doom);
-		SDL_UpdateWindowSurface(doom->game->win);
-		return ;
-	}
+		return (handle_show_loading(doom));
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);
@@ -203,6 +213,7 @@ void		game_render(t_doom *doom)
 		}
 	}
 	handle_enemy_ai(doom);
+	animate_portals(doom);
 	if (DEBUG == 1)
 		update_minimap(doom);
 	render_frame(doom);
