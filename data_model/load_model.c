@@ -96,7 +96,7 @@ static void create_model_appended(t_doom *doom)
 
 static void	create_data_model(t_doom *doom, char *map_file_path)
 {
-	puts("CREATE DATA BORN!!!!");
+	//puts("CREATE DATA BORN!!!!");
 	ft_putstr("Loaded mapfile data from file: ");
 	ft_putendl(map_file_path);
 	map_to_model(doom->map, doom->mdl);

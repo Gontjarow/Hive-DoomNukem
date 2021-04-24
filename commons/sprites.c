@@ -273,13 +273,6 @@ static int	load_portal_sprite(t_doom *doom, char *path, int i)
 		doom->sprites->txt_portal[i + 10] = load_texture(doom, path);
 		i++;
 	}
-	// doom->sprites->txt_portal[10] = load_texture(doom, "img/sprites/portal/portal_10.png");
-	// doom->sprites->txt_portal[11] = load_texture(doom, "img/sprites/portal/portal_11.png");
-	// doom->sprites->txt_portal[12] = load_texture(doom, "img/sprites/portal/portal_12.png");
-	// doom->sprites->txt_portal[13] = load_texture(doom, "img/sprites/portal/portal_13.png");
-	// doom->sprites->txt_portal[14] = load_texture(doom, "img/sprites/portal/portal_14.png");
-	// doom->sprites->txt_portal[15] = load_texture(doom, "img/sprites/portal/portal_15.png");
-	// doom->sprites->txt_portal[16] = load_texture(doom, "img/sprites/portal/portal_16.png");
 	return (1);
 }
 
@@ -293,11 +286,12 @@ void		load_ammo_bars(t_doom *doom)
 
 static void load_loading_screen(t_doom *doom)
 {
+	doom->sprites->txt_loading_none = load_texture(doom, "img/loading/chapter_none.png");
 	doom->sprites->txt_loading_0 = load_texture(doom, "img/loading/first_chapter.png");
 	doom->sprites->txt_loading_1 = load_texture(doom, "img/loading/second_chapter.png");
 	doom->sprites->txt_loading_2 = load_texture(doom, "img/loading/third_chapter.png");
-	doom->sprites->txt_loading_3 = load_texture(doom, "img/loading/ending.png");
-	puts("LOADING SCREEN IMAGES LOADED TO MEMORY");
+	doom->sprites->txt_loading_won = load_texture(doom, "img/loading/ending.png");
+	//puts("LOADING SCREEN IMAGES LOADED TO MEMORY");
 }
 
 int			load_sprites(t_doom *doom)

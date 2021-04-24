@@ -132,6 +132,14 @@ void			render_effectors(t_doom *doom)
 			int x = left;
 			if (x < 0)
 				x -= x;
+
+				// Debug seg fault
+				if (effect->active_sprite == NULL)
+				{
+					ft_putendl("Active sprite was NULL in render_items!");
+					effect = effect->next;
+					continue;
+				}
 			while (x < right && x < GAME_WIN_WIDTH)
 			{
 				signed	horizontal = (x - left);

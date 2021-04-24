@@ -17,6 +17,7 @@
 
 # define CROUCH_HEIGHT 10
 # define STAND_HEIGHT 20
+# define KNEE_HEIGHT 11
 
 enum	e_enemy_aggro { INACTIVE, ACTIVE };
 enum	e_enemy_type { RANGED, MELEE, BOSS };
@@ -161,6 +162,8 @@ typedef struct 			s_wall
 	struct s_point		start;
 	struct s_point		end;
 	int 				id;
+	int					texture_id;
+	SDL_Surface			*active_sprite;
 	struct s_wall		*next;
 }						t_wall;
 
@@ -172,6 +175,7 @@ typedef struct 			s_room
 	int 				wall_count;
 	int 				floor_height;
 	int 				roof_height;
+	int					has_ceiling; 
 	t_point 			visual;
 	struct s_room		*next;
 }						t_room;
@@ -256,10 +260,11 @@ typedef struct 			s_sprites
 	int					portal_phase;
 
 	// Loading Screen Sprites
+	struct SDL_Surface	*txt_loading_none;
 	struct SDL_Surface	*txt_loading_0;
 	struct SDL_Surface	*txt_loading_1;
 	struct SDL_Surface	*txt_loading_2;
-	struct SDL_Surface	*txt_loading_3;
+	struct SDL_Surface	*txt_loading_won;
 
 	// Underlying data holders, invididually named for readability
 	struct SDL_Surface	*txt_ranged_front_attack;
@@ -352,6 +357,7 @@ enum 					e_alphabet_types { SCANCODES, CHARS };
  * */
 
 void 					print_glyph_str(const char *str, SDL_Surface *buff, int x, int y);
+void 					print_glyph_str_dymo(const char *str, SDL_Surface *buff, int x, int y);
 int						propose_character(char c, char *buff, int *i, int table_index);
 void					*get_alphabet_tables(int type);
 int						table_index(char c);

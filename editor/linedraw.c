@@ -69,6 +69,9 @@ t_wall	*linedraw_to_wall(t_linedraw *data)
 	wall->start.y = data->draw_from_y;
 	wall->end.x = data->draw_to_x;
 	wall->end.y = data->draw_to_y;
+	wall->texture_id = get_state()->selected_weapon_type;
+	printf("Wall->texture_id was set to %d\n", wall->texture_id);
+	wall->active_sprite = NULL;
 	get_model()->wall_count++;
 	wall = (t_wall*)malloc(sizeof(t_wall));
 	if (!wall)

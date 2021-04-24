@@ -39,10 +39,10 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 50
+# define FPS 120
 # define TICKS_PER_FRAME 1000.0 / FPS
 
-# define DEBUG 1
+# define DEBUG 0
 
 typedef struct			s_doom
 {
@@ -54,6 +54,7 @@ typedef struct			s_doom
 	float				fps;
 	float				delta_time;
 	int					delta_anim;
+	int					chapter_index;
 	const Uint8* 		keystates;
 	uint32_t 			frame_start;
 	struct SDL_Window	*win;

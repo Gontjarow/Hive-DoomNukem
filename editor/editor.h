@@ -169,6 +169,7 @@ typedef struct 			s_state
     int 				grid_size;
     int 				cooldown;
     int 				saving_choice;
+    int                 give_ceiling_to_rooms;
 }						t_state;
 
 typedef struct 			s_editor
@@ -197,7 +198,15 @@ void					edt_render(t_doom *doom);
 void					edt_mouse_motion(t_doom *doom);
 void					edt_mouse_down(t_doom *doom);
 void					edt_keystate_input(t_doom *doom);
-int 					edt_handle_confirm_save(t_doom *doom);
+
+/*
+ * from editor_take_input.c
+ * */
+
+void					draw_confirmation(char *input, t_doom *doom);
+void					draw_input(t_doom *doom);
+void					decide_table(int x, char *arr, int *i, t_doom *doom);
+void					keystate_input(char *arr, int *i, t_doom *doom);
 
 /*
  * from draw_editor.c
@@ -461,10 +470,11 @@ void					delete_portals_by_room(t_room *room, t_model *mdl);
 void					delete_portal(t_wall *portal, t_model *mdl);
 
 /*
- * from ask_to_save.c
+ * from editor_handle_save.c
  * */
 
 char					*ask_to_save(t_doom *doom);
+int 					edt_handle_confirm_save(t_doom *doom);
 
 /*
  * from room.c

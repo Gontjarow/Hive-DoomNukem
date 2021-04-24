@@ -74,11 +74,13 @@ static void		handle_level_exit(t_doom *doom)
 	if (Mix_Playing(7))
 		Mix_HaltChannel(7);
 	doom->game->level_exit_reached = 1;
-	doom->menu->update_argc_argv = 1;
-	if (doom->menu->added_arg)
-		free(doom->menu->added_arg);
-	doom->menu->added_arg = ft_strdup(doom->mdl->chain);
-	printf("Set added_arg to [%s]\n", doom->mdl->chain);
+	if (doom->mdl->chain != NULL)
+	{
+		doom->menu->update_argc_argv = 1;
+		doom->menu->added_arg = ft_strdup(doom->mdl->chain);
+	}
+	else
+		doom->game->won_the_game = 1;
 }
 
 void			handle_pickup(t_doom *doom)
@@ -86,7 +88,7 @@ void			handle_pickup(t_doom *doom)
 	int			pc;
 	t_pickup	*pickup;
 
-	// TODO SEPARATE TO PROPER FUNCTION
+	// TODO handle_effects
 	if (get_model()->effect_count > 0 && player_collision_with_exit(doom, get_model()->effect_first))
 		handle_level_exit(doom);
 	pc = doom->mdl->pickup_count;

@@ -69,7 +69,7 @@ void			destroy_world(t_world *world)
 	world->sectors = NULL;
 	free(world);
 	singleton_manager(NULL, SINGLETON_WORLD, 1);
-	puts("WORLD EVAPORATED!!!");
+	//puts("WORLD EVAPORATED!!!");
 }
 
 t_world			*get_world()
@@ -79,7 +79,7 @@ t_world			*get_world()
 
 	if (world == NULL)
 	{
-		puts("WORLD DATA BORN!!!");
+		//puts("WORLD DATA BORN!!!");
 		world = malloc(sizeof(*world));
 		mdl = get_model();
 		world->sectors = malloc(mdl->room_count * sizeof(t_sector));

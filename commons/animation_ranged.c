@@ -124,6 +124,8 @@ void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 		frames[5] = doom->sprites->txt_ranged_death[5];
 		frames[6] = doom->sprites->txt_ranged_death[6];
 	}
+	if (enemy->anim_phase > 6)
+		enemy->anim_phase = 6;
 	enemy->active_sprite = frames[enemy->anim_phase];
 	if (enemy->anim_phase > 6)
 		enemy->anim.done = IDLE;

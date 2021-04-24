@@ -33,7 +33,7 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	new_effect = (t_effect*)malloc(sizeof(t_effect));
 	mdl->effects->next = new_effect;
 	mdl->effects = new_effect;
-	ft_putendl("Created an effect to model!");
+	//ft_putendl("Created an effect to model!");
 }
 
 static t_token		*effect_spec(void)
@@ -238,6 +238,8 @@ static void			map_wall_to_model(const int *fields, t_model *mdl)
 	mdl->walls->start.y = fields[2];
 	mdl->walls->end.x = fields[3];
 	mdl->walls->end.y = fields[4];
+	mdl->walls->texture_id = fields[5];
+	mdl->walls->active_sprite = NULL;
 	mdl->wall_count++;
 	if (mdl->wall_count == 1)
 		mdl->wall_first = mdl->walls;
@@ -256,7 +258,7 @@ static t_token		*wall_spec(void)
 	{
 		i = 0;
 		spec = (t_token *) malloc(sizeof(t_token));
-		spec->expected = 5;
+		spec->expected = 6;
 		spec->sur[0] = '[';
 		spec->sur[1] = ']';
 		spec->equ = '=';
@@ -269,6 +271,7 @@ static t_token		*wall_spec(void)
 		ft_strcpy(spec->keys[2], "start.y");
 		ft_strcpy(spec->keys[3], "end.x");
 		ft_strcpy(spec->keys[4], "end.y");
+		ft_strcpy(spec->keys[5], "texture_id");
 		spec->result_ptr = NULL;
 		spec->map_function = map_wall_to_model;
 	}
@@ -332,6 +335,7 @@ static void			map_room_to_model(const int *fields, t_model *mdl)
 	mdl->rooms->wall_count = fields[2];
 	mdl->rooms->floor_height = fields[3];
 	mdl->rooms->roof_height = fields[4];
+	mdl->rooms->has_ceiling = fields[5];
 	mdl->rooms->visual.x = -1;
 	mdl->rooms->visual.y = -1;
 	mdl->room_count++;
@@ -352,7 +356,7 @@ static t_token		*room_spec(void)
 	{
 		i = 0;
 		spec = (t_token*)malloc(sizeof(t_token));
-		spec->expected = 5;
+		spec->expected = 6;
 		spec->sur[0] = '[';
 		spec->sur[1] = ']';
 		spec->equ = '=';
@@ -365,6 +369,7 @@ static t_token		*room_spec(void)
 		ft_strcpy(spec->keys[2], "wall_count");
 		ft_strcpy(spec->keys[3], "floor_height");
 		ft_strcpy(spec->keys[4], "roof_height");
+		ft_strcpy(spec->keys[5], "has_ceiling");
 		spec->result_ptr = NULL;
 		spec->map_function = map_room_to_model;
 	}
