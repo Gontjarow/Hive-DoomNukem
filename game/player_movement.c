@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 19:31:17 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 18:40:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 			&& doom->sounds->footstep_delay == 0)
 		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
 	if (doom->sounds->footstep_delay == 0)
-		doom->sounds->footstep_delay = 8;
+		doom->sounds->footstep_delay = 2000 * doom->delta_time;
 	doom->mdl->player.x = doom->mdl->player.x + (signal *
 	((double)doom->mdl->player.mov_speed * doom->delta_time)) * -cos(rad);
 	doom->mdl->player.y = doom->mdl->player.y + (signal *
@@ -49,15 +49,20 @@ static void		strafe(t_doom *doom, int signal)
 
 	orig_rot = doom->mdl->player.rot;
 	doom->mdl->player.rot = doom->mdl->player.rot + (90 * signal);
+	if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching
+			&& doom->sounds->footstep_delay == 0)
+		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
+	if (doom->sounds->footstep_delay == 0)
+		doom->sounds->footstep_delay = 2000 * doom->delta_time;
 	if (doom->mdl->player.rot < 0)
 		doom->mdl->player.rot = 359 + (doom->mdl->player.rot);
 	if (doom->mdl->player.rot >= 360)
 		doom->mdl->player.rot = 0 + (doom->mdl->player.rot) - 360;
 	strafe_rad = deg_to_rad(doom->mdl->player.rot);
 	doom->mdl->player.x = doom->mdl->player.x +
-	(((double)doom->mdl->player.mov_speed * doom->delta_time)) * -cos(strafe_rad);
+	((((double)doom->mdl->player.mov_speed - 300) * doom->delta_time)) * -cos(strafe_rad);
 	doom->mdl->player.y = doom->mdl->player.y +
-	(((double)doom->mdl->player.mov_speed * doom->delta_time)) * -sin(strafe_rad);
+	((((double)doom->mdl->player.mov_speed - 300) * doom->delta_time)) * -sin(strafe_rad);
 	doom->mdl->player.rot = orig_rot;
 	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
 	handle_pickup(doom);

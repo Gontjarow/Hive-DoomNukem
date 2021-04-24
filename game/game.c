@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/04/24 15:29:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 19:55:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 
 static void	dispatch_player_shots(t_doom *doom)
 {
-	if (doom->mdl->player.weap_id == SHOTGUN)	// WIP
+	if (doom->mdl->player.weap_id == SHOTGUN)
 		player_shoots_shotgun(doom);
 	else
 		player_shoots(doom);

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/04/03 18:21:23 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 20:16:31 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ typedef struct 			s_player
 	int					shooting;
 	int					invis;
 	struct SDL_Surface	*active_health_bar;
+	struct SDL_Surface	*active_fuel_bar;
 	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
 	struct s_weapon		weap_arr[10];
@@ -188,7 +189,7 @@ typedef struct			s_effect
 	struct s_effect		*next;
 }						t_effect;
 
-enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON };
+enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON};
 # define PICKING_RADIUS 10
 
 typedef struct 			s_pickup
@@ -237,6 +238,7 @@ typedef struct 			s_sprites
 {
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;
+	struct SDL_Surface	**txt_fuel_bar;
 	struct SDL_Surface	*txt_assault_ammo_bar;
 	struct SDL_Surface	*txt_shotgun_ammo_bar;
 	struct SDL_Surface	*txt_pistol_ammo_bar;

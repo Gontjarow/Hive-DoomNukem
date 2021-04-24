@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 15:27:17 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 19:56:24 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,6 +329,17 @@ void		handle_player_health_bar(t_doom *doom)
 	draw_surface(0, WIN_HEIGHT - 35, doom->mdl->player.active_health_bar, doom->game->hud_location);
 }
 
+void		handle_player_fuel_bar(t_doom *doom)
+{
+	float	percentage;
+	int		pos;
+
+	percentage = doom->mdl->player.weap_arr[3].ammo_cur / 10;
+	pos = (int)percentage;
+	doom->mdl->player.active_fuel_bar = doom->sprites->txt_fuel_bar[pos];
+	draw_surface(0, WIN_HEIGHT - 75, doom->mdl->player.active_fuel_bar, doom->game->hud_location);
+}
+
 void		handle_player_ammo_bar(t_doom *doom)
 {
 	int		ammo;
@@ -385,11 +396,11 @@ void		handle_weapon_bar(t_doom *doom)
 {
 	if (doom->game->cel_shade_hud)
 		return (handle_weapon_bar_shaded(doom));
-	if (doom->mdl->player.weap_id == PISTOL)
+	if (doom->mdl->player.weap_id == PISTOL && !doom->mdl->player.is_running)
 		draw_surface_ignore_alpha(WIN_WIDTH - 150, 0, doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
-	else if (doom->mdl->player.weap_id == SHOTGUN)
+	else if (doom->mdl->player.weap_id == SHOTGUN && !doom->mdl->player.is_running)
 		draw_surface_ignore_alpha(WIN_WIDTH - 260, 0, doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
-	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
+	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE && !doom->mdl->player.is_running)
 		draw_surface_ignore_alpha(WIN_WIDTH - 260, 0, doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
 }
 
@@ -430,6 +441,8 @@ void		render_game_hud(t_doom *doom)
 	if (doom->game->hud_location == NULL)
 		doom->game->hud_location = doom->game->buff;
 	handle_player_health_bar(doom);
+	if (doom->mdl->player.weap_arr[3].ammo_cur > 0)
+		handle_player_fuel_bar(doom);
 	handle_player_ammo_bar(doom);
 	handle_clip_bar(doom);
 	handle_weapon_bar(doom);
