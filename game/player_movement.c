@@ -76,7 +76,7 @@ static void		rotating_left_right(t_doom *doom, int signal)
 
 static void no_go(t_model *mdl, t_coord old)
 {
-	puts("No go!");
+		//puts("No go!");
 	mdl->player.x = old.x;
 	mdl->player.y = old.y;
 }
@@ -146,19 +146,19 @@ static void		apply_gravity(t_doom *doom)
 	doom->mdl->player.z += doom->mdl->player.z_velocity;
 	if ((int)doom->mdl->player.z > doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
-		puts("reducing height!");
+		//puts("reducing height!");
 		doom->mdl->player.z_velocity -= 0.25;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height
 		&& doom->mdl->player.z_velocity == 0.0)
 	{
-		puts("bouncing up from the crouch!");
+		//puts("bouncing up from the crouch!");
 		//doom->mdl->player.z += 1.0;
 		doom->mdl->player.z += 0.5;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
-		puts("hit the floor with the feet!");
+		//puts("hit the floor with the feet!");
 		//printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 		doom->mdl->player.z = doom->mdl->player.room->floor_height + doom->mdl->player.height;
 		doom->mdl->player.z_velocity = 0.0;
@@ -166,7 +166,7 @@ static void		apply_gravity(t_doom *doom)
 	}
 	else if ((int)doom->mdl->player.z > doom->mdl->player.room->roof_height)
 	{
-		puts("hit the roof with the head");
+		//puts("hit the roof with the head");
 		doom->mdl->player.z = doom->mdl->player.room->roof_height;
 		doom->mdl->player.z_velocity = 0.0;
 	}
@@ -191,9 +191,9 @@ void			handle_player_movement(t_doom *doom)
 	rad = deg_to_rad(doom->mdl->player.rot);
 	if (doom->sounds->footstep_delay > 0)
 		doom->sounds->footstep_delay--;
-	if (doom->keystates[SDL_SCANCODE_W])
+	if (doom->keystates[SDL_SCANCODE_W] || doom->keystates[SDL_SCANCODE_UP])
 		moving_up_down(doom, 1, rad);
-	if (doom->keystates[SDL_SCANCODE_S])
+	if (doom->keystates[SDL_SCANCODE_S] || doom->keystates[SDL_SCANCODE_DOWN])
 		moving_up_down(doom, -1, rad);
 	if (doom->keystates[SDL_SCANCODE_A])
 		strafe(doom, 1);

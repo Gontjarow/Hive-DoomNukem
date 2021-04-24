@@ -30,6 +30,4 @@
 [Pickup] id = 4 | loc.x = 1223 | loc.y = 203 | flavor = 1 | weapon_type_id = 1
 [Pickup] id = 5 | loc.x = 1215 | loc.y = 713 | flavor = 1 | weapon_type_id = 1
 
-[Chain_to_mapfile] fourth
-
 [Player] spawn.x = 74 | spawn.y = 435 | rot = 360

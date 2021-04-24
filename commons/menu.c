@@ -44,7 +44,7 @@ void 		init_menu(t_doom *doom)
 
     if (!(doom->menu = (t_menu*)malloc(sizeof(t_menu))))
         ft_die("Fatal error: Failed mallocing doom->menu at init_menu.");
-    puts("MENU IS BORN!!!");
+    //puts("MENU IS BORN!!!");
     doom->menu->alphabet_scale = 1;
     doom->menu->selected = 1;
     doom->menu->mousing_at = -1;
@@ -95,7 +95,7 @@ void 		destroy_menu(t_doom *doom)
     destroy_alphabet(doom->menu);
     free(doom->menu);
     doom->menu = NULL;
-    puts("MENU IS GONE!!!");
+    //puts("MENU IS GONE!!!");
 }
 
 static int ms_since(double milliseconds, double *compared_to)
@@ -314,9 +314,12 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
     }
     if (doom->event.type == SDL_MOUSEBUTTONDOWN)
         select_if_mousing_at(doom, argc, argv);
+        
+        //puts("FIRING EVENT A LOT!");
 	if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->edt_quit && doom->event.window.windowID == SDL_GetWindowID(doom->edt->win))
 	{
-		doom->edt_quit = 1;
+		    //puts("FIRING EVENT OUTCOME A!");
+        doom->edt_quit = 1;
 		destroy_edt(doom);
 		destroy_model(doom);
 		SDL_RestoreWindow(doom->win);
@@ -325,15 +328,20 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}
 	else if (doom->event.type == SDL_WINDOWEVENT && doom->event.window.event == SDL_WINDOWEVENT_CLOSE && !doom->game_quit && doom->event.window.windowID == SDL_GetWindowID(doom->game->win))
-		game_quit(doom);
+    {
+            //puts("FIRING EVENT OUTCOME B!");
+        game_quit(doom);
+    }
 	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && doom->edt_quit && doom->game_quit && !doom->menu->esc_lock))
 	{
-		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
+		    //puts("FIRING EVENT OUTCOME C!");
+        Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 		SDL_Delay(300);
 		doom->quit = 1;
 	}
 	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->edt_quit))
 	{
+            //puts("FIRING EVENT OUTCOME D!");
 		doom->edt_quit = 1;
 		destroy_edt(doom);
 		destroy_model(doom);
@@ -344,13 +352,25 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 		Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
 	}
 	else if (doom->event.type == SDL_QUIT || (doom->event.type == SDL_KEYDOWN && doom->event.button.button == SDL_SCANCODE_ESCAPE && !doom->game_quit))
-		game_quit(doom);
+    {
+            //puts("FIRING EVENT OUTCOME E!");
+        game_quit(doom);
+    }		
 	else if (!doom->game_quit && doom->game->level_exit_reached)
 	{
-		game_quit(doom);
-		puts("INSTANTLY RELOADING!!!");
-		start_game_from_menu(doom, argc, argv);
-		puts("INSANT RELOADING COMPLETED!!!");
+            //puts("FIRING EVENT OUTCOME F!");
+		if (doom->game->won_the_game)
+        {
+            game_quit(doom);
+            ft_putendl("WON THE GAME!");
+		    ft_putendl("Display victory screen here....");
+            doom->chapter_index = 0;           
+        }
+        else
+        {
+            game_quit(doom);
+            start_game_from_menu(doom, argc, argv);
+        }    	    
 	}
 }
 
