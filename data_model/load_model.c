@@ -50,10 +50,34 @@ static void		assign_enemy_cd(t_model *mdl)
 	}
 }
 
+static void		link_mdl_wall_textures(t_model *mdl)
+{
+	t_wall	*wall;
+	int		wc;
+
+	wc = mdl->wall_count;
+	wall = mdl->wall_first;
+	while (wc--)
+	{
+		if (wall->texture_id < 0 || wall->texture_id > 9)
+		{
+			wall->active_sprite = NULL;
+			printf("Warning: Link_mdl_wall_textures function aborted and linked a NULL pointer wall->active_sprite, texture_id out of bounds was %d\n", wall->texture_id);
+			wall = wall->next;
+			continue ;
+		}
+		wall->active_sprite = doom_ptr()->sprites->txt_wall[wall->texture_id];
+		if (wall->active_sprite == NULL)
+			printf("Warning: Link_mdl_wall_textures function linked to NULL pointer wall->active_sprite, texture_id was %d\n", wall->texture_id);
+		wall = wall->next;
+	}
+	ft_putendl("LINKED WALL TEXTURE_IDS TO WALL ACTIVE SPRITES IN DOOM->MDL");
+}
+
 static void		link_mdl_rooms(t_model *mdl)
 {
-    t_room *room;
-    int 	rc;
+    t_room	*room;
+    int		rc;
 
     rc = mdl->room_count;
     room = mdl->room_first;
@@ -85,6 +109,7 @@ static void print_map_strings(t_mapfile *map)
 	ft_putendl("Printed all map strings!");
 }
 
+/* Depreceated. Do not use! Remove with same time as removing testing code for data embedding
 static void create_model_appended(t_doom *doom)
 {
 	ft_putendl("Loaded appended mapfile data!");
@@ -92,7 +117,7 @@ static void create_model_appended(t_doom *doom)
 	map_to_model(doom->map, doom->mdl);
 	link_mdl_rooms(doom->mdl);
 	expand_mdl_polygon_maps(doom->mdl);
-}
+}*/
 
 static void	create_data_model(t_doom *doom, char *map_file_path)
 {
@@ -100,6 +125,7 @@ static void	create_data_model(t_doom *doom, char *map_file_path)
 	ft_putstr("Loaded mapfile data from file: ");
 	ft_putendl(map_file_path);
 	map_to_model(doom->map, doom->mdl);
+	link_mdl_wall_textures(doom->mdl);
 	link_mdl_rooms(doom->mdl);
 	expand_mdl_polygon_maps(doom->mdl);
 }

@@ -15,6 +15,34 @@ static char *extension_num_path(char *folder, char c, char *extension)
 	return (path);
 }
 
+static int	load_texture_sprite(t_doom *doom)
+{
+	int		i;
+	char	*path;
+
+	if (!(doom->sprites->txt_wall = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 10)))
+		return (-1);
+	i = -1;
+	while (++i < 10)
+	{
+		doom->sprites->txt_wall[i] = NULL;
+		path = extension_num_path("img/textures/wall/wall_", i + '0', ".png");
+		doom->sprites->txt_wall[i] = load_texture(doom, path);
+		free(path);
+	}
+	if (!(doom->sprites->txt_floor = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 10)))
+		return (-1);
+	i = -1;
+	while (++i < 10)
+	{
+		doom->sprites->txt_floor[i] = NULL;
+		path = extension_num_path("img/textures/floor/floor_", i + '0', ".png");
+		doom->sprites->txt_floor[i] = load_texture(doom, path);
+		free(path);
+	}
+	ft_putendl("LOADED WALL AND FLOOR TEXTURES TO MEMORY");
+}
+
 static int	load_ranged_sprite(t_doom *doom, char *path, int i)
 {
 	if (!(doom->sprites->txt_ranged_front_walk = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 4)))
@@ -290,6 +318,7 @@ int			load_sprites(t_doom *doom)
 		ft_putendl("Warning: Doom->sprites was not NULL when load_sprites");
 	if (doom->sprites == NULL)
 		ft_putendl("Warning: Doom->sprites was not malloced at load_sprites");
+	load_texture_sprite(doom);
 	load_ranged_sprite(doom, path, i);
 	load_melee_sprite(doom, path, i);
 	load_boss_sprite(doom, path, i);
@@ -301,6 +330,9 @@ int			load_sprites(t_doom *doom)
 	return (1);
 }
 
+// TODO
+// Use SDL_Freesurface for every single sprite loaded with load_texture etc.
+// free(doom->sprites); is a massive memory leak as it does not deallocate allocated SDL_Surface data memory, but just superficial pointers only
 int			destroy_sprites(t_doom *doom)
 {
 	free(doom->sprites);

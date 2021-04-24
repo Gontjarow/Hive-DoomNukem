@@ -239,6 +239,10 @@ typedef struct 			s_rsrc
 
 typedef struct 			s_sprites
 {
+	// Wall and Floor Sprites
+	struct SDL_Surface **txt_wall;
+	struct SDL_Surface **txt_floor;
+	
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;
 	struct SDL_Surface	*txt_assault_ammo_bar;
