@@ -146,10 +146,6 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 			t_xy len = vec2_sub(wall_segment.stop, wall_segment.start);
 			double depth = wall_segment.start.y + vec2_mul(len, (double)horizontal / (x2 - x1)).y;
 
-			// Todo: draw sky or ceiling
-
-			// vertical_line(screen_x, world->screen_y_top[screen_x], y_start, 0xff0000);
-
 			int top = world->screen_y_top[screen_x];
 			int bot = world->screen_y_bot[screen_x];
 
