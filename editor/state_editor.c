@@ -93,6 +93,7 @@ t_state				*get_state(void)
 		state->gui->activate(state);
 		state->cooldown = 0;
 		state->saving_choice = 1;
+		state->give_ceiling_to_rooms = 1;
 	}
 	return (state);
 }

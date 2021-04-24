@@ -110,6 +110,7 @@ typedef struct	s_sector
 	unsigned	vertex_count;
 	t_xy		*vertex;
 	signed		*neighbors;
+	int			has_ceiling;
 }				t_sector;
 
 typedef struct	s_section

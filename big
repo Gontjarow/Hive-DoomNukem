@@ -1,0 +1,123 @@
+[Wall] id = 0 | start.x = 148 | start.y = 243 | end.x = 745 | end.y = 142 | texture_id = 1
+[Wall] id = 1 | start.x = 745 | start.y = 142 | end.x = 1264 | end.y = 295 | texture_id = 1
+[Wall] id = 2 | start.x = 1264 | start.y = 295 | end.x = 1392 | end.y = 534 | texture_id = 1
+[Wall] id = 3 | start.x = 1392 | start.y = 534 | end.x = 996 | end.y = 777 | texture_id = 1
+[Wall] id = 4 | start.x = 996 | start.y = 777 | end.x = 196 | end.y = 669 | texture_id = 1
+[Wall] id = 5 | start.x = 196 | start.y = 669 | end.x = 148 | end.y = 243 | texture_id = 1
+[Wall] id = 6 | start.x = 1392 | start.y = 534 | end.x = 1706 | end.y = 625 | texture_id = 1
+[Wall] id = 7 | start.x = 1706 | start.y = 625 | end.x = 1801 | end.y = 923 | texture_id = 1
+[Wall] id = 8 | start.x = 1801 | start.y = 923 | end.x = 1560 | end.y = 1111 | texture_id = 1
+[Wall] id = 9 | start.x = 1560 | start.y = 1111 | end.x = 1129 | end.y = 1032 | texture_id = 1
+[Wall] id = 10 | start.x = 1129 | start.y = 1032 | end.x = 996 | end.y = 777 | texture_id = 1
+[Wall] id = 11 | start.x = 996 | start.y = 777 | end.x = 1392 | end.y = 534 | texture_id = 1
+[Wall] id = 12 | start.x = 832 | start.y = 1206 | end.x = 1129 | end.y = 1032 | texture_id = 1
+[Wall] id = 13 | start.x = 1129 | start.y = 1032 | end.x = 1560 | end.y = 1111 | texture_id = 1
+[Wall] id = 14 | start.x = 1560 | start.y = 1111 | end.x = 1483 | end.y = 1558 | texture_id = 1
+[Wall] id = 15 | start.x = 1483 | start.y = 1558 | end.x = 1048 | end.y = 1618 | texture_id = 1
+[Wall] id = 16 | start.x = 1048 | start.y = 1618 | end.x = 763 | end.y = 1466 | texture_id = 1
+[Wall] id = 17 | start.x = 763 | start.y = 1466 | end.x = 832 | end.y = 1206 | texture_id = 1
+[Wall] id = 18 | start.x = 1157 | start.y = 1761 | end.x = 1048 | end.y = 1618 | texture_id = 1
+[Wall] id = 19 | start.x = 1048 | start.y = 1618 | end.x = 1483 | end.y = 1558 | texture_id = 1
+[Wall] id = 20 | start.x = 1483 | start.y = 1558 | end.x = 1455 | end.y = 1717 | texture_id = 1
+[Wall] id = 21 | start.x = 1455 | start.y = 1717 | end.x = 1157 | end.y = 1761 | texture_id = 1
+[Wall] id = 22 | start.x = 1041 | start.y = 1860 | end.x = 1157 | end.y = 1761 | texture_id = 1
+[Wall] id = 23 | start.x = 1157 | start.y = 1761 | end.x = 1455 | end.y = 1717 | texture_id = 1
+[Wall] id = 24 | start.x = 1455 | start.y = 1717 | end.x = 1527 | end.y = 1939 | texture_id = 1
+[Wall] id = 25 | start.x = 1527 | start.y = 1939 | end.x = 1407 | end.y = 2134 | texture_id = 1
+[Wall] id = 26 | start.x = 1407 | start.y = 2134 | end.x = 1030 | end.y = 2086 | texture_id = 1
+[Wall] id = 27 | start.x = 1030 | start.y = 2086 | end.x = 1041 | end.y = 1860 | texture_id = 1
+[Wall] id = 28 | start.x = 1090 | start.y = 2280 | end.x = 1030 | end.y = 2086 | texture_id = 1
+[Wall] id = 29 | start.x = 1030 | start.y = 2086 | end.x = 1407 | end.y = 2134 | texture_id = 1
+[Wall] id = 30 | start.x = 1407 | start.y = 2134 | end.x = 1350 | end.y = 2317 | texture_id = 1
+[Wall] id = 31 | start.x = 1350 | start.y = 2317 | end.x = 1090 | end.y = 2280 | texture_id = 1
+[Wall] id = 32 | start.x = 1068 | start.y = 2509 | end.x = 1090 | end.y = 2280 | texture_id = 1
+[Wall] id = 33 | start.x = 1090 | start.y = 2280 | end.x = 1350 | end.y = 2317 | texture_id = 1
+[Wall] id = 34 | start.x = 1350 | start.y = 2317 | end.x = 1328 | end.y = 2585 | texture_id = 1
+[Wall] id = 35 | start.x = 1328 | start.y = 2585 | end.x = 1068 | end.y = 2509 | texture_id = 1
+[Wall] id = 36 | start.x = 941 | start.y = 2627 | end.x = 1068 | end.y = 2509 | texture_id = 1
+[Wall] id = 37 | start.x = 1068 | start.y = 2509 | end.x = 1328 | end.y = 2585 | texture_id = 1
+[Wall] id = 38 | start.x = 1328 | start.y = 2585 | end.x = 1251 | end.y = 2809 | texture_id = 1
+[Wall] id = 39 | start.x = 1251 | start.y = 2809 | end.x = 1070 | end.y = 2911 | texture_id = 1
+[Wall] id = 40 | start.x = 1070 | start.y = 2911 | end.x = 892 | end.y = 2811 | texture_id = 1
+[Wall] id = 41 | start.x = 892 | start.y = 2811 | end.x = 941 | end.y = 2627 | texture_id = 1
+[Wall] id = 42 | start.x = 1156 | start.y = 3212 | end.x = 1070 | end.y = 2911 | texture_id = 1
+[Wall] id = 43 | start.x = 1070 | start.y = 2911 | end.x = 1251 | end.y = 2809 | texture_id = 1
+[Wall] id = 44 | start.x = 1251 | start.y = 2809 | end.x = 1495 | end.y = 2977 | texture_id = 1
+[Wall] id = 45 | start.x = 1495 | start.y = 2977 | end.x = 1461 | end.y = 3224 | texture_id = 1
+[Wall] id = 46 | start.x = 1461 | start.y = 3224 | end.x = 1156 | end.y = 3212 | texture_id = 1
+[Wall] id = 47 | start.x = 1766 | start.y = 3326 | end.x = 1461 | end.y = 3224 | texture_id = 1
+[Wall] id = 48 | start.x = 1461 | start.y = 3224 | end.x = 1495 | end.y = 2977 | texture_id = 1
+[Wall] id = 49 | start.x = 1495 | start.y = 2977 | end.x = 1745 | end.y = 2944 | texture_id = 1
+[Wall] id = 50 | start.x = 1745 | start.y = 2944 | end.x = 1887 | end.y = 3101 | texture_id = 1
+[Wall] id = 51 | start.x = 1887 | start.y = 3101 | end.x = 1766 | end.y = 3326 | texture_id = 1
+[Wall] id = 52 | start.x = 1706 | start.y = 625 | end.x = 2064 | end.y = 566 | texture_id = 1
+[Wall] id = 53 | start.x = 2064 | start.y = 566 | end.x = 2138 | end.y = 666 | texture_id = 1
+[Wall] id = 54 | start.x = 2138 | start.y = 666 | end.x = 2148 | end.y = 840 | texture_id = 1
+[Wall] id = 55 | start.x = 2148 | start.y = 840 | end.x = 1801 | end.y = 923 | texture_id = 1
+[Wall] id = 56 | start.x = 1801 | start.y = 923 | end.x = 1706 | end.y = 625 | texture_id = 1
+[Wall] id = 57 | start.x = 2064 | start.y = 566 | end.x = 2033 | end.y = 352 | texture_id = 1
+[Wall] id = 58 | start.x = 2033 | start.y = 352 | end.x = 2154 | end.y = 245 | texture_id = 1
+[Wall] id = 59 | start.x = 2154 | start.y = 245 | end.x = 2335 | end.y = 333 | texture_id = 1
+[Wall] id = 60 | start.x = 2335 | start.y = 333 | end.x = 2302 | end.y = 567 | texture_id = 1
+[Wall] id = 61 | start.x = 2302 | start.y = 567 | end.x = 2138 | end.y = 666 | texture_id = 1
+[Wall] id = 62 | start.x = 2138 | start.y = 666 | end.x = 2064 | end.y = 566 | texture_id = 1
+[Wall] id = 63 | start.x = 2335 | start.y = 333 | end.x = 2578 | end.y = 228 | texture_id = 1
+[Wall] id = 64 | start.x = 2578 | start.y = 228 | end.x = 2781 | end.y = 393 | texture_id = 1
+[Wall] id = 65 | start.x = 2781 | start.y = 393 | end.x = 2656 | end.y = 646 | texture_id = 1
+[Wall] id = 66 | start.x = 2656 | start.y = 646 | end.x = 2302 | end.y = 567 | texture_id = 1
+[Wall] id = 67 | start.x = 2302 | start.y = 567 | end.x = 2335 | end.y = 333 | texture_id = 1
+[Wall] id = 68 | start.x = 2781 | start.y = 393 | end.x = 2988 | end.y = 650 | texture_id = 1
+[Wall] id = 69 | start.x = 2988 | start.y = 650 | end.x = 2871 | end.y = 855 | texture_id = 1
+[Wall] id = 70 | start.x = 2871 | start.y = 855 | end.x = 2701 | end.y = 797 | texture_id = 1
+[Wall] id = 71 | start.x = 2701 | start.y = 797 | end.x = 2656 | end.y = 646 | texture_id = 1
+[Wall] id = 72 | start.x = 2656 | start.y = 646 | end.x = 2781 | end.y = 393 | texture_id = 1
+[Wall] id = 73 | start.x = 2458 | start.y = 853 | end.x = 2701 | end.y = 797 | texture_id = 1
+[Wall] id = 74 | start.x = 2701 | start.y = 797 | end.x = 2871 | end.y = 855 | texture_id = 1
+[Wall] id = 75 | start.x = 2871 | start.y = 855 | end.x = 2890 | end.y = 1040 | texture_id = 1
+[Wall] id = 76 | start.x = 2890 | start.y = 1040 | end.x = 2598 | end.y = 1064 | texture_id = 1
+[Wall] id = 77 | start.x = 2598 | start.y = 1064 | end.x = 2458 | end.y = 853 | texture_id = 1
+[Wall] id = 78 | start.x = 1954 | start.y = 934 | end.x = 2458 | end.y = 853 | texture_id = 1
+[Wall] id = 79 | start.x = 2458 | start.y = 853 | end.x = 2598 | end.y = 1064 | texture_id = 1
+[Wall] id = 80 | start.x = 2598 | start.y = 1064 | end.x = 2444 | end.y = 1423 | texture_id = 1
+[Wall] id = 81 | start.x = 2444 | start.y = 1423 | end.x = 1880 | end.y = 1334 | texture_id = 1
+[Wall] id = 82 | start.x = 1880 | start.y = 1334 | end.x = 1954 | end.y = 934 | texture_id = 1
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 6 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 1 | first_wall_id = 6 | wall_count = 6 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 2 | first_wall_id = 12 | wall_count = 6 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 3 | first_wall_id = 18 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 4 | first_wall_id = 22 | wall_count = 6 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 5 | first_wall_id = 28 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 6 | first_wall_id = 32 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 7 | first_wall_id = 36 | wall_count = 6 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 8 | first_wall_id = 42 | wall_count = 5 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 9 | first_wall_id = 47 | wall_count = 5 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+[Room] id = 10 | first_wall_id = 52 | wall_count = 5 | floor_height = 100 | roof_height = 200 | has_ceiling = 0
+[Room] id = 11 | first_wall_id = 57 | wall_count = 6 | floor_height = 100 | roof_height = 200 | has_ceiling = 0
+[Room] id = 12 | first_wall_id = 63 | wall_count = 5 | floor_height = 100 | roof_height = 200 | has_ceiling = 0
+[Room] id = 13 | first_wall_id = 68 | wall_count = 5 | floor_height = 100 | roof_height = 200 | has_ceiling = 0
+[Room] id = 14 | first_wall_id = 73 | wall_count = 5 | floor_height = 100 | roof_height = 200 | has_ceiling = 0
+[Room] id = 15 | first_wall_id = 78 | wall_count = 5 | floor_height = 100 | roof_height = 200 | has_ceiling = 1
+
+[Portal] id = 0 | start.x = 996 | start.y = 777 | end.x = 1392 | end.y = 534
+[Portal] id = 1 | start.x = 1129 | start.y = 1032 | end.x = 1560 | end.y = 1111
+[Portal] id = 2 | start.x = 1048 | start.y = 1618 | end.x = 1483 | end.y = 1558
+[Portal] id = 3 | start.x = 1157 | start.y = 1761 | end.x = 1455 | end.y = 1717
+[Portal] id = 4 | start.x = 1030 | start.y = 2086 | end.x = 1407 | end.y = 2134
+[Portal] id = 5 | start.x = 1090 | start.y = 2280 | end.x = 1350 | end.y = 2317
+[Portal] id = 6 | start.x = 1068 | start.y = 2509 | end.x = 1328 | end.y = 2585
+[Portal] id = 7 | start.x = 1070 | start.y = 2911 | end.x = 1251 | end.y = 2809
+[Portal] id = 8 | start.x = 1461 | start.y = 3224 | end.x = 1495 | end.y = 2977
+[Portal] id = 9 | start.x = 1801 | start.y = 923 | end.x = 1706 | end.y = 625
+[Portal] id = 10 | start.x = 2138 | start.y = 666 | end.x = 2064 | end.y = 566
+[Portal] id = 11 | start.x = 2302 | start.y = 567 | end.x = 2335 | end.y = 333
+[Portal] id = 12 | start.x = 2656 | start.y = 646 | end.x = 2781 | end.y = 393
+[Portal] id = 13 | start.x = 2701 | start.y = 797 | end.x = 2871 | end.y = 855
+[Portal] id = 14 | start.x = 2458 | start.y = 853 | end.x = 2598 | end.y = 1064
+
+[Enemy] id = 0 | x = 1685 | y = 3127 | rot = 79 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 1102 | y = 2823 | rot = 79 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 2 | x = 1994 | y = 1263 | rot = 22 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Player] spawn.x = 785 | spawn.y = 402 | rot = 41
+[No level exit defined] Infinite map suitable for debugging!

@@ -60,8 +60,8 @@ void	add_enemy_to_string(t_enemy *enemy, t_mapfile *map)
 void	add_wall_to_string(t_wall *wall, t_mapfile *map)
 {
 	map->join_string = ft_strnew(255);
-	sprintf(map->join_string, "[Wall] id = %d | start.x = %d | start.y = %d | end.x = %d | end.y = %d\n",
-			wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
+	sprintf(map->join_string, "[Wall] id = %d | start.x = %d | start.y = %d | end.x = %d | end.y = %d | texture_id = %d\n",
+			wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y, wall->texture_id);
 	if (!map->wall_string)
 		map->wall_string = ft_strnew(1);
 	map->wall_string = ft_strjoin(map->wall_string, map->join_string);
@@ -108,8 +108,8 @@ void 	add_portal_to_string(t_wall *portal, t_mapfile *map)
 void	add_room_to_string(t_room *room, t_mapfile *map)
 {
 	map->join_string = ft_strnew(255);
-	sprintf(map->join_string, "[Room] id = %d | first_wall_id = %d | wall_count = %d | floor_height = %d | roof_height = %d\n",
-			room->id, room->first_wall_id, room->wall_count, room->floor_height, room->roof_height);
+	sprintf(map->join_string, "[Room] id = %d | first_wall_id = %d | wall_count = %d | floor_height = %d | roof_height = %d | has_ceiling = %d\n",
+			room->id, room->first_wall_id, room->wall_count, room->floor_height, room->roof_height, room->has_ceiling);
 	if (!map->room_string)
 		map->room_string = ft_strnew(1);
 	map->room_string = ft_strjoin(map->room_string, map->join_string);

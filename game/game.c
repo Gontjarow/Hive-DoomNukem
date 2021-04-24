@@ -192,8 +192,17 @@ static void handle_show_loading(t_doom *doom)
 
 void		game_render(t_doom *doom)
 {
+	static int lock_q = 0;
 	static int mix_i = 0;
 
+	if (lock_q && !doom->keystates[SDL_SCANCODE_Q])
+		lock_q = 0;
+	else if (doom->keystates[SDL_SCANCODE_Q] && !lock_q)
+	{
+		debug_model_rooms();
+		lock_q = 1;
+	}
+	
 	// TODO: Remove invis toggling ? Experimental feature cutting off from shipped build propably
 	handle_player_invis_toggle(doom);
 	if (doom->game->show_loading)

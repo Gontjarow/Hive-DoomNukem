@@ -206,6 +206,7 @@ t_world			*load_world(t_world *world)
 		sector->vertex_count = room->wall_count;
 		sector->floor = room->floor_height / WORLD_SCALE;
 		sector->ceil = room->roof_height / WORLD_SCALE;
+		sector->has_ceiling = room->has_ceiling;
 
 		// Allocate fixed size blocks
 		// Note: sector->vertex has one extra index
