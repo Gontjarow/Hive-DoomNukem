@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/24 18:40:13 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/24 21:01:58 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
 	if (doom->sounds->footstep_delay == 0)
 		doom->sounds->footstep_delay = 2000 * doom->delta_time;
-	doom->mdl->player.x = doom->mdl->player.x + (signal *
-	((double)doom->mdl->player.mov_speed * doom->delta_time)) * -cos(rad);
-	doom->mdl->player.y = doom->mdl->player.y + (signal *
-	((double)doom->mdl->player.mov_speed * doom->delta_time)) * -sin(rad);
+	doom->mdl->player.x = doom->mdl->player.x + ((float)signal *
+	((float)doom->mdl->player.mov_speed * doom->delta_time)) * -cos(rad);
+	doom->mdl->player.y = doom->mdl->player.y + ((float)signal *
+	((float)doom->mdl->player.mov_speed * doom->delta_time)) * -sin(rad);
 	update_player_tail(doom, rad);
 	handle_pickup(doom);
 }
