@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/24 21:15:03 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/27 16:32:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ int			main(int argc, char *argv[])
 		frame_ticks = SDL_GetTicks() - doom.frame_start;
 		doom.delta_time = frame_ticks / 1000.0f;
 		doom.delta_anim = 0.07f / doom.delta_time;
-		printf("delta time: %f\n", doom.delta_time);
+		// printf("delta time: %f\n", doom.delta_time);
 	}
 	return (destroy_and_quit(&doom));
 }

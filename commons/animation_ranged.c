@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:00:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 20:42:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:33:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void		animate_ranged_back_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
 	static int			cd = 0;
-	// static int			cd_limit = 0;
 
 	if (frames[0] == 0)
 	{
@@ -34,7 +33,6 @@ void		animate_ranged_back_walk(t_enemy *enemy, t_doom *doom)
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;
-		// cd_limit = 0.07f / doom->delta_time;
 		enemy->anim_phase++;
 	}
 	cd++;
@@ -44,7 +42,6 @@ void		animate_ranged_front_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
 	static int			cd = 0;
-	// static int			cd_limit = 0;
 
 	if (frames[0] == 0)
 	{
@@ -62,7 +59,6 @@ void		animate_ranged_front_walk(t_enemy *enemy, t_doom *doom)
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;
-		// cd_limit = 0.07f / doom->delta_time;
 		enemy->anim_phase++;
 	}
 	cd++;
@@ -73,7 +69,6 @@ void		animate_ranged_side_walk(t_enemy *enemy, t_doom *doom)
 	static SDL_Surface *frames[4] = { 0 };
 	static int			last_orient = -1;
 	static int			cd = 0;
-	// static int			cd_limit = 0;
 
 	if (enemy->anim.orient != last_orient)
 	{
@@ -102,7 +97,6 @@ void		animate_ranged_side_walk(t_enemy *enemy, t_doom *doom)
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;
-		// cd_limit = 0.07f / doom->delta_time;
 		enemy->anim_phase++;
 	}
 	cd++;
@@ -112,7 +106,6 @@ void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface	*frames[7] = { 0 };
 	static int			cd = 0;
-	// static int			cd_limit = 0;
 	
 	if (frames[0] == 0)
 	{
@@ -132,7 +125,6 @@ void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;
-		// cd_limit = 0.07f / doom->delta_time;
 		enemy->anim_phase++;
 	}
 	cd++;
@@ -142,7 +134,6 @@ void		animate_ranged_front_attack(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface	*frames[2] = { 0 };
 	static int			cd = 0;
-	// static int			cd_limit = 0;
 
 	if (frames[0] == 0)
 	{
@@ -158,7 +149,6 @@ void		animate_ranged_front_attack(t_enemy *enemy, t_doom *doom)
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;
-		// cd_limit = 0.07f / doom->delta_time;
 		enemy->anim_phase++;
 	}
 	cd++;
@@ -169,7 +159,6 @@ void		animate_ranged_side_attack(t_enemy *enemy, t_doom *doom)
 	static SDL_Surface *frames[2] = { 0 };
 	static int			last_orient = -1;
 	static int			cd = 0;
-	// static int			cd_limit = 0;
 
 	if (enemy->anim.orient != last_orient)
 	{
@@ -194,7 +183,6 @@ void		animate_ranged_side_attack(t_enemy *enemy, t_doom *doom)
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;
-		// cd_limit = 0.07f / doom->delta_time;
 		enemy->anim_phase++;
 	}
 	cd++;

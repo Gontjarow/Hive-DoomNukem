@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 20:07:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:25:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void		enemy_update_cooldown(t_doom *doom, t_enemy *enemy)
 	{
 		enemy->stun_time--;
 		if (enemy->stun_time == 0)
-			enemy->stun_cd = 800 * doom->delta_time;
+			enemy->stun_cd = 500 * doom->delta_time;
 	}
 }
 
@@ -44,7 +44,7 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 	enemy->ray_color = 0xffff0000;
 	if (DEBUG == 1)
 		doom->minimap->enemy_ray_timeout = 15;
-	enemy->shoot_cd = 2500 * doom->delta_time;
+	enemy->shoot_cd = 1000 * doom->delta_time;
 	enemy->bullet_pos.x = enemy->x;
 	enemy->bullet_pos.y = enemy->y;
 	while (check_location(doom, enemy->bullet_pos.x,

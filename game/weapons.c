@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/24 20:20:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:21:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[0].ammo_cur = 12;
 	doom->mdl->player.weap_arr[0].ammo_res = 1;
 	doom->mdl->player.weap_arr[0].ammo_max = 12;
-	doom->mdl->player.weap_arr[0].cooldown = 4000 * doom->delta_time;
+	doom->mdl->player.weap_arr[0].cooldown = 1000 * doom->delta_time;
 	doom->mdl->player.weap_arr[0].dmg = 15;
-	doom->mdl->player.weap_arr[0].reload_time = 15000 * doom->delta_time;
+	doom->mdl->player.weap_arr[0].reload_time = 4500 * doom->delta_time;
 	doom->mdl->player.weap_arr[0].fire_sound = doom->sounds->mcPistolShot;
 	doom->mdl->player.weap_arr[0].reload_sound = doom->sounds->mcPistolRld;
 	doom->mdl->player.weap_arr[0].weap_img = load_texture(doom, "img/weapons/colt.png");
@@ -29,9 +29,9 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[1].ammo_cur = 5;
 	doom->mdl->player.weap_arr[1].ammo_res = 5;
 	doom->mdl->player.weap_arr[1].ammo_max = 5;
-	doom->mdl->player.weap_arr[1].cooldown = 5000 * doom->delta_time;
+	doom->mdl->player.weap_arr[1].cooldown = 2000 * doom->delta_time;
 	doom->mdl->player.weap_arr[1].dmg = 40;
-	doom->mdl->player.weap_arr[1].reload_time = 35000 * doom->delta_time;
+	doom->mdl->player.weap_arr[1].reload_time = 12000 * doom->delta_time;
 	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcShotgunShot;
 	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcShotgunRld;
 	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/shotgun.png");
@@ -39,9 +39,9 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[2].ammo_cur = 30;
 	doom->mdl->player.weap_arr[2].ammo_res = 3;
 	doom->mdl->player.weap_arr[2].ammo_max = 30;
-	doom->mdl->player.weap_arr[2].cooldown = 1200 * doom->delta_time;
+	doom->mdl->player.weap_arr[2].cooldown = 350 * doom->delta_time;
 	doom->mdl->player.weap_arr[2].dmg = 30;
-	doom->mdl->player.weap_arr[2].reload_time = 20000 * doom->delta_time;
+	doom->mdl->player.weap_arr[2].reload_time = 6000 * doom->delta_time;
 	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcAssaultShot;
 	doom->mdl->player.weap_arr[2].reload_sound = doom->sounds->mcAssaultRld;
 	doom->mdl->player.weap_arr[2].weap_img = load_texture(doom, "img/weapons/ak47.png");

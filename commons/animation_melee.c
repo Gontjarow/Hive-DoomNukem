@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:01:21 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/05 20:39:47 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:44:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void		animate_melee_back_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[6] = { 0 };
+	static int			cd = 0;
 
 	if (frames[0] == 0)
 	{
@@ -28,12 +29,19 @@ void		animate_melee_back_walk(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_melee_front_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
+	static int			cd = 0;
 
 	if (frames[0] == 0)
 	{
@@ -47,12 +55,19 @@ void		animate_melee_front_walk(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_melee_side_walk(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
+	static int			cd = 0;
 
 	if (frames[0] == 0)
 	{
@@ -76,12 +91,19 @@ void		animate_melee_side_walk(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_melee_death(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[6] = { 0 };
+	static int			cd = 0;
 
 	if (frames[0] == 0)
 	{
@@ -92,14 +114,23 @@ void		animate_melee_death(t_enemy *enemy, t_doom *doom)
 		frames[4] = doom->sprites->txt_melee_death[4];
 		frames[5] = doom->sprites->txt_melee_death[5];
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	if (enemy->anim_phase > 5)
+		enemy->anim_phase = 5;
+	enemy->active_sprite = frames[enemy->anim_phase];
 	if (enemy->anim_phase > 5)
 		enemy->anim.done = IDLE;
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_melee_front_attack(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
+	static int			cd = 0;
 
 	if (frames[0] == 0)
 	{
@@ -113,13 +144,20 @@ void		animate_melee_front_attack(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		enemy->anim_phase++;
+	}
+	cd++;
 }
 
 void		animate_melee_side_attack(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface *frames[4] = { 0 };
 	static int			last_orient = -1;
+	static int			cd = 0;
 
 	if (enemy->anim.orient != last_orient)
 	{
@@ -144,5 +182,11 @@ void		animate_melee_side_attack(t_enemy *enemy, t_doom *doom)
 		enemy->anim_phase = 0;
 		enemy->anim.done = IDLE;
 	}
-	enemy->active_sprite = frames[enemy->anim_phase++];
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (cd > doom->delta_anim)
+	{
+		cd = 0;
+		enemy->anim_phase++;
+	}
+	cd++;
 }

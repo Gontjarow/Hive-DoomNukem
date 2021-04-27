@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 20:09:54 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:16:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 	if (enemy->id == id && enemy->hp.cur > 0)
 	{
 		if (enemy->stun_cd == 0)
-			enemy->stun_time = 500 * doom->delta_time;
+			enemy->stun_time = 100 * doom->delta_time;
 		enemy->anim.done = HURT;
 		enemy->ai.aggro = ACTIVE;
 		enemy->hp.cur -=

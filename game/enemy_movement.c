@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:18:34 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/03 19:00:18 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/04/27 17:20:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void		rotate_left(t_doom *doom, t_enemy *enemy)
 	int		y;
 	double	rad;
 
-	enemy->rot -= 5;
+	enemy->rot -= 10;
 	if (enemy->rot < 0)
 		enemy->rot = 359;
 	rad = deg_to_rad(enemy->rot);
@@ -50,7 +50,7 @@ static void		rotate_right(t_doom *doom, t_enemy *enemy)
 	int		y;
 	double	rad;
 
-	enemy->rot += 5;
+	enemy->rot += 10;
 	if (enemy->rot >= 360)
 		enemy->rot = 0;
 	rad = deg_to_rad(enemy->rot);
