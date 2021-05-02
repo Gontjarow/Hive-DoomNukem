@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom-nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/04/24 21:16:12 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/02 19:16:47 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # define FPS 120
 # define TICKS_PER_FRAME 1000.0 / FPS
 
-# define DEBUG 0
+# define DEBUG 1
 
 typedef struct			s_doom
 {

@@ -300,4 +300,6 @@ void			render_frame(t_doom *doom)
 	render_enemies(doom);
 	render_pickups(doom);
 	render_effectors(doom);
+	if (DEBUG)
+		SDL_UpdateWindowSurface(doom->minimap->win);
 }

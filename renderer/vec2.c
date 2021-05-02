@@ -106,3 +106,10 @@ t_xy			vec2_lerp(t_xy start, t_xy stop, double t)
 		vec2_mul(start, t),
 		vec2_mul(stop, 1 - t)));
 }
+
+int				vec2_near_equal(t_xy a, t_xy b)
+{
+	t_xy diff;
+	diff = (t_xy){b.x - a.x, b.y - a.y};
+	return ((diff.x < 0.00001) && (diff.y < 0.00001));
+}

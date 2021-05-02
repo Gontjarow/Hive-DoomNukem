@@ -326,3 +326,22 @@ SDL_Surface		*get_panorama_tex(t_doom *doom)
 
 	return (tex);
 }
+
+// The basic idea is to create a line from the wall to the player,
+// then use that in texture UV space to grab colors to actually draw on the screen.
+// the length of the line<>player needs to be normalized into screen space to account for any length differences.
+void	draw_textured_line(t_xy_line src, SDL_Surface *tex, t_xy_line dst, SDL_Surface *buff, t_doom *doom)
+{
+	double ratio = line_mag(dst) / line_mag(src);
+	t_xy src_dir = vec2_mul(vec2_norm(line_direction(src)), ratio);
+
+	// loop:
+	while (!vec2_near_equal(dst.start, dst.stop))
+	{
+		uint32_t color = get_pixel(tex, src.start.x, src.start.y);
+		set_pixel(buff, dst.start.x, dst.start.y, color);
+		src.start = vec2_add(src.start, src_dir);
+	}
+	ft_assert(vec2_near_equal(dst.start, dst.stop) && vec2_near_equal(src.stop, src.stop),
+		"draw_texture_line: src/dst must end at the same time");
+}

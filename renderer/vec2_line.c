@@ -16,6 +16,11 @@ t_xy_line		line_xy(t_xy start, t_xy stop, int color)
 	return ((t_xy_line){start, stop, color});
 }
 
+t_xy			line_direction(t_xy_line line)
+{
+	return (vec2_sub(line.stop, line.start));
+}
+
 t_xy_line		line_relative(t_xy start, t_xy stop, t_xy origin)
 {
 	return (line_xy(

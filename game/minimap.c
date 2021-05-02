@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/03/21 16:53:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/02 19:30:43 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,30 @@ void		destroy_minimap(t_doom *doom)
 	doom->minimap = NULL;
 }
 
+static void	print_uv_grid(t_doom *doom, int w, int h)
+{
+	int x = 0;
+	while (x < doom->minimap->buff->w)
+	{
+		t_xy_line l = line(x, 0, x, MWIN_HEIGHT);
+		l.color = 0x303030;
+		drawline(l, doom->minimap->buff);
+		x += w;
+	}
+	int y = 0;
+	while (y < doom->minimap->buff->w)
+	{
+		t_xy_line l = line(0, y, MWIN_WIDTH, y);
+		l.color = 0x303030;
+		drawline(l, doom->minimap->buff);
+		y += h;
+	}
+}
+
 void		update_minimap(t_doom *doom)
 {
 	flood_buffer(doom->minimap->buff, 0xff000000);
+	print_uv_grid(doom, 64, 64);
 	if (doom->minimap->player_ray_timeout > 0
 		&& doom->mdl->player.shoot_cd != 0)
 		print_player_ray(doom);

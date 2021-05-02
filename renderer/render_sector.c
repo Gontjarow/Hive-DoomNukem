@@ -156,7 +156,20 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 
 				//! wall ceil floor
 				if (sector->has_ceiling)
+				{
 					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
+					if (section->id == 0 && screen_x == x1)
+					{
+						t_xy_line uv = line(
+							sector->vertex[1].x,
+							sector->vertex[1].y,
+							doom->game->world->player.position.x,
+							doom->game->world->player.position.y);
+						t_xy_line sc = line(screen_x, top, screen_x, y_start);
+						draw_textured_line(uv, border, sc, doom->game->buff, doom);
+						drawline(uv, doom->minimap->buff);
+					}
+				}
 				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
 			}
 			else
@@ -193,24 +206,24 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 
 
 		//! Debug view.
-		if (doom->game->show_info)
+		if (DEBUG)
 		{
-			drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,             GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
-			drawline(line_xy(vec2(GAME_MIDWIDTH,                   0), vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT-1), 0x0000ff), doom->game->buff);
+			drawline(line_xy(vec2(GAME_WIN_WIDTH-1, GAME_MIDHEIGHT-1), vec2(0,             GAME_MIDHEIGHT-1), 0x0000ff), doom->minimap->buff);
+			drawline(line_xy(vec2(GAME_MIDWIDTH,                   0), vec2(GAME_MIDWIDTH, GAME_MIDHEIGHT-1), 0x0000ff), doom->minimap->buff);
 
 			debug = line_add_offset(wall_segment, debug_view_offset);
 			debug.color = 0xffffff;
-			drawline(debug, doom->game->buff);
-			draw_box(vec2_add(wall_segment.start, debug_view_offset), 3, debug.color, doom->game->buff);
-			draw_box(vec2_add(wall_segment.stop, debug_view_offset), 3, debug.color, doom->game->buff);
+			drawline(debug, doom->minimap->buff);
+			draw_box(vec2_add(wall_segment.start, debug_view_offset), 3, debug.color, doom->minimap->buff);
+			draw_box(vec2_add(wall_segment.stop, debug_view_offset), 3, debug.color, doom->minimap->buff);
 
 			// Proves 90 degree FOV
 			t_xy center = debug_view_offset;
-			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90+45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
-			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90-45)*DEG_TO_RAD)), 0xff0000), doom->game->buff);
-			drawline(line_xy(vec2_add(center, vec2(-50,0)), vec2_add(center, vec2(50,0)), 0xff0000), doom->game->buff);
+			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90+45)*DEG_TO_RAD)), 0xff0000), doom->minimap->buff);
+			drawline(line_xy(center, vec2_add(center, vec2_rot(vec2(0, -100), (90-45)*DEG_TO_RAD)), 0xff0000), doom->minimap->buff);
+			drawline(line_xy(vec2_add(center, vec2(-50,0)), vec2_add(center, vec2(50,0)), 0xff0000), doom->minimap->buff);
 
-			if (vertex == 0) drawline(line_add_offset(start_clip, debug_view_offset), doom->game->buff);
+			if (vertex == 0) drawline(line_add_offset(start_clip, debug_view_offset), doom->minimap->buff);
 
 		}
 

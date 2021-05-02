@@ -75,7 +75,7 @@ $(LIBFT_PATH)/libft.a:
 	@make -C libft
 
 %.o: %.c
-	@printf "gcc %25s ==> %s\n" $< $@
+	@printf "gcc %30s ==> %s\n" $< $@
 	@gcc $(FLAGS) -w -c $< -o $@
 
 clean:
