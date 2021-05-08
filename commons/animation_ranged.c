@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:00:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:33:13 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 20:55:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ void		animate_ranged_side_walk(t_enemy *enemy, t_doom *doom)
 void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 {
 	static SDL_Surface	*frames[7] = { 0 };
-	static int			cd = 0;
-	
+	// static int			cd = 0;
+
 	if (frames[0] == 0)
 	{
 		frames[0] = doom->sprites->txt_ranged_death[0];
@@ -117,17 +117,24 @@ void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 		frames[5] = doom->sprites->txt_ranged_death[5];
 		frames[6] = doom->sprites->txt_ranged_death[6];
 	}
+	// if (enemy->id == 3)
+	// {
+	// 	printf("Animate ranged [%d] death %f\n", enemy->id, (float)SDL_GetTicks());
+	// 	printf("cd: %d\n", enemy->anim.count);
+	// }
+	// printf("ranged death [%d]\n", enemy->anim_phase);
 	if (enemy->anim_phase > 6)
-		enemy->anim_phase = 6;
-	enemy->active_sprite = frames[enemy->anim_phase];
-	if (enemy->anim_phase > 6)
-		enemy->anim.done = IDLE;
-	if (cd > doom->delta_anim)
 	{
-		cd = 0;
+		enemy->anim_phase = 6;
+		enemy->anim.dead = 1;
+	}
+	enemy->active_sprite = frames[enemy->anim_phase];
+	if (enemy->anim.count > doom->delta_anim)
+	{
+		enemy->anim.count = 0;
 		enemy->anim_phase++;
 	}
-	cd++;
+	enemy->anim.count++;
 }
 
 void		animate_ranged_front_attack(t_enemy *enemy, t_doom *doom)

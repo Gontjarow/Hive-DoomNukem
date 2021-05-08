@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:02:25 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:48:06 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 20:51:53 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,10 +128,11 @@ void		animate_boss_death(t_enemy *enemy, t_doom *doom)
 		frames[8] = doom->sprites->txt_boss_death[8];
 	}
 	if (enemy->anim_phase > 8)
+	{
+		enemy->anim.dead = 1;
 		enemy->anim_phase = 8;
+	}
 	enemy->active_sprite = frames[enemy->anim_phase];
-	if (enemy->anim_phase > 8)
-		enemy->anim.done = IDLE;
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;

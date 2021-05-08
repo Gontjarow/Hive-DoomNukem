@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/08 18:12:51 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 20:46:16 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,12 +127,21 @@ typedef struct          s_ai
 
 typedef struct			s_animation
 {
-	SDL_Surface 		**surfaces;
-	int 				frames;
-	int 				current;
+	// SDL_Surface 		**surfaces;
+	// int 				frames;
+	// int 				current;
+	int					dead;
+	int					count;
 	int					orient;
 	int					done;
 }						t_animation;
+
+typedef struct			s_menu_anim
+{
+	SDL_Surface 		**surfaces;
+	int 				frames;
+	int 				current;
+}						t_menu_anim;
 
 typedef struct 			s_enemy
 {
@@ -320,7 +329,7 @@ typedef struct			s_menu
 {
 	int 				selected;
 	int                 mousing_at;
-	struct s_animation	ani_thunder;
+	struct s_menu_anim	ani_thunder;
 	int 				esc_lock;
 	struct SDL_Surface	*alphabet[128];
 	int 				alphabet_scale;
