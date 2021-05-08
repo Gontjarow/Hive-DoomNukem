@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:00:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:33:13 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 19:48:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,11 +117,10 @@ void		animate_ranged_death(t_enemy *enemy, t_doom *doom)
 		frames[5] = doom->sprites->txt_ranged_death[5];
 		frames[6] = doom->sprites->txt_ranged_death[6];
 	}
+	// printf("ranged death [%d]\n", enemy->anim_phase);
 	if (enemy->anim_phase > 6)
 		enemy->anim_phase = 6;
 	enemy->active_sprite = frames[enemy->anim_phase];
-	if (enemy->anim_phase > 6)
-		enemy->anim.done = IDLE;
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;

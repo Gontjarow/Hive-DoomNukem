@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/08 18:13:08 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 19:08:39 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	destroy_sounds(t_doom *doom)
 	Mix_FreeChunk(doom->sounds->mcBoss);
 	Mix_FreeChunk(doom->sounds->mcBackground);
 	Mix_FreeChunk(doom->sounds->mcLoading);
+	Mix_FreeChunk(doom->sounds->mcJetpack);
 	doom->sounds->mcThunder = NULL;
 	doom->sounds->mcSteam = NULL;
 	doom->sounds->mcPlop = NULL;

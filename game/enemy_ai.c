@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:25:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 19:51:15 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	deal_damage_on_player(t_doom *doom, t_enemy *enemy)
 {
 	if (doom->mdl->player.hp.cur > 0)
 	{
-		doom->mdl->player.hp.cur -= enemy->ai.dmg;
+		// doom->mdl->player.hp.cur -= enemy->ai.dmg;
 		if (doom->mdl->player.hp.cur <= 0)
 			doom->mdl->player.hp.cur = 0;
 	}
@@ -28,12 +28,12 @@ void		enemy_update_cooldown(t_doom *doom, t_enemy *enemy)
 		enemy->shoot_cd--;
 	if (enemy->stun_cd > 0)
 		enemy->stun_cd--;
-	if (enemy->stun_time > 0)
-	{
-		enemy->stun_time--;
-		if (enemy->stun_time == 0)
-			enemy->stun_cd = 500 * doom->delta_time;
-	}
+	// if (enemy->stun_time > 0)
+	// {
+	// 	enemy->stun_time--;
+	// 	if (enemy->stun_time == 0)
+	// 		enemy->stun_cd = 500 * doom->delta_time;
+	// }
 }
 
 void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)

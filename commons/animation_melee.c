@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 15:01:21 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:44:25 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 19:35:01 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,6 @@ void		animate_melee_death(t_enemy *enemy, t_doom *doom)
 	if (enemy->anim_phase > 5)
 		enemy->anim_phase = 5;
 	enemy->active_sprite = frames[enemy->anim_phase];
-	if (enemy->anim_phase > 5)
-		enemy->anim.done = IDLE;
 	if (cd > doom->delta_anim)
 	{
 		cd = 0;

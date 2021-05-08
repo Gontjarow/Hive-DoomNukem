@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:16:21 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 20:12:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 {
 	if (enemy->id == id && enemy->hp.cur > 0)
 	{
-		if (enemy->stun_cd == 0)
-			enemy->stun_time = 100 * doom->delta_time;
+		// if (enemy->stun_cd == 0)
+		// 	enemy->stun_time = 100 * doom->delta_time;
 		enemy->anim.done = HURT;
 		enemy->ai.aggro = ACTIVE;
 		enemy->hp.cur -=
@@ -98,6 +98,11 @@ int					player_shoots(t_doom *doom)
 	int		enemy_id;
 	double	rad;
 
+	if (doom->mdl->enemy_count > 0)
+	{
+		printf("Enemy ID 0: %d\n", doom->mdl->enemy_first->anim.done);
+		printf("Enemy ID 0: %d\n", doom->mdl->enemy_first->anim.current);
+	}
 	rad = deg_to_rad(doom->mdl->player.rot) - M_PI;
 	enemy_id = -1;
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
