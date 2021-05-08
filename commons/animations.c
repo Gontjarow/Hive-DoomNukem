@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 15:08:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/08 20:08:35 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 20:55:47 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void			animate_ranged_hurt(t_enemy *enemy, t_doom *doom)
 		frames[0] = doom->sprites->txt_ranged_front_idle;
 		frames[1] = doom->sprites->txt_ranged_death[0];
 	}
-	printf("Animate ranged [%d] hurt %f\n", enemy->id, (float)SDL_GetTicks());
+	// printf("Animate ranged [%d] hurt %f\n", enemy->id, (float)SDL_GetTicks());
 	// if (enemy->stun_time == 0)
 	// 	enemy->anim.done = IDLE;
 	enemy->active_sprite = frames[1];
@@ -212,11 +212,8 @@ void			animate_portals(t_doom *doom)
 
 void			animation_switch(t_enemy *enemy, t_doom *doom)
 {
-	// if (enemy->anim.done == ATTACK)
-	// {
-	// 	animate_attack(enemy, doom);
-	// 	// printf("ASDASDASD\nASDASADASD\nASDASDASDASDNASDASD\n");
-	// }
+	if (enemy->anim.dead)
+		return ;
 	if (enemy->anim.done == DEATH || enemy->hp.cur == 0)
 		animate_death(enemy, doom);
 	else if (enemy->anim.done == MOVE)

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/08 20:12:28 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 20:59:48 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,13 @@ int					player_shoots(t_doom *doom)
 	int		enemy_id;
 	double	rad;
 
-	if (doom->mdl->enemy_count > 0)
-	{
-		printf("Enemy ID 0: %d\n", doom->mdl->enemy_first->anim.done);
-		printf("Enemy ID 0: %d\n", doom->mdl->enemy_first->anim.current);
-	}
+	// if (doom->mdl->enemy_count > 0)
+	// {
+	// 	printf("Enemy ID 0: %d\n", doom->mdl->enemy_first->next->next->next->anim.done);
+	// 	printf("Enemy ID 0: %d\n", doom->mdl->enemy_first->next->next->next->anim.orient);
+	// 	// printf("Enemy ID 0: %d\n", doom->mdl->enemy_first->next->next->next->anim.frames);
+	// 	// printf("Enemy ID 0: %d\n", doom->mdl->enemy_first->anim.current);
+	// }
 	rad = deg_to_rad(doom->mdl->player.rot) - M_PI;
 	enemy_id = -1;
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
