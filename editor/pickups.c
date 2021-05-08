@@ -84,6 +84,8 @@ void			pickups_plant_ammo(int x, int y)
 		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_assault_ammo_pickup;
 	else if (mdl->pickups->weapon_type_id == SHOTGUN)
 		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_shotgun_ammo_pickup;
+	else if (mdl->pickups->weapon_type_id == JETPACK)
+		mdl->pickups->active_sprite = doom_ptr()->sprites->txt_jetpack_ammo_pickup;
 	else
 		mdl->pickups->active_sprite = NULL;
 	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));

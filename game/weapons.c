@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:21:28 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 16:21:52 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,11 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[2].weap_img = load_texture(doom, "img/weapons/ak47.png");
 		doom->mdl->player.weap_arr[2].do_own = 1; // Debug faster with AK
 		doom->mdl->player.weap_id = 2;
-	doom->mdl->player.weap_arr[3].ammo_cur = 0;
-	doom->mdl->player.weap_arr[3].ammo_max = 100;
+	doom->mdl->player.weap_arr[3].do_own = 0;
+	doom->mdl->player.weap_arr[3].ammo_res = 0;
+	doom->mdl->player.weap_arr[3].ammo_cur = 1000;
+	doom->mdl->player.weap_arr[3].ammo_max = 1000;
+	doom->mdl->player.weap_arr[3].weap_img = load_texture(doom, "img/weapons/jetpack.png");
 	// doom->mdl->player.weap_arr[3].fire_sound = doom->sounds->mcJetpack;		//TODO: Add sound
 }
 
