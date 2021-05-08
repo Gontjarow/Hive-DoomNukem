@@ -164,6 +164,10 @@ static void render_chapter_screen(t_doom *doom, int chapter)
 
 static void handle_show_loading(t_doom *doom)
 {
+	if (doom->game->won_the_game == -1)
+		return (render_losing_screen(doom, 0));
+	if (doom->game->won_the_game == 1)
+		return (render_winning_screen(doom, 0));
 	if (!Mix_Playing(7))
 		Mix_PlayChannel(7, doom->sounds->mcLoading, -1);
 	if (doom->mdl->chain != NULL || doom->chapter_index > 0)
@@ -192,13 +196,16 @@ static void handle_show_loading(t_doom *doom)
 
 static void		check_losing_condition(t_doom *doom)
 {
+	if (doom->game->won_the_game != 0)
+		return ;
 	if (doom->mdl->player.hp.cur < 1)
 	{
 		if (Mix_Playing(7))
 			Mix_HaltChannel(7);
+		doom->game->show_loading = 1;
 		doom->game->won_the_game = -1;
-		doom->game->level_exit_reached = 1;
-	}	
+		render_losing_screen(doom, 1);
+	}
 }
 
 void		game_render(t_doom *doom)

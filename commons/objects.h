@@ -272,6 +272,7 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_loading_1;
 	struct SDL_Surface	*txt_loading_2;
 	struct SDL_Surface	*txt_loading_won;
+	struct SDL_Surfacce *txt_loading_lost;
 
 	// Underlying data holders, invididually named for readability
 	struct SDL_Surface	*txt_ranged_front_attack;
@@ -419,6 +420,8 @@ void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
 
 void					draw_rect_color(int x[2], int y[2], unsigned int color, SDL_Surface *buff);
 void					draw_surface_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
+void					render_winning_screen(t_doom *doom, int reset);
+void					render_losing_screen(t_doom *doom, int reset);
 void					render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_screen, int reset);
 
 /*

@@ -82,7 +82,12 @@ static void		handle_level_exit(t_doom *doom)
 		doom->menu->added_arg = ft_strdup(doom->mdl->chain);
 	}
 	else
+	{
+		doom->game->level_exit_reached = 0;
+		doom->game->show_loading = 1;
 		doom->game->won_the_game = 1;
+		render_winning_screen(doom, 1);
+	}
 }
 
 void			handle_pickup(t_doom *doom)
