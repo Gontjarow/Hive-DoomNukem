@@ -118,6 +118,8 @@
 [Enemy] id = 0 | x = 1685 | y = 3127 | rot = 79 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
 [Enemy] id = 1 | x = 1102 | y = 2823 | rot = 79 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
 [Enemy] id = 2 | x = 1994 | y = 1263 | rot = 22 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 3 | x = 964 | y = 496 | rot = 219 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Effect] id = 0 | type_id = 0 | loc.x = 676 | loc.y = 671 | target.x = 0 | target.y = 0 | target_id = 0
 
 [Player] spawn.x = 785 | spawn.y = 402 | rot = 41
-[No level exit defined] Infinite map suitable for debugging!

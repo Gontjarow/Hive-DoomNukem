@@ -318,7 +318,8 @@ static void load_loading_screen(t_doom *doom)
 	doom->sprites->txt_loading_0 = load_texture(doom, "img/loading/first_chapter.png");
 	doom->sprites->txt_loading_1 = load_texture(doom, "img/loading/second_chapter.png");
 	doom->sprites->txt_loading_2 = load_texture(doom, "img/loading/third_chapter.png");
-	doom->sprites->txt_loading_won = load_texture(doom, "img/loading/ending.png");
+	doom->sprites->txt_loading_won = load_texture(doom, "img/loading/won.png");
+	doom->sprites->txt_loading_lost = load_texture(doom, "img/loading/lost.png");
 	//puts("LOADING SCREEN IMAGES LOADED TO MEMORY");
 }
 

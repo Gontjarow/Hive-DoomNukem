@@ -79,6 +79,7 @@ static void	typewrite(const char *str, SDL_Surface *buff, int x, int y)
 	static int 	rounds = 1;
 	static int	ticks = 0;
 
+	//puts("typewriter");
 	if (ft_strequ(str, "reset"))
 	{
 		if (part)
@@ -87,15 +88,18 @@ static void	typewrite(const char *str, SDL_Surface *buff, int x, int y)
 		order = NULL;
 		rounds = 1;
 		ticks = 0;
+		//puts("typewriter got resetted");
 		return ;
 	}
 	if (ticks < 4)
 		ticks++;
+	//puts("typewriter ticked");
 	if (order == NULL)
 	{
 		order = str;
 		part = ft_strnew(1);
 		part = ft_strncpy(part, order, 1);
+		//puts("typewriter accepted order");
 	}
 	else if (ticks == 4 && rounds < ft_strlen(order))
 	{
@@ -104,8 +108,54 @@ static void	typewrite(const char *str, SDL_Surface *buff, int x, int y)
 		free(part);
 		part = ft_strnew(rounds);
 		part = ft_strncpy(part, order, rounds);
+		//puts("typewriter advanced part towards order");
 	}
 	print_glyph_str_dymo(part, buff, x, y);
+	//puts("typewriter wrote stuff");
+}
+
+void render_winning_screen(t_doom *doom, int reset)
+{
+	static int tock = 0;
+	static int tick = 0;
+
+	if (reset)
+	{
+		typewrite("reset", NULL, 0, 0);
+		return ;
+	}
+	tock++;
+	if (tock > (int)doom->fps)
+		tock = 0;
+	if (tock == 0)
+		tick = tick == 0 ? 1 : 0;
+	draw_surface(0, 0, doom->sprites->txt_loading_won, doom->game->buff);
+	typewrite("you are victorious", doom->game->buff, 45, 40);
+	if (tick == 1)
+		print_glyph_str("press escape", doom->game->buff, 45, 445);
+	SDL_UpdateWindowSurface(doom->game->win);
+}
+
+void render_losing_screen(t_doom *doom, int reset)
+{
+	static int tock = 0;
+	static int tick = 0;
+
+	tock++;
+	if (tock > (int)doom->fps)
+		tock = 0;
+	if (tock == 0)
+		tick = tick == 0 ? 1 : 0;
+	if (reset)
+	{
+		typewrite("reset", NULL, 0, 0);
+		return ;
+	}
+	draw_surface(0, 0, doom->sprites->txt_loading_lost, doom->game->buff);
+	typewrite("return to menu", doom->game->buff, 475, 335);
+	if (tick == 1)
+		print_glyph_str("press escape", doom->game->buff, 490, 385);
+	SDL_UpdateWindowSurface(doom->game->win);
 }
 
 void		render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_screen, int reset)
