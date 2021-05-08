@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/02 19:30:43 by ngontjar         ###   ########.fr       */
+/*   Updated: 2021/05/08 20:55:50 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,13 @@ void		destroy_minimap(t_doom *doom)
 	doom->minimap = NULL;
 }
 
-static void	print_uv_grid(t_doom *doom, int w, int h)
+static void	print_uv_grid(t_doom *doom, int w, int h, int c)
 {
 	int x = 0;
 	while (x < doom->minimap->buff->w)
 	{
 		t_xy_line l = line(x, 0, x, MWIN_HEIGHT);
-		l.color = 0x303030;
+		l.color = c;
 		drawline(l, doom->minimap->buff);
 		x += w;
 	}
@@ -80,7 +80,7 @@ static void	print_uv_grid(t_doom *doom, int w, int h)
 	while (y < doom->minimap->buff->w)
 	{
 		t_xy_line l = line(0, y, MWIN_WIDTH, y);
-		l.color = 0x303030;
+		l.color = c;
 		drawline(l, doom->minimap->buff);
 		y += h;
 	}
@@ -89,7 +89,8 @@ static void	print_uv_grid(t_doom *doom, int w, int h)
 void		update_minimap(t_doom *doom)
 {
 	flood_buffer(doom->minimap->buff, 0xff000000);
-	print_uv_grid(doom, 64, 64);
+	print_uv_grid(doom, 64, 64, 0x303030);
+	print_uv_grid(doom, 512, 512, 0x606060);
 	if (doom->minimap->player_ray_timeout > 0
 		&& doom->mdl->player.shoot_cd != 0)
 		print_player_ray(doom);
@@ -117,7 +118,7 @@ void		init_minimap(t_doom *doom)
 	doom->minimap->buff = SDL_GetWindowSurface(doom->minimap->win);
 	if (doom->minimap->buff == NULL)
 		ft_die("Fatal error: Failed init of SDL_Surface from minimap");
-	doom->minimap->scale = 1.0;
+	doom->minimap->scale = 1.0 / 10;
 	doom->minimap->sprite_num = 0;
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
 	// SDL_SetWindowPosition(doom->minimap->win, (1920 / 2) - GAME_MIDWIDTH, win_y - 400);

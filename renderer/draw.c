@@ -353,3 +353,52 @@ void	draw_textured_line(t_xy_line src, SDL_Surface *tex, t_xy_line dst, SDL_Surf
 		if (--timeout == 0) break;
 	}
 }
+
+// There was an attempt.
+void	draw_vertical_floor(t_xy_line screen, t_xy world, t_xyz player, SDL_Surface *tex, t_doom *doom)
+{
+	while (screen.start.y < screen.stop.y)
+	{
+		// printf("draw %4.0f %4.0f\n", screen.start.x, screen.start.y);
+
+		double pixel_dist = GAME_WIN_HEIGHT / (GAME_WIN_HEIGHT - screen.start.y);
+		double wall_dist = vec2_mag(vec2_sub(vec32(player), world));
+
+		double weight = pixel_dist / wall_dist;
+
+		double floor_x = (weight * world.x) + ((1 - weight) * player.x);
+		double floor_y = (weight * world.y) + ((1 - weight) * player.y);
+
+		int tex_x = (int)(floor_x * tex->w) % tex->w;
+		int tex_y = (int)(floor_y * tex->h) % tex->h;
+		// printf("tex w%i h%i\n", tex_x, tex_y);
+
+		// if (tex_y % 2)
+			set_pixel(doom->game->buff, screen.start.x, screen.start.y,
+				get_pixel(tex, tex_x, tex_y));
+		// else
+			// set_pixel(doom->game->buff, screen.start.x, screen.start.y,
+				// 0xffffff);
+
+		++screen.start.y;
+	}
+}
+
+// This seems to color the whole floor according to
+// the pixel the player is currently standing on...
+void	draw_horizontal_floor(SDL_Surface *tex, int screen_x, int screen_y, t_doom *doom)
+{
+	while (screen_y < GAME_WIN_HEIGHT)
+	{
+		double ratio = STAND_HEIGHT / (screen_y - GAME_MIDHEIGHT);
+		double magic = (ratio);
+		int y = doom->game->world->player.position.y + (magic * sin(screen_x));
+		int x = doom->game->world->player.position.x + (magic * cos(screen_x));
+		int tex_x = (x % tex->w);
+		int tex_y = (y % tex->h);
+
+		set_pixel(doom->game->buff, screen_x, screen_y,
+			get_pixel(tex, tex_x, tex_y));
+		++screen_y;
+	}
+}

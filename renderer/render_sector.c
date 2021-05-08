@@ -157,22 +157,24 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				//! wall ceil floor
 				if (sector->has_ceiling)
 				{
-					// vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
-					if (section->id == 0)
-					{
-						t_xy_line uv = line(
-							sector->vertex[1].x,
-							sector->vertex[1].y,
-							doom->game->world->player.position.x,
-							doom->game->world->player.position.y);
-							uv.color = 0x00ffff;
-						drawline(uv, doom->minimap->buff);
-
-						t_xy_line sc = line(screen_x, top, screen_x, y_start);
-						draw_textured_line(uv, border, sc, doom->game->buff, doom);
-					}
+					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
 				}
-				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
+				// vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
+				if (section->id == 0)
+				{
+					// t_xy_line uv = line(
+					// 	sector->vertex[1].x,
+					// 	sector->vertex[1].y,
+					// 	doom->game->world->player.position.x,
+					// 	doom->game->world->player.position.y);
+					// 	uv.color = 0x00ffff;
+					// drawline(uv, doom->minimap->buff);
+
+					// t_xy_line sc = line(screen_x, y_stop, screen_x, bot);
+					// t_xy world_xy = line_lerp(wall_segment, screen_x / x2);
+					// draw_vertical_floor(sc, world_xy, doom->game->world->player.position, border, doom);
+					draw_horizontal_floor(bricks, screen_x, y_stop, doom);
+				}
 			}
 			else
 			{
