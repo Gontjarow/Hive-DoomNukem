@@ -30,6 +30,7 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define 				WAV_LOADINGSONG "wav/loadingscreen.wav"
 # define				WAV_BACKGROUND "wav/background.wav"
 # define				WAV_BOSS "wav/boss.wav"
+# define				WAV_JETPACK "wav/jetpack.wav"
 
 enum e_singleton_types { SINGLETON_MDL, SINGLETON_WORLD };
 /*

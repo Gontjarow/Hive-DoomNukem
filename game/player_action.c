@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/08 16:23:58 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 18:15:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ static void	player_jumps(t_doom *doom)
 	{
 		doom->mdl->player.weap_arr[JETPACK].ammo_cur--;
 		doom->mdl->player.z_velocity += 0.4;
+		if (doom->sounds->jetpack_delay == 0)
+		{
+			Mix_PlayChannel(-1, doom->sounds->mcJetpack, 0);
+			doom->sounds->jetpack_delay = 1000 * doom->delta_time;
+		}
 		return ;
 	}
 	if (doom->mdl->player.is_jumping == 0 &&

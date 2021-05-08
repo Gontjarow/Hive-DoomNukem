@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2021/04/03 16:37:43 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 18:13:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ void	load_sounds(t_doom *doom)
 		ft_die("Fatal error: SDL_mixer failed to load WAV_BOSS!");
 	if (!(doom->sounds->mcBackground = Mix_LoadWAV(WAV_BACKGROUND)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_BACKGROUND!");
+	if (!(doom->sounds->mcJetpack = Mix_LoadWAV(WAV_JETPACK)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_JETPACK!");
 	doom->sounds->footstep_delay = 0;
+	doom->sounds->jetpack_delay = 0;
 }
 
 void	destroy_sounds(t_doom *doom)
