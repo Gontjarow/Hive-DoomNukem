@@ -157,17 +157,19 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				//! wall ceil floor
 				if (sector->has_ceiling)
 				{
-					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
-					if (section->id == 0 && screen_x == x1)
+					// vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
+					if (section->id == 0)
 					{
 						t_xy_line uv = line(
 							sector->vertex[1].x,
 							sector->vertex[1].y,
 							doom->game->world->player.position.x,
 							doom->game->world->player.position.y);
+							uv.color = 0x00ffff;
+						drawline(uv, doom->minimap->buff);
+
 						t_xy_line sc = line(screen_x, top, screen_x, y_start);
 						draw_textured_line(uv, border, sc, doom->game->buff, doom);
-						drawline(uv, doom->minimap->buff);
 					}
 				}
 				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);

@@ -327,21 +327,29 @@ SDL_Surface		*get_panorama_tex(t_doom *doom)
 	return (tex);
 }
 
-// The basic idea is to create a line from the wall to the player,
-// then use that in texture UV space to grab colors to actually draw on the screen.
+// The basic idea is to create a line from the wall to the player (in world space),
+// then use that line in texture UV space to grab colors to actually draw on the screen.
+// "draw textured line (from source texture, into destination buffer)"
 // the length of the line<>player needs to be normalized into screen space to account for any length differences.
 void	draw_textured_line(t_xy_line src, SDL_Surface *tex, t_xy_line dst, SDL_Surface *buff, t_doom *doom)
 {
-	double ratio = line_mag(dst) / line_mag(src);
-	t_xy src_dir = vec2_mul(vec2_norm(line_direction(src)), ratio);
+	double	ratio = line_mag(dst) / line_mag(src);
+	t_xy	normalized = vec2_norm(line_direction(src));
+	t_xy	progress_per_pixel = vec2_mul(normalized, ratio);
+	int 	timeout = GAME_WIN_HEIGHT;
 
-	// loop:
-	while (!vec2_near_equal(dst.start, dst.stop))
+	while (dst.start.y < dst.stop.y)
 	{
-		uint32_t color = get_pixel(tex, src.start.x, src.start.y);
-		set_pixel(buff, dst.start.x, dst.start.y, color);
-		src.start = vec2_add(src.start, src_dir);
+		set_pixel(buff, dst.start.x, dst.start.y,
+		get_pixel( tex, src.start.x, src.start.y));
+
+		++dst.start.y;
+		src.start = vec2_add(src.start, progress_per_pixel);
+		if (src.start.x > tex->w) src.start.x = 0;
+		if (src.start.y > tex->h) src.start.y = 0;
+		if (src.start.x < 0) src.start.x = tex->w - 1;
+		if (src.start.y < 0) src.start.y = tex->h - 1;
+
+		if (--timeout == 0) break;
 	}
-	ft_assert(vec2_near_equal(dst.start, dst.stop) && vec2_near_equal(src.stop, src.stop),
-		"draw_texture_line: src/dst must end at the same time");
 }

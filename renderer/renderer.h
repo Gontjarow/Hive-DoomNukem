@@ -236,7 +236,7 @@ double			vec2_point_line_distance(t_xy point, t_xy pos, t_xy dir);
 t_xy			vec2_point_to_line(t_xy point, t_xy line, t_xy dir);
 signed			vec2_point_side(t_xy point, t_xy start, t_xy end);
 t_xy			vec2_lerp(t_xy start, t_xy stop, double t);
-int				vec2_near_equal(t_xy a, t_xy b);
+int				vec2_near_equal(t_xy a, t_xy b, double threshold);
 
 t_xy_line		line(double ax, double ay, double bx, double by);
 t_xy_line		line_xy(t_xy start, t_xy stop, int color);
