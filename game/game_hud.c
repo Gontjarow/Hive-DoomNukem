@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/24 19:56:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 16:22:48 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,7 +334,7 @@ void		handle_player_fuel_bar(t_doom *doom)
 	float	percentage;
 	int		pos;
 
-	percentage = doom->mdl->player.weap_arr[3].ammo_cur / 10;
+	percentage = doom->mdl->player.weap_arr[JETPACK].ammo_cur / 100;
 	pos = (int)percentage;
 	doom->mdl->player.active_fuel_bar = doom->sprites->txt_fuel_bar[pos];
 	draw_surface(0, WIN_HEIGHT - 75, doom->mdl->player.active_fuel_bar, doom->game->hud_location);
@@ -520,7 +520,7 @@ void		render_game_hud(t_doom *doom)
 	if (doom->game->hud_location == NULL)
 		doom->game->hud_location = doom->game->buff;
 	handle_player_health_bar(doom);
-	if (doom->mdl->player.weap_arr[3].ammo_cur > 0)
+	if (doom->mdl->player.weap_arr[JETPACK].do_own)
 		handle_player_fuel_bar(doom);
 	handle_player_ammo_bar(doom);
 	handle_clip_bar(doom);

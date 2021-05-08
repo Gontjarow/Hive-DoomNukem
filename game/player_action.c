@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/03 19:33:31 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 16:23:58 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 static void	player_jumps(t_doom *doom)
 {
+	if (doom->mdl->player.weap_arr[JETPACK].do_own && doom->mdl->player.weap_arr[JETPACK].ammo_cur > 0)
+	{
+		doom->mdl->player.weap_arr[JETPACK].ammo_cur--;
+		doom->mdl->player.z_velocity += 0.4;
+		return ;
+	}
 	if (doom->mdl->player.is_jumping == 0 &&
 		doom->mdl->player.is_crouching == 0)
 	{

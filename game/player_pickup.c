@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/24 20:16:15 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/08 16:26:07 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ static void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 
 	if (pickup->weapon_type_id == PISTOL)
 		doom->mdl->player.weap_arr[pickup->weapon_type_id].ammo_res = 1;
+	else if (pickup->weapon_type_id == JETPACK)
+		doom->mdl->player.weap_arr[pickup->weapon_type_id].ammo_cur = 1000;
 	else
 		doom->mdl->player.weap_arr[pickup->weapon_type_id].ammo_res += 1;
 	pc = doom->mdl->pickup_count;

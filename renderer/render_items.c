@@ -43,8 +43,11 @@ void			render_pickups(t_doom *doom)
 			double ceil;
 			if (pickup->flavor == PICKUP_HEALTH || pickup->flavor == PICKUP_AMMO)
 				ceil = world->sectors[pickup_id].floor + 2 - world->player.position.z;
+			else if (pickup->flavor == PICKUP_WEAPON && pickup->weapon_type_id == JETPACK)
+				ceil = world->sectors[pickup_id].floor + 2 - world->player.position.z;
 			else if (pickup->flavor == PICKUP_WEAPON)
 				ceil = world->sectors[pickup_id].floor + 1 - world->player.position.z;
+			
 			else
 				ceil = world->sectors[pickup_id].floor + EYE_HEIGHT - world->player.position.z;
 

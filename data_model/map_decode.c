@@ -84,6 +84,8 @@ static void			map_pickup_to_model(const int *fields, t_model *mdl)
 			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_assault_ammo_pickup;
 		else if (mdl->pickups->weapon_type_id == SHOTGUN)
 			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_shotgun_ammo_pickup;
+		else if (mdl->pickups->weapon_type_id == JETPACK)
+			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_jetpack_ammo_pickup;
 		else
 			mdl->pickups->active_sprite = NULL;
 	}
@@ -93,6 +95,8 @@ static void			map_pickup_to_model(const int *fields, t_model *mdl)
 			mdl->pickups->active_sprite = doom_ptr()->mdl->player.weap_arr[2].weap_img;
 		else if (mdl->pickups->weapon_type_id == SHOTGUN)
 			mdl->pickups->active_sprite = doom_ptr()->mdl->player.weap_arr[1].weap_img;
+		else if (mdl->pickups->weapon_type_id == JETPACK)
+			mdl->pickups->active_sprite = doom_ptr()->mdl->player.weap_arr[3].weap_img;
 		else
 			mdl->pickups->active_sprite = NULL;
 	}
