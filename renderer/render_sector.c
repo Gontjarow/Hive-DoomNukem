@@ -34,7 +34,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 	t_xy_line wall;
 	t_xy_line scale;
 
-	SDL_Surface *bricks = get_bricks_tex(doom);
+	// KRUSTHOL DISABLED: SDL_Surface *bricks = get_bricks_tex(doom);
+	SDL_Surface *bricks;
 	SDL_Surface *border = get_border_tex(doom);
 
 	const t_xy debug_view_offset = vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100);
@@ -42,6 +43,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 	vertex = 0;
 	while (vertex < sector->vertex_count)
 	{
+		bricks = sector->active_sprites[vertex]; 
 		//! Calculate relative vertex positions for one wall.
 		// The world's zero-point is considered to be the player.
 

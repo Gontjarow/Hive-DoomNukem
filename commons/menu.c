@@ -359,18 +359,25 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 	else if (!doom->game_quit && doom->game->level_exit_reached)
 	{
             //puts("FIRING EVENT OUTCOME F!");
-		if (doom->game->won_the_game)
+		if (doom->game->won_the_game == 1)
         {
             game_quit(doom);
             ft_putendl("WON THE GAME!");
 		    ft_putendl("Display victory screen here....");
-            doom->chapter_index = 0;           
+            doom->chapter_index = 0;
+        }
+        else if (doom->game->won_the_game == -1)
+        {
+            game_quit(doom);
+            ft_putendl("LOST THE GAME!");
+		    ft_putendl("Display losing screen here....");
+            doom->chapter_index = 0;
         }
         else
         {
             game_quit(doom);
             start_game_from_menu(doom, argc, argv);
-        }    	    
+        }
 	}
 }
 

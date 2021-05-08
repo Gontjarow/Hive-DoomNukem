@@ -190,6 +190,17 @@ static void handle_show_loading(t_doom *doom)
 	return ;
 }
 
+static void		check_losing_condition(t_doom *doom)
+{
+	if (doom->mdl->player.hp.cur < 1)
+	{
+		if (Mix_Playing(7))
+			Mix_HaltChannel(7);
+		doom->game->won_the_game = -1;
+		doom->game->level_exit_reached = 1;
+	}	
+}
+
 void		game_render(t_doom *doom)
 {
 	static int lock_q = 0;
@@ -202,7 +213,7 @@ void		game_render(t_doom *doom)
 		debug_model_rooms();
 		lock_q = 1;
 	}
-	
+	check_losing_condition(doom);
 	// TODO: Remove invis toggling ? Experimental feature cutting off from shipped build propably
 	handle_player_invis_toggle(doom);
 	if (doom->game->show_loading)
