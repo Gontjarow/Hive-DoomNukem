@@ -111,6 +111,7 @@ typedef struct	s_sector
 	t_xy		*vertex;
 	signed		*neighbors;
 	int			has_ceiling;
+	SDL_Surface **active_sprites;
 }				t_sector;
 
 typedef struct	s_section

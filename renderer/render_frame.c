@@ -215,6 +215,7 @@ t_world			*load_world(t_world *world)
 		int vertices = sector->vertex_count;
 		sector->neighbors = malloc((vertices  ) * sizeof(*sector->neighbors));
 		sector->vertex    = malloc((vertices+1) * sizeof(*sector->vertex)   );
+		sector->active_sprites = malloc((vertices) * sizeof(SDL_Surface*));
 
 		// Init allocated memory
 		int vertex = 0;
@@ -230,6 +231,7 @@ t_world			*load_world(t_world *world)
 		int walls = sector->vertex_count; //room->wall_count;
 		while (i < walls)
 		{
+			sector->active_sprites[i] = wall->active_sprite;
 			sector->vertex[i++] = vec2_div(vec2(wall->start.x, wall->start.y), WORLD_SCALE);
 			wall = wall->next;
 		}
