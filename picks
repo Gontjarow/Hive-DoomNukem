@@ -1,0 +1,26 @@
+[Wall] id = 0 | start.x = 378 | start.y = 374 | end.x = 560 | end.y = 286 | texture_id = 1
+[Wall] id = 1 | start.x = 560 | start.y = 286 | end.x = 833 | end.y = 288 | texture_id = 1
+[Wall] id = 2 | start.x = 833 | start.y = 288 | end.x = 1008 | end.y = 423 | texture_id = 1
+[Wall] id = 3 | start.x = 1008 | start.y = 423 | end.x = 1076 | end.y = 615 | texture_id = 1
+[Wall] id = 4 | start.x = 1076 | start.y = 615 | end.x = 928 | end.y = 739 | texture_id = 1
+[Wall] id = 5 | start.x = 928 | start.y = 739 | end.x = 725 | end.y = 767 | texture_id = 1
+[Wall] id = 6 | start.x = 725 | start.y = 767 | end.x = 541 | end.y = 739 | texture_id = 1
+[Wall] id = 7 | start.x = 541 | start.y = 739 | end.x = 424 | end.y = 679 | texture_id = 1
+[Wall] id = 8 | start.x = 424 | start.y = 679 | end.x = 387 | end.y = 551 | texture_id = 1
+[Wall] id = 9 | start.x = 387 | start.y = 551 | end.x = 378 | end.y = 374 | texture_id = 1
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 10 | floor_height = 100 | roof_height = 500 | has_ceiling = 1
+
+[Enemy] id = 0 | x = 961 | y = 595 | rot = 62 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 800 | y = 334 | rot = 161 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Effect] id = 0 | type_id = 0 | loc.x = 893 | loc.y = 695 | target.x = 0 | target.y = 0 | target_id = 0
+
+[Pickup] id = 0 | loc.x = 733 | loc.y = 388 | flavor = 1 | weapon_type_id = 1
+[Pickup] id = 1 | loc.x = 794 | loc.y = 421 | flavor = 1 | weapon_type_id = 2
+[Pickup] id = 2 | loc.x = 832 | loc.y = 465 | flavor = 1 | weapon_type_id = 3
+[Pickup] id = 4 | loc.x = 907 | loc.y = 504 | flavor = 2 | weapon_type_id = 3
+[Pickup] id = 5 | loc.x = 897 | loc.y = 468 | flavor = 2 | weapon_type_id = 2
+[Pickup] id = 6 | loc.x = 868 | loc.y = 415 | flavor = 2 | weapon_type_id = 1
+
+[Player] spawn.x = 477 | spawn.y = 522 | rot = 30

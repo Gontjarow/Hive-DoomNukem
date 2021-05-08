@@ -149,6 +149,12 @@ static void cross_boundaries(t_model *mdl, t_coord old)
 static void		apply_gravity(t_doom *doom)
 {
 	doom->mdl->player.z += doom->mdl->player.z_velocity;
+	if ((int)doom->mdl->player.z > doom->mdl->player.room->roof_height)
+	{
+		doom->mdl->player.z = (double)doom->mdl->player.room->roof_height;
+		doom->mdl->player.z_velocity = -0.25;
+		return ;
+	}
 	if ((int)doom->mdl->player.z > doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
 		//puts("reducing height!");
@@ -168,12 +174,6 @@ static void		apply_gravity(t_doom *doom)
 		doom->mdl->player.z = doom->mdl->player.room->floor_height + doom->mdl->player.height;
 		doom->mdl->player.z_velocity = 0.0;
 		doom->mdl->player.is_jumping = 0;
-	}
-	else if ((int)doom->mdl->player.z > doom->mdl->player.room->roof_height)
-	{
-		//puts("hit the roof with the head");
-		doom->mdl->player.z = doom->mdl->player.room->roof_height;
-		doom->mdl->player.z_velocity = 0.0;
 	}
 	// printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 }
