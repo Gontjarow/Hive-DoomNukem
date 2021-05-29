@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:18:34 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:20:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 18:04:09 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void			rotate_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 	int		orient;
 	double	rad;
 
-	if (enemy->hp.cur > 0 && enemy->stun_time == 0)
+	if (enemy->hp.cur > 0 && enemy->stun_time <= 0)
 	{
 		rad = deg_to_rad(enemy->rot);
 		p.x = enemy->x + 10 * -cos(rad);
@@ -99,7 +99,7 @@ void			move_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 	old.y = enemy->y;
 	dist = calc_distance(enemy, doom);
 	if (check_location(doom, enemy->x, enemy->y) != -1
-		&& enemy->hp.cur > 0 && enemy->stun_time == 0
+		&& enemy->hp.cur > 0 && enemy->stun_time <= 0
 			&& !(dist < enemy->ai.min_dis))
 		handle_enemy_movement(enemy, doom, old);
 }

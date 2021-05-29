@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 15:08:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/08 20:55:47 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 18:03:36 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void			animate_ranged_hurt(t_enemy *enemy, t_doom *doom)
 		frames[1] = doom->sprites->txt_ranged_death[0];
 	}
 	// printf("Animate ranged [%d] hurt %f\n", enemy->id, (float)SDL_GetTicks());
-	// if (enemy->stun_time == 0)
-	// 	enemy->anim.done = IDLE;
+	if (enemy->stun_time <= 0)
+		enemy->anim.done = IDLE;
 	enemy->active_sprite = frames[1];
 }
 
@@ -36,7 +36,7 @@ void			animate_melee_hurt(t_enemy *enemy, t_doom *doom)
 		frames[0] = doom->sprites->txt_melee_front_idle;
 		frames[1] = doom->sprites->txt_melee_death[0];
 	}
-	if (enemy->stun_time == 0)
+	if (enemy->stun_time <= 0)
 		enemy->anim.done = IDLE;
 	enemy->active_sprite = frames[1];
 }
@@ -50,7 +50,7 @@ void			animate_boss_hurt(t_enemy *enemy, t_doom *doom)
 		frames[0] = doom->sprites->txt_boss_front_idle;
 		frames[1] = doom->sprites->txt_boss_death[0];
 	}
-    if (enemy->stun_time == 0)
+    if (enemy->stun_time <= 0)
         enemy->anim.done = IDLE;
     enemy->active_sprite = frames[1];
 }

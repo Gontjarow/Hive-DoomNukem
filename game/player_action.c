@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/08 18:15:17 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 17:12:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@ static void	player_jumps(t_doom *doom)
 {
 	if (doom->mdl->player.weap_arr[JETPACK].do_own && doom->mdl->player.weap_arr[JETPACK].ammo_cur > 0)
 	{
+		doom->mdl->player.is_flying = 1;
 		doom->mdl->player.weap_arr[JETPACK].ammo_cur--;
 		doom->mdl->player.z_velocity += 0.4;
-		if (doom->sounds->jetpack_delay == 0)
+		if (doom->sounds->jetpack_delay <= 0)
 		{
 			Mix_PlayChannel(-1, doom->sounds->mcJetpack, 0);
-			doom->sounds->jetpack_delay = 1000 * doom->delta_time;
+			doom->sounds->jetpack_delay = 1;
 		}
 		return ;
 	}
@@ -46,7 +47,7 @@ static void	player_crouch(t_doom *doom)
 	{
 		doom->mdl->player.crouch_lock = 0;
 		doom->mdl->player.is_crouching = 0;
-		doom->mdl->player.mov_speed = 800;
+		doom->mdl->player.mov_speed = 300;
 		doom->mdl->player.height = STAND_HEIGHT;
 	}
 }

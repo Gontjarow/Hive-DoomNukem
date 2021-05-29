@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/08 20:46:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 17:52:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ typedef struct 			s_weapon
 	int					ammo_res;
 	int 				ammo_max;
 	int					do_own;
-	int 				cooldown;
-	int 				reload_time;
+	double 				cooldown;
+	double 				reload_time;
 	struct SDL_Surface	*weap_img;
 	struct Mix_Chunk 	*fire_sound;
 	struct Mix_Chunk	*reload_sound;
@@ -87,24 +87,26 @@ typedef struct 			s_player
 	double				z;
 	double				z_velocity;
 	double 				yaw;
+	double				shoot_cd;
+	double				reload_time;
 	int					room_id;
-	struct s_room		*room;
 	int 				rot;
 	int					height;
 	int					is_jumping;
 	int					is_crouching;
 	int					is_running;
+	int					is_flying;
+	int					has_fired;
 	int					mov_speed;
 	int					max_speed;
 	int					min_speed;
 	int					run_lock;
 	int					crouch_lock;
 	int					rot_speed;
-	int					shoot_cd;
-	int					reload_time;
 	int					weap_id;
 	int					shooting;
 	int					invis;
+	struct s_room		*room;
 	struct SDL_Surface	*active_health_bar;
 	struct SDL_Surface	*active_fuel_bar;
 	struct SDL_Surface	*hud_num[10];
@@ -151,10 +153,10 @@ typedef struct 			s_enemy
 	int 				rot;
 	int					did_shoot;
 	int					who_shot;
-	int					shoot_cd;
+	double				shoot_cd;
 	int					anim_phase;
-	int					stun_time;
-	int					stun_cd;
+	double				stun_time;
+	double				stun_cd;
 	uint32_t			ray_color;
 	struct s_ai			ai;
 	struct s_coord		bullet_pos;
@@ -238,8 +240,9 @@ typedef struct 			s_sounds
 	struct Mix_Chunk	*mcBoss;
 	struct Mix_Chunk	*mcLoading;
 	struct Mix_Chunk	*mcJetpack;
-	int					jetpack_delay;
-	int					footstep_delay;
+	int					is_flying;
+	double				jetpack_delay;
+	double				footstep_delay;
 }						t_sounds;
 
 typedef struct 			s_rsrc

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/05/19 16:52:22 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 15:54:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 # define UINT_ERROR_CONSTANT 32202
 # define EPS 1e-14
 
-# define FPS 120
+# define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
 
 # define DEBUG 0
@@ -57,6 +57,7 @@ typedef struct			s_doom
 	int					chapter_index;
 	const Uint8* 		keystates;
 	uint32_t 			frame_start;
+	uint32_t 			frame_end;
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
 	union SDL_Event		event;

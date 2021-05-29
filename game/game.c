@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/04/24 19:55:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 17:34:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,14 @@ void		game_mouse_motion(t_doom *doom)
 void		game_mouse_updown(t_doom *doom)
 {
 	if (doom->event.type == SDL_MOUSEBUTTONUP && doom->event.button.button == SDL_BUTTON_LEFT)
+	{
 		doom->mdl->player.shooting = 0;
+		doom->mdl->player.has_fired = 0;
+	}
 	if (doom->event.type == SDL_MOUSEBUTTONDOWN && doom->event.button.button == SDL_BUTTON_LEFT)
+	{
 		doom->mdl->player.shooting = 1;
+	}
 }
 
 double		deg_to_rad(int deg)
@@ -126,14 +131,6 @@ static void			debug_show_game_polymap(SDL_Surface *polymap, uint32_t *colors)
 	puts("Drew polymap onto game screen!");
 	SDL_UpdateWindowSurface(doom_ptr()->game->win);
 	SDL_Delay(1000);
-}
-
-static void	dispatch_player_shots(t_doom *doom)
-{
-	if (doom->mdl->player.weap_id == SHOTGUN)
-		player_shoots_shotgun(doom);
-	else
-		player_shoots(doom);
 }
 
 static void handle_player_invis_toggle(t_doom *doom)
@@ -211,7 +208,6 @@ static void		check_losing_condition(t_doom *doom)
 void		game_render(t_doom *doom)
 {
 	static int lock_q = 0;
-	static int mix_i = 0;
 
 	if (lock_q && !doom->keystates[SDL_SCANCODE_Q])
 		lock_q = 0;
@@ -228,17 +224,7 @@ void		game_render(t_doom *doom)
 	handle_player_movement(doom);
 	handle_player_action(doom);
 	player_update_weapons(doom);
-	if (doom->mdl->player.shooting && !doom->mdl->player.is_running)
-	{
-		if (doom->mdl->player.shoot_cd == 0 && doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0 && doom->mdl->player.reload_time == 0)
-		{
-			Mix_PlayChannel(mix_i, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
-			mix_i++;
-			if (mix_i > 6)
-				mix_i = 0;
-			dispatch_player_shots(doom);
-		}
-	}
+	handle_player_shooting(doom);
 	handle_enemy_ai(doom);
 	animate_portals(doom);
 	if (DEBUG == 1)

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:05:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 17:16:41 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@ void			update_player_tail(t_doom *doom, double rad)
 static void		moving_up_down(t_doom *doom, int signal, double rad)
 {
 	signal = (-1) * signal;
-	if (doom->mdl->player.is_crouching && doom->sounds->footstep_delay == 0)
+	if (doom->mdl->player.is_crouching && doom->sounds->footstep_delay <= 0)
 		Mix_PlayChannel(-1, doom->sounds->mcCrouching, 0);
-	else if (doom->mdl->player.is_running && doom->sounds->footstep_delay == 0)
+	else if (doom->mdl->player.is_running && doom->sounds->footstep_delay <= 0)
 		Mix_PlayChannel(-1, doom->sounds->mcRunning, 0);
 	else if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching
-			&& doom->sounds->footstep_delay == 0)
+			&& doom->sounds->footstep_delay <= 0 && !doom->mdl->player.is_flying)
 		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
-	if (doom->sounds->footstep_delay == 0)
-		doom->sounds->footstep_delay = 500 * doom->delta_time;
+	if (doom->sounds->footstep_delay <= 0)
+		doom->sounds->footstep_delay = 0.5;
 	doom->mdl->player.x = doom->mdl->player.x + ((float)signal *
 	((float)doom->mdl->player.mov_speed * doom->delta_time)) * -cos(rad);
 	doom->mdl->player.y = doom->mdl->player.y + ((float)signal *
@@ -50,19 +50,19 @@ static void		strafe(t_doom *doom, int signal)
 	orig_rot = doom->mdl->player.rot;
 	doom->mdl->player.rot = doom->mdl->player.rot + (90 * signal);
 	if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching
-			&& doom->sounds->footstep_delay == 0)
+			&& doom->sounds->footstep_delay <= 0 && !doom->mdl->player.is_flying)
 		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
-	if (doom->sounds->footstep_delay == 0)
-		doom->sounds->footstep_delay = 500 * doom->delta_time;
+	if (doom->sounds->footstep_delay <= 0)
+		doom->sounds->footstep_delay = 0.5;
 	if (doom->mdl->player.rot < 0)
 		doom->mdl->player.rot = 359 + (doom->mdl->player.rot);
 	if (doom->mdl->player.rot >= 360)
 		doom->mdl->player.rot = 0 + (doom->mdl->player.rot) - 360;
 	strafe_rad = deg_to_rad(doom->mdl->player.rot);
 	doom->mdl->player.x = doom->mdl->player.x +
-	((((double)doom->mdl->player.mov_speed - 200) * doom->delta_time)) * -cos(strafe_rad);
+	((((double)doom->mdl->player.mov_speed - 50) * doom->delta_time)) * -cos(strafe_rad);
 	doom->mdl->player.y = doom->mdl->player.y +
-	((((double)doom->mdl->player.mov_speed - 200) * doom->delta_time)) * -sin(strafe_rad);
+	((((double)doom->mdl->player.mov_speed - 50) * doom->delta_time)) * -sin(strafe_rad);
 	doom->mdl->player.rot = orig_rot;
 	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
 	handle_pickup(doom);
@@ -174,6 +174,7 @@ static void		apply_gravity(t_doom *doom)
 		doom->mdl->player.z = doom->mdl->player.room->floor_height + doom->mdl->player.height;
 		doom->mdl->player.z_velocity = 0.0;
 		doom->mdl->player.is_jumping = 0;
+		doom->mdl->player.is_flying = 0;
 	}
 	// printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 }
@@ -195,7 +196,7 @@ void			handle_player_movement(t_doom *doom)
 	old.y = doom->mdl->player.y;
 	rad = deg_to_rad(doom->mdl->player.rot);
 	if (doom->sounds->footstep_delay > 0)
-		doom->sounds->footstep_delay--;
+		doom->sounds->footstep_delay -= 1 * doom->delta_time;
 	if (doom->keystates[SDL_SCANCODE_W] || doom->keystates[SDL_SCANCODE_UP])
 		moving_up_down(doom, 1, rad);
 	if (doom->keystates[SDL_SCANCODE_S] || doom->keystates[SDL_SCANCODE_DOWN])

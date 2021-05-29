@@ -66,15 +66,15 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.is_crouching = 0;
 	doom->mdl->player.is_running = 0;
 	doom->mdl->player.height = STAND_HEIGHT;
-	doom->mdl->player.min_speed = 300;	// crouched
-	doom->mdl->player.mov_speed = 500;	// walking
-	doom->mdl->player.max_speed = 800;	// running
+	doom->mdl->player.min_speed = 100;	// crouched
+	doom->mdl->player.mov_speed = 300;	// walking
+	doom->mdl->player.max_speed = 500;	// running
 	doom->mdl->player.rot_speed = 5;
 	doom->mdl->player.run_lock = 0;
 	doom->mdl->player.crouch_lock = 0;
 	doom->mdl->player.weap_id = PISTOL;
-	doom->mdl->player.reload_time = 0;
-	doom->mdl->player.shoot_cd = 0;
+	doom->mdl->player.reload_time = 0.0;
+	doom->mdl->player.shoot_cd = 0.0;
 	doom->mdl->player.bullet_pos.x = 0.0;
 	doom->mdl->player.bullet_pos.y = 0.0;
 	doom->mdl->player.hp.cur = 100;
@@ -83,6 +83,8 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.invis = 0;
 	doom->mdl->player.room_id = -1;
 	doom->mdl->player.room = NULL;
+	doom->mdl->player.is_flying = 0;
+	doom->mdl->player.has_fired = 0;
 		//puts("PLAYER ROOM INITED TO NULL AND ID TO -1");
 	init_player_weapon(doom);
 }

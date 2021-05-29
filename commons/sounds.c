@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/08 19:08:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 17:07:31 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ void	load_sounds(t_doom *doom)
 		ft_die("Fatal error: SDL_mixer failed to load WAV_BACKGROUND!");
 	if (!(doom->sounds->mcJetpack = Mix_LoadWAV(WAV_JETPACK)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_JETPACK!");
-	doom->sounds->footstep_delay = 0;
-	doom->sounds->jetpack_delay = 0;
+	doom->sounds->footstep_delay = 0.0;
+	doom->sounds->jetpack_delay = 0.0;
 }
 
 void	destroy_sounds(t_doom *doom)

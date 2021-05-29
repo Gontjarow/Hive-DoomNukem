@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/08 16:22:48 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 16:08:24 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -351,7 +351,7 @@ void		handle_player_ammo_bar(t_doom *doom)
 	space = 0;
 	while (i <= ammo)
 	{
-		if (doom->mdl->player.reload_time == 0)
+		if (doom->mdl->player.reload_time <= 0)
 		{
 			if (doom->mdl->player.weap_id == PISTOL)
 				draw_surface_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_pistol_ammo_bar, doom->game->hud_location);

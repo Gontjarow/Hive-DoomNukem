@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/08 20:59:48 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 18:41:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,12 @@ void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 {
 	if (enemy->id == id && enemy->hp.cur > 0)
 	{
-		// if (enemy->stun_cd == 0)
-		// 	enemy->stun_time = 100 * doom->delta_time;
-		enemy->anim.done = HURT;
+		if (enemy->stun_cd <= 0)
+		{
+			enemy->stun_time = 0.3;
+			enemy->stun_cd = 1.5 + enemy->stun_time;
+			enemy->anim.done = HURT;
+		}
 		enemy->ai.aggro = ACTIVE;
 		enemy->hp.cur -=
 		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
@@ -131,4 +134,41 @@ int					player_shoots(t_doom *doom)
 		}
 	}
 	return (0);
+}
+
+static void			play_shoot_sounds(t_doom *doom)
+{
+	static int mix_i = 0;
+
+	Mix_PlayChannel(mix_i, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
+	mix_i++;
+	if (mix_i > 6)
+		mix_i = 0;
+}
+
+void				handle_player_shooting(t_doom *doom)
+{
+	if (doom->mdl->player.shooting && !doom->mdl->player.is_running)
+	{
+		if (doom->mdl->player.shoot_cd <= 0 && doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur > 0 && doom->mdl->player.reload_time <= 0)
+		{
+			if (doom->mdl->player.weap_id == PISTOL && !doom->mdl->player.has_fired)
+			{
+				player_shoots(doom);
+				play_shoot_sounds(doom);
+				doom->mdl->player.has_fired = 1;
+			}
+			else if (doom->mdl->player.weap_id == SHOTGUN && !doom->mdl->player.has_fired)
+			{
+				player_shoots_shotgun(doom);
+				play_shoot_sounds(doom);
+				doom->mdl->player.has_fired = 1;
+			}
+			else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
+			{
+				player_shoots(doom);
+				play_shoot_sounds(doom);
+			}
+		}
+	}
 }

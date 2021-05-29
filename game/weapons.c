@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/19 16:39:58 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/29 17:39:38 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[0].ammo_cur = 12;
 	doom->mdl->player.weap_arr[0].ammo_res = 1;
 	doom->mdl->player.weap_arr[0].ammo_max = 12;
-	doom->mdl->player.weap_arr[0].cooldown = 1000 * doom->delta_time;
+	doom->mdl->player.weap_arr[0].cooldown = 60 / 600.0;
 	doom->mdl->player.weap_arr[0].dmg = 15;
-	doom->mdl->player.weap_arr[0].reload_time = 4500 * doom->delta_time;
+	doom->mdl->player.weap_arr[0].reload_time = 1.5;
 	doom->mdl->player.weap_arr[0].fire_sound = doom->sounds->mcPistolShot;
 	doom->mdl->player.weap_arr[0].reload_sound = doom->sounds->mcPistolRld;
 	doom->mdl->player.weap_arr[0].weap_img = load_texture(doom, "img/weapons/colt.png");
@@ -29,9 +29,9 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[1].ammo_cur = 5;
 	doom->mdl->player.weap_arr[1].ammo_res = 5;
 	doom->mdl->player.weap_arr[1].ammo_max = 5;
-	doom->mdl->player.weap_arr[1].cooldown = 2000 * doom->delta_time;
+	doom->mdl->player.weap_arr[1].cooldown = 60 / 120.0;
 	doom->mdl->player.weap_arr[1].dmg = 40;
-	doom->mdl->player.weap_arr[1].reload_time = 12000 * doom->delta_time;
+	doom->mdl->player.weap_arr[1].reload_time = 3.5;
 	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcShotgunShot;
 	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcShotgunRld;
 	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/shotgun.png");
@@ -39,9 +39,9 @@ void		init_player_weapon(t_doom *doom)
 	doom->mdl->player.weap_arr[2].ammo_cur = 30;
 	doom->mdl->player.weap_arr[2].ammo_res = 3;
 	doom->mdl->player.weap_arr[2].ammo_max = 30;
-	doom->mdl->player.weap_arr[2].cooldown = 350 * doom->delta_time;
+	doom->mdl->player.weap_arr[2].cooldown = 60 / 600.0;
 	doom->mdl->player.weap_arr[2].dmg = 30;
-	doom->mdl->player.weap_arr[2].reload_time = 6000 * doom->delta_time;
+	doom->mdl->player.weap_arr[2].reload_time = 2;
 	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcAssaultShot;
 	doom->mdl->player.weap_arr[2].reload_sound = doom->sounds->mcAssaultRld;
 	doom->mdl->player.weap_arr[2].weap_img = load_texture(doom, "img/weapons/ak47.png");
@@ -55,7 +55,7 @@ void		init_player_weapon(t_doom *doom)
 
 static void	player_swap_weapons(t_doom *doom)
 {
-	if (doom->mdl->player.reload_time == 0)
+	if (doom->mdl->player.reload_time <= 0)
 	{
 		if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[PISTOL].do_own && doom->mdl->player.weap_id != PISTOL)
 		{
@@ -95,16 +95,17 @@ static void	handle_ammo_calc(t_doom *doom)
 
 static void	player_shoot_reload(t_doom *doom)
 {
-	if (doom->keystates[SDL_SCANCODE_E])
-	{
-		if (doom->mdl->player.shoot_cd == 0 && doom->mdl->player.weap_arr
-			[doom->mdl->player.weap_id].ammo_cur > 0 &&
-				doom->mdl->player.reload_time == 0)
-		{
-			Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
-			player_shoots(doom);
-		}
-	}
+	// Disabled Shooting with E key
+	// if (doom->keystates[SDL_SCANCODE_E])
+	// {
+	// 	if (doom->mdl->player.shoot_cd <= 0 && doom->mdl->player.weap_arr
+	// 		[doom->mdl->player.weap_id].ammo_cur > 0 &&
+	// 			doom->mdl->player.reload_time <= 0)
+	// 	{
+	// 		Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
+	// 		player_shoots(doom);
+	// 	}
+	// }
 	if (doom->keystates[SDL_SCANCODE_R])
 	{
 		if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur !=
@@ -124,9 +125,9 @@ void		player_update_weapons(t_doom *doom)
 	player_swap_weapons(doom);
 	player_shoot_reload(doom);
 	if (doom->mdl->player.shoot_cd > 0)
-		doom->mdl->player.shoot_cd--;
+		doom->mdl->player.shoot_cd -= 1 * doom->delta_time;
 	if (doom->mdl->player.reload_time > 0)
-		doom->mdl->player.reload_time--;
+		doom->mdl->player.reload_time -= 1 * doom->delta_time;
 	if (doom->sounds->jetpack_delay > 0)
-		doom->sounds->jetpack_delay--;
+		doom->sounds->jetpack_delay -= 1 * doom->delta_time;
 }
