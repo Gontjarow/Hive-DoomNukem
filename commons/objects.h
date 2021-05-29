@@ -174,6 +174,7 @@ typedef struct 			s_wall
 	int					texture_id;
 	SDL_Surface			*active_sprite;
 	struct s_wall		*next;
+	int					can_portal;
 }						t_wall;
 
 typedef struct 			s_room

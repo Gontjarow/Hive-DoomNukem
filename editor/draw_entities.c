@@ -190,6 +190,14 @@ void			update_tail_to_buffer(SDL_Surface *buff, void *obj_ptr, int obj_type)
 		//puts("Drew tail for enemy object - yup");
 	}
 }
+static void		draw_selected_wall_to_backbuffer(void)
+{
+	t_wall		*selected_wall;
+	
+	selected_wall = wall_by_id(select_logic()->selected_wall_id);	
+	wall_to_buffer(selected_wall, editor_back_buffer()->buff, COLOR_SELECTION_WALL);
+}
+
 // TODO			BLIT BASED RENDERING IS SLOW!!!! FIX???
 //					BEFORE ABANDONING SDL_BLIT CODE, TRY OPTIMIZING SDL_SURFACE WITH SDL_CONVERT
 //				ALTERNATIVELY: DRAW DIRECTLY TO INTENDED PIXELBUFFER, SKIPPING BLIT
@@ -212,6 +220,8 @@ void 			draw_selection_to_backbuffer(t_state *state)
 	number_to_buffer(editor_back_buffer()->buff, adjusted, room->roof_height, COLOR_SELECTION_LINE);
 	adjusted.y += 40;
 	number_to_buffer(editor_back_buffer()->buff, adjusted, room->floor_height, COLOR_SELECTION_LINE);
+	if (select_logic()->selected_wall_id != -1)
+		draw_selected_wall_to_backbuffer();
 }
 void 			draw_plantings_to_backbuffer(t_model *mdl, t_state *state)
 {
