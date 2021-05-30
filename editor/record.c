@@ -68,6 +68,10 @@ int			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_cou
 	mdl->rooms->visual.x = -1;
 	mdl->rooms->visual.y = -1;
 	mdl->rooms->has_ceiling = get_state()->give_ceiling_to_rooms;
+	mdl->rooms->is_hallway = 0;
+	mdl->rooms->adjusting_opposite = 0;
+	mdl->rooms->slope_floor = -1;
+	mdl->rooms->slope_roof = -1;
 	mdl->room_count++;
 	next_room = (t_room*)malloc(sizeof(t_room));
 	if (!next_room)

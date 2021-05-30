@@ -108,8 +108,8 @@ void 	add_portal_to_string(t_wall *portal, t_mapfile *map)
 void	add_room_to_string(t_room *room, t_mapfile *map)
 {
 	map->join_string = ft_strnew(255);
-	sprintf(map->join_string, "[Room] id = %d | first_wall_id = %d | wall_count = %d | floor_height = %d | roof_height = %d | has_ceiling = %d\n",
-			room->id, room->first_wall_id, room->wall_count, room->floor_height, room->roof_height, room->has_ceiling);
+	sprintf(map->join_string, "[Room] id = %d | first_wall_id = %d | wall_count = %d | floor_height = %d | roof_height = %d | has_ceiling = %d | slope_floor = %d | slope_roof = %d\n",
+			room->id, room->first_wall_id, room->wall_count, room->floor_height, room->roof_height, room->has_ceiling, room->slope_floor, room->slope_roof);
 	if (!map->room_string)
 		map->room_string = ft_strnew(1);
 	map->room_string = ft_strjoin(map->room_string, map->join_string);

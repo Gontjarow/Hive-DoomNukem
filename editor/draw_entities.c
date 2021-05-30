@@ -215,7 +215,16 @@ void 			draw_selection_to_backbuffer(t_state *state)
 	if (room->visual.x == -1 && room->visual.y == -1)
 		find_visual_xy(room);
 	adjusted = scrolled_position(room->visual.x, room->visual.y, get_state());
-	square_to_buffer(editor_back_buffer()->buff, adjusted, 10, COLOR_SELECTION_LINE);
+	if (room->is_hallway)
+	{
+		adjusted.x -= 30;
+		number_to_buffer(editor_back_buffer()->buff, (t_point){adjusted.x + 60, adjusted.y - 20}, room->slope_roof, COLOR_SELECTION_LINE);
+		number_to_buffer(editor_back_buffer()->buff, (t_point){adjusted.x + 60, adjusted.y + 20}, room->slope_floor, COLOR_SELECTION_LINE);
+	}
+	if (room->adjusting_opposite)
+		square_to_buffer(editor_back_buffer()->buff, (t_point){adjusted.x + 60, adjusted.y}, 10, COLOR_SELECTION_WALL);
+	else
+		square_to_buffer(editor_back_buffer()->buff, adjusted, 10, COLOR_SELECTION_WALL);	
 	adjusted.y -= 20;
 	number_to_buffer(editor_back_buffer()->buff, adjusted, room->roof_height, COLOR_SELECTION_LINE);
 	adjusted.y += 40;
