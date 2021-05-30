@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_2d.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:21:22 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/21 14:22:27 by krusthol         ###   ########.fr       */
+/*   Updated: 2021/05/30 14:55:21 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ void render_winning_screen(t_doom *doom, int reset)
 	if (tick == 1)
 		print_glyph_str("press escape", doom->game->buff, 45, 445);
 	SDL_UpdateWindowSurface(doom->game->win);
+	if (!Mix_Playing(7))
+		Mix_PlayChannel(7, doom->sounds->mcLoading, -1);
 }
 
 void render_losing_screen(t_doom *doom, int reset)
@@ -156,6 +158,8 @@ void render_losing_screen(t_doom *doom, int reset)
 	if (tick == 1)
 		print_glyph_str("press escape", doom->game->buff, 490, 385);
 	SDL_UpdateWindowSurface(doom->game->win);
+	if (!Mix_Playing(7))
+		Mix_PlayChannel(7, doom->sounds->mcLoading, -1);
 }
 
 void		render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_screen, int reset)
