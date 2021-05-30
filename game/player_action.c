@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 17:12:25 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 16:00:39 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	player_jumps(t_doom *doom)
 		if (doom->sounds->jetpack_delay <= 0)
 		{
 			Mix_PlayChannel(-1, doom->sounds->mcJetpack, 0);
-			doom->sounds->jetpack_delay = 1;
+			doom->sounds->jetpack_delay = 0.5;
 		}
 		return ;
 	}

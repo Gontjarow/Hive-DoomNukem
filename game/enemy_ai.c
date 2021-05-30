@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 18:33:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 15:45:18 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void		enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 	enemy->anim.done = ATTACK;
 	enemy->did_shoot = 1;
 	enemy->who_shot = enemy->id;
-	Mix_PlayChannel(-1, doom->sounds->mcPistolShot, 0);
+	Mix_PlayChannel(-1, enemy->ai.mcEnemyShoot, 0);
 }
 
 void		handle_enemy_shooting(t_doom *doom, t_enemy *enemy)

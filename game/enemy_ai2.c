@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/04/27 17:53:59 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 15:57:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void		ai_ranged(t_doom *doom, t_enemy *enemy)
 {
+	enemy->ai.mcEnemyDeath = doom->sounds->mcEnemyDeath;
+	enemy->ai.mcEnemyShoot = doom->sounds->mcLaserShot;
 	enemy->ai.min_dis = 200;
 	enemy->ai.max_dis = 400;
 	enemy->ai.mov_speed = 300;
@@ -23,6 +25,8 @@ void		ai_ranged(t_doom *doom, t_enemy *enemy)
 
 void		ai_melee(t_doom *doom, t_enemy *enemy)
 {
+	enemy->ai.mcEnemyDeath = doom->sounds->mcDogDying;
+	enemy->ai.mcEnemyShoot = doom->sounds->mcDogShot;
 	enemy->ai.min_dis = 45;
 	enemy->ai.max_dis = 300;
 	enemy->ai.mov_speed = 500;
@@ -32,6 +36,8 @@ void		ai_melee(t_doom *doom, t_enemy *enemy)
 
 void		ai_boss(t_doom *doom, t_enemy *enemy)
 {
+	enemy->ai.mcEnemyDeath = doom->sounds->mcEnemyDeath;
+	enemy->ai.mcEnemyShoot = doom->sounds->mcLaserShot;
 	enemy->ai.min_dis = 200;
 	enemy->ai.max_dis = 400;
 	enemy->ai.mov_speed = 400;

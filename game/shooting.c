@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 18:41:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 15:59:37 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 		{
 			enemy->hp.cur = 0;
 			enemy->anim.done = DEATH;
-			Mix_PlayChannel(1, doom->sounds->mcEnemyDeath, 0);
+			Mix_PlayChannel(1, enemy->ai.mcEnemyDeath, 0);
 		}
 	}
 }

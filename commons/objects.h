@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/29 17:52:13 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 15:58:04 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,8 @@ typedef struct          s_ai
 	int                 aggro;
 	int                 mov_speed;
 	int                 dmg;
+	struct Mix_Chunk	*mcEnemyDeath;
+	struct Mix_Chunk 	*mcEnemyShoot;
 }                       t_ai;
 
 typedef struct			s_animation
@@ -240,6 +242,9 @@ typedef struct 			s_sounds
 	struct Mix_Chunk	*mcBoss;
 	struct Mix_Chunk	*mcLoading;
 	struct Mix_Chunk	*mcJetpack;
+	struct Mix_Chunk	*mcLaserShot;
+	struct Mix_Chunk	*mcDogShot;
+	struct Mix_Chunk	*mcDogDying;
 	int					is_flying;
 	double				jetpack_delay;
 	double				footstep_delay;
