@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 15:50:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 17:19:10 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,6 @@ void		init_minimap(t_doom *doom)
 	doom->minimap->scale = 1.0;
 	doom->minimap->sprite_num = 0;
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
-	// SDL_SetWindowPosition(doom->minimap->win, (1920 / 2) - GAME_MIDWIDTH, win_y - 400);
 	SDL_SetWindowPosition(doom->game->win, (1920 / 2) - GAME_MIDWIDTH, win_y + 128);
-	// SDL_RaiseWindow(doom->game->win);
 	update_minimap(doom);
 }

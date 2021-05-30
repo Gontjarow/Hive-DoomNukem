@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/05 17:51:52 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 17:09:29 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void			handle_player_movement(t_doom *doom);
 void			handle_player_action(t_doom *doom);
 void			handle_pickup(t_doom *doom);
 void			game_print_alphabet(const char *str, t_doom *doom, int x, int y);
-void			game_print_numbers(const char *str, t_doom *doom, int x, int y);
 void			init_hud(t_doom *doom);
 void			render_game_hud(t_doom *doom);
 void			handle_game_hud(t_doom *doom);

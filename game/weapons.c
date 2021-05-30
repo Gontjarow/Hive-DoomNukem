@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 17:39:38 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 17:25:14 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void		init_player_weapon(t_doom *doom)
 {
 	init_hud(doom);
-	load_numbers(doom);
 	doom->mdl->player.weap_arr[0].ammo_cur = 12;
 	doom->mdl->player.weap_arr[0].ammo_res = 1;
 	doom->mdl->player.weap_arr[0].ammo_max = 12;
@@ -80,7 +79,7 @@ static void	handle_ammo_calc(t_doom *doom)
 	int dif;
 	int rest;
 
-	if (doom->mdl->player.weap_id == PISTOL)	// pistol has infinite ammo
+	if (doom->mdl->player.weap_id == PISTOL)
 	{
 		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur = 12;
 		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res = 1;
@@ -95,7 +94,7 @@ static void	handle_ammo_calc(t_doom *doom)
 
 static void	player_shoot_reload(t_doom *doom)
 {
-	// Disabled Shooting with E key
+	// Disabled Shooting with E key -> Place holder for player interaction with doors
 	// if (doom->keystates[SDL_SCANCODE_E])
 	// {
 	// 	if (doom->mdl->player.shoot_cd <= 0 && doom->mdl->player.weap_arr

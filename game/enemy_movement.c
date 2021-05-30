@@ -6,27 +6,11 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:18:34 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 18:04:09 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 17:18:16 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
-
-/*
-// orient = orientation(...)
-// orient is +deg or -deg 
-// if (orient > 90 || orient < -90)
-//    enemy->anim.orient = BACK
-// else if orient > 45 deg || orient < -45 deg
-//    enemy->anim.orient = SIDE
-// else
-//    enemy->anim.orient = FRONT
-orient = orientation(doom, enemy, p.x, p.y);
-if (orient > 0)
-   rotate_left(doom, enemy);
-else if (orient < 0)
-   rotate_right(doom, enemy);
-*/
 
 static void		rotate_left(t_doom *doom, t_enemy *enemy)
 {
