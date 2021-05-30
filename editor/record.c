@@ -35,9 +35,7 @@ void			show_editor_polymap(SDL_Surface *polymap, uint32_t *colors)
 		}
 		y++;
 	}
-		//printf("iterated (%d) times, x, y = %d, %d\n", x * y, x, y);
 	editor_back_buffer()->rendering_on = 1;
-		//puts("Drew polymap onto screen!");
 }
 
 void 			record_portal(t_model *mdl, t_wall *wall)
@@ -70,6 +68,10 @@ int			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_cou
 	mdl->rooms->visual.x = -1;
 	mdl->rooms->visual.y = -1;
 	mdl->rooms->has_ceiling = get_state()->give_ceiling_to_rooms;
+	mdl->rooms->is_hallway = 0;
+	mdl->rooms->adjusting_opposite = 0;
+	mdl->rooms->slope_floor = -1;
+	mdl->rooms->slope_roof = -1;
 	mdl->room_count++;
 	next_room = (t_room*)malloc(sizeof(t_room));
 	if (!next_room)
@@ -153,9 +155,6 @@ t_enemy			*record_enemy(t_point location, t_point *tail, t_model *mdl)
 	mdl->enemies->ai.type_id = get_state()->selected_ai_type;
 	assign_max_hp_by_type(mdl->enemies);
 	mdl->enemies->rot = degree_rot((t_point){location.x, location.y}, tail);
-		//printf("Enemy rot value is %d\n", mdl->enemies->rot);
-
-	//mdl->enemies->sprite_id = get_state()->selected_sprite_id;
 	new_enemy = (t_enemy*)malloc(sizeof(t_enemy));
 	if (!new_enemy)
 		ft_die("Fatal error: Could not malloc t_enemy at record_enemy");

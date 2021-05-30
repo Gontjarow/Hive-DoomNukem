@@ -340,8 +340,12 @@ static void			map_room_to_model(const int *fields, t_model *mdl)
 	mdl->rooms->floor_height = fields[3];
 	mdl->rooms->roof_height = fields[4];
 	mdl->rooms->has_ceiling = fields[5];
+	mdl->rooms->slope_floor = fields[6];
+	mdl->rooms->slope_roof = fields[7];
+	mdl->rooms->is_hallway = (mdl->rooms->slope_floor != -1 && mdl->rooms->slope_roof != -1 && mdl->rooms->wall_count == 4);
 	mdl->rooms->visual.x = -1;
 	mdl->rooms->visual.y = -1;
+	mdl->rooms->adjusting_opposite = 0;
 	mdl->room_count++;
 	if (mdl->room_count == 1)
 		mdl->room_first = mdl->rooms;
@@ -360,7 +364,7 @@ static t_token		*room_spec(void)
 	{
 		i = 0;
 		spec = (t_token*)malloc(sizeof(t_token));
-		spec->expected = 6;
+		spec->expected = 8;
 		spec->sur[0] = '[';
 		spec->sur[1] = ']';
 		spec->equ = '=';
@@ -374,6 +378,8 @@ static t_token		*room_spec(void)
 		ft_strcpy(spec->keys[3], "floor_height");
 		ft_strcpy(spec->keys[4], "roof_height");
 		ft_strcpy(spec->keys[5], "has_ceiling");
+		ft_strcpy(spec->keys[6], "slope_floor");
+		ft_strcpy(spec->keys[7], "slope_roof");
 		spec->result_ptr = NULL;
 		spec->map_function = map_room_to_model;
 	}

@@ -178,6 +178,7 @@ typedef struct 			s_wall
 	int					texture_id;
 	SDL_Surface			*active_sprite;
 	struct s_wall		*next;
+	int					can_portal;
 }						t_wall;
 
 typedef struct 			s_room
@@ -189,6 +190,10 @@ typedef struct 			s_room
 	int 				floor_height;
 	int 				roof_height;
 	int					has_ceiling; 
+	int					is_hallway;
+	int					slope_floor;
+	int					slope_roof;
+	int					adjusting_opposite;
 	t_point 			visual;
 	struct s_room		*next;
 }						t_room;

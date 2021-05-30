@@ -36,6 +36,8 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define COLOR_LINE				0xffffffff
 # define COLOR_PORTAL			0xff00ffff
 # define COLOR_SELECTION_LINE	0xffffff00
+# define COLOR_SELECTION_WALL	0xff0000ff
+# define COLOR_SELECTION_VECTOR 0xffff0000
 # define COLOR_GRID_LINE		0xff888888
 # define COLOR_PLAYER			0xff00ff00
 # define COLOR_ENEMY			0xffffff00
@@ -51,6 +53,8 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define FLOOR_MIN				0
 # define FLOOR_DEFAULT			100
 # define FLOOR_MAX				750
+# define NEXT_WALL              1
+# define PREV_WALL              -1
 # define ROOF_MIN				0
 # define ROOF_DEFAULT			200
 # define ROOF_MAX				800
@@ -119,6 +123,9 @@ typedef struct 			s_select
 	int 				selected_room_id;
 	int 				last_floor;
 	int 				last_roof;
+    int                 selected_wall_id;
+    int                 adding_slope;
+    t_wall              virtual_slope_wall;
 }						t_select;
 
 typedef struct 			s_status
