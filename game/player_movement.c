@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 17:16:41 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 16:13:16 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ static void		apply_velocity(t_doom *doom)
 {
 	if (doom->mdl->player.is_running && doom->mdl->player.mov_speed != doom->mdl->player.max_speed)
 		doom->mdl->player.mov_speed += 100;
-	else if (!doom->mdl->player.is_running && doom->mdl->player.mov_speed > 500)
+	else if (!doom->mdl->player.is_running && doom->mdl->player.mov_speed > 300)
 		doom->mdl->player.mov_speed -= 100;
 }
 

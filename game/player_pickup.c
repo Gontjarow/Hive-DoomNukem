@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/08 16:26:07 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/05/30 16:16:04 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 	int			pc;
 
 	doom->mdl->player.weap_arr[pickup->weapon_type_id].do_own = 1;
+	doom->mdl->player.weap_id = pickup->weapon_type_id;
 	pc = doom->mdl->pickup_count;
 	current = doom->mdl->pickup_first;
 	if (current->id == pickup->id)
