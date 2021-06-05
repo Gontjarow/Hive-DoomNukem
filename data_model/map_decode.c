@@ -26,7 +26,9 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	mdl->effects->target.x = fields[4];
 	mdl->effects->target.y = fields[5];
 	mdl->effects->target_id = fields[6];
-	mdl->effects->active_sprite = NULL; //doom_ptr()->sprites->txt_portal[0];
+	mdl->effects->active_sprite = NULL;
+	if (mdl->effects->type_id == EFFECT_POSTER)
+		mdl->effects->active_sprite = doom_ptr()->sprites->txt_poster_on;
 	mdl->effect_count++;
 	if (mdl->effect_count == 1)
 		mdl->effect_first = mdl->effects;
