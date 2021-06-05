@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sprites.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/05 16:32:02 by msuarez-          #+#    #+#             */
+/*   Updated: 2021/06/05 17:55:38 by msuarez-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "doom-nukem.h"
 
 static char *extension_num_path(char *folder, char c, char *extension)
@@ -305,6 +317,16 @@ static int	load_portal_sprite(t_doom *doom, char *path, int i)
 	return (1);
 }
 
+static void	load_effector_sprites(t_doom *doom)
+{
+	doom->sprites->txt_light_off = load_texture(doom, "img/textures/effectors/light_off.png");
+	doom->sprites->txt_light_on = load_texture(doom, "img/textures/effectors/light_on.png");
+	doom->sprites->txt_switch_off = load_texture(doom, "img/textures/effectors/switch_off.png");
+	doom->sprites->txt_switch_on = load_texture(doom, "img/textures/effectors/switch_on.png");
+	doom->sprites->txt_poster_off = load_texture(doom, "img/textures/effectors/poster_off.png");
+	doom->sprites->txt_poster_on = load_texture(doom, "img/textures/effectors/poster_on.png");
+}
+
 void		load_ammo_bars(t_doom *doom)
 {
 	doom->sprites->txt_pistol_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/pistolammo.png");
@@ -345,6 +367,7 @@ int			load_sprites(t_doom *doom)
 	load_ammo_bars(doom);
 	load_loading_screen(doom);
 	load_portal_sprite(doom, path, i);
+	load_effector_sprites(doom);
 	return (1);
 }
 

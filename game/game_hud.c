@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 16:08:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/05 19:28:38 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -404,14 +404,6 @@ void		handle_weapon_bar(t_doom *doom)
 		draw_surface_ignore_alpha(WIN_WIDTH - 260, 0, doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
 }
 
-void		handle_key_bar(t_doom *doom)
-{
-	/*
-		Placeholder to check if player owns a key to display it later on game hud
-	*/
-	// draw_surface(WIN_WIDTH - 50, 300, doom->sprites->txt_key_hud, doom->game->hud_location);
-}
-
 static void render_legacy_ch(t_model *mdl)
 {
 	t_line 	crosshair;
@@ -525,7 +517,8 @@ void		render_game_hud(t_doom *doom)
 	handle_player_ammo_bar(doom);
 	handle_clip_bar(doom);
 	handle_weapon_bar(doom);
-	// handle_key_bar(doom);	//WIP
+	if (doom->mdl->player.has_key)
+		draw_surface_ignore_alpha(WIN_WIDTH - 50, 300, doom->sprites->txt_key_hud, doom->game->hud_location);
 	if (!doom->game->show_info)
 		render_crosshair(doom->mdl);
 }

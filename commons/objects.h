@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/30 15:58:04 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/05 19:20:04 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ typedef struct 			s_player
 	int					is_running;
 	int					is_flying;
 	int					has_fired;
+	int					has_key;
 	int					mov_speed;
 	int					max_speed;
 	int					min_speed;
@@ -250,6 +251,7 @@ typedef struct 			s_sounds
 	struct Mix_Chunk	*mcLaserShot;
 	struct Mix_Chunk	*mcDogShot;
 	struct Mix_Chunk	*mcDogDying;
+	struct Mix_Chunk	*mcOutAmmo;
 	int					is_flying;
 	double				jetpack_delay;
 	double				footstep_delay;
@@ -285,6 +287,12 @@ typedef struct 			s_sprites
 
 	// Effector Sprites
 	struct SDL_Surface	**txt_portal;
+	struct SDL_Surface	*txt_switch_off;
+	struct SDL_Surface	*txt_switch_on;
+	struct SDL_Surface	*txt_light_off;
+	struct SDL_Surface	*txt_light_on;
+	struct SDL_Surface	*txt_poster_off;
+	struct SDL_Surface	*txt_poster_on;
 	struct SDL_Surface	*active_portal;
 	int					portal_phase;
 

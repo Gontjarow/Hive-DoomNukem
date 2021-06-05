@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 17:09:29 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/05 19:04:00 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ unsigned int	check_location(t_doom *doom, int x, int y);
 int				player_shoots(t_doom *doom);
 int				player_collision_with_enemies(t_doom *doom);
 int				player_collision_with_pickup(t_doom *doom, t_pickup *pickup);
+int				player_collision_with_effects(t_doom *doom, t_effect *effect);
 int				player_collision_with_exit(t_doom *doom, t_effect *level_exit);
 int				check_hit(t_doom *doom);
 int				point_circle(double px, double py, double cx, double cy);

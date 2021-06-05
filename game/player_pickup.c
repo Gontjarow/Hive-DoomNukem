@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 16:43:40 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/05 19:11:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,36 @@ static void		handle_level_exit(t_doom *doom)
 	}
 }
 
+void			handle_effect_pickup(t_doom *doom)
+{
+	int			ec;
+	t_effect	*effect;
+
+	ec = doom->mdl->effect_count;
+	if (ec == 0)
+		return ;
+	effect = doom->mdl->effect_first;
+	while (ec--)
+	{
+		if (effect->type_id == EFFECT_EXIT &&
+		player_collision_with_effects(doom, effect) == -1)
+			handle_level_exit(doom);
+		// else if (effect->type_id == EFFECT_KEY &&			//TODO
+		// player_collision_with_effects(doom, effect) == -1)
+		// 	handle_key_pickup(doom);
+		effect = effect->next;
+	}
+}
+
 void			handle_pickup(t_doom *doom)
 {
 	int			pc;
 	t_pickup	*pickup;
 
 	// TODO handle_effects
-	if (get_model()->effect_count > 0 && player_collision_with_exit(doom, get_model()->effect_first))
-		handle_level_exit(doom);
+	// if (get_model()->effect_count > 0 && player_collision_with_exit(doom, get_model()->effect_first))
+	// 	handle_level_exit(doom);
+	handle_effect_pickup(doom);
 	pc = doom->mdl->pickup_count;
 	if (pc == 0)
 		return ;

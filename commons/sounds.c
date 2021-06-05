@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/22 16:26:08 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/30 15:54:06 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/05 18:19:20 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void	load_sounds(t_doom *doom)
 		ft_die("Fatal error: SDL_mixer failed to load WAV_DOGSHOT!");
 	if (!(doom->sounds->mcDogDying = Mix_LoadWAV(WAV_DOGDYING)))
 		ft_die("Fatal error: SDL_mixer failed to load WAV_DOGDYING!");
+	if (!(doom->sounds->mcOutAmmo = Mix_LoadWAV(WAV_OUTAMMO)))
+		ft_die("Fatal error: SDL_mixer failed to load WAV_OUTAMMO!");
 	doom->sounds->footstep_delay = 0.0;
 	doom->sounds->jetpack_delay = 0.0;
 }

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 17:17:14 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/05 18:29:31 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,10 @@ void				handle_player_shooting(t_doom *doom)
 				player_shoots(doom);
 				play_shoot_sounds(doom);
 			}
+		}
+		else if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur == 0)
+		{
+			Mix_PlayChannel(-1, doom->sounds->mcOutAmmo, 0);
 		}
 	}
 }

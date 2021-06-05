@@ -34,6 +34,7 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define				WAV_LASERSHOT "wav/lasershot.wav"
 # define				WAV_DOGSHOT "wav/dogshot.wav"
 # define				WAV_DOGDYING "wav/dogdying.wav"
+# define				WAV_OUTAMMO "wav/outammo.wav"
 
 enum e_singleton_types { SINGLETON_MDL, SINGLETON_WORLD };
 /*

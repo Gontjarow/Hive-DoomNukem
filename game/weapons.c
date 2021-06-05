@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 17:25:14 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/05 19:29:20 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,15 +95,10 @@ static void	handle_ammo_calc(t_doom *doom)
 static void	player_shoot_reload(t_doom *doom)
 {
 	// Disabled Shooting with E key -> Place holder for player interaction with doors
-	// if (doom->keystates[SDL_SCANCODE_E])
+	// if (doom->keystates[SDL_SCANCODE_E] && doom->mdl->player.has_key && player_collision_with_effector(doom, effector) == -1)
 	// {
-	// 	if (doom->mdl->player.shoot_cd <= 0 && doom->mdl->player.weap_arr
-	// 		[doom->mdl->player.weap_id].ammo_cur > 0 &&
-	// 			doom->mdl->player.reload_time <= 0)
-	// 	{
-	// 		Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].fire_sound, 0);
-	// 		player_shoots(doom);
-	// 	}
+	// 	doom->mdl->player.has_key = 0;
+	// 	open_door();
 	// }
 	if (doom->keystates[SDL_SCANCODE_R])
 	{
