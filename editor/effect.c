@@ -343,7 +343,7 @@ void			effect_adjust(int x_or_y, int change)
 	if (*target < 1)
 		*target = 1;
 	//puts("Adjusted Target with WSAD in Effects!");
-	printf("poster's new tx,ty = [%d,%d]\n", last->target.x, last->target.y);
+	// printf("poster's new tx,ty = [%d,%d]\n", last->target.x, last->target.y);
 	if (x_or_y == 0)
 		recalculate_effect_location(last);
 	else
