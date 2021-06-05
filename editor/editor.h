@@ -45,6 +45,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define COLOR_AMMO_PICKUP		0xffffff00
 # define COLOR_WEAPON_PICKUP	0xffffffff
 # define COLOR_EFFECT_EXIT		0xff00ff00
+# define COLOR_EFFECT_POSTER	0xffffff00
 # define COLOR_EFFECT_KEY		0xffffff00
 # define COLOR_EFFECT_LIGHT		0xffffffff
 # define EDT_TRIANGLE_SIZE		16
@@ -116,6 +117,7 @@ typedef struct 			s_logic
 	t_point				sweep[2];
 	int 				sweep_counter;
 	logic_colors		colors;
+    int                 last_plant_id;
 }						t_logic;
 
 typedef struct 			s_select
@@ -361,6 +363,7 @@ uint32_t				effect_colors(int type);
 void 					effect_swap_type(void);
 void					effect_plant(int x, int y);
 t_logic 				*effect_logic(void);
+void			        effect_adjust(int x_or_y, int change);
 void					effect_activate(t_state *state);
 void					effect_deactivate(t_state *state);
 void					effect_change_zoom(t_state *state);

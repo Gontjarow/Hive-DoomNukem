@@ -123,7 +123,7 @@ void	debug_model_portals(void)
 
 void	debug_model_effects(void)
 {
-	char 		**types = { "EFFECT_EXIT", "EFFECT_KEY", "EFFECT_LIGHT" };
+	char 		**types = { "EFFECT_EXIT", "EFFECT_POSTER", "EFFECT_KEY", "EFFECT_LIGHT" };
 	t_effect	*effect;
 	int			ec;
 

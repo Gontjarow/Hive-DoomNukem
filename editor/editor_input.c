@@ -85,6 +85,8 @@ void			edt_keystate_input(t_doom *doom)
 {
 	static int	lock_q = 0;
 	static int	lock_w = 0;
+	static int	lock_s = 0;
+	static int	lock_a = 0;
 	static int	lock_e = 0;
 	static int	lock_r = 0;
 	static int	lock_d = 0;
@@ -115,18 +117,45 @@ void			edt_keystate_input(t_doom *doom)
 		lock_q = 1;
 	}
 
-	if (lock_w && !doom->keystates[SDL_SCANCODE_W])
-		lock_w = 0;
+	if (lock_w)
+		lock_w--;
 	else if (doom->keystates[SDL_SCANCODE_W] && !lock_w)
 	{
-		debug_model_player();
-		debug_model_enemies();
-		debug_model_walls();
-		debug_model_rooms();
-		debug_model_effects();
-		debug_model_chain();
-		debug_model_pickups();
+		effect_adjust(1, 1);
+		//debug_model_player();
+		//debug_model_enemies();
+		//debug_model_walls();
+		//debug_model_rooms();
+		//debug_model_effects();
+		//debug_model_chain();
+		//debug_model_pickups();
 		lock_w = 1;
+	}
+	if (lock_s)
+		lock_s--;
+	else if (doom->keystates[SDL_SCANCODE_S] && !lock_s)
+	{
+		effect_adjust(1, -1);
+		lock_s = 1;
+	}
+		
+	if (lock_a)
+		lock_a--;
+	else if (doom->keystates[SDL_SCANCODE_A] && !lock_a)
+	{
+		effect_adjust(0, -1);
+		lock_a = 1;
+	}
+
+	if (lock_d)
+		lock_d--;
+	else if (doom->keystates[SDL_SCANCODE_D] && !lock_d)
+	{
+		effect_adjust(0, 1);
+		select_floor(-1);
+		lock_d = 1;
+		if (get_state()->gui == mode_select())
+			lock_d = 4;
 	}
 
 	if (lock_c && !doom->keystates[SDL_SCANCODE_C])
@@ -151,14 +180,6 @@ void			edt_keystate_input(t_doom *doom)
 	{
 		select_roof(1);
 		lock_r = 4;
-	}
-
-	if (lock_d)
-		lock_d--;
-	else if (doom->keystates[SDL_SCANCODE_D] && !lock_d)
-	{
-		select_floor(-1);
-		lock_d = 4;
 	}
 
 	if (lock_f)
