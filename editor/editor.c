@@ -14,6 +14,8 @@
 
 // EFFECTORS_TYPES EXTENSION - ATTACH TO T_WALL (AND MAKE CAN_PORTAL = 0)
 // POSTER
+// [Effect] id = 0 | type_id = 0 | loc.x = 2874 | loc.y = 1292 | target.x = 0 | target.y = 0 | target_id = 0
+// eg. [Effect] id = 1 | type_id = 1 [Enum to EFFECT_POSTER] | loc.x = 2874[unused] | loc.y = 1292[unused] | target.x = 0[pct] | target.y = 0[pct] | target_id = 0[wall_id]
 // LIGHTSWITCH
 // DOORSWITCH
 
