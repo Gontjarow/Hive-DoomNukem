@@ -171,11 +171,13 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 					t_effect *e = w->effects[i];
 					SDL_Surface *tex = e->active_sprite;
 					// printf("effect found %i\n", e->type_id);
-					double h = e->target.x / 100;
-					if (h < ((double)horizontal / (x2 - x1))) // should begin drawing
+					double h = e->target.x / 100.0;
+					if (h < tex_x) // should begin drawing
 					{
-						vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), tex, depth);
-						double v = e->target.y / 100;
+						// TODO: NOT DONE
+						double poster_x = tex_x - h;
+						vertical_wall(screen_x, poster_x, vec2(y_start, y_stop), tex, depth);
+						double v = e->target.y / 100.0;
 					}
 					++i;
 				}
