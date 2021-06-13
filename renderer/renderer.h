@@ -77,26 +77,6 @@ typedef struct	s_matrix
 	double m[4][4];
 }				t_matrix;
 
-# define Xx m[0][0]
-# define Xy m[1][0]
-# define Xz m[2][0]
-# define Xw m[3][0]
-
-# define Yx m[0][1]
-# define Yy m[1][1]
-# define Yz m[2][1]
-# define Yw m[3][1]
-
-# define Zx m[0][2]
-# define Zy m[1][2]
-# define Zz m[2][2]
-# define Zw m[3][2]
-
-# define Tx m[0][3]
-# define Ty m[1][3]
-# define Tz m[2][3]
-# define Tw m[3][3]
-
 typedef struct	s_cam
 {
 	t_xyz	pos;
@@ -105,13 +85,14 @@ typedef struct	s_cam
 
 typedef struct	s_sector
 {
+	int			room_id;
 	double		floor;
 	double		ceil;
 	unsigned	vertex_count;
 	t_xy		*vertex;
 	signed		*neighbors;
 	int			has_ceiling;
-	SDL_Surface **active_sprites;
+	SDL_Surface	**textures;
 }				t_sector;
 
 typedef struct	s_section
@@ -155,6 +136,7 @@ SDL_Surface		*get_border_tex(t_doom *doom);
 SDL_Surface		*get_panorama_tex(t_doom *doom);
 void			destroy_world(t_world *world);
 t_world			*load_world(t_world *world);
+void			link_wall_decorators();
 
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			drawline(t_xy_line line, SDL_Surface *surface);

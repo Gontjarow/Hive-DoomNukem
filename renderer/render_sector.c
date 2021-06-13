@@ -34,8 +34,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 	t_xy_line wall;
 	t_xy_line scale;
 
-	// KRUSTHOL DISABLED: SDL_Surface *bricks = get_bricks_tex(doom);
-	SDL_Surface *bricks;
+	// KRUSTHOL DISABLED: SDL_Surface *texture = get_bricks_tex(doom);
+	SDL_Surface *texture;
 	SDL_Surface *border = get_border_tex(doom);
 
 	const t_xy debug_view_offset = vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100);
@@ -43,7 +43,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 	vertex = 0;
 	while (vertex < sector->vertex_count)
 	{
-		bricks = sector->active_sprites[vertex]; 
+		texture = sector->textures[vertex];
 		//! Calculate relative vertex positions for one wall.
 		// The world's zero-point is considered to be the player.
 
@@ -154,12 +154,31 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 			//! Draw wall
 			if (neighbor == NO_NEIGHBOR)
 			{
-				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), bricks, depth);
+				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), texture, depth);
 
 				//! wall ceil floor
 				if (sector->has_ceiling)
 					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
 				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
+
+				//! Draw posters
+				t_room *r = room_by_id(sector->room_id);
+				t_wall *w = wall_by_id(r->first_wall_id + vertex);
+				int i = 0;
+				// printf("wall %i effects %i\n", vertex, w->effect_count);
+				while (i < w->effect_count)
+				{
+					t_effect *e = w->effects[i];
+					SDL_Surface *tex = e->active_sprite;
+					// printf("effect found %i\n", e->type_id);
+					double h = e->target.x / 100;
+					if (h < ((double)horizontal / (x2 - x1))) // should begin drawing
+					{
+						vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), tex, depth);
+						double v = e->target.y / 100;
+					}
+					++i;
+				}
 			}
 			else
 			{
@@ -180,8 +199,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				signed		connecting_y_start     = connecting_yawed_ceil.start.y + (horizontal * connecting_ceil_angle);
 				signed		connecting_y_stop      = connecting_yawed_floor.start.y + (horizontal * connecting_floor_angle);
 
-				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), bricks, depth);
-				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), bricks, depth);
+				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), texture, depth);
+				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), texture, depth);
 
 				if (connecting_y_start > top) world->screen_y_top[screen_x] = connecting_y_start;
 				if (connecting_y_stop  < bot) world->screen_y_bot[screen_x] = connecting_y_stop;

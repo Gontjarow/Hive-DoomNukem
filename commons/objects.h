@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   objects.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/06/05 19:20:04 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 18:14:50 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ typedef struct 			s_enemy
 	struct SDL_Surface	*active_sprite;
 }						t_enemy;
 
+#define MAX_EFFECT_COUNT 4
 typedef struct 			s_wall
 {
 	struct s_point		start;
@@ -180,6 +181,9 @@ typedef struct 			s_wall
 	SDL_Surface			*active_sprite;
 	struct s_wall		*next;
 	int					can_portal;
+	struct s_effect		*effects[MAX_EFFECT_COUNT];
+	int					effect_count;
+
 }						t_wall;
 
 typedef struct 			s_room
@@ -190,7 +194,7 @@ typedef struct 			s_room
 	int 				wall_count;
 	int 				floor_height;
 	int 				roof_height;
-	int					has_ceiling; 
+	int					has_ceiling;
 	int					is_hallway;
 	int					slope_floor;
 	int					slope_roof;
@@ -269,7 +273,7 @@ typedef struct 			s_sprites
 	// Wall and Floor Sprites
 	struct SDL_Surface **txt_wall;
 	struct SDL_Surface **txt_floor;
-	
+
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;
 	struct SDL_Surface	**txt_fuel_bar;
