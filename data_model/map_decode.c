@@ -28,12 +28,13 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	mdl->effects->target.y = fields[5];
 	mdl->effects->target_id = fields[6];
 	mdl->effects->active_sprite = NULL;
+	mdl->effects->activated = 0;
 	if (mdl->effects->type_id == EFFECT_POSTER)
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_poster_on;
 	else if (mdl->effects->type_id == EFFECT_KEYPANEL)
-		mdl->effects->active_sprite = doom_ptr()->sprites->txt_key_hud;
+		mdl->effects->active_sprite = doom_ptr()->sprites->txt_panel_off;
 	else if (mdl->effects->type_id == EFFECT_LIGHTKNOB)
-		mdl->effects->active_sprite = doom_ptr()->sprites->txt_light_on;
+		mdl->effects->active_sprite = doom_ptr()->sprites->txt_switch_on;
 	mdl->effect_count++;
 	if (mdl->effect_count == 1)
 		mdl->effect_first = mdl->effects;

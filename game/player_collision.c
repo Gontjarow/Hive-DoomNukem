@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/05 19:00:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 19:21:06 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int			player_collision_with_effects(t_doom *doom, t_effect *effect)
 	dx = (int)doom->mdl->player.x - effect->loc.x;
 	dy = (int)doom->mdl->player.y - effect->loc.y;
 	distance = sqrt(dx * dx + dy * dy);
-	if ((distance < 10 + PICKING_RADIUS))
+	if ((distance < 80))
 		return (-1);
 	return (0);
 }

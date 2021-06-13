@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 16:32:02 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/05 17:55:38 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 18:39:47 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,6 +325,8 @@ static void	load_effector_sprites(t_doom *doom)
 	doom->sprites->txt_switch_on = load_texture(doom, "img/textures/effectors/switch_on.png");
 	doom->sprites->txt_poster_off = load_texture(doom, "img/textures/effectors/poster_off.png");
 	doom->sprites->txt_poster_on = load_texture(doom, "img/textures/effectors/poster_on.png");
+	doom->sprites->txt_panel_off = load_texture(doom, "img/textures/effectors/panel_off.png");
+	doom->sprites->txt_panel_on = load_texture(doom, "img/textures/effectors/panel_on.png");
 }
 
 void		load_ammo_bars(t_doom *doom)

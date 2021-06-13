@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/06/05 19:20:04 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 18:46:37 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,7 @@ typedef struct			s_effect
 {
 	int					id;
 	int 				type_id;
+	int					activated;
 	struct s_point		loc;
 	struct s_point		target;
 	int 				target_id;
@@ -293,6 +294,8 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_light_on;
 	struct SDL_Surface	*txt_poster_off;
 	struct SDL_Surface	*txt_poster_on;
+	struct SDL_Surface	*txt_panel_off;
+	struct SDL_Surface	*txt_panel_on;
 	struct SDL_Surface	*active_portal;
 	int					portal_phase;
 

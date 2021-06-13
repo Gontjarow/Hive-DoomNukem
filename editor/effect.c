@@ -38,6 +38,7 @@ static void 	effect_plant_exit(int x, int y)
 		mdl->effects->target.x = 0;
 		mdl->effects->target.y = 0;
 		mdl->effects->target_id = 0;
+		mdl->effects->activated = 0;
 		mdl->effects->active_sprite = NULL;
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
 		if (!new_effect)
@@ -157,6 +158,7 @@ static int		effect_plant_poster(int x, int y)
 		mdl->effects->id = mdl->effect_count;
 		mdl->effects->type_id = EFFECT_POSTER;
 		mdl->effects->target_id = new_id;
+		mdl->effects->activated = 0;
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_poster_on;
 		new_id = mdl->effects->id;
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
@@ -190,6 +192,7 @@ static int		effect_plant_keypanel(int x, int y)
 		mdl->effects->id = mdl->effect_count;
 		mdl->effects->type_id = EFFECT_KEYPANEL;
 		mdl->effects->target_id = new_id;
+		mdl->effects->activated = 0;
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_switch_on;
 		new_id = mdl->effects->id;
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
@@ -238,6 +241,7 @@ static int		effect_plant_lightknob(int x, int y)
 		mdl->effects->id = mdl->effect_count;
 		mdl->effects->type_id = EFFECT_LIGHTKNOB;
 		mdl->effects->target_id = new_id;
+		mdl->effects->activated = 0;
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_switch_on;
 		new_id = mdl->effects->id;
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
