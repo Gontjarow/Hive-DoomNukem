@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/05 19:11:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 17:11:24 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,23 @@ static void		handle_level_exit(t_doom *doom)
 	}
 }
 
+static void		handle_key_pickup(t_doom *doom, t_pickup *pickup)
+{
+	t_pickup	*current;
+	t_pickup	*prev;
+	int			pc;
+
+	doom->mdl->player.has_key = 1;
+	pc = doom->mdl->pickup_count;
+	current = doom->mdl->pickup_first;
+	if (current->id == pickup->id)
+		pickup = delete_first(doom);
+	else
+		pickup = delete_node(current, prev, pickup);
+	Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
+	doom->mdl->pickup_count--;
+}
+
 void			handle_effect_pickup(t_doom *doom)
 {
 	int			ec;
@@ -106,9 +123,6 @@ void			handle_effect_pickup(t_doom *doom)
 		if (effect->type_id == EFFECT_EXIT &&
 		player_collision_with_effects(doom, effect) == -1)
 			handle_level_exit(doom);
-		// else if (effect->type_id == EFFECT_KEY &&			//TODO
-		// player_collision_with_effects(doom, effect) == -1)
-		// 	handle_key_pickup(doom);
 		effect = effect->next;
 	}
 }
@@ -140,6 +154,10 @@ void			handle_pickup(t_doom *doom)
 		player_collision_with_pickup(doom, pickup) == -1 &&
 		doom->mdl->player.weap_arr[pickup->weapon_type_id].do_own == 0)
 			handle_weapon_pickup(doom, pickup);
+		// else if (pickup->flavor == PICKUP_KEY &&				// WIP - 1
+		// player_collision_with_pickup(doom, pickup) == -1 &&
+		// doom->mdl->player.has_key == 0)
+		// 	handle_key_pickup(doom, pickup);
 		pickup = pickup->next;
 	}
 }

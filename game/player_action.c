@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 15:41:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 17:15:09 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,31 @@ static void	experimental_elevator(int active, int hard_reset)
 	}
 }
 
+// static void	player_effector_interactions(t_doom *doom)		// WIP - 1
+// {
+// 	int			ec;
+// 	t_effect	*effect;
+
+// 	ec = doom->mdl->effect_count;
+// 	if (ec == 0)
+// 		return ;
+// 	effect = doom->mdl->effect_first;
+// 	while (ec--)
+// 	{
+// 		if (effect->type_id == EFFECT_LIGHT &&
+// 		player_collision_with_effects(doom, effect) == -1)
+// 			switch_light();
+// 		if (effect->type_id == EFFECT_SWITCH &&
+// 			player_collision_with_effects(doom, effect) == -1 &&
+// 			doom->mdl->player.has_key)
+// 		{
+// 			doom->mdl->player.has_key = 0;
+// 			open_door();
+// 		}
+// 		effect = effect->next;
+// 	}
+// }
+
 void		handle_player_action(t_doom *doom)
 {
 	if (doom->keystates[SDL_SCANCODE_SPACE])
@@ -150,6 +175,8 @@ void		handle_player_action(t_doom *doom)
 		player_run(doom);
 	if (!doom->keystates[SDL_SCANCODE_LSHIFT] && doom->mdl->player.run_lock)
 		player_run(doom);
+	// if (doom->keystates[SDL_SCANCODE_E])		// WIP - 1
+	// 	player_effector_interactions(doom);
 	if (doom->keystates[SDL_SCANCODE_P])
 		debug_model_effects();
 	if (doom->keystates[SDL_SCANCODE_L])
