@@ -14,6 +14,7 @@ static void			map_chain_to_model(const char *str, t_model *mdl)
 	printf("Model set to chain to map \"%s\"\n", mdl->chain);
 }
 
+// TODO Replace correct Active_Sprites for these
 // 2x Effect spec functions
 static void			map_effect_to_model(const int *fields, t_model *mdl)
 {
@@ -26,7 +27,13 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	mdl->effects->target.x = fields[4];
 	mdl->effects->target.y = fields[5];
 	mdl->effects->target_id = fields[6];
-	mdl->effects->active_sprite = NULL; //doom_ptr()->sprites->txt_portal[0];
+	mdl->effects->active_sprite = NULL;
+	if (mdl->effects->type_id == EFFECT_POSTER)
+		mdl->effects->active_sprite = doom_ptr()->sprites->txt_poster_on;
+	else if (mdl->effects->type_id == EFFECT_KEYPANEL)
+		mdl->effects->active_sprite = doom_ptr()->sprites->txt_key_hud;
+	else if (mdl->effects->type_id == EFFECT_LIGHTKNOB)
+		mdl->effects->active_sprite = doom_ptr()->sprites->txt_light_on;
 	mdl->effect_count++;
 	if (mdl->effect_count == 1)
 		mdl->effect_first = mdl->effects;
@@ -66,6 +73,7 @@ static t_token		*effect_spec(void)
 	return (spec);
 }
 
+// TODO fix active_sprite to correct sprite
 // 2x Pickup spec functions
 static void			map_pickup_to_model(const int *fields, t_model *mdl)
 {
@@ -86,6 +94,8 @@ static void			map_pickup_to_model(const int *fields, t_model *mdl)
 			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_shotgun_ammo_pickup;
 		else if (mdl->pickups->weapon_type_id == JETPACK)
 			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_jetpack_ammo_pickup;
+		else if (mdl->pickups->flavor == PICKUP_KEY)
+			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_key_hud;
 		else
 			mdl->pickups->active_sprite = NULL;
 	}

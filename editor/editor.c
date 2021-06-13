@@ -16,13 +16,20 @@
 // POSTER
 // [Effect] id = 0 | type_id = 0 | loc.x = 2874 | loc.y = 1292 | target.x = 0 | target.y = 0 | target_id = 0
 // eg. [Effect] id = 1 | type_id = 1 [Enum to EFFECT_POSTER] | loc.x = 2874[unused] | loc.y = 1292[unused] | target.x = 0[pct] | target.y = 0[pct] | target_id = 0[wall_id]
+// Simplify door switches to always be on the doors, and one shot opening for all doors
+// Blue Effect can be a Accespanel terminal which takes acces keys and unlocks all portals connected to the room it is in
+// Unlockable doors are just like regular doors but will not open from the switch before the Access Panel has been fed with a key
+// Access Key is a pickup 
+
+// Fix Zoomed Out bugs for WSAD control of new effectors
+
 // LIGHTSWITCH
 // DOORSWITCH
 
 // BULLETPROOF GLASSWINDOWS - T_PORTAL
 // 0 NOTHING
-// 1 DOOR
-// 2 WINDOW
+// 1 DOOR / extends t_portal with new field
+// 2 WINDOW / extended field has ENUM REGULAR_PORTAL DOOR_PORTAL WINDOW_PORTAL
 
 // ALLOW DISCARD MAP INSTEAD OF ASK FOR SAVENAME WITH ESC
 // VALIDATE NON OVERLAPPING
