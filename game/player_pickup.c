@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 17:11:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 17:30:32 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,10 +154,10 @@ void			handle_pickup(t_doom *doom)
 		player_collision_with_pickup(doom, pickup) == -1 &&
 		doom->mdl->player.weap_arr[pickup->weapon_type_id].do_own == 0)
 			handle_weapon_pickup(doom, pickup);
-		// else if (pickup->flavor == PICKUP_KEY &&				// WIP - 1
-		// player_collision_with_pickup(doom, pickup) == -1 &&
-		// doom->mdl->player.has_key == 0)
-		// 	handle_key_pickup(doom, pickup);
+		else if (pickup->flavor == PICKUP_KEY &&				// WIP - 1
+		player_collision_with_pickup(doom, pickup) == -1 &&
+		doom->mdl->player.has_key == 0)
+			handle_key_pickup(doom, pickup);
 		pickup = pickup->next;
 	}
 }

@@ -94,8 +94,6 @@ static void			map_pickup_to_model(const int *fields, t_model *mdl)
 			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_shotgun_ammo_pickup;
 		else if (mdl->pickups->weapon_type_id == JETPACK)
 			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_jetpack_ammo_pickup;
-		else if (mdl->pickups->flavor == PICKUP_KEY)
-			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_key_hud;
 		else
 			mdl->pickups->active_sprite = NULL;
 	}
@@ -110,6 +108,8 @@ static void			map_pickup_to_model(const int *fields, t_model *mdl)
 		else
 			mdl->pickups->active_sprite = NULL;
 	}
+	if (mdl->pickups->flavor == PICKUP_KEY)
+			mdl->pickups->active_sprite = doom_ptr()->sprites->txt_key_hud;
 	mdl->pickup_count++;
 	if (mdl->pickup_count == 1)
 		mdl->pickup_first = mdl->pickups;

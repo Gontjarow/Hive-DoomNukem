@@ -41,13 +41,12 @@ void			render_pickups(t_doom *doom)
 			// Lower height for sprites based on type
 			double floor = world->sectors[pickup_id].floor - 0.5 - world->player.position.z;
 			double ceil;
-			if (pickup->flavor == PICKUP_HEALTH || pickup->flavor == PICKUP_AMMO)
+			if (pickup->flavor == PICKUP_HEALTH || pickup->flavor == PICKUP_AMMO || pickup->flavor == PICKUP_KEY)
 				ceil = world->sectors[pickup_id].floor + 2 - world->player.position.z;
 			else if (pickup->flavor == PICKUP_WEAPON && pickup->weapon_type_id == JETPACK)
 				ceil = world->sectors[pickup_id].floor + 2 - world->player.position.z;
 			else if (pickup->flavor == PICKUP_WEAPON)
 				ceil = world->sectors[pickup_id].floor + 1 - world->player.position.z;
-			
 			else
 				ceil = world->sectors[pickup_id].floor + EYE_HEIGHT - world->player.position.z;
 
