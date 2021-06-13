@@ -48,6 +48,8 @@ uint32_t	pickup_color(int flavor)
 		return (COLOR_AMMO_PICKUP);
 	if (flavor == PICKUP_WEAPON)
 		return (COLOR_WEAPON_PICKUP);
+	if (flavor == PICKUP_KEY)
+		return (COLOR_KEY_PICKUP);
 	ft_putendl("Warning: Could not match pickup flavor to a color at pickup_color.");
 	return (COLOR_LINE);
 }

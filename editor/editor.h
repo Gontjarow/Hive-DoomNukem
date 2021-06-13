@@ -44,10 +44,11 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define COLOR_HEALTH_PICKUP	0xff00ff00
 # define COLOR_AMMO_PICKUP		0xffffff00
 # define COLOR_WEAPON_PICKUP	0xffffffff
+# define COLOR_KEY_PICKUP       0xff0000ff
 # define COLOR_EFFECT_EXIT		0xff00ff00
 # define COLOR_EFFECT_POSTER	0xffffff00
-# define COLOR_EFFECT_KEY		0xffffff00
-# define COLOR_EFFECT_LIGHT		0xffffffff
+# define COLOR_EFFECT_KEYPANEL  0xff0000ff
+# define COLOR_EFFECT_LIGHTKNOB 0xffff00ff
 # define EDT_TRIANGLE_SIZE		16
 # define PICKUP_RADIUS			16
 # define HEIGHT_STEPPING		10

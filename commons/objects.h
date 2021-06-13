@@ -199,7 +199,7 @@ typedef struct 			s_room
 	struct s_room		*next;
 }						t_room;
 
-enum 	e_effect_types { EFFECT_EXIT, EFFECT_POSTER };
+enum 	e_effect_types { EFFECT_EXIT, EFFECT_POSTER, EFFECT_KEYPANEL, EFFECT_LIGHTKNOB };
 
 typedef struct			s_effect
 {
@@ -212,7 +212,7 @@ typedef struct			s_effect
 	struct s_effect		*next;
 }						t_effect;
 
-enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON};
+enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON, PICKUP_KEY };
 # define PICKING_RADIUS 10
 
 typedef struct 			s_pickup
