@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 16:00:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 15:41:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static void	player_jumps(t_doom *doom)
 {
-	if (doom->mdl->player.weap_arr[JETPACK].do_own && doom->mdl->player.weap_arr[JETPACK].ammo_cur > 0)
+	if (doom->mdl->player.weap_arr[JETPACK].do_own &&
+		doom->mdl->player.weap_arr[JETPACK].ammo_cur > 0)
 	{
 		doom->mdl->player.is_flying = 1;
 		doom->mdl->player.weap_arr[JETPACK].ammo_cur--;
@@ -66,16 +67,21 @@ static void	player_run(t_doom *doom)
 	}
 }
 
-static void update_world(t_world *world)
+static void	update_world(t_world *world)
 {
-	t_model *mdl = get_model();
-	t_room *room = mdl->room_first;
-	int room_index = 0;
-	int rooms = mdl->room_count;
+	t_model		*mdl;
+	t_room		*room;
+	t_sector	*sector;
+	int			room_index;
+	int			rooms;
 
+	mdl = get_model();
+	room = mdl->room_first;
+	room_index = 0;
+	rooms = mdl->room_count;
 	while (~--rooms)
 	{
-		t_sector *sector = &world->sectors[room_index];
+		sector = &world->sectors[room_index];
 		sector->floor = room->floor_height / WORLD_SCALE;
 		sector->ceil = room->roof_height / WORLD_SCALE;
 		++room_index;
@@ -85,7 +91,7 @@ static void update_world(t_world *world)
 
 static void	experimental_elevator(int active, int hard_reset)
 {
-	static int 	original_floor = -1;
+	static int	original_floor = -1;
 	static int	original_roof = -1;
 
 	if (active && original_floor == -1 && original_roof == -1)
@@ -128,7 +134,6 @@ static void	experimental_elevator(int active, int hard_reset)
 									get_model()->player.room->floor_height + get_model()->player.height : get_model()->player.z;
 		}
 	}
-
 }
 
 void		handle_player_action(t_doom *doom)

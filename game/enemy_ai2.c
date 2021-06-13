@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 15:57:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 15:17:59 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,58 +63,6 @@ void		ai_assignment(t_doom *doom)
 		else if (enemy->ai.type_id == BOSS)
 			ai_boss(doom, enemy);
 		enemy = enemy->next;
-	}
-}
-
-void		check_aggro(t_doom *doom, t_enemy *enemy)
-{
-	int dist;
-
-	if (check_location(doom, doom->mdl->player.x, doom->mdl->player.y)
-		== check_location(doom, enemy->x, enemy->y))
-	{
-		dist = calc_distance(enemy, doom);
-		if (dist <= enemy->ai.max_dis)
-			enemy->ai.aggro = ACTIVE;
-	}
-}
-
-static void		check_sprite_orient(t_doom *doom, t_enemy *enemy)
-{
-	int		offset;
-	t_xy	delta;
-	float	angle;
-
-	if (enemy->hp.cur > 0)
-	{
-		delta.y = doom->mdl->player.y - enemy->y;
-		delta.x = doom->mdl->player.x - enemy->x;
-		angle = atan2(delta.y, delta.x);
-		if (angle < 0)
-        	angle = fabs(angle);
-    	else
-        	angle = 2 * M_PI - angle;
-		angle *= (180 / M_PI);
-		offset = 180 - enemy->rot;
-		if ((offset > 0 && offset <= 90) || (offset > 90 && offset <= 180))
-			angle -= offset;
-		else if ((offset > -180 && offset <= -90) || (offset > -90 && offset < 0))
-		{
-			offset = enemy->rot;
-			angle -= 180 - offset;
-		}
-		if (angle < 0)
-			angle += 360;
-		if (angle > 360)
-			angle -= 360;
-		if ((angle >= 0 && angle <= 45) || (angle <= 360 && angle >= 315))
-			enemy->anim.orient = FRONT;
-		else if (angle < 315 && angle >= 225)
-			enemy->anim.orient = RIGHT;
-		else if (angle > 45 && angle <= 135)
-			enemy->anim.orient = LEFT;
-		else
-			enemy->anim.orient = BACK;
 	}
 }
 
