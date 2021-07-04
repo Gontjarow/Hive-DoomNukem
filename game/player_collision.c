@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/05 19:00:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 20:55:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int			check_hit(t_doom *doom)
 {
 	int		ec;
 	t_coord	closest;
-	t_coord dist;
 	t_enemy	*enemy;
 
 	ec = doom->mdl->enemy_count;
@@ -103,7 +102,9 @@ int			player_collision_with_effects(t_doom *doom, t_effect *effect)
 	dx = (int)doom->mdl->player.x - effect->loc.x;
 	dy = (int)doom->mdl->player.y - effect->loc.y;
 	distance = sqrt(dx * dx + dy * dy);
-	if ((distance < 10 + PICKING_RADIUS))
+	if ((distance < 20) && effect->type_id == EFFECT_EXIT)
+		return (-1);
+	else if ((distance < 80) && effect->type_id != EFFECT_EXIT)
 		return (-1);
 	return (0);
 }

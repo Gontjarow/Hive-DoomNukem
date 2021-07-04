@@ -47,6 +47,11 @@ void 			record_portal(t_model *mdl, t_wall *wall)
 	mdl->portals->start.y = wall->start.y;
 	mdl->portals->end.x = wall->end.x;
 	mdl->portals->end.y = wall->end.y;
+	mdl->portals->portal_type = REGULAR_PORTAL;
+	if (mdl->portals->portal_type == REGULAR_PORTAL)
+		mdl->portals->open = 1;
+	else
+		mdl->portals->open = 0;
 	mdl->portal_count++;
 	next_portal = (t_wall*)malloc(sizeof(t_wall));
 	if (!next_portal)

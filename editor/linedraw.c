@@ -73,6 +73,8 @@ t_wall	*linedraw_to_wall(t_linedraw *data)
 	wall->texture_id = get_state()->selected_weapon_type;
 	//printf("Wall->texture_id was set to %d\n", wall->texture_id);
 	wall->active_sprite = NULL;
+	wall->portal_type = NOT_A_PORTAL;
+	wall->open = 0;
 	get_model()->wall_count++;
 	wall = (t_wall*)malloc(sizeof(t_wall));
 	if (!wall)

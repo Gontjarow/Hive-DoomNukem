@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/05 18:29:31 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 19:59:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,15 +96,74 @@ int					player_shoots_shotgun(t_doom *doom)
 	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur += 2;
 }
 
+static void			check_poster_hit(t_doom *doom)
+{
+	int		ec;
+	int		dx;
+	int		dy;
+	int		distance;
+	t_effect *effector;
+
+	ec = doom->mdl->effect_count;
+	if (ec == 0)
+		return ;
+	effector = doom->mdl->effect_first;
+	while (ec--)
+	{
+		if (effector->type_id == EFFECT_POSTER && effector->activated == 0)
+		{
+			dx = (int)doom->mdl->player.bullet_pos.x - effector->loc.x;
+			dy = (int)doom->mdl->player.bullet_pos.y - effector->loc.y;
+			distance = sqrt(dx * dx + dy * dy);
+			if ((distance < 22))
+			{
+				effector->activated = 1;
+				effector->active_sprite = doom->sprites->txt_poster_off;
+				return ;
+			}
+		}
+		effector = effector->next;
+	}
+}
+
+static int			check_bullet_hitting_door(t_doom *doom, t_xy prev_loc, t_xy current_loc)
+{
+	// algorithm to loop through the mdl->portal(s?) linked list and check for intersections.
+	//this is not run on every frame, just the frames when bullet room_id has changed
+	// return (1) if intersecting closed door
+
+	int		pc;
+	t_wall	*portals;
+
+	pc = doom->mdl->portal_count;
+	if (pc == 0)
+		return (0);
+	portals = doom->mdl->portal_first;
+	while (pc--)
+	{
+		if (portals->open == 0)
+		{
+			printf("ITS INTERSECTING!\n");
+			return (1);
+		}
+		portals = portals->next;
+	}
+	return (0);
+}
+
 int					player_shoots(t_doom *doom)
 {
 	int		enemy_id;
 	double	rad;
+	int		last_room_id;
+	int		current_room_id;
+	t_xy	cached_bullet_loc;
 
 	rad = deg_to_rad(doom->mdl->player.rot) - M_PI;
 	enemy_id = -1;
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
 	doom->mdl->player.bullet_pos.y = doom->mdl->player.y;
+	last_room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x, doom->mdl->player.y);
 	if (DEBUG == 1)
 	{
 		doom->minimap->player_ray_color = 0xffff0000;
@@ -116,8 +175,19 @@ int					player_shoots(t_doom *doom)
 	while (check_location(doom, doom->mdl->player.bullet_pos.x,
 			doom->mdl->player.bullet_pos.y) != -1 && enemy_id < 0)
 	{
+		cached_bullet_loc.x = doom->mdl->player.bullet_pos.x;
+		cached_bullet_loc.y = doom->mdl->player.bullet_pos.y;
 		doom->mdl->player.bullet_pos.x += 1 * -cos(rad);
 		doom->mdl->player.bullet_pos.y += 1 * -sin(rad);
+		current_room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.bullet_pos.x, doom->mdl->player.bullet_pos.y);
+		if (current_room_id != last_room_id)
+		{
+			// Different room_id for bullet, reroute to algorithm for checking hits against door
+			if (check_bullet_hitting_door(doom, cached_bullet_loc, (t_xy){doom->mdl->player.bullet_pos.x, doom->mdl->player.bullet_pos.y}))
+				break ;
+		}
+		last_room_id = current_room_id;
+		check_poster_hit(doom);
 		enemy_id = check_hit(doom);
 		if (enemy_id >= 0)
 		{

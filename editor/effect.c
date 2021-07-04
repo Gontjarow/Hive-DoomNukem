@@ -38,6 +38,7 @@ static void 	effect_plant_exit(int x, int y)
 		mdl->effects->target.x = 0;
 		mdl->effects->target.y = 0;
 		mdl->effects->target_id = 0;
+		mdl->effects->activated = 0;
 		mdl->effects->active_sprite = NULL;
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
 		if (!new_effect)
@@ -137,6 +138,22 @@ static int		closest_wall_id(t_model *mdl, t_point xy, t_point *winning_hit, t_po
 	return (lowest_id);
 }
 
+static int		already_postered_wall(int wall_id)
+{
+	t_effect	*effect;
+	int			ec;
+
+	effect = get_model()->effect_first;
+	ec = get_model()->effect_count;
+	while (ec--)
+	{
+		if (effect->type_id == EFFECT_POSTER && effect->target_id == wall_id)
+			return (1);
+		effect = effect->next;
+	}
+	return (0);
+}
+
 static int		effect_plant_poster(int x, int y)
 {
 	t_model		*mdl;
@@ -149,7 +166,11 @@ static int		effect_plant_poster(int x, int y)
 	new_id = closest_wall_id(mdl, (t_point){x, y}, &winning_hit, &positive_hit);
 	if (new_id != -1)
 	{
-		//TODO CALCULATE TARGET.X, IT'S NOT 50
+		if (already_postered_wall(new_id))
+		{
+			puts("Disallowing placing more Poster Effectors on the same wall!");
+			return (-1);
+		}			
 		mdl->effects->target.x = 50;
 		mdl->effects->target.y = 50;
 		mdl->effects->loc.x = winning_hit.x;
@@ -157,6 +178,7 @@ static int		effect_plant_poster(int x, int y)
 		mdl->effects->id = mdl->effect_count;
 		mdl->effects->type_id = EFFECT_POSTER;
 		mdl->effects->target_id = new_id;
+		mdl->effects->activated = 0;
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_poster_on;
 		new_id = mdl->effects->id;
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
@@ -171,26 +193,130 @@ static int		effect_plant_poster(int x, int y)
 	return (new_id);
 }
 
-static void 	effect_plant_key(int x, int y)
+static int		effect_plant_keypanel(int x, int y)
 {
-	//plant key effector
+	t_model		*mdl;
+	t_effect	*new_effect;
+	t_point		winning_hit;
+	t_point		positive_hit;
+	int			new_id;
+
+	mdl = get_model(); 
+	new_id = closest_wall_id(mdl, (t_point){x, y}, &winning_hit, &positive_hit);
+	if (new_id != -1)
+	{
+		if (effect_logic()->following_up_on != -1)
+		{
+			puts("Should check that this effect is now planted on top of a valid DOOR_PORTAL!");
+			return (-1);
+		}
+		mdl->effects->target.x = 50;
+		mdl->effects->target.y = 50;
+		mdl->effects->loc.x = winning_hit.x;
+		mdl->effects->loc.y = winning_hit.y;
+		mdl->effects->id = mdl->effect_count;
+		mdl->effects->type_id = EFFECT_KEYPANEL;
+		mdl->effects->target_id = new_id;
+		mdl->effects->activated = 0;
+		mdl->effects->active_sprite = doom_ptr()->sprites->txt_switch_on;
+		effect_logic()->following_up_on = new_id;
+		effect_logic()->plant_dir = DOWNWARD;
+		new_id = mdl->effects->id;
+		new_effect = (t_effect*)malloc(sizeof(t_effect));
+		if (!new_effect)
+			ft_die("Fatal error: Could not malloc new_effect at effect_plant_keypanel!");
+		mdl->effects->next = new_effect;
+		mdl->effect_count++;
+		if (mdl->effect_count == 1)
+			mdl->effect_first = mdl->effects;
+		mdl->effects = new_effect;
+	}
+	return (new_id);
 }
 
-static void 	effect_plant_light(int x, int y)
+static int		light_pos(t_wall *wall)
 {
-	//plant light effector
+	t_point diff;
+	int		optimum;
+
+	diff.x = wall->end.x - wall->start.x;
+	diff.y = wall->end.y - wall->start.y;
+	optimum = 2000 / (abs(diff.x) + abs(diff.y));
+	if (optimum <= 1)
+		return (2);
+	if (optimum >= 100)
+		return (99);
+	return (optimum);
+}
+
+static int		already_lightknobbed_room(t_room *room)
+{
+	t_effect	*effect;
+	int			ec;
+
+	effect = get_model()->effect_first;
+	ec = get_model()->effect_count;
+	while (ec--)
+	{
+		if (effect->type_id == EFFECT_LIGHTKNOB)
+		{
+			if (room_by_wall_id(effect->target_id, get_model()) == room)
+				return (1);
+		}
+		effect = effect->next;
+	}
+	return (0);
+}
+
+static int		effect_plant_lightknob(int x, int y)
+{
+	t_model		*mdl;
+	t_effect	*new_effect;
+	t_point		winning_hit;
+	t_point		positive_hit;
+	int			new_id;
+
+	mdl = get_model(); 
+	new_id = closest_wall_id(mdl, (t_point){x, y}, &winning_hit, &positive_hit);
+	if (new_id != -1)
+	{
+		if (already_lightknobbed_room(room_by_wall_id(new_id, mdl)))
+		{
+			puts("Disallowing placing more Lightknob Effectors in the same room!");
+			return (-1);
+		}			
+		mdl->effects->target.x = light_pos(wall_by_id(new_id));
+		mdl->effects->target.y = 50;
+		mdl->effects->loc.x = winning_hit.x;
+		mdl->effects->loc.y = winning_hit.y;
+		mdl->effects->id = mdl->effect_count;
+		mdl->effects->type_id = EFFECT_LIGHTKNOB;
+		mdl->effects->target_id = new_id;
+		mdl->effects->activated = 0;
+		mdl->effects->active_sprite = doom_ptr()->sprites->txt_switch_on;
+		new_id = mdl->effects->id;
+		new_effect = (t_effect*)malloc(sizeof(t_effect));
+		if (!new_effect)
+			ft_die("Fatal error: Could not malloc new_effect at effect_plant_lightswitch!");
+		mdl->effects->next = new_effect;
+		mdl->effect_count++;
+		if (mdl->effect_count == 1)
+			mdl->effect_first = mdl->effects;
+		mdl->effects = new_effect;
+	}
+	return (new_id);
 }
 
 int				effect_dirs(int type)
 {
-	static int	dirs[3] = { DOWNWARD, UPWARD, DOWNWARD };
+	static int	dirs[3] = { DOWNWARD, UPWARD, UPWARD, UPWARD };
 
 	return (dirs[type]);
 }
 
 uint32_t		effect_colors(int type)
 {
-	static uint32_t colors[4] = { COLOR_EFFECT_EXIT, COLOR_EFFECT_POSTER, COLOR_EFFECT_KEY, COLOR_EFFECT_LIGHT };
+	static uint32_t colors[4] = { COLOR_EFFECT_EXIT, COLOR_EFFECT_POSTER, COLOR_EFFECT_KEYPANEL, COLOR_EFFECT_LIGHTKNOB };
 
 	return (colors[type]);
 }
@@ -211,7 +337,10 @@ static void		print_digits_for_effect_target_y(t_effect *effect, int y)
 {
 	int first;
 	int second;
+	t_point scroll;
 
+	//rel = relative_position(effect->loc.x, effect->loc.y, get_state());
+	scroll = scrolled_position(effect->loc.x, effect->loc.y, get_state());
 	if (y < 1 || y > 99)
 		return ;
 	first = -1;
@@ -220,11 +349,11 @@ static void		print_digits_for_effect_target_y(t_effect *effect, int y)
 	if (second == 0)
 		second = 10;
 	if (y > 9)
-		digit_to_buffer(editor_back_buffer()->buff, (t_point){effect->loc.x - 6, effect->loc.y + 12}, first * 10, COLOR_SELECTION_LINE);
+		digit_to_buffer(editor_back_buffer()->buff, (t_point){scroll.x - 6, scroll.y + 12}, first * 10, COLOR_SELECTION_LINE);
 	else
-		digit_to_buffer(editor_back_buffer()->buff, (t_point){effect->loc.x, effect->loc.y + 12}, y * 10, COLOR_SELECTION_LINE);
+		digit_to_buffer(editor_back_buffer()->buff, (t_point){scroll.x, scroll.y + 12}, y * 10, COLOR_SELECTION_LINE);
 	if (second != -1 && y > 9)
-		digit_to_buffer(editor_back_buffer()->buff, (t_point){effect->loc.x + 6, effect->loc.y + 12}, second * 10, COLOR_SELECTION_LINE);	
+		digit_to_buffer(editor_back_buffer()->buff, (t_point){scroll.x + 6, scroll.y + 12}, second * 10, COLOR_SELECTION_LINE);	
 	editor_back_buffer()->rendering_on = 1;
 }
 
@@ -232,7 +361,7 @@ void			effect_plant(int x, int y)
 {
 	t_point		relative;
 	int			result;
-	t_effect	*new_poster;
+	t_effect	*new_effect;
 
 	relative = relative_position(x, y, get_state());
 	x = relative.x;
@@ -248,13 +377,33 @@ void			effect_plant(int x, int y)
 		effect_change_zoom(get_state());
 		if (result != -1)
 		{
-			new_poster = effect_by_id(result);
+			//new_effect = effect_by_id(result);
 			effect_logic()->last_plant_id = result;
 			// TODO Instead figure out how to calculate target.X (reverse engineer effect_adjust for that?)
 			effect_adjust(0, 0);
 			//print_digits_for_effect_target_y(new_poster, new_poster->target.y);
 		}				
-	}		
+	}
+	else if (effect_logic()->plant_type == EFFECT_KEYPANEL)
+	{
+		result = effect_plant_keypanel(x, y);
+		effect_change_zoom(get_state());
+		if (result != -1)
+		{
+			effect_logic()->last_plant_id = result;
+			effect_adjust(0, 0);
+		}
+	}
+	else if (effect_logic()->plant_type == EFFECT_LIGHTKNOB)
+	{
+		result = effect_plant_lightknob(x, y);
+		effect_change_zoom(get_state());
+		if (result != -1)
+		{
+			effect_logic()->last_plant_id = result;
+			effect_adjust(0, 0);
+		}
+	}
 	get_state()->saving_choice = 0;	
 }
 
@@ -276,14 +425,13 @@ t_logic 		*effect_logic(void)
 		logic->sweep[0].y = 0;
 		logic->colors = effect_colors;
 		logic->last_plant_id = -1;
+		logic->following_up_on = -1;
 	}
 	return (logic);
 }
 
 static void		recalculate_effect_location(t_effect *effect)
 {
-	//puts("Updating screen with new triangle location along the horizontal axis for the wall!");
-	// target.x was changed, move position along wall
 	t_wall	*wall;
 	t_xy	orig;
 	t_xy	vec;
@@ -301,29 +449,7 @@ static void		recalculate_effect_location(t_effect *effect)
 	effect->loc.y = (int)new.y;
 	effect_change_zoom(get_state());
 	print_digits_for_effect_target_y(effect, effect->target.y);
-	//draw_box(vec2_add(orig, pct), 5, 0xffffffff, editor_front_buffer()->buff);
-	//editor_front_buffer()->rendering_on = 1;
-	//vec2p("pct: ", pct);
 }
-
-/*
-
-static t_xy		hinge_algorithm(t_xy point, t_wall *hinge, int hinge_mirror_x, int hinge_mirror_y)
-{
-	t_xy orig;
-	t_xy vec;
-	t_xy half;
-
-	orig.x = hinge->start.x;
-	orig.y = hinge->start.y;	
-	vec.x = hinge_mirror_x;
-	vec.y = hinge_mirror_y;	
-	half = vec2_mul(vec2_norm(vec), 0.5f * vec2_mag(vec));
-	half = vec2_rot(half, M_PI);	
-	return (vec2_point_to_line(point, orig, vec2_norm(half)));
-}
-
-*/
 
 void			effect_adjust(int x_or_y, int change)
 {
@@ -369,6 +495,10 @@ void			effect_activate(t_state *state)
 
 void			effect_deactivate(t_state *state)
 {
+	if (effect_logic()->following_up_on != -1)
+	{
+		puts("Should destroy half-inputted effector!");
+	}
 	state->job_running = 0;
 	state->job_abort = 0;
 	state->thread_hit = 0;
@@ -381,7 +511,14 @@ void			effect_deactivate(t_state *state)
 
 void			effect_change_zoom(t_state *state)
 {
+	t_effect *highlighted_effect;
+
 	redraw_editor_to_backbuffer(COLOR_LINE);
+	if (effect_logic()->last_plant_id != -1)
+	{
+		highlighted_effect = effect_by_id(effect_logic()->last_plant_id);
+		print_digits_for_effect_target_y(highlighted_effect, highlighted_effect->target.y);
+	}
 }
 
 static void		effect_refresh_preview(void)
@@ -396,12 +533,27 @@ static void		effect_refresh_preview(void)
 
 void 			effect_swap_type(void)
 {
+	if (effect_logic()->following_up_on != -1)
+	{
+		puts("Should handle aborting half-inputted effect here!");
+		effect_logic()->following_up_on = -1;
+	}
 	if (effect_logic()->plant_type == EFFECT_EXIT && get_model()->effect_count > 0)
 	{
 		effect_logic()->plant_type = EFFECT_POSTER;
 		effect_logic()->plant_dir = UPWARD;
 	}
 	else if (effect_logic()->plant_type == EFFECT_POSTER)
+	{
+		effect_logic()->plant_type = EFFECT_KEYPANEL;
+		effect_logic()->plant_dir = UPWARD;
+	}
+	else if (effect_logic()->plant_type == EFFECT_KEYPANEL)
+	{
+		effect_logic()->plant_type = EFFECT_LIGHTKNOB;
+		effect_logic()->plant_dir = UPWARD;
+	}
+	else if (effect_logic()->plant_type == EFFECT_LIGHTKNOB)
 	{
 		effect_logic()->plant_type = EFFECT_EXIT;
 		effect_logic()->plant_dir = DOWNWARD;
@@ -535,7 +687,7 @@ void 			effect_middle_click(int x, int y)
 {
 	static int	last_id = -1;
 	int 		curr_id;
-	t_effect	*poster;
+	t_effect	*highlighted_effect;
 
 	effect_change_zoom(get_state());
 	wipe_editor_front_buffer(0x00000000);
@@ -554,8 +706,8 @@ void 			effect_middle_click(int x, int y)
 		if (curr_id != -1 && curr_id != 0)
 		{
 			effect_logic()->last_plant_id = curr_id;
-			poster = effect_by_id(curr_id);
-			print_digits_for_effect_target_y(poster, poster->target.y);
+			highlighted_effect = effect_by_id(curr_id);
+			print_digits_for_effect_target_y(highlighted_effect, highlighted_effect->target.y);
 		}
 	}
 }

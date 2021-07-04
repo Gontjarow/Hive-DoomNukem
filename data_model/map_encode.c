@@ -96,8 +96,8 @@ void	add_pickup_to_string(t_pickup *pickup, t_mapfile *map)
 void 	add_portal_to_string(t_wall *portal, t_mapfile *map)
 {
 	map->join_string = ft_strnew(255);
-	sprintf(map->join_string, "[Portal] id = %d | start.x = %d | start.y = %d | end.x = %d | end.y = %d\n",
-			portal->id, portal->start.x, portal->start.y, portal->end.x, portal->end.y);
+	sprintf(map->join_string, "[Portal] id = %d | start.x = %d | start.y = %d | end.x = %d | end.y = %d | portal_type = %d\n",
+			portal->id, portal->start.x, portal->start.y, portal->end.x, portal->end.y, portal->portal_type);
 	if (!map->portal_string)
 		map->portal_string = ft_strnew(1);
 	map->portal_string = ft_strjoin(map->portal_string, map->join_string);

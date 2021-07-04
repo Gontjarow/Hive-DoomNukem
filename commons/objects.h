@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/07/04 21:04:18 by ngontjar         ###   ########.fr       */
+/*   Updated: 2021/07/04 21:27:05 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,12 +183,14 @@ typedef struct 			s_wall
 	int					can_portal;
 	struct s_effect		*effects[MAX_EFFECT_COUNT];
 	int					effect_count;
-
+	int					open;
+	int					portal_type;
 }						t_wall;
 
 typedef struct 			s_room
 {
 	struct s_wall		*first_wall;
+	int					lit;
 	int 				first_wall_id;
 	int 				id;
 	int 				wall_count;
@@ -203,12 +205,13 @@ typedef struct 			s_room
 	struct s_room		*next;
 }						t_room;
 
-enum 	e_effect_types { EFFECT_EXIT, EFFECT_POSTER };
+enum 	e_effect_types { EFFECT_EXIT, EFFECT_POSTER, EFFECT_KEYPANEL, EFFECT_LIGHTKNOB };
 
 typedef struct			s_effect
 {
 	int					id;
 	int 				type_id;
+	int					activated;
 	struct s_point		loc;
 	struct s_point		target;
 	int 				target_id;
@@ -216,7 +219,7 @@ typedef struct			s_effect
 	struct s_effect		*next;
 }						t_effect;
 
-enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON};
+enum	e_pickup_flavors { PICKUP_HEALTH, PICKUP_AMMO, PICKUP_WEAPON, PICKUP_KEY };
 # define PICKING_RADIUS 10
 
 typedef struct 			s_pickup
@@ -297,6 +300,8 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_light_on;
 	struct SDL_Surface	*txt_poster_off;
 	struct SDL_Surface	*txt_poster_on;
+	struct SDL_Surface	*txt_panel_off;
+	struct SDL_Surface	*txt_panel_on;
 	struct SDL_Surface	*active_portal;
 	int					portal_phase;
 

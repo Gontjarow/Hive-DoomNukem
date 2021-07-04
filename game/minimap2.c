@@ -6,35 +6,11 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 20:03:18 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/19 19:23:50 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/06/13 15:32:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
-
-void			print_minimap_weapons(t_doom *doom)
-{
-	unsigned int	*pixels;
-	unsigned int	*ref;
-	int				x;
-	int				y;
-	int				k;
-	int				cut;
-
-	pixels = doom->minimap->buff->pixels;
-	ref = doom->mdl->player.weap_arr[doom->mdl->player.weap_id].weap_img->pixels;
-	cut = 15 * WIN_WIDTH;
-	y = (WIN_WIDTH - doom->mdl->player.weap_arr[doom->mdl->player.weap_id].weap_img->w) + ((WIN_HEIGHT - doom->mdl->player.weap_arr[doom->mdl->player.weap_id].weap_img->h) * WIN_WIDTH) - cut;
-	y += cut;
-	x = 0;
-	k = 0;
-	while (k < ((doom->mdl->player.weap_arr[doom->mdl->player.weap_id].weap_img->w * doom->mdl->player.weap_arr[doom->mdl->player.weap_id].weap_img->h)))
-	{
-		y = x == doom->mdl->player.weap_arr[doom->mdl->player.weap_id].weap_img->w ? y + WIN_WIDTH : y;
-		x = x == doom->mdl->player.weap_arr[doom->mdl->player.weap_id].weap_img->w ? 0 : x;
-		pixels[x++ + y] = ref[k++];
-	}
-}
 
 static void		mcircle_enemy(t_doom *doom, t_enemy *enemy, unsigned int color)
 {

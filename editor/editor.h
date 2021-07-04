@@ -34,9 +34,14 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define EDT_WIN_WIDTH			1600
 # define EDT_WIN_HEIGHT			900
 # define COLOR_LINE				0xffffffff
-# define COLOR_PORTAL			0xff00ffff
+# define COLOR_PORTAL			0xff8888ff
+# define COLOR_DOOR             0xffff88ff
+# define COLOR_WINDOW           0xff88ffff
 # define COLOR_SELECTION_LINE	0xffffff00
 # define COLOR_SELECTION_WALL	0xff0000ff
+# define COLOR_REGULAR_PORTAL   0xff2222ff
+# define COLOR_DOOR_PORTAL      0xffff22ff
+# define COLOR_WINDOW_PORTAL    0xff22ffff
 # define COLOR_SELECTION_VECTOR 0xffff0000
 # define COLOR_GRID_LINE		0xff888888
 # define COLOR_PLAYER			0xff00ff00
@@ -44,10 +49,11 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define COLOR_HEALTH_PICKUP	0xff00ff00
 # define COLOR_AMMO_PICKUP		0xffffff00
 # define COLOR_WEAPON_PICKUP	0xffffffff
+# define COLOR_KEY_PICKUP       0xff0000ff
 # define COLOR_EFFECT_EXIT		0xff00ff00
 # define COLOR_EFFECT_POSTER	0xffffff00
-# define COLOR_EFFECT_KEY		0xffffff00
-# define COLOR_EFFECT_LIGHT		0xffffffff
+# define COLOR_EFFECT_KEYPANEL  0xff0000ff
+# define COLOR_EFFECT_LIGHTKNOB 0xffff00ff
 # define EDT_TRIANGLE_SIZE		16
 # define PICKUP_RADIUS			16
 # define HEIGHT_STEPPING		10
@@ -118,6 +124,7 @@ typedef struct 			s_logic
 	int 				sweep_counter;
 	logic_colors		colors;
     int                 last_plant_id;
+    int                 following_up_on;
 }						t_logic;
 
 typedef struct 			s_select
@@ -127,6 +134,7 @@ typedef struct 			s_select
 	int 				last_roof;
     int                 selected_wall_id;
     int                 adding_slope;
+    int                 selected_portal_id;
     t_wall              virtual_slope_wall;
 }						t_select;
 
@@ -247,6 +255,7 @@ void	 				handle_keyboard_scrolling(t_doom *doom);
  * */
 
 void					wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color);
+void    				room_portals_to_buffer(t_room *room, SDL_Surface *buff);
 void 					room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color);
 void					x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color);
 

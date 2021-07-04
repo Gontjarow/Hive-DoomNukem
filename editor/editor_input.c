@@ -51,7 +51,18 @@ static void		handle_regular_numbers(t_doom *doom)
 	{
 		if (doom->keystates[scancodes[i++]])
 		{
-			get_state()->selected_weapon_type = (i);
+			if (get_state()->gui == mode_select())
+			{
+				if (select_logic()->selected_portal_id == -1)
+					return ;
+				if (i == 0 || i > 3)
+					return ;
+				portal_by_id(select_logic()->selected_portal_id)->portal_type = i;
+				printf("Selected portal_type [%d] for portal_id [%d] (1=REGULAR 2=DOOR 3=WINDOW)\n", i, select_logic()->selected_portal_id);
+				select_change_zoom(get_state());
+				return ;
+			}
+			get_state()->selected_weapon_type = i;
 			printf("Selected weapon type %d\n", get_state()->selected_weapon_type);
 			if (get_state()->gui == mode_pickups())
 				pickups_refresh_preview();

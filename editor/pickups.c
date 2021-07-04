@@ -28,6 +28,36 @@
 //						DRAW ALSO A NUMBER WITH THE PREVIEWING // DONE
 //						IMPLEMENT ALSO A PRESERVING/UNPRESERVING SQUARE/DIGIT // DONE
 
+void 			pickups_plant_key(int x, int y)
+{
+	int			radius;
+	t_model		*mdl;
+	t_pickup	*new_pickup;
+	t_point		relative;
+
+	radius = PICKUP_RADIUS / get_state()->zoom_factor;
+	relative = relative_position(x, y, get_state());
+	editor_back_buffer()->rendering_on = 1;
+	square_to_buffer(editor_back_buffer()->buff, (t_point){x, y}, radius, COLOR_KEY_PICKUP);
+	digit_to_buffer(editor_back_buffer()->buff, (t_point) {x, y}, 0, COLOR_KEY_PICKUP);
+	mdl = get_model();
+	mdl->pickups->id = mdl->pickup_count;
+	mdl->pickups->flavor = PICKUP_KEY;
+	mdl->pickups->weapon_type_id = 0;
+	mdl->pickups->loc.x = relative.x;
+	mdl->pickups->loc.y = relative.y;
+	// TODO Replace txt_key_hud with actual active sprite for Pickup key
+	mdl->pickups->active_sprite = doom_ptr()->sprites->txt_key_hud;
+	new_pickup = (t_pickup*)malloc(sizeof(t_pickup));
+	if (!new_pickup)
+		ft_die("Fatal error: Could not malloc new_pickup at pickups_plant_key!");
+	mdl->pickups->next = new_pickup;
+	mdl->pickup_count++;
+	if (mdl->pickup_count == 1)
+		mdl->pickup_first = mdl->pickups;
+	mdl->pickups = new_pickup;
+}
+
 void			pickups_plant_health(int x, int y)
 {
 	int			radius;
@@ -136,7 +166,7 @@ void			pickups_plant_weapon(int x, int y)
 
 uint32_t		pickups_colors(int type)
 {
-	static uint32_t colors[3] = { COLOR_HEALTH_PICKUP, COLOR_AMMO_PICKUP, COLOR_WEAPON_PICKUP };
+	static uint32_t colors[4] = { COLOR_HEALTH_PICKUP, COLOR_AMMO_PICKUP, COLOR_WEAPON_PICKUP, COLOR_KEY_PICKUP };
 
 	return (colors[type]);
 }
@@ -168,7 +198,9 @@ void 			pickups_swap_type(void)
 	else if (pickups_logic()->plant_type == PICKUP_AMMO)
 		pickups_logic()->plant_type = PICKUP_WEAPON;
 	else if (pickups_logic()->plant_type == PICKUP_WEAPON)
-		pickups_logic()->plant_type = PICKUP_HEALTH;
+		pickups_logic()->plant_type = PICKUP_KEY;
+	else if (pickups_logic()->plant_type == PICKUP_KEY)
+		pickups_logic()->plant_type = PICKUP_HEALTH;	
 	pickups_refresh_preview();
 }
 
@@ -193,6 +225,8 @@ void			pickups_plant(int x, int y)
 		pickups_plant_ammo(x, y);
 	else if (pickups_logic()->plant_type == PICKUP_WEAPON)
 		pickups_plant_weapon(x, y);
+	else if (pickups_logic()->plant_type == PICKUP_KEY)
+		pickups_plant_key(x, y);
 	get_state()->saving_choice = 0;
 }
 
@@ -236,6 +270,8 @@ void 			pickups_mouse_motion(int x, int y)
 		// Here, check if its better to do "preserving" variations of cross_to_buffer and digit_to_buffer
 		if (pickups_logic()->plant_type == PICKUP_HEALTH)
 			preserving_cross_to_buffer(doom_ptr()->edt->buff, last_preview, PICKUP_RADIUS / get_state()->zoom_factor / 2, 0xff000000);
+		else if (pickups_logic()->plant_type == PICKUP_KEY)
+			digit_to_buffer_ptr(doom_ptr()->edt->buff, last_preview, 0, 0xff000000, preserve_render_line);
 		else
 			digit_to_buffer_ptr(doom_ptr()->edt->buff, last_preview, get_state()->selected_weapon_type * 10, 0xff000000, preserve_render_line);
 	}
@@ -243,6 +279,8 @@ void 			pickups_mouse_motion(int x, int y)
 	unpreserving_square_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, PICKUP_RADIUS / get_state()->zoom_factor, pickups_logic()->colors(pickups_logic()->plant_type));
 	if (pickups_logic()->plant_type == PICKUP_HEALTH)
 		unpreserving_cross_to_buffer(doom_ptr()->edt->buff, (t_point){x, y}, PICKUP_RADIUS / get_state()->zoom_factor / 2, pickups_logic()->colors(PICKUP_HEALTH));
+	else if (pickups_logic()->plant_type == PICKUP_KEY)
+		digit_to_buffer_ptr(doom_ptr()->edt->buff, (t_point){x, y}, 0, pickups_logic()->colors(pickups_logic()->plant_type), unpreserve_render_line);
 	else
 		digit_to_buffer_ptr(doom_ptr()->edt->buff, (t_point){x, y}, get_state()->selected_weapon_type * 10, pickups_logic()->colors(pickups_logic()->plant_type), unpreserve_render_line);
 	last_preview.x = x;

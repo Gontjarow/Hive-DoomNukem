@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 16:00:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 21:16:40 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static void	player_jumps(t_doom *doom)
 {
-	if (doom->mdl->player.weap_arr[JETPACK].do_own && doom->mdl->player.weap_arr[JETPACK].ammo_cur > 0)
+	if (doom->mdl->player.weap_arr[JETPACK].do_own &&
+		doom->mdl->player.weap_arr[JETPACK].ammo_cur > 0)
 	{
 		doom->mdl->player.is_flying = 1;
 		doom->mdl->player.weap_arr[JETPACK].ammo_cur--;
@@ -66,16 +67,21 @@ static void	player_run(t_doom *doom)
 	}
 }
 
-static void update_world(t_world *world)
+static void	update_world(t_world *world)
 {
-	t_model *mdl = get_model();
-	t_room *room = mdl->room_first;
-	int room_index = 0;
-	int rooms = mdl->room_count;
+	t_model		*mdl;
+	t_room		*room;
+	t_sector	*sector;
+	int			room_index;
+	int			rooms;
 
+	mdl = get_model();
+	room = mdl->room_first;
+	room_index = 0;
+	rooms = mdl->room_count;
 	while (~--rooms)
 	{
-		t_sector *sector = &world->sectors[room_index];
+		sector = &world->sectors[room_index];
 		sector->floor = room->floor_height / WORLD_SCALE;
 		sector->ceil = room->roof_height / WORLD_SCALE;
 		++room_index;
@@ -85,7 +91,7 @@ static void update_world(t_world *world)
 
 static void	experimental_elevator(int active, int hard_reset)
 {
-	static int 	original_floor = -1;
+	static int	original_floor = -1;
 	static int	original_roof = -1;
 
 	if (active && original_floor == -1 && original_roof == -1)
@@ -128,7 +134,72 @@ static void	experimental_elevator(int active, int hard_reset)
 									get_model()->player.room->floor_height + get_model()->player.height : get_model()->player.z;
 		}
 	}
+}
 
+/*
+	switch_light()
+	check which room the player is in
+	if activated is true
+		change brightness to low of that room
+	else
+		change brightness to normal of that room
+*/
+
+static void open_doors(t_doom *doom)
+{
+	int		pc;
+	t_wall	*portals;
+
+	pc = doom->mdl->portal_count;
+	if (pc == 0)
+		return ;
+	portals = doom->mdl->portal_first;
+	while (pc--)
+	{
+		if (portals->portal_type == 2)
+		{
+			portals->open = 1;
+			//change the portal sprite to transparent?
+		}
+		portals = portals->next;
+	}
+}
+
+static void	player_effector_interactions(t_doom *doom)		// WIP - 1
+{
+	int			ec;
+	t_room		*curr_room;
+	t_effect	*effect;
+	t_wall		*wall;
+
+	ec = doom->mdl->effect_count;
+	if (ec == 0)
+		return ;
+	effect = doom->mdl->effect_first;
+	while (ec--)
+	{
+		if (effect->type_id == EFFECT_LIGHTKNOB &&
+			player_collision_with_effects(doom, effect) == -1)
+		{
+			effect->activated = !effect->activated;
+			curr_room = room_by_id(check_location(doom, doom->mdl->player.x, doom->mdl->player.y));
+			curr_room->lit = effect->activated;
+			if (effect->activated)
+				effect->active_sprite = doom->sprites->txt_switch_off;
+			else
+				effect->active_sprite = doom->sprites->txt_switch_on;
+		}
+		if (effect->type_id == EFFECT_KEYPANEL &&
+			player_collision_with_effects(doom, effect) == -1 &&
+			doom->mdl->player.has_key && effect->activated == 0)
+		{
+			doom->mdl->player.has_key = 0;
+			effect->activated = 1;
+			effect->active_sprite = doom->sprites->txt_panel_on;
+			open_doors(doom);
+		}
+		effect = effect->next;
+	}
 }
 
 void		handle_player_action(t_doom *doom)
@@ -145,6 +216,8 @@ void		handle_player_action(t_doom *doom)
 		player_run(doom);
 	if (!doom->keystates[SDL_SCANCODE_LSHIFT] && doom->mdl->player.run_lock)
 		player_run(doom);
+	if (doom->keystates[SDL_SCANCODE_E])
+		player_effector_interactions(doom);
 	if (doom->keystates[SDL_SCANCODE_P])
 		debug_model_effects();
 	if (doom->keystates[SDL_SCANCODE_L])
