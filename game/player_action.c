@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/04 14:19:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 17:48:29 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,15 @@ static void	experimental_elevator(int active, int hard_reset)
 		}
 	}
 }
+
+/*
+	switch_light()
+	check which room the player is in
+	if activated is true
+		change brightness to low of that room
+	else
+		change brightness to normal of that room
+*/
 
 static void	player_effector_interactions(t_doom *doom)		// WIP - 1
 {

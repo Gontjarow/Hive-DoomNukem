@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/04 15:09:31 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 17:20:03 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ static void			check_poster_hit(t_doom *doom)
 			dx = (int)doom->mdl->player.bullet_pos.x - effector->loc.x;
 			dy = (int)doom->mdl->player.bullet_pos.y - effector->loc.y;
 			distance = sqrt(dx * dx + dy * dy);
-			if ((distance < 10 + PICKING_RADIUS))
+			if ((distance < 22))
 			{
 				effector->activated = 1;
 				effector->active_sprite = doom->sprites->txt_poster_off;
