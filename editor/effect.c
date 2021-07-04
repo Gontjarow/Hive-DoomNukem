@@ -205,6 +205,11 @@ static int		effect_plant_keypanel(int x, int y)
 	new_id = closest_wall_id(mdl, (t_point){x, y}, &winning_hit, &positive_hit);
 	if (new_id != -1)
 	{
+		if (effect_logic()->following_up_on != -1)
+		{
+			puts("Should check that this effect is now planted on top of a valid DOOR_PORTAL!");
+			return (-1);
+		}
 		mdl->effects->target.x = 50;
 		mdl->effects->target.y = 50;
 		mdl->effects->loc.x = winning_hit.x;
@@ -214,6 +219,8 @@ static int		effect_plant_keypanel(int x, int y)
 		mdl->effects->target_id = new_id;
 		mdl->effects->activated = 0;
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_switch_on;
+		effect_logic()->following_up_on = new_id;
+		effect_logic()->plant_dir = DOWNWARD;
 		new_id = mdl->effects->id;
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
 		if (!new_effect)
@@ -418,6 +425,7 @@ t_logic 		*effect_logic(void)
 		logic->sweep[0].y = 0;
 		logic->colors = effect_colors;
 		logic->last_plant_id = -1;
+		logic->following_up_on = -1;
 	}
 	return (logic);
 }
@@ -487,6 +495,10 @@ void			effect_activate(t_state *state)
 
 void			effect_deactivate(t_state *state)
 {
+	if (effect_logic()->following_up_on != -1)
+	{
+		puts("Should destroy half-inputted effector!");
+	}
 	state->job_running = 0;
 	state->job_abort = 0;
 	state->thread_hit = 0;
@@ -521,6 +533,11 @@ static void		effect_refresh_preview(void)
 
 void 			effect_swap_type(void)
 {
+	if (effect_logic()->following_up_on != -1)
+	{
+		puts("Should handle aborting half-inputted effect here!");
+		effect_logic()->following_up_on = -1;
+	}
 	if (effect_logic()->plant_type == EFFECT_EXIT && get_model()->effect_count > 0)
 	{
 		effect_logic()->plant_type = EFFECT_POSTER;
