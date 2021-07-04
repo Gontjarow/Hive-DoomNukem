@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/06/13 18:14:50 by ngontjar         ###   ########.fr       */
+/*   Updated: 2021/07/04 21:04:18 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -466,9 +466,10 @@ void					draw_visible(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
 void					draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
 void					flood_buffer(SDL_Surface *buff, uint32_t color);
 void					set_protected_color(uint32_t color);
-int 					set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
+int						set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
 uint32_t				get_pixel(SDL_Surface *surface, int x, int y);
-void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
+void					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
+void					set_pixel_dark(SDL_Surface *buff, int x, int y, uint32_t color);
 
 /*
  * from rotation_math.c

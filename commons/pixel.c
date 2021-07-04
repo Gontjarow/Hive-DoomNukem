@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pixel.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 15:51:22 by krusthol          #+#    #+#             */
-/*   Updated: 2020/11/06 15:26:27 by krusthol         ###   ########.fr       */
+/*   Updated: 2021/07/04 20:33:58 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,5 +148,18 @@ void 	set_pixel(SDL_Surface *buff, int x, int y, uint32_t color)
 		pixels[location] = color;
 	// else
 	// 	return (ft_putendl("Warning: set_pixel called to set a pixel outside buffer memory area. Operation was blocked."));
+}
+
+void 	set_pixel_dark(SDL_Surface *buff, int x, int y, uint32_t color)
+{
+	uint32_t	*pixels;
+	int 		location;
+	int 		maximum_limit;
+
+	pixels = buff->pixels;
+	location = x + buff->w * y;
+	maximum_limit = buff->w * buff->h;
+	if (0 <= location && location < maximum_limit)
+		pixels[location] = (color & DARK_MASK) >> 2;
 }
 

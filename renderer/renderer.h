@@ -23,6 +23,8 @@
 # define SPRITE_SCALE 2.5
 # define BYTE_TRANSPARENT 0xFF
 # define COLOR_TRANSPARENT 0xFF00FF
+# define DARK_MASK 0b111111001111110011111100
+# define FUNC_SETPIXEL int (*fp)(SDL_Surface *, int, int, uint32_t)
 
 // For wall effect drawing
 # define POSTER_WIDTH 0.2
