@@ -47,7 +47,7 @@ void			render_pickups(t_doom *doom)
 				ceil = world->sectors[pickup_id].floor + 2 - world->player.position.z;
 			else if (pickup->flavor == PICKUP_WEAPON)
 				ceil = world->sectors[pickup_id].floor + 1 - world->player.position.z;
-			
+
 			else
 				ceil = world->sectors[pickup_id].floor + EYE_HEIGHT - world->player.position.z;
 
@@ -91,6 +91,9 @@ void			render_effectors(t_doom *doom)
 	t_effect	*effect = doom->mdl->effect_first;
 	while (~--effect_count)
 	{
+		if (effect->type_id == EFFECT_POSTER)
+			continue;
+
 		double turn_90 = world->player.angle + PI_BY_TWO;
 		t_xy epos  = vec2_div(vec2(effect->loc.x, effect->loc.y), WORLD_SCALE);
 		t_xy left  = vec2_add(epos, vec2(-cos(turn_90) * SPRITE_SCALE, -sin(turn_90) * SPRITE_SCALE));
