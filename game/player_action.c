@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/04 17:48:29 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 19:55:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,26 @@ static void	experimental_elevator(int active, int hard_reset)
 		change brightness to normal of that room
 */
 
+static void open_doors(t_doom *doom)
+{
+	int		pc;
+	t_wall	*portals;
+
+	pc = doom->mdl->portal_count;
+	if (pc == 0)
+		return ;
+	portals = doom->mdl->portal_first;
+	while (pc--)
+	{
+		if (portals->portal_type == 2)
+		{
+			portals->open = 1;
+			//change the portal sprite to transparent?
+		}
+		portals = portals->next;
+	}
+}
+
 static void	player_effector_interactions(t_doom *doom)		// WIP - 1
 {
 	int			ec;
@@ -174,7 +194,7 @@ static void	player_effector_interactions(t_doom *doom)		// WIP - 1
 			doom->mdl->player.has_key = 0;
 			effect->activated = 1;
 			effect->active_sprite = doom->sprites->txt_panel_on;
-			// open_door();
+			open_doors(doom);
 		}
 		effect = effect->next;
 	}

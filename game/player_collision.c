@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/04 19:10:04 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 20:55:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int			check_hit(t_doom *doom)
 {
 	int		ec;
 	t_coord	closest;
-	t_coord dist;
 	t_enemy	*enemy;
 
 	ec = doom->mdl->enemy_count;

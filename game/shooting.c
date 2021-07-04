@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/04 19:37:54 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 19:59:30 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,37 +126,12 @@ static void			check_poster_hit(t_doom *doom)
 	}
 }
 
-static int 			check_intersect(t_xy current_loc, t_point start, t_point end)
-{
-	double	slope;
-	int		pt3_on;
-	int		pt3_between;
-
-	pt3_on = 0;
-	pt3_between = 0;
-	slope = (end.y - start.y) / (end.x - start.x);
-	if ((current_loc.y - start.y) == (slope * (current_loc.x - start.x)))
-		pt3_on = 1;
-	if ((min(start.x, end.x) <= current_loc.x && current_loc.x <= max(start.x, end.x)) && (min(start.y, end.y) <= current_loc.y && current_loc.y <= max(start.y, end.y)))
-		pt3_between = 1;
-	if (pt3_on && pt3_between)
-		return (1);
-	return (0);
-}
-
 static int			check_bullet_hitting_door(t_doom *doom, t_xy prev_loc, t_xy current_loc)
 {
 	// algorithm to loop through the mdl->portal(s?) linked list and check for intersections.
 	//this is not run on every frame, just the frames when bullet room_id has changed
 	// return (1) if intersecting closed door
 
-	//if its intersecting, check its actual status, if its status is 0, 1, 2
-	// 0 = REGULAR_PORTAL
-	// 1 = DOOR_PORTAL
-	// 2 = WINDOW_PORTAL
-	//if 0, let it gooooooo
-	//if 1, check the door status, if closed, stop it, if open, let it goooooo
-	//if 2, stop it
 	int		pc;
 	t_wall	*portals;
 
@@ -166,14 +141,11 @@ static int			check_bullet_hitting_door(t_doom *doom, t_xy prev_loc, t_xy current
 	portals = doom->mdl->portal_first;
 	while (pc--)
 	{
-		// printf("Found a portal!\n");
-		if ()
+		if (portals->open == 0)
 		{
-			// check whats the status of this portal!
 			printf("ITS INTERSECTING!\n");
 			return (1);
 		}
-		// printf("Next portal!\n");
 		portals = portals->next;
 	}
 	return (0);
@@ -192,7 +164,6 @@ int					player_shoots(t_doom *doom)
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
 	doom->mdl->player.bullet_pos.y = doom->mdl->player.y;
 	last_room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x, doom->mdl->player.y);
-
 	if (DEBUG == 1)
 	{
 		doom->minimap->player_ray_color = 0xffff0000;
@@ -213,9 +184,7 @@ int					player_shoots(t_doom *doom)
 		{
 			// Different room_id for bullet, reroute to algorithm for checking hits against door
 			if (check_bullet_hitting_door(doom, cached_bullet_loc, (t_xy){doom->mdl->player.bullet_pos.x, doom->mdl->player.bullet_pos.y}))
-			{
 				break ;
-			}
 		}
 		last_room_id = current_room_id;
 		check_poster_hit(doom);
