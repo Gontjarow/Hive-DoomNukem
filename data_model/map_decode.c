@@ -255,6 +255,8 @@ static void			map_wall_to_model(const int *fields, t_model *mdl)
 	mdl->walls->end.y = fields[4];
 	mdl->walls->texture_id = fields[5];
 	mdl->walls->active_sprite = NULL;
+	mdl->walls->portal_type = NOT_A_PORTAL;
+	mdl->walls->open = 1;
 	mdl->wall_count++;
 	if (mdl->wall_count == 1)
 		mdl->wall_first = mdl->walls;
@@ -303,6 +305,11 @@ static void			map_portal_to_model(const int *fields, t_model *mdl)
 	mdl->portals->start.y = fields[2];
 	mdl->portals->end.x = fields[3];
 	mdl->portals->end.y = fields[4];
+	mdl->portals->portal_type = fields[5];
+	if (mdl->portals->portal_type == REGULAR_PORTAL || mdl->portals->portal_type == NOT_A_PORTAL)
+		mdl->portals->open = 1;
+	else
+		mdl->portals->open = 0;
 	mdl->portal_count++;
 	if (mdl->portal_count == 1)
 		mdl->portal_first = mdl->portals;
@@ -321,7 +328,7 @@ static t_token		*portal_spec(void)
 	{
 		i = 0;
 		spec = (t_token*)malloc(sizeof(t_token));
-		spec->expected = 5;
+		spec->expected = 6;
 		spec->sur[0] = '[';
 		spec->sur[1] = ']';
 		spec->equ = '=';
@@ -334,6 +341,7 @@ static t_token		*portal_spec(void)
 		ft_strcpy(spec->keys[2], "start.y");
 		ft_strcpy(spec->keys[3], "end.x");
 		ft_strcpy(spec->keys[4], "end.y");
+		ft_strcpy(spec->keys[5], "portal_type");
 		spec->result_ptr = NULL;
 		spec->map_function = map_portal_to_model;
 	}
