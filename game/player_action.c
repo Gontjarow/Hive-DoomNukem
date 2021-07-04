@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 19:52:48 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 14:19:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ static void	player_effector_interactions(t_doom *doom)		// WIP - 1
 {
 	int			ec;
 	t_effect	*effect;
+	t_wall		*wall;
 
 	ec = doom->mdl->effect_count;
 	if (ec == 0)

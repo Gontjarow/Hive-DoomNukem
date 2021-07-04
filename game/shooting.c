@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/05 18:29:31 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 15:09:31 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,36 @@ int					player_shoots_shotgun(t_doom *doom)
 	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur += 2;
 }
 
+static void			check_poster_hit(t_doom *doom)
+{
+	int		ec;
+	int		dx;
+	int		dy;
+	int		distance;
+	t_effect *effector;
+
+	ec = doom->mdl->effect_count;
+	if (ec == 0)
+		return ;
+	effector = doom->mdl->effect_first;
+	while (ec--)
+	{
+		if (effector->type_id == EFFECT_POSTER && effector->activated == 0)
+		{
+			dx = (int)doom->mdl->player.bullet_pos.x - effector->loc.x;
+			dy = (int)doom->mdl->player.bullet_pos.y - effector->loc.y;
+			distance = sqrt(dx * dx + dy * dy);
+			if ((distance < 10 + PICKING_RADIUS))
+			{
+				effector->activated = 1;
+				effector->active_sprite = doom->sprites->txt_poster_off;
+				return ;
+			}
+		}
+		effector = effector->next;
+	}
+}
+
 int					player_shoots(t_doom *doom)
 {
 	int		enemy_id;
@@ -118,6 +148,7 @@ int					player_shoots(t_doom *doom)
 	{
 		doom->mdl->player.bullet_pos.x += 1 * -cos(rad);
 		doom->mdl->player.bullet_pos.y += 1 * -sin(rad);
+		check_poster_hit(doom);
 		enemy_id = check_hit(doom);
 		if (enemy_id >= 0)
 		{
