@@ -154,12 +154,12 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 			//! Draw wall
 			if (neighbor == NO_NEIGHBOR)
 			{
-				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), texture, depth);
+				vertical_wall(screen_x, tex_x, vec2(y_start, y_stop), texture, depth, set_pixel);
 
 				//! wall ceil floor
 				if (sector->has_ceiling)
-					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
-				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
+					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY, set_pixel);
+				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY, set_pixel);
 
 				//! Draw posters
 				t_room *r = room_by_id(sector->room_id);
@@ -177,7 +177,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 					{
 						// value ÷ range = (0, 1)
 						double poster_x = (tex_x - (h - POSTER_HALF)) / ((h + POSTER_HALF) - (h - POSTER_HALF));
-						vertical_wall(screen_x, poster_x, vec2(y_start, y_stop), tex, depth);
+						vertical_wall(screen_x, poster_x, vec2(y_start, y_stop), tex, depth, set_pixel);
 					}
 					++i;
 				}
@@ -186,8 +186,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 			{
 				//! portal ceil floor
 				if (sector->has_ceiling)
-					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY);
-				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY);
+					vertical_wall(screen_x, tex_x, vec2(top, y_start), border, -INFINITY, set_pixel);
+				vertical_wall(screen_x, tex_x, vec2(y_stop, bot), border, -INFINITY, set_pixel);
 
 				double		connecting_ceil        = connecting->ceil - doom->game->world->player.position.z;
 				t_xy_line	connecting_yawed_ceil  = calculate_yawed(connecting_ceil, wall_segment, scale, doom->game->world->player.yaw);
@@ -201,8 +201,8 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 				signed		connecting_y_start     = connecting_yawed_ceil.start.y + (horizontal * connecting_ceil_angle);
 				signed		connecting_y_stop      = connecting_yawed_floor.start.y + (horizontal * connecting_floor_angle);
 
-				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), texture, depth);
-				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), texture, depth);
+				vertical_wall(screen_x, tex_x, vec2(y_start, connecting_y_start), texture, depth, set_pixel);
+				vertical_wall(screen_x, tex_x, vec2(connecting_y_stop, y_stop), texture, depth, set_pixel);
 
 				if (connecting_y_start > top) world->screen_y_top[screen_x] = connecting_y_start;
 				if (connecting_y_stop  < bot) world->screen_y_bot[screen_x] = connecting_y_stop;

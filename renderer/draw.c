@@ -82,7 +82,7 @@ static uint32_t	texture_pixel(SDL_Surface *tex, int x, int y)
 		return (COLOR_TRANSPARENT);
 }
 
-void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth)
+void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth, FUNC_SETPIXEL)
 {
 	unsigned	*pixels;
 	unsigned	color;
@@ -122,7 +122,8 @@ void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, d
 		color = texture_pixel(tex, tex_x * tex->w, tex_y);
 		if (color != COLOR_TRANSPARENT)
 		{
-			pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
+			fp(doom_ptr()->game->buff, screen_x, range.x, color);
+			// pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
 			zbuffer[GAME_WIN_WIDTH * (int)range.x + screen_x] = depth;
 		}
 		tex_y += y_step;

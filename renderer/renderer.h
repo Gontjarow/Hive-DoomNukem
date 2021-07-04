@@ -133,7 +133,7 @@ void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			drawline(t_xy_line line, SDL_Surface *surface);
 void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
 void			vertical_line(int column, int start, int end, int color);
-void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth);
+void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth, FUNC_SETPIXEL);
 void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom);
 void			vertical_sprite(SDL_Surface *active_sprite, int screen_x, int tex_x, t_xy range, double depth);
 void			vertical_shade(int column, int start, int end, int color);
