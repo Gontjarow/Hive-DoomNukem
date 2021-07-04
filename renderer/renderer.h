@@ -72,21 +72,6 @@ typedef struct	s_xy_line
 	signed	color;
 }				t_xy_line;
 
-typedef t_xyzw	t_dir;
-typedef t_xyzw	t_pos;
-typedef t_xyzw	t_vert;
-
-typedef struct	s_matrix
-{
-	double m[4][4];
-}				t_matrix;
-
-typedef struct	s_cam
-{
-	t_xyz	pos;
-	t_xyz	rot;
-}				t_cam;
-
 typedef struct	s_sector
 {
 	int			room_id;
