@@ -13,6 +13,7 @@ t_select 		*select_logic(void)
 		logic->last_floor = FLOOR_DEFAULT;
 		logic->last_roof = ROOF_DEFAULT;
 		logic->selected_wall_id = -1;
+		logic->selected_portal_id = -1;
 		logic->adding_slope = 0;
 		logic->virtual_slope_wall.id = -1;
 	}
@@ -127,11 +128,33 @@ void 			select_delete_room(void)
 	get_state()->saving_choice = 0;
 }
 
+static int		selected_portal(int wall_id)
+{
+	t_wall		*wall;
+	t_wall		*portal;
+	int			pc;
+
+	wall = wall_by_id(wall_id);
+	pc = get_model()->portal_count;
+	portal = get_model()->portal_first;
+	while (pc--)
+	{
+		if (wall->start.x == portal->start.x && wall->end.x == portal->end.x && wall->start.y == portal->start.y && wall->end.y == portal->end.y)
+			return (portal->id);
+		else if (wall->start.x == portal->end.x && wall->end.x == portal->start.x && wall->start.y == portal->end.y && wall->end.y == portal->start.y)
+			return (portal->id);
+		portal = portal->next;
+	}
+	return (-1);
+}
+
 static void		select_wall(int room_id, int cycle_dir)
 {
-	t_room*		room;
-
+	t_room		*room;
+	int			selection_is_portal;
+	
 	select_logic()->selected_wall_id += cycle_dir;
+	select_logic()->selected_portal_id = -1;
 	room = room_by_id(room_id);
 	if (room->first_wall_id > select_logic()->selected_wall_id)
 	{
@@ -141,6 +164,16 @@ static void		select_wall(int room_id, int cycle_dir)
 	{
 		select_logic()->selected_wall_id = room->first_wall_id;
 	}
+	// Check if selected_wall_id matches with a portal, if so, flip a boolean
+	if (select_logic()->selected_wall_id != -1)
+	{
+		selection_is_portal = selected_portal(select_logic()->selected_wall_id);
+		if (selection_is_portal != -1)
+		{
+			select_logic()->selected_portal_id = selection_is_portal;
+			//puts("SELECTION IS PORTAL!!!!");
+		}
+	}	
 	select_change_zoom(get_state());
 }
 
@@ -151,6 +184,7 @@ static void 	select_room(int x, int y, int cycle_dir)
 	clicked_room_id = room_id_from_polymap(get_model()->poly_map, x, y);
 	if (clicked_room_id == -1)
 	{
+		select_logic()->selected_portal_id = -1;
 		select_logic()->selected_room_id = clicked_room_id;
 		return ;
 	}
@@ -164,7 +198,9 @@ static void 	select_room(int x, int y, int cycle_dir)
 			select_logic()->selected_wall_id = room_by_id(clicked_room_id)->first_wall_id + 3;
 		select_change_zoom(get_state());
 		return ;
-	}		
+	}
+	if (clicked_room_id != select_logic()->selected_room_id)
+		select_logic()->selected_portal_id = -1;	
 	if (clicked_room_id == select_logic()->selected_room_id && cycle_dir == NEXT_WALL)
 	{
 		select_logic()->selected_room_id = clicked_room_id;

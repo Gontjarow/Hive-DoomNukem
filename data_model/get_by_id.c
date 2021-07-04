@@ -16,6 +16,34 @@ t_room				*room_by_id(int id)
 	return (NULL);
 }
 
+t_wall				*portal_by_id(int id)
+{
+	int		pc;
+	t_wall 	*portal;
+
+	if (id < 0)
+	{
+		ft_putendl("Warning: Portal_by_id was requested to return a portal with id less than 0. Returned NULL.");
+		return (NULL);
+	}
+	if (get_model()->portal_count != 0)
+		pc = get_model()->portal_count;
+	if (pc <= id)
+	{
+		ft_putendl("Warning: Portal_by_id was requested to return a portal with id equal or less than portal_count of get_model(). Returned NULL.");
+		return (NULL);
+	}
+	portal = get_model()->portal_first;
+	while (pc--)
+	{
+		if (portal->id == id)
+			return (portal);
+		portal = portal->next;
+	}
+	ft_putendl("Warning: Portal_by_id could not find a portal with the requested id. Returned NULL.");
+	return (NULL);
+}
+
 t_wall				*wall_by_id(int id)
 {
 	int		wc;

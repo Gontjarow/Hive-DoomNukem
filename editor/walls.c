@@ -145,7 +145,47 @@ void 				wall_to_buffer(t_wall *wall, SDL_Surface *buff, uint32_t color)
 	return (wall_to_buffer_fixed(&adjusted_wall, buff, color));
 }
 
+uint32_t			color_by_portal_type(int portal_type)
+{
+	if (portal_type == DOOR_PORTAL)
+		return (COLOR_DOOR);
+	else if (portal_type == WINDOW_PORTAL)
+		return (COLOR_WINDOW);
+	return (COLOR_PORTAL);
+}
 
+void				room_portals_to_buffer(t_room *room, SDL_Surface *buff)
+{
+	t_wall	*wall;
+	t_wall	*portal;
+	t_wall	*match;
+	int		wc;
+	int 	pc;
+
+	wall = room->first_wall;
+	wc = room->wall_count;
+	while (wc--)
+	{
+		pc = get_model()->portal_count;
+		portal = get_model()->portal_first;
+		match = NULL;
+		while (pc--)
+		{
+			if (wall->start.x == portal->start.x && wall->end.x == portal->end.x && wall->start.y == portal->start.y && wall->end.y == portal->end.y)
+				match = portal;
+			else if (wall->start.x == portal->end.x && wall->end.x == portal->start.x && wall->start.y == portal->end.y && wall->end.y == portal->start.y)
+				match = portal;
+			if (match != NULL)
+				break ;
+			portal = portal->next;
+		}
+		if (match != NULL)
+		{
+			wall_to_buffer(match, buff, color_by_portal_type(match->portal_type));
+		}
+		wall = wall->next;
+	}
+}
 
 void 				room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color)
 {
@@ -163,9 +203,19 @@ void 				room_walls_to_buffer(t_room *room, SDL_Surface *buff, uint32_t color)
 
 void				x_walls_to_buffer(int x, t_wall *wall, SDL_Surface *buff, uint32_t color)
 {
+	uint32_t draw_color;
+
 	while (x--)
 	{
-		wall_to_buffer(wall, buff, color);
+		if (wall->portal_type == NOT_A_PORTAL)
+			draw_color = color;
+		else if (wall->portal_type == REGULAR_PORTAL)
+			draw_color = COLOR_PORTAL;
+		else if (wall->portal_type == DOOR_PORTAL)
+			draw_color = COLOR_DOOR;
+		else if (wall->portal_type == WINDOW_PORTAL)
+			draw_color = COLOR_WINDOW;			
+		wall_to_buffer(wall, buff, draw_color);
 		wall = wall->next;
 	}
 }

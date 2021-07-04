@@ -9,6 +9,10 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define 				DEBUGGING_USE_FLAG "[No level exit defined] Infinite map suitable for debugging!\n"
 # define 				TOKEN_FIELD_LIMIT 16
 # define				TOKEN_KEY_LIMIT 16
+# define				NOT_A_PORTAL 0
+# define				REGULAR_PORTAL 1
+# define				DOOR_PORTAL 2
+# define				WINDOW_PORTAL 3
 # define 				WAV_PLOP "wav/plop.wav"
 # define 				WAV_STEAM0 "wav/steam/0.wav"
 # define 				WAV_SWORD "wav/sword.wav"
@@ -167,5 +171,6 @@ void 					relink_model_walls(t_wall *relinking_wall);
 
 t_room					*room_by_id(int id);
 t_wall					*wall_by_id(int id);
+t_wall					*portal_by_id(int id);
 
 #endif

@@ -180,6 +180,8 @@ typedef struct 			s_wall
 	SDL_Surface			*active_sprite;
 	struct s_wall		*next;
 	int					can_portal;
+	int					open;
+	int					portal_type;
 }						t_wall;
 
 typedef struct 			s_room
