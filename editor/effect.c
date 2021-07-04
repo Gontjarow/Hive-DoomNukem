@@ -138,6 +138,22 @@ static int		closest_wall_id(t_model *mdl, t_point xy, t_point *winning_hit, t_po
 	return (lowest_id);
 }
 
+static int		already_postered_wall(int wall_id)
+{
+	t_effect	*effect;
+	int			ec;
+
+	effect = get_model()->effect_first;
+	ec = get_model()->effect_count;
+	while (ec--)
+	{
+		if (effect->type_id == EFFECT_POSTER && effect->target_id == wall_id)
+			return (1);
+		effect = effect->next;
+	}
+	return (0);
+}
+
 static int		effect_plant_poster(int x, int y)
 {
 	t_model		*mdl;
@@ -150,7 +166,11 @@ static int		effect_plant_poster(int x, int y)
 	new_id = closest_wall_id(mdl, (t_point){x, y}, &winning_hit, &positive_hit);
 	if (new_id != -1)
 	{
-		//TODO CALCULATE TARGET.X, IT'S NOT 50
+		if (already_postered_wall(new_id))
+		{
+			puts("Disallowing placing more Poster Effectors on the same wall!");
+			return (-1);
+		}			
 		mdl->effects->target.x = 50;
 		mdl->effects->target.y = 50;
 		mdl->effects->loc.x = winning_hit.x;
@@ -185,6 +205,11 @@ static int		effect_plant_keypanel(int x, int y)
 	new_id = closest_wall_id(mdl, (t_point){x, y}, &winning_hit, &positive_hit);
 	if (new_id != -1)
 	{
+		if (effect_logic()->following_up_on != -1)
+		{
+			puts("Should check that this effect is now planted on top of a valid DOOR_PORTAL!");
+			return (-1);
+		}
 		mdl->effects->target.x = 50;
 		mdl->effects->target.y = 50;
 		mdl->effects->loc.x = winning_hit.x;
@@ -194,6 +219,8 @@ static int		effect_plant_keypanel(int x, int y)
 		mdl->effects->target_id = new_id;
 		mdl->effects->activated = 0;
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_switch_on;
+		effect_logic()->following_up_on = new_id;
+		effect_logic()->plant_dir = DOWNWARD;
 		new_id = mdl->effects->id;
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
 		if (!new_effect)
@@ -222,6 +249,25 @@ static int		light_pos(t_wall *wall)
 	return (optimum);
 }
 
+static int		already_lightknobbed_room(t_room *room)
+{
+	t_effect	*effect;
+	int			ec;
+
+	effect = get_model()->effect_first;
+	ec = get_model()->effect_count;
+	while (ec--)
+	{
+		if (effect->type_id == EFFECT_LIGHTKNOB)
+		{
+			if (room_by_wall_id(effect->target_id, get_model()) == room)
+				return (1);
+		}
+		effect = effect->next;
+	}
+	return (0);
+}
+
 static int		effect_plant_lightknob(int x, int y)
 {
 	t_model		*mdl;
@@ -234,6 +280,11 @@ static int		effect_plant_lightknob(int x, int y)
 	new_id = closest_wall_id(mdl, (t_point){x, y}, &winning_hit, &positive_hit);
 	if (new_id != -1)
 	{
+		if (already_lightknobbed_room(room_by_wall_id(new_id, mdl)))
+		{
+			puts("Disallowing placing more Lightknob Effectors in the same room!");
+			return (-1);
+		}			
 		mdl->effects->target.x = light_pos(wall_by_id(new_id));
 		mdl->effects->target.y = 50;
 		mdl->effects->loc.x = winning_hit.x;
@@ -374,6 +425,7 @@ t_logic 		*effect_logic(void)
 		logic->sweep[0].y = 0;
 		logic->colors = effect_colors;
 		logic->last_plant_id = -1;
+		logic->following_up_on = -1;
 	}
 	return (logic);
 }
@@ -443,6 +495,10 @@ void			effect_activate(t_state *state)
 
 void			effect_deactivate(t_state *state)
 {
+	if (effect_logic()->following_up_on != -1)
+	{
+		puts("Should destroy half-inputted effector!");
+	}
 	state->job_running = 0;
 	state->job_abort = 0;
 	state->thread_hit = 0;
@@ -477,6 +533,11 @@ static void		effect_refresh_preview(void)
 
 void 			effect_swap_type(void)
 {
+	if (effect_logic()->following_up_on != -1)
+	{
+		puts("Should handle aborting half-inputted effect here!");
+		effect_logic()->following_up_on = -1;
+	}
 	if (effect_logic()->plant_type == EFFECT_EXIT && get_model()->effect_count > 0)
 	{
 		effect_logic()->plant_type = EFFECT_POSTER;

@@ -124,6 +124,7 @@ typedef struct 			s_logic
 	int 				sweep_counter;
 	logic_colors		colors;
     int                 last_plant_id;
+    int                 following_up_on;
 }						t_logic;
 
 typedef struct 			s_select
