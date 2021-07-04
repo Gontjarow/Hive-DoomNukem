@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/04 19:55:28 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 21:16:40 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,7 @@ static void open_doors(t_doom *doom)
 static void	player_effector_interactions(t_doom *doom)		// WIP - 1
 {
 	int			ec;
+	t_room		*curr_room;
 	t_effect	*effect;
 	t_wall		*wall;
 
@@ -181,11 +182,12 @@ static void	player_effector_interactions(t_doom *doom)		// WIP - 1
 			player_collision_with_effects(doom, effect) == -1)
 		{
 			effect->activated = !effect->activated;
+			curr_room = room_by_id(check_location(doom, doom->mdl->player.x, doom->mdl->player.y));
+			curr_room->lit = effect->activated;
 			if (effect->activated)
 				effect->active_sprite = doom->sprites->txt_switch_off;
 			else
 				effect->active_sprite = doom->sprites->txt_switch_on;
-			// switch_light();
 		}
 		if (effect->type_id == EFFECT_KEYPANEL &&
 			player_collision_with_effects(doom, effect) == -1 &&

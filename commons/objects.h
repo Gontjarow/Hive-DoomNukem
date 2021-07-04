@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/06/13 18:46:37 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/04 21:14:41 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,7 @@ typedef struct 			s_wall
 typedef struct 			s_room
 {
 	struct s_wall		*first_wall;
+	int					lit;
 	int 				first_wall_id;
 	int 				id;
 	int 				wall_count;
