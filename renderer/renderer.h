@@ -24,6 +24,10 @@
 # define BYTE_TRANSPARENT 0xFF
 # define COLOR_TRANSPARENT 0xFF00FF
 
+// For wall effect drawing
+# define POSTER_WIDTH 0.2
+# define POSTER_HALF (POSTER_WIDTH / 2)
+
 // For line clipping
 # define LINE_SIDES_CROSS -1
 # define LINE_SIDES_EQUAL  1

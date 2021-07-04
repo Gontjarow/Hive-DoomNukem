@@ -172,12 +172,12 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 					SDL_Surface *tex = e->active_sprite;
 					// printf("effect found %i\n", e->type_id);
 					double h = e->target.x / 100.0;
-					if (h < tex_x) // should begin drawing
+					// within draw range
+					if ((h - POSTER_HALF) <= tex_x && tex_x <= (h + POSTER_HALF))
 					{
-						// TODO: NOT DONE
-						double poster_x = tex_x - h;
+						// value ÷ range = (0, 1)
+						double poster_x = (tex_x - (h - POSTER_HALF)) / ((h + POSTER_HALF) - (h - POSTER_HALF));
 						vertical_wall(screen_x, poster_x, vec2(y_start, y_stop), tex, depth);
-						double v = e->target.y / 100.0;
 					}
 					++i;
 				}
