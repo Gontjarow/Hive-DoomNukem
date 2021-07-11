@@ -95,13 +95,14 @@ typedef struct	s_section
 
 typedef struct	s_camera
 {
-	signed	sector_id;
-	t_xyz	position;
-	t_xyz	velocity;
-	double	angle;
-	double	sin;
-	double	cos;
-	double	yaw;
+	signed		sector_id;
+	t_xyz		position;
+	t_xyz		velocity;
+	double		angle;
+	double		sin;
+	double		cos;
+	double		yaw;
+	t_xy_line	*bounds;
 }				t_camera;
 
 typedef struct	s_world
@@ -119,6 +120,24 @@ typedef struct	s_queue
 	t_section	*front;
 	t_section	*rear;
 }				t_queue;
+
+typedef struct	s_wdata
+{
+	t_xy_line	preclip;
+	t_xy_line	render;
+	t_xy_line	ceil;
+	t_xy_line	floor;
+	int			x1;
+	int			x2;
+	int			neighbor_id;
+	double		ceil_angle;
+	double		floor_angle;
+	t_xy_line	start_clip;
+	double		clipped_ratio;
+	double		visible_ratio;
+	double		h_step;
+	t_sector	*connecting;
+}				t_wdata;
 
 double			*get_zbuffer();
 t_world			*get_world();

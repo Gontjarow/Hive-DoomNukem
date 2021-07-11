@@ -253,6 +253,12 @@ t_world			*load_world(t_world *world)
 
 	ft_bzero(&world->player, sizeof(world->player));
 
+	world->player.bounds = set_clip_bounds(
+		vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
+		vec2(+GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
+		vec2(+GAME_MIDWIDTH, NEAR_PLANE),
+		vec2(-GAME_MIDWIDTH, NEAR_PLANE));
+
 	world->screen_y_top = malloc(sizeof(int) * GAME_WIN_WIDTH);
 	world->screen_y_bot = malloc(sizeof(int) * GAME_WIN_WIDTH);
 
