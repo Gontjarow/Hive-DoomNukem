@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/07/11 17:22:25 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/11 19:51:11 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,6 +300,8 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_poster_on;
 	struct SDL_Surface	*txt_panel_off;
 	struct SDL_Surface	*txt_panel_on;
+	struct SDL_Surface	*txt_lever_off;
+	struct SDL_Surface	*txt_lever_on;
 	struct SDL_Surface	*active_portal;
 	int					portal_phase;
 
