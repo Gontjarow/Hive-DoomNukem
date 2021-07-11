@@ -123,6 +123,10 @@ typedef struct	s_queue
 
 typedef struct	s_wdata
 {
+	signed		vertex;
+	t_room		*room;
+	SDL_Surface	*texture;
+	t_xy_line	scale;
 	t_xy_line	preclip;
 	t_xy_line	render;
 	t_xy_line	ceil;
@@ -133,11 +137,24 @@ typedef struct	s_wdata
 	double		ceil_angle;
 	double		floor_angle;
 	t_xy_line	start_clip;
-	double		clipped_ratio;
+	double		clipped_start;
 	double		visible_ratio;
-	double		h_step;
+	double		x_step;
 	t_sector	*connecting;
 }				t_wdata;
+
+typedef struct	s_stripe
+{
+	int		x;
+	int		delta;
+	double	tx;
+	int		y1;
+	int		y2;
+	double	depth;
+	int		top;
+	int		bot;
+	t_xy	render_width;
+}				t_stripe;
 
 double			*get_zbuffer();
 t_world			*get_world();

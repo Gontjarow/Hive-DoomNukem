@@ -82,6 +82,7 @@ static uint32_t	texture_pixel(SDL_Surface *tex, int x, int y)
 		return (COLOR_TRANSPARENT);
 }
 
+// TODO: No more than 4 parameters!
 void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth, FUNC_SETPIXEL)
 {
 	unsigned	*pixels;
