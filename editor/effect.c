@@ -249,7 +249,7 @@ static int		light_pos(t_wall *wall)
 	return (optimum);
 }
 
-static int		already_lightknobbed_room(t_room *room)
+int				already_lightknobbed_room(t_room *room)
 {
 	t_effect	*effect;
 	int			ec;

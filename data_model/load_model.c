@@ -76,6 +76,11 @@ static void		link_mdl_wall_textures(t_model *mdl)
 	//ft_putendl("LINKED WALL TEXTURE_IDS TO WALL ACTIVE SPRITES IN DOOM->MDL");
 }
 
+static void		lightknob_room(t_room *room)
+{
+	puts("Lightknobbing room that was not already lightknobbed! Should include code here to add to the effect data a lightknob for this t_room!");
+}
+
 static void		link_mdl_rooms(t_model *mdl)
 {
     t_room	*room;
@@ -90,6 +95,8 @@ static void		link_mdl_rooms(t_model *mdl)
 		find_visual_xy(room);
 		//puts("SET BARYMETRIC CENTERPOINT FOR ROOM->VISUAL.X AND ROOM->VISUAL.Y!");
         room = room->next;
+		if (!already_lightknobbed_room(room))
+			lightknob_room(room);
     }
 }
 
