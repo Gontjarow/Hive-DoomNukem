@@ -149,14 +149,6 @@ void			edt_keystate_input(t_doom *doom)
 		effect_adjust(1, -1);
 		lock_s = 1;
 	}
-
-	if (lock_o)
-		lock_o--;
-	else if (doom->keystates[SDL_SCANCODE_O] && !lock_o)
-	{
-		effect_adjust(1, -1);
-		lock_o = 1;
-	}
 		
 	if (lock_a)
 		lock_a--;

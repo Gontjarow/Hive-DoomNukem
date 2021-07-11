@@ -12,6 +12,31 @@
 
 #include "doom-nukem.h"
 
+static void	void_polymap_door_ranks(t_model *mdl)
+{
+	t_wall	*portal;
+	int		pc;
+
+	portal = mdl->portal_first;
+	pc = mdl->portal_count;
+	while (pc--)
+	{
+		if (portal->portal_type == DOOR_PORTAL)
+		{
+			puts("Should void this DOOR_PORTAL in polymap with void pixel ranks on both sides + on top of the vector, to prevent player sinking into door!");
+			// TODO Come up with a voiding / de-voiding algorithm for the polymap for the door during game loading / gameplay when opened
+			// eg. here we would call something like polymap_manipulate_door(door, CLOSE);
+			// polymap_manipulate_door(t_wall *door, int open)
+			//{
+			//	algorithm that manipulates ranks of pixels on top of the door vector into mdl->polymap with color 0 or color room_by_portal(door)->id;
+			//}
+			// eg. gameplay_code()->door_open() should call something like polymap_manipulate_door(door, OPEN);
+			// TODO test airtightness with a single rank, triple rank, quintuple rank, septuple rank and select the first completely airtight rank count
+		}
+		portal = portal->next;
+	}
+}
+
 static void expand_mdl_polygon_maps(t_model *mdl)
 {
     static int times = 0;
@@ -76,16 +101,51 @@ static void		link_mdl_wall_textures(t_model *mdl)
 	//ft_putendl("LINKED WALL TEXTURE_IDS TO WALL ACTIVE SPRITES IN DOOM->MDL");
 }
 
+static int		wall_is_also_portal(t_wall *wall)
+{
+	t_wall	*portal;
+	int		pc;
+
+	portal = get_model()->portal_first;
+	pc = get_model()->portal_count;
+	while (pc--)
+	{
+		if (matching_walls(wall, portal))
+			return (1);
+		portal = portal->next;
+	}	
+	return (0);
+}
+
 static void		lightknob_room(t_room *room)
 {
-	puts("Lightknobbing room that was not already lightknobbed! Should include code here to add to the effect data a lightknob for this t_room!");
+	t_wall	*wall;
+	int		wc;
+
+	wall = room->first_wall;
+	wc = room->wall_count;
+	while (wc--)
+	{
+		if (!(wall_is_also_portal(wall)))
+		{
+			if (effect_lightknob_wall(wall))
+			{
+				//puts("Lightknobbing a room that was not already lightknobbed!");
+				return ;
+			}
+		}
+		wall = wall->next;
+	}
+	puts("Failed to lightknob a room that was not already lightknobbed! No non-portal walls found in room!");
 }
 
 static void		link_mdl_rooms(t_model *mdl)
 {
     t_room	*room;
     int		rc;
+	int		lightknob_auto_count;
 
+	lightknob_auto_count = 0;
     rc = mdl->room_count;
     room = mdl->room_first;
     while (rc--)
@@ -94,10 +154,15 @@ static void		link_mdl_rooms(t_model *mdl)
 		// Calculate barymetric center point for convex polygon (can be used to place sprite of light to room for example)
 		find_visual_xy(room);
 		//puts("SET BARYMETRIC CENTERPOINT FOR ROOM->VISUAL.X AND ROOM->VISUAL.Y!");
-        room = room->next;
 		if (!already_lightknobbed_room(room))
+		{
 			lightknob_room(room);
+			lightknob_auto_count++;
+		}		
+        room = room->next;
     }
+	if (lightknob_auto_count)
+		puts("Editor: Set Lightknobs automatically to some rooms which were missing them!");
 }
 
 static void print_map_strings(t_mapfile *map)
@@ -140,6 +205,8 @@ static void	create_data_model(t_doom *doom, char *map_file_path)
 	link_mdl_wall_textures(doom->mdl);
 	link_mdl_rooms(doom->mdl);
 	expand_mdl_polygon_maps(doom->mdl);
+	if (doom->edt_quit)
+		void_polymap_door_ranks(doom->mdl);
 }
 
 static void assign_player_room(t_doom *doom)

@@ -202,7 +202,7 @@ typedef struct 			s_room
 	struct s_room		*next;
 }						t_room;
 
-enum 	e_effect_types { EFFECT_EXIT, EFFECT_POSTER, EFFECT_KEYPANEL, EFFECT_LIGHTKNOB };
+enum 	e_effect_types { EFFECT_EXIT, EFFECT_POSTER, EFFECT_KEYPANEL, EFFECT_LIGHTKNOB, EFFECT_TARGET };
 
 typedef struct			s_effect
 {

@@ -1,0 +1,47 @@
+[Wall] id = 0 | start.x = 588 | start.y = 593 | end.x = 429 | end.y = 437 | texture_id = 1
+[Wall] id = 1 | start.x = 429 | start.y = 437 | end.x = 451 | end.y = 290 | texture_id = 1
+[Wall] id = 2 | start.x = 451 | start.y = 290 | end.x = 628 | end.y = 202 | texture_id = 1
+[Wall] id = 3 | start.x = 628 | start.y = 202 | end.x = 769 | end.y = 201 | texture_id = 1
+[Wall] id = 4 | start.x = 769 | start.y = 201 | end.x = 928 | end.y = 265 | texture_id = 1
+[Wall] id = 5 | start.x = 928 | start.y = 265 | end.x = 1014 | end.y = 380 | texture_id = 1
+[Wall] id = 6 | start.x = 1014 | start.y = 380 | end.x = 909 | end.y = 579 | texture_id = 1
+[Wall] id = 7 | start.x = 909 | start.y = 579 | end.x = 588 | end.y = 593 | texture_id = 1
+[Wall] id = 8 | start.x = 1014 | start.y = 380 | end.x = 1170 | end.y = 348 | texture_id = 1
+[Wall] id = 9 | start.x = 1170 | start.y = 348 | end.x = 1326 | end.y = 360 | texture_id = 1
+[Wall] id = 10 | start.x = 1326 | start.y = 360 | end.x = 1409 | end.y = 478 | texture_id = 1
+[Wall] id = 11 | start.x = 1409 | start.y = 478 | end.x = 1421 | end.y = 567 | texture_id = 1
+[Wall] id = 12 | start.x = 1421 | start.y = 567 | end.x = 1323 | end.y = 696 | texture_id = 1
+[Wall] id = 13 | start.x = 1323 | start.y = 696 | end.x = 1109 | end.y = 718 | texture_id = 1
+[Wall] id = 14 | start.x = 1109 | start.y = 718 | end.x = 909 | end.y = 579 | texture_id = 1
+[Wall] id = 15 | start.x = 909 | start.y = 579 | end.x = 1014 | end.y = 380 | texture_id = 1
+[Wall] id = 16 | start.x = 1421 | start.y = 567 | end.x = 1527 | end.y = 590 | texture_id = 2
+[Wall] id = 17 | start.x = 1527 | start.y = 590 | end.x = 1543 | end.y = 741 | texture_id = 2
+[Wall] id = 18 | start.x = 1543 | start.y = 741 | end.x = 1472 | end.y = 800 | texture_id = 2
+[Wall] id = 19 | start.x = 1472 | start.y = 800 | end.x = 1355 | end.y = 777 | texture_id = 2
+[Wall] id = 20 | start.x = 1355 | start.y = 777 | end.x = 1323 | end.y = 696 | texture_id = 2
+[Wall] id = 21 | start.x = 1323 | start.y = 696 | end.x = 1421 | end.y = 567 | texture_id = 2
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 8 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 1 | first_wall_id = 8 | wall_count = 8 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 2 | first_wall_id = 16 | wall_count = 6 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+
+[Portal] id = 0 | start.x = 909 | start.y = 579 | end.x = 1014 | end.y = 380 | portal_type = 2
+[Portal] id = 1 | start.x = 1323 | start.y = 696 | end.x = 1421 | end.y = 567 | portal_type = 2
+
+[Enemy] id = 0 | x = 896 | y = 424 | rot = 147 | hp = 75 | wep.type_id = 2 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 1227 | y = 605 | rot = 83 | hp = 75 | wep.type_id = 2 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 2 | x = 1458 | y = 725 | rot = 79 | hp = 75 | wep.type_id = 2 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 3 | x = 889 | y = 523 | rot = 180 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 4 | x = 1343 | y = 556 | rot = 7 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 5 | x = 1488 | y = 668 | rot = 30 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Effect] id = 0 | type_id = 0 | loc.x = 534 | loc.y = 397 | target.x = 0 | target.y = 0 | target_id = 0
+[Effect] id = 1 | type_id = 2 | loc.x = 1216 | loc.y = 707 | target.x = 50 | target.y = 50 | target_id = 13
+[Effect] id = 2 | type_id = 4 | loc.x = 1366 | loc.y = 638 | target.x = 50 | target.y = 50 | target_id = 1
+[Effect] id = 3 | type_id = 2 | loc.x = 971 | loc.y = 322 | target.x = 50 | target.y = 50 | target_id = 5
+[Effect] id = 4 | type_id = 4 | loc.x = 955 | loc.y = 490 | target.x = 50 | target.y = 50 | target_id = 0
+[Effect] id = 5 | type_id = 3 | loc.x = 508 | loc.y = 515 | target.x = 6 | target.y = 50 | target_id = 0
+[Effect] id = 6 | type_id = 3 | loc.x = 1092 | loc.y = 364 | target.x = 10 | target.y = 50 | target_id = 8
+[Effect] id = 7 | type_id = 3 | loc.x = 1474 | loc.y = 578 | target.x = 15 | target.y = 50 | target_id = 16
+
+[Player] spawn.x = 570 | spawn.y = 381 | rot = 10
