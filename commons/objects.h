@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/07/04 21:14:41 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/11 15:23:14 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct 			s_player
 	int					is_flying;
 	int					has_fired;
 	int					has_key;
+	int					eff_pressed;
 	int					mov_speed;
 	int					max_speed;
 	int					min_speed;
