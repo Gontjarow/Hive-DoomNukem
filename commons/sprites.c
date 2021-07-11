@@ -52,7 +52,7 @@ static int	load_texture_sprite(t_doom *doom)
 		doom->sprites->txt_floor[i] = load_texture(doom, path);
 		free(path);
 	}
-	ft_putendl("LOADED WALL AND FLOOR TEXTURES TO MEMORY");
+	//ft_putendl("LOADED WALL AND FLOOR TEXTURES TO MEMORY");
 }
 
 static int	load_ranged_sprite(t_doom *doom, char *path, int i)

@@ -73,7 +73,7 @@ static void		link_mdl_wall_textures(t_model *mdl)
 			printf("Warning: Link_mdl_wall_textures function linked to NULL pointer wall->active_sprite, texture_id was %d\n", wall->texture_id);
 		wall = wall->next;
 	}
-	ft_putendl("LINKED WALL TEXTURE_IDS TO WALL ACTIVE SPRITES IN DOOM->MDL");
+	//ft_putendl("LINKED WALL TEXTURE_IDS TO WALL ACTIVE SPRITES IN DOOM->MDL");
 }
 
 static void		link_mdl_rooms(t_model *mdl)
@@ -86,6 +86,9 @@ static void		link_mdl_rooms(t_model *mdl)
     while (rc--)
     {
     	room->first_wall = wall_by_id(room->first_wall_id);
+		// Calculate barymetric center point for convex polygon (can be used to place sprite of light to room for example)
+		find_visual_xy(room);
+		//puts("SET BARYMETRIC CENTERPOINT FOR ROOM->VISUAL.X AND ROOM->VISUAL.Y!");
         room = room->next;
     }
 }
