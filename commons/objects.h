@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/07/11 15:23:14 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/11 17:22:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -494,5 +494,14 @@ uint32_t				invert_color(uint32_t color);
 
 void					load_resources(t_model *mdl);
 int						load_appended(t_doom *doom);
+
+/*
+ * from destroy_sprites.c
+ * */
+
+void					destroy_walls_floors(t_doom *doom);
+void					destroy_enemies(t_doom *doom);
+void					destroy_pickups(t_doom *doom);
+void					destroy_single_sprites(t_doom *doom);
 
 #endif
