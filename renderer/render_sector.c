@@ -51,15 +51,15 @@ void			horizontal_clamp(int *x1, int *x2, t_section *section)
 	*x2 = min(*x2, section->right);
 }
 
-void			record_neighboring_sector(t_wdata *saved, signed sector_id)
+void			record_neighboring_sector(t_sector *sector, t_wdata *saved)
 {
 	t_world	*world;
 
 	world = get_world();
-	saved->neighbor_id = sector_id;
+	saved->neighbor_id = sector->neighbors[saved->vertex];
 	if (saved->neighbor_id != NO_NEIGHBOR)
 		queue_add(saved->neighbor_id, saved->x1, saved->x2);
-	saved->connecting = &(world->sectors[sector_id]);
+	saved->connecting = &(world->sectors[saved->neighbor_id]);
 }
 
 void			calculate_yawed_wall_height(t_sector *sector, t_xy_line scale, t_wdata *saved)
@@ -110,32 +110,32 @@ void	calculate_z_depth(t_wdata saved, t_stripe *screen)
 	screen->depth = saved.render.start.y + vec2_mul(screen->render_width, ratio).y;
 }
 
-void	draw_solid_stripe(t_sector *sector, t_wdata saved, t_stripe screen)
+// NOTE: Single vertical stripe.
+void	draw_wall_posters(t_wdata saved, t_stripe screen)
 {
-	vertical_wall(screen.x, screen.tx, vec2(screen.y1, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
-
-	if (sector->has_ceiling)
-		vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), -INFINITY, (saved.room->lit ? set_pixel : set_pixel_dark));
-	vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), -INFINITY, (saved.room->lit ? set_pixel : set_pixel_dark));
-
-	//! Draw posters
-	t_wall *w = wall_by_id(saved.room->first_wall_id + saved.vertex);
+	t_wall *wall = wall_by_id(saved.room->first_wall_id + saved.vertex);
 	int i = 0;
-	while (i < w->effect_count)
+	while (i < wall->effect_count)
 	{
-		t_effect *e = w->effects[i];
-		SDL_Surface *tex = e->active_sprite;
-		// printf("effect found %i\n", e->type_id);
-		double h = e->target.x / 100.0;
+		saved.texture = wall->effects[i]->active_sprite;
+		double h = wall->effects[i]->target.x / 100.0;
+
 		// within draw range
 		if ((h - POSTER_HALF) <= screen.tx && screen.tx <= (h + POSTER_HALF))
 		{
 			// value ÷ range = (0, 1)
 			double poster_x = (screen.tx - (h - POSTER_HALF)) / ((h + POSTER_HALF) - (h - POSTER_HALF));
-			vertical_wall(screen.x, poster_x, vec2(screen.y1, screen.y2), tex, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+			vertical_wall(screen.x, poster_x, vec2(screen.y1, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 		}
 		++i;
 	}
+}
+
+void	draw_solid_stripe(t_sector *sector, t_wdata saved, t_stripe screen)
+{
+	vertical_wall(screen.x, screen.tx, vec2(screen.y1, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+
+	draw_wall_posters(saved, screen);
 }
 
 void	draw_portal_stripes(t_sector *sector, t_wdata saved, t_stripe screen)
@@ -255,7 +255,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 		horizontal_clamp(&saved.x1, &saved.x2, section);
 
 		//! Add neighboring sector to queue if it exists.
-		record_neighboring_sector(&saved, sector->neighbors[saved.vertex]);
+		record_neighboring_sector(sector, &saved);
 
 		//! One more clip into the player's view-cone.
 		clip_to_cone(wall, &saved.render);
