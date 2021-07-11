@@ -17,6 +17,13 @@ t_room				*room_by_wall_id(int id, t_model *mdl)
 	t_room *room;
 	int     rc;
 
+	// NOT saved to map data
+
+	room->visual.x;
+	room->visual.y;
+
+	// Can be recalculated on map data load
+
 	room = mdl->room_first;
 	rc = mdl->room_count;
 	while (rc--)

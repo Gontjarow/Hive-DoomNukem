@@ -19,7 +19,7 @@ static int		equal_points(t_point a, t_point b)
 	return (0);
 }
 
-static int		matching_walls(t_wall *a, t_wall *b)
+int				matching_walls(t_wall *a, t_wall *b)
 {
 	if (equal_points(a->start, b->start) && equal_points(a->end, b->end))
 		return (1);

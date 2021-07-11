@@ -104,6 +104,7 @@ void	 	draw_effect(t_effect *effect, t_state *state)
 {
 	int		relative_x;
 	int		relative_y;
+	t_wall	faux_wall;
 
 	if (!((effect->loc.x >= state->scroll_x) &&
 		  (effect->loc.x <= state->scroll_x + (state->zoom_factor * EDT_WIN_WIDTH)) &&
@@ -118,6 +119,17 @@ void	 	draw_effect(t_effect *effect, t_state *state)
 	relative_y /= state->zoom_factor;
 	unpreserving_triangle_to_buffer(editor_back_buffer()->buff, (t_point){relative_x, relative_y},
 		effect_dirs(effect->type_id), effect_colors(effect->type_id));
+	if (effect->type_id == EFFECT_KEYPANEL && effect->next)
+	{
+		if (effect->next->type_id == EFFECT_TARGET)
+		{
+			faux_wall.start.x = effect->loc.x;
+			faux_wall.start.y = effect->loc.y;
+			faux_wall.end.x = effect->next->loc.x;
+			faux_wall.end.y = effect->next->loc.y;
+			wall_to_buffer(&faux_wall, editor_back_buffer()->buff, COLOR_EFFECT_KEYPANEL);
+		}		
+	}
 }
 
 void	 	draw_pickup(t_pickup *pickup, t_state *state)

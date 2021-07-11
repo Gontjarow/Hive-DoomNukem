@@ -354,6 +354,8 @@ static void			map_room_to_model(const int *fields, t_model *mdl)
 	t_room *new_room;
 
 	mdl->rooms->id = fields[0];
+	// Rooms->first_wall cannot be reliably set at this point but will be once all lines are decoded
+	mdl->rooms->first_wall = NULL;
 	mdl->rooms->first_wall_id = fields[1];
 	mdl->rooms->wall_count = fields[2];
 	mdl->rooms->floor_height = fields[3];
@@ -362,8 +364,10 @@ static void			map_room_to_model(const int *fields, t_model *mdl)
 	mdl->rooms->slope_floor = fields[6];
 	mdl->rooms->slope_roof = fields[7];
 	mdl->rooms->is_hallway = (mdl->rooms->slope_floor != -1 && mdl->rooms->slope_roof != -1 && mdl->rooms->wall_count == 4);
+	// We set these from trash to -1 to let the program know there are uncalculated
 	mdl->rooms->visual.x = -1;
 	mdl->rooms->visual.y = -1;
+	
 	mdl->rooms->adjusting_opposite = 0;
 	mdl->room_count++;
 	if (mdl->room_count == 1)
