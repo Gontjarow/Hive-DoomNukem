@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/12 15:38:56 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/12 20:53:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,37 +136,61 @@ static void	experimental_elevator(int active, int hard_reset)
 	}
 }
 
-/*
-	switch_light()
-	check which room the player is in
-	if activated is true
-		change brightness to low of that room
-	else
-		change brightness to normal of that room
-*/
-
-static void open_doors(t_doom *doom)
+static t_effect		*find_target_effect(t_doom *doom, int keypanel_id)
 {
-	int		pc;
-	t_wall	*portals;
+	int				ec;
+	t_effect		*effect;
 
+	ec = doom->mdl->effect_count;
+	if (ec == 0)
+		return (NULL);
+	effect = doom->mdl->effect_first;
+	while (ec--)
+	{
+		if (effect->id == keypanel_id + 1)
+			return (effect);
+		effect = effect->next;
+	}
+	printf("WARNING!! RETURN VALUE IN FIND_TARGET_EFFECT IS NULL\n");
+	return (NULL);
+}
+
+static void			open_doors(t_doom *doom, t_effect *effect)
+{
+	int				pc;
+	t_wall			*portals;
+	t_effect		*target_effect;
+
+	
 	pc = doom->mdl->portal_count;
 	if (pc == 0)
 		return ;
+	target_effect = find_target_effect(doom, effect->id);
 	portals = doom->mdl->portal_first;
 	while (pc--)
 	{
-		if (portals->portal_type == 2)
+		if (portals->portal_type == DOOR_PORTAL) // this is obviously opening all doors in the world -> later find which door belongs to the keypanel or lever the player interacted
 		{
-			portals->open = 1;
-			portals->active_sprite = NULL;
-			//change the portal sprite to transparent?
+			// if (effect->is_visible)
+			// {
+			// 	printf("Is visible\n");
+			// }
+			// else
+			// {
+
+				// printf("EFFECT_TARGET->target_id: %d | PORTAL->id: %d\n", target_effect->target_id, portals->id);
+				if (target_effect->target_id == portals->id)		// this means they are connected: keypanel to door
+				{
+					portals->open = 1;
+					portals->active_sprite = NULL;					//change the portal sprite to transparent?
+				}
+			// }
 		}
 		portals = portals->next;
 	}
 }
 
-static void	player_switch_light(t_doom *doom, t_effect	*effect, t_room *curr_room)
+static void	player_switch_light(t_doom *doom, t_effect *effect, t_room *curr_room)
 {
 	if (!doom->mdl->player.eff_pressed)
 	{
@@ -181,7 +205,7 @@ static void	player_switch_light(t_doom *doom, t_effect	*effect, t_room *curr_roo
 	}
 }
 
-// static void	player_switch_lever(t_doom *doom, t_effect	*effect)
+// static void	player_switch_lever(t_doom *doom, t_effect *effect)		//WIP
 // {
 // 	if (!doom->mdl->player.eff_pressed)
 // 	{
@@ -191,6 +215,7 @@ static void	player_switch_light(t_doom *doom, t_effect	*effect, t_room *curr_roo
 // 			effect->active_sprite = doom->sprites->txt_lever_off;
 // 		else
 // 			effect->active_sprite = doom->sprites->txt_lever_on;
+// 		open_doors(doom, effect);
 // 	}
 // }
 
@@ -217,11 +242,11 @@ static void	player_effector_interactions(t_doom *doom)
 			doom->mdl->player.has_key = 0;
 			effect->activated = 1;
 			effect->active_sprite = doom->sprites->txt_panel_on;
-			open_doors(doom);
+			open_doors(doom, effect);
 		}
 		// if (effect->type_id == EFFECT_LEVER &&
 		// player_collision_with_effects(doom, effect) == -1 &&
-		// effect->is_visible == 1)
+		// effect->is_visible == 1)		-> effect->is_visible will be set to 1 if no keypanel has been attached to a door, therefore EFFECT_LEVER has been created
 		// 	player_switch_lever(doom, effect);
 
 		effect = effect->next;
