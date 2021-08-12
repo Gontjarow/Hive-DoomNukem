@@ -181,6 +181,9 @@ void			render_enemies(t_doom *doom);
 void			render_pickups(t_doom *doom);
 void			render_effectors(t_doom *doom);
 
+// Somewhat generalized render functions
+t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
+
 t_queue			*get_queue();
 void			queue_add(int id, int left, int right);
 void			queue_pop();
