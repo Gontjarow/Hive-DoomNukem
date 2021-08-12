@@ -28,7 +28,7 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	mdl->effects->target.y = fields[5];
 	mdl->effects->target_id = fields[6];
 	mdl->effects->active_sprite = NULL;
-	mdl->effects->activated = 0;
+	mdl->effects->activated = 1;
 	mdl->effects->is_visible = 1;
 	if (mdl->effects->type_id == EFFECT_POSTER)
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_poster_on;
@@ -375,6 +375,7 @@ static void			map_room_to_model(const int *fields, t_model *mdl)
 	mdl->rooms->has_ceiling = fields[5];
 	mdl->rooms->slope_floor = fields[6];
 	mdl->rooms->slope_roof = fields[7];
+	mdl->rooms->lit = 1;
 	mdl->rooms->is_hallway = (mdl->rooms->slope_floor != -1 && mdl->rooms->slope_roof != -1 && mdl->rooms->wall_count == 4);
 	// We set these from trash to -1 to let the program know there are uncalculated
 	mdl->rooms->visual.x = -1;

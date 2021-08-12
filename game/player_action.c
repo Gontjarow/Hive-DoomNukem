@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/09 14:59:22 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/12 15:38:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,19 @@ static void	player_switch_light(t_doom *doom, t_effect	*effect, t_room *curr_roo
 	}
 }
 
+// static void	player_switch_lever(t_doom *doom, t_effect	*effect)
+// {
+// 	if (!doom->mdl->player.eff_pressed)
+// 	{
+// 		doom->mdl->player.eff_pressed = 1;
+// 		effect->activated = !effect->activated;
+// 		if (effect->activated)
+// 			effect->active_sprite = doom->sprites->txt_lever_off;
+// 		else
+// 			effect->active_sprite = doom->sprites->txt_lever_on;
+// 	}
+// }
+
 static void	player_effector_interactions(t_doom *doom)
 {
 	int			ec;
@@ -206,15 +219,11 @@ static void	player_effector_interactions(t_doom *doom)
 			effect->active_sprite = doom->sprites->txt_panel_on;
 			open_doors(doom);
 		}
-		// If a door is not connected to a key panel, then effect->is_visible should
-		// be true and a lever would be present on the door, which means we can now
-		// interact with the lever
 		// if (effect->type_id == EFFECT_LEVER &&
 		// player_collision_with_effects(doom, effect) == -1 &&
 		// effect->is_visible == 1)
-		// {
+		// 	player_switch_lever(doom, effect);
 
-		// }
 		effect = effect->next;
 	}
 }
@@ -233,7 +242,7 @@ void		handle_player_action(t_doom *doom)
 		player_run(doom);
 	if (!doom->keystates[SDL_SCANCODE_LSHIFT] && doom->mdl->player.run_lock)
 		player_run(doom);
-	if (doom->keystates[SDL_SCANCODE_E])
+	if (doom->keystates[SDL_SCANCODE_E] && !doom->mdl->player.eff_pressed)
 		player_effector_interactions(doom);
 	if (!doom->keystates[SDL_SCANCODE_E] && doom->mdl->player.eff_pressed)
 		doom->mdl->player.eff_pressed = 0;
