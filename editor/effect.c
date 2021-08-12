@@ -265,6 +265,7 @@ static int		add_keypanel_target_effector(int portal_id, t_point winning_hit, t_m
 	mdl->effects->type_id = EFFECT_TARGET;
 	mdl->effects->target_id = portal_id;
 	mdl->effects->activated = 0;
+	mdl->effects->is_visible = 0;
 	mdl->effects->active_sprite = NULL;
 	new_effect = (t_effect*)malloc(sizeof(t_effect));
 	if (!new_effect)

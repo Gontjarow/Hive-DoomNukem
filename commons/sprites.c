@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 16:32:02 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/11 19:55:59 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/18 16:16:01 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	load_texture_sprite(t_doom *doom)
 		doom->sprites->txt_floor[i] = load_texture(doom, path);
 		free(path);
 	}
-	//ft_putendl("LOADED WALL AND FLOOR TEXTURES TO MEMORY");
+	doom->sprites->txt_door = load_texture(doom, "img/textures/wall/door.png");
 }
 
 static int	load_ranged_sprite(t_doom *doom, char *path, int i)

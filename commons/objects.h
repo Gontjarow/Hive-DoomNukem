@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/07/11 19:51:11 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/18 17:32:05 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,7 @@ typedef struct			s_effect
 	int					activated;
 	struct s_point		loc;
 	struct s_point		target;
+	int					is_visible;
 	int 				target_id;
 	SDL_Surface			*active_sprite;
 	struct s_effect		*next;
@@ -274,6 +275,7 @@ typedef struct 			s_sprites
 	// Wall and Floor Sprites
 	struct SDL_Surface **txt_wall;
 	struct SDL_Surface **txt_floor;
+	struct SDL_Surface *txt_door;
 	
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;

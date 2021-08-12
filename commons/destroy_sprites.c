@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/11 16:47:10 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/11 19:14:30 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/09 14:14:41 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	destroy_walls_floors(t_doom *doom)
 	doom->sprites->txt_wall = NULL;
 	free(doom->sprites->txt_floor);
 	doom->sprites->txt_floor = NULL;
+	free(doom->sprites->txt_door);
+	doom->sprites->txt_door = NULL;
 }
 
 static void	destroy_more_enemies(t_doom *doom)

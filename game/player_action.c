@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/11 15:54:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/09 14:59:22 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ static void open_doors(t_doom *doom)
 		if (portals->portal_type == 2)
 		{
 			portals->open = 1;
+			portals->active_sprite = NULL;
 			//change the portal sprite to transparent?
 		}
 		portals = portals->next;
@@ -205,6 +206,15 @@ static void	player_effector_interactions(t_doom *doom)
 			effect->active_sprite = doom->sprites->txt_panel_on;
 			open_doors(doom);
 		}
+		// If a door is not connected to a key panel, then effect->is_visible should
+		// be true and a lever would be present on the door, which means we can now
+		// interact with the lever
+		// if (effect->type_id == EFFECT_LEVER &&
+		// player_collision_with_effects(doom, effect) == -1 &&
+		// effect->is_visible == 1)
+		// {
+
+		// }
 		effect = effect->next;
 	}
 }

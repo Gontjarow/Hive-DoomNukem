@@ -29,6 +29,7 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	mdl->effects->target_id = fields[6];
 	mdl->effects->active_sprite = NULL;
 	mdl->effects->activated = 0;
+	mdl->effects->is_visible = 1;
 	if (mdl->effects->type_id == EFFECT_POSTER)
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_poster_on;
 	else if (mdl->effects->type_id == EFFECT_KEYPANEL)
@@ -307,9 +308,20 @@ static void			map_portal_to_model(const int *fields, t_model *mdl)
 	mdl->portals->end.y = fields[4];
 	mdl->portals->portal_type = fields[5];
 	if (mdl->portals->portal_type == REGULAR_PORTAL || mdl->portals->portal_type == NOT_A_PORTAL)
+	{
 		mdl->portals->open = 1;
-	else
+	}
+	else if (mdl->portals->portal_type == DOOR_PORTAL)
+	{
 		mdl->portals->open = 0;
+		mdl->portals->active_sprite = doom_ptr()->sprites->txt_door;
+	}
+	else if (mdl->portals->portal_type == WINDOW_PORTAL)
+	{
+		mdl->portals->open = 0;
+		// Here should come the almost transparent texture?
+		// mdl->portals->active_sprite = doom_ptr()->sprites->txt_door;
+	}
 	mdl->portal_count++;
 	if (mdl->portal_count == 1)
 		mdl->portal_first = mdl->portals;
