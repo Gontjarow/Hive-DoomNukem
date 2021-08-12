@@ -380,6 +380,9 @@ void 					effect_mouse_motion(int x, int y);
 void 					effect_left_click(int x, int y);
 void 					effect_right_click(int x, int y);
 void 					effect_middle_click(int x, int y);
+int     				already_lightknobbed_room(t_room *room);
+int     				effect_lightknob_wall(t_wall *wall);
+void        			remove_effect(int id);
 
 /*
  * from positions.c
@@ -506,6 +509,7 @@ t_room					*room_by_wall_id(int id, t_model *mdl);
  * from portal.c
  * */
 
+int     				matching_walls(t_wall *a, t_wall *b);
 int						portal_belongs_to_room(t_wall *portal, t_room *room);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/04 19:59:30 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/07/18 16:11:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,7 @@ static int			check_bullet_hitting_door(t_doom *doom, t_xy prev_loc, t_xy current
 	while (pc--)
 	{
 		if (portals->open == 0)
-		{
-			printf("ITS INTERSECTING!\n");
 			return (1);
-		}
 		portals = portals->next;
 	}
 	return (0);

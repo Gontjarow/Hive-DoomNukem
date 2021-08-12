@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/07/04 21:27:05 by ngontjar         ###   ########.fr       */
+/*   Updated: 2021/08/12 15:47:44 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct 			s_player
 	int					is_flying;
 	int					has_fired;
 	int					has_key;
+	int					eff_pressed;
 	int					mov_speed;
 	int					max_speed;
 	int					min_speed;
@@ -205,7 +206,7 @@ typedef struct 			s_room
 	struct s_room		*next;
 }						t_room;
 
-enum 	e_effect_types { EFFECT_EXIT, EFFECT_POSTER, EFFECT_KEYPANEL, EFFECT_LIGHTKNOB };
+enum 	e_effect_types { EFFECT_EXIT, EFFECT_POSTER, EFFECT_KEYPANEL, EFFECT_LIGHTKNOB, EFFECT_TARGET };
 
 typedef struct			s_effect
 {
@@ -214,6 +215,7 @@ typedef struct			s_effect
 	int					activated;
 	struct s_point		loc;
 	struct s_point		target;
+	int					is_visible;
 	int 				target_id;
 	SDL_Surface			*active_sprite;
 	struct s_effect		*next;
@@ -276,6 +278,7 @@ typedef struct 			s_sprites
 	// Wall and Floor Sprites
 	struct SDL_Surface **txt_wall;
 	struct SDL_Surface **txt_floor;
+	struct SDL_Surface *txt_door;
 
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;
@@ -302,6 +305,8 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_poster_on;
 	struct SDL_Surface	*txt_panel_off;
 	struct SDL_Surface	*txt_panel_on;
+	struct SDL_Surface	*txt_lever_off;
+	struct SDL_Surface	*txt_lever_on;
 	struct SDL_Surface	*active_portal;
 	int					portal_phase;
 
@@ -497,5 +502,14 @@ uint32_t				invert_color(uint32_t color);
 
 void					load_resources(t_model *mdl);
 int						load_appended(t_doom *doom);
+
+/*
+ * from destroy_sprites.c
+ * */
+
+void					destroy_walls_floors(t_doom *doom);
+void					destroy_enemies(t_doom *doom);
+void					destroy_pickups(t_doom *doom);
+void					destroy_single_sprites(t_doom *doom);
 
 #endif

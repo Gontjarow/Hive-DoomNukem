@@ -141,7 +141,8 @@ void			render_effectors(t_doom *doom)
 				// Debug seg fault
 				if (effect->active_sprite == NULL)
 				{
-					ft_putendl("Active sprite was NULL in render_items!");
+					// ft_putendl("Active sprite was NULL in render_items!");
+					// printf("effect id: %d\n", effect->id);
 					effect = effect->next;
 					continue;
 				}

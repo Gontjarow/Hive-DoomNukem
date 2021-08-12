@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/08/12 15:15:41 by ngontjar         ###   ########.fr       */
+/*   Updated: 2021/08/12 15:45:31 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # define FPS 60
 # define TICKS_PER_FRAME 1000.0 / FPS
 
-# define DEBUG 1
+# define DEBUG 0
 
 typedef struct			s_doom
 {

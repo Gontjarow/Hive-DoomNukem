@@ -86,6 +86,7 @@ void		init_model(t_doom *doom)
 	doom->mdl->player.is_flying = 0;
 	doom->mdl->player.has_fired = 0;
 	doom->mdl->player.has_key = 0;
+	doom->mdl->player.eff_pressed = 0;
 		//puts("PLAYER ROOM INITED TO NULL AND ID TO -1");
 	init_player_weapon(doom);
 }
