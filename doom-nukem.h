@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom-nukem.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 19:13:53 by ngontjar          #+#    #+#             */
-/*   Updated: 2021/07/04 19:07:32 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/12 15:15:41 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct			s_doom
 }						t_doom;
 
 void			ft_assert(int eval, const char *error_message);
+void			ft_crash_if(int eval, const char *error_message);
 void			ft_die(const char *error_message);
 void 			load_alphabet(t_menu *menu);
 void	 		destroy_alphabet(t_menu *menu);

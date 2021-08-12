@@ -184,6 +184,7 @@ void			render_effectors(t_doom *doom);
 t_queue			*get_queue();
 void			queue_add(int id, int left, int right);
 void			queue_pop();
+void			print_queue(t_queue *queue);
 
 /*
 ** Math is fun, okay? ⤵️

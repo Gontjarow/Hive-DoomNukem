@@ -231,9 +231,10 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 		clip_to_bounds(wall, &wall, world->player.bounds);
 
 		//! Ignore zero-length walls.
-		if (doom->game->show_info && line_is_zero(wall))
+		if (line_is_zero(wall))
 		{
-			draw_debug(saved.preclip);
+			if (doom->game->show_info)
+				draw_debug(saved.preclip);
 			++saved.vertex;
 			continue;
 		}
@@ -244,9 +245,10 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 		saved.x2 = GAME_MIDWIDTH + (wall.stop.x  * saved.scale.stop.x);
 
 		//! Ignore impossible walls, or walls that are backwards.
-		if(doom->game->show_info && (saved.x1 >= saved.x2 || saved.x2 < section->left || section->right < saved.x1))
+		if(saved.x1 >= saved.x2 || saved.x2 < section->left || section->right < saved.x1)
 		{
-			draw_debug(saved.preclip);
+			if (doom->game->show_info)
+				draw_debug(saved.preclip);
 			++saved.vertex;
 			continue;
 		}
