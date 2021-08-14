@@ -2,7 +2,7 @@
 
 t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out)
 {
-	//! Calculate points scaled by screen.delta FOV.
+	//! Calculate points scaled by screen.x_delta FOV.
 	// (window height / Y position) = 90 degree FOV
 	out->start.x = GAME_WIN_HEIGHT / -segment.start.y;
 	out->stop.x = GAME_WIN_HEIGHT / -segment.stop.y;
@@ -106,7 +106,7 @@ void	calculate_z_depth(t_wdata saved, t_stripe *screen)
 {
 	double ratio; //? What ratio?
 
-	ratio = (double)screen->delta / (saved.x2 - saved.x1);
+	ratio = (double)screen->x_delta / (saved.x2 - saved.x1);
 	screen->depth = saved.render.start.y + vec2_mul(screen->render_width, ratio).y;
 }
 
@@ -157,8 +157,8 @@ void	draw_portal_stripes(t_sector *sector, t_wdata saved, t_stripe screen)
 	double		connecting_ceil_angle  = (connecting_yawed_ceil.stop.y - connecting_yawed_ceil.start.y) / (double)(saved.x2 - saved.x1);
 	double		connecting_floor_angle = (connecting_yawed_floor.stop.y - connecting_yawed_floor.start.y) / (double)(saved.x2 - saved.x1);
 
-	signed		connecting_y_start     = connecting_yawed_ceil.start.y + (screen.delta * connecting_ceil_angle);
-	signed		connecting_y_stop      = connecting_yawed_floor.start.y + (screen.delta * connecting_floor_angle);
+	signed		connecting_y_start     = connecting_yawed_ceil.start.y + (screen.x_delta * connecting_ceil_angle);
+	signed		connecting_y_stop      = connecting_yawed_floor.start.y + (screen.x_delta * connecting_floor_angle);
 
 	vertical_wall(screen.x, screen.tx, vec2(screen.y1, connecting_y_start), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 	vertical_wall(screen.x, screen.tx, vec2(connecting_y_stop, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
@@ -169,8 +169,8 @@ void	draw_portal_stripes(t_sector *sector, t_wdata saved, t_stripe screen)
 
 void	calculate_vertical_endpoints(t_wdata saved, t_stripe *screen)
 {
-	screen->y1 = saved.ceil.start.y + (screen->delta * saved.ceil_angle);
-	screen->y2 = saved.floor.start.y + (screen->delta * saved.floor_angle);
+	screen->y1 = saved.ceil.start.y + (screen->x_delta * saved.ceil_angle);
+	screen->y2 = saved.floor.start.y + (screen->x_delta * saved.floor_angle);
 }
 
 void	draw_single_wall(t_sector *sector, t_wdata saved)
@@ -185,8 +185,8 @@ void	draw_single_wall(t_sector *sector, t_wdata saved)
 	screen.x = saved.x1;
 	while (screen.x < saved.x2)
 	{
-		screen.delta = (screen.x - saved.x1);
-		screen.tx = saved.clipped_start + (screen.delta * saved.x_step);
+		screen.x_delta = (screen.x - saved.x1);
+		screen.tx = saved.clipped_start + (screen.x_delta * saved.x_step);
 
 		calculate_vertical_endpoints(saved, &screen);
 		calculate_z_depth(saved, &screen);

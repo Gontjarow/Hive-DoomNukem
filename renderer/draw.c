@@ -67,7 +67,7 @@ static unsigned	texture_pixel_debug(SDL_Surface *tex, int x, int y)
 		return (COLOR_TRANSPARENT);
 }
 
-static uint32_t	texture_pixel(SDL_Surface *tex, int x, int y)
+uint32_t		texture_pixel(SDL_Surface *tex, int x, int y)
 {
 	uint32_t	*sprite;
 	uint32_t	pixel;
@@ -199,6 +199,38 @@ void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex
 
 		current_pixel.y++;
 		range.x++;
+	}
+}
+
+void			draw_sprite(t_wdata saved, t_stripe screen, FUNC_SETPIXEL)
+{
+	screen.x = saved.x1;
+	screen.tx = 0;
+	if (screen.x < 0)
+	{
+		screen.tx += screen.x_delta * -screen.x;
+		screen.x = 0;
+	}
+	while (screen.x < saved.x2 && screen.x < GAME_WIN_WIDTH && screen.tx < saved.texture->w)
+	{
+		screen.y = screen.y1;
+		screen.ty = 0;
+		if (screen.y < 0)
+		{
+			screen.ty += screen.y_delta * -screen.y;
+			screen.y = 0;
+		}
+		while ((screen.y <= screen.y2) && (screen.y < GAME_WIN_HEIGHT))
+		{
+			uint32_t color = texture_pixel(saved.texture, screen.tx, screen.ty);
+			if (color != COLOR_TRANSPARENT && color >> 24 != 0x00)
+				if (zbuffer_ok(GAME_WIN_WIDTH * screen.y + screen.x, screen.depth))
+					fp(doom_ptr()->game->buff, screen.x, screen.y, color);
+			++screen.y;
+			screen.ty += screen.y_delta;
+		}
+		++screen.x;
+		screen.tx += screen.x_delta;
 	}
 }
 

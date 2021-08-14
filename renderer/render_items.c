@@ -47,6 +47,8 @@ void		render_effectors(t_doom *doom)
 			continue;
 		}
 
+		saved.texture = effect->active_sprite;
+
 		//! Only this value is considered for scaling (simple distance).
 		saved.scale.start.y = GAME_WIN_HEIGHT / -sprite.start.y;
 
@@ -65,23 +67,24 @@ void		render_effectors(t_doom *doom)
 		//? meaning that retrieving it by location may return -1 as the index.
 		t_room *room = room_by_wall_id(effect->target_id, doom->mdl);
 
-		double floor = room->floor_height / WORLD_SCALE - world->player.position.z;
-		floor = GAME_MIDHEIGHT - (floor + sprite.start.y * world->player.yaw) * saved.scale.start.y;
+		saved.floor.start.y = room->floor_height / WORLD_SCALE - world->player.position.z;
+		saved.floor.start.y = GAME_MIDHEIGHT - (saved.floor.start.y + sprite.start.y * world->player.yaw) * saved.scale.start.y;
 
-		double ceil  = room->floor_height / WORLD_SCALE + EYE_HEIGHT - world->player.position.z;
-		ceil  = GAME_MIDHEIGHT - (ceil  + sprite.start.y * world->player.yaw) * saved.scale.start.y;
+		saved.ceil.start.y = room->floor_height / WORLD_SCALE + EYE_HEIGHT - world->player.position.z;
+		saved.ceil.start.y = GAME_MIDHEIGHT - (saved.ceil.start.y + sprite.start.y * world->player.yaw) * saved.scale.start.y;
 
-		int x = saved.x1;
-		if (x < 0)
-			x -= x;
-
-		int	length = (saved.x2 - saved.x1);
-		while (x < saved.x2 && x < GAME_WIN_WIDTH)
-		{
-			int tx = (x - saved.x1) * effect->active_sprite->w / length;
-			vertical_sprite(effect->active_sprite, x, tx, vec2(ceil, floor), sprite.start.y);
-			++x;
-		}
+		t_stripe screen;
+		screen.x = saved.x1;
+		screen.y = saved.ceil.start.y;
+		screen.y1 = saved.ceil.start.y;
+		screen.y2 = saved.floor.start.y;
+		screen.depth = sprite.start.y + 0.1;
+		screen.x_delta = saved.texture->w / (double)(saved.x2 - saved.x1);
+		screen.y_delta = saved.texture->h / (double)(screen.y2 - screen.y1);
+		if (room->lit)
+			draw_sprite(saved, screen, set_pixel);
+		else
+			draw_sprite(saved, screen, set_pixel_dark);
 
 		if (doom->game->show_info)
 		{

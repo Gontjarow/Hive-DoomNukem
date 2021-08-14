@@ -145,14 +145,17 @@ typedef struct	s_wdata
 
 typedef struct	s_stripe
 {
-	int		x;
-	int		delta;
-	double	tx;
-	int		y1;
-	int		y2;
-	double	depth;
-	int		top;
-	int		bot;
+	int		x;			// screen_x
+	int		y;			// screen_y
+	double	tx;			// texture_x
+	double	ty;			// texture_x
+	double	x_delta;	// texture X delta
+	double	y_delta;	// texture Y delta
+	double	depth;		// Z buffer
+	int		y1;			// top pixel
+	int		y2;			// bottom pixel
+	int		top;		// absolute screen boundary
+	int		bot;		// absolute screen boundary
 	t_xy	render_width;
 }				t_stripe;
 
@@ -168,6 +171,7 @@ void			link_wall_decorators();
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			drawline(t_xy_line line, SDL_Surface *surface);
 void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
+void			draw_sprite(t_wdata saved, t_stripe screen, FUNC_SETPIXEL);
 void			vertical_line(int column, int start, int end, int color);
 void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth, FUNC_SETPIXEL);
 void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom);
@@ -183,6 +187,8 @@ void			render_effectors(t_doom *doom);
 
 // Somewhat generalized render functions
 t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
+uint32_t		texture_pixel(SDL_Surface *tex, int x, int y);
+int				zbuffer_ok(int index, double depth);
 
 t_queue			*get_queue();
 void			queue_add(int id, int left, int right);
