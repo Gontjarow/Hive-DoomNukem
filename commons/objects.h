@@ -6,7 +6,7 @@
 /*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/12 15:47:44 by ngontjar         ###   ########.fr       */
+/*   Updated: 2021/08/14 21:06:27 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,6 @@ typedef struct			s_effect
 	int					activated;
 	struct s_point		loc;
 	struct s_point		target;
-	int					is_visible;
 	int 				target_id;
 	SDL_Surface			*active_sprite;
 	struct s_effect		*next;
