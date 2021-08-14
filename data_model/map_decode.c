@@ -28,7 +28,6 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	mdl->effects->target.y = fields[5];
 	mdl->effects->target_id = fields[6];
 	mdl->effects->active_sprite = NULL;
-	mdl->effects->is_visible = 1;
 	if (mdl->effects->type_id == EFFECT_POSTER)
 	{
 		mdl->effects->activated = 0;
