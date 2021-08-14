@@ -189,6 +189,7 @@ void			render_effectors(t_doom *doom);
 t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
 uint32_t		texture_pixel(SDL_Surface *tex, int x, int y);
 int				zbuffer_ok(int index, double depth);
+t_xy_line		viewer_facing_wall(t_xy location, t_world *world);
 
 t_queue			*get_queue();
 void			queue_add(int id, int left, int right);
@@ -207,6 +208,7 @@ double			value_changed(int initialize, double value);
 
 void			vec2p(const char *name, t_xy v);
 t_xy			vec2(double x, double y);
+t_xy			veci2(t_point v);
 t_xyz			vec23(t_xy v, double z);
 t_xy			vec2_add(t_xy a, t_xy b);
 t_xy			vec2_sub(t_xy a, t_xy b);

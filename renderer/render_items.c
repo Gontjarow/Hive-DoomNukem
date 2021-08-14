@@ -1,6 +1,6 @@
 #include "doom-nukem.h"
 
-t_xy_line	viewer_facing_wall(t_effect *effect, t_world *world)
+t_xy_line	viewer_facing_wall(t_xy location, t_world *world)
 {
 	double	cos90;
 	double	sin90;
@@ -11,7 +11,7 @@ t_xy_line	viewer_facing_wall(t_effect *effect, t_world *world)
 	cos90 = cos(world->player.angle + PI_BY_TWO);
 	sin90 = sin(world->player.angle + PI_BY_TWO);
 
-	pos = vec2_div(vec2(effect->loc.x, effect->loc.y), WORLD_SCALE);
+	pos = vec2_div(location, WORLD_SCALE);
 
 	left = vec2_mul(vec2(-cos90, -sin90), SPRITE_SCALE);
 	left = vec2_add(pos, left);
@@ -36,10 +36,10 @@ void		render_effectors(t_doom *doom)
 
 	while (~--effect_count)
 	{
-		if (effect->type_id == EFFECT_POSTER)
-			continue;
+		// if (effect->type_id == EFFECT_POSTER)
+		// 	continue;
 
-		t_xy_line sprite = viewer_facing_wall(effect, world);
+		t_xy_line sprite = viewer_facing_wall(veci2(effect->loc), world);
 
 		if (sprite.start.y > NEAR_PLANE)
 		{

@@ -10,6 +10,11 @@ t_xy	vec2(double x, double y)
 	return ((t_xy){x, y});
 }
 
+t_xy	veci2(t_point v)
+{
+	return (vec2(v.x, v.y));
+}
+
 t_xyz	vec23(t_xy v, double z)
 {
 	return (vec3(v.x, v.y, z));
