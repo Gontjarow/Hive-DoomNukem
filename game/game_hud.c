@@ -6,27 +6,28 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/05 19:28:38 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:23:50 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-void		init_hud(t_doom *doom)
+void	init_hud(t_doom *doom)
 {
-	int n;
+	int	n;
 
 	n = 0;
 	while (n <= 9)
 	{
-		if (!(doom->mdl->player.weap_arr[n].weap_img =
-		(SDL_Surface*)malloc(sizeof(SDL_Surface))))
+		doom->mdl->player.weap_arr[n].weap_img = (SDL_Surface *)
+			malloc(sizeof(SDL_Surface));
+		if (!(doom->mdl->player.weap_arr[n].weap_img))
 			ft_die("Error allocating weap_img!\n");
 		n++;
 	}
 }
 
-static void draw_surface_with_alpha_blurred(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
+static void	draw_surface_with_alpha_blurred(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
 	int *pix[2];
 	int i;
@@ -101,7 +102,7 @@ static void draw_surface_with_alpha_blurred(int x, int y, SDL_Surface *surf, SDL
 	}
 }
 
-static void draw_surface_with_alpha_cel_shaded_black(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
+static void	draw_surface_with_alpha_cel_shaded_black(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
 	int *pix[2];
 	int i;
@@ -168,7 +169,7 @@ static void draw_surface_with_alpha_cel_shaded_black(int x, int y, SDL_Surface *
 	}
 }
 
-static void draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
+static void	draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
 	uint32_t *pix[2];
 	int i;
@@ -245,7 +246,7 @@ static void draw_surface_with_alpha_cel_shaded(int x, int y, SDL_Surface *surf, 
 	}
 }
 
-static void draw_surface_with_alpha_silhouette(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
+static void	draw_surface_with_alpha_silhouette(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
 	int *pix[2];
 	int i;
@@ -318,7 +319,7 @@ static void draw_surface_with_alpha_silhouette(int x, int y, SDL_Surface *surf, 
 	}
 }
 
-void		handle_player_health_bar(t_doom *doom)
+void	handle_player_health_bar(t_doom *doom)
 {
 	float	percentage;
 	int		pos;
@@ -326,10 +327,11 @@ void		handle_player_health_bar(t_doom *doom)
 	percentage = doom->mdl->player.hp.cur / 10;
 	pos = (int)percentage;
 	doom->mdl->player.active_health_bar = doom->sprites->txt_health_bar[pos];
-	draw_surface(0, WIN_HEIGHT - 35, doom->mdl->player.active_health_bar, doom->game->hud_location);
+	draw_surface(0, WIN_HEIGHT - 35, doom->mdl->player.active_health_bar,
+		doom->game->hud_location);
 }
 
-void		handle_player_fuel_bar(t_doom *doom)
+void	handle_player_fuel_bar(t_doom *doom)
 {
 	float	percentage;
 	int		pos;
@@ -337,10 +339,20 @@ void		handle_player_fuel_bar(t_doom *doom)
 	percentage = doom->mdl->player.weap_arr[JETPACK].ammo_cur / 100;
 	pos = (int)percentage;
 	doom->mdl->player.active_fuel_bar = doom->sprites->txt_fuel_bar[pos];
-	draw_surface(0, WIN_HEIGHT - 75, doom->mdl->player.active_fuel_bar, doom->game->hud_location);
+	draw_surface(0, WIN_HEIGHT - 75, doom->mdl->player.active_fuel_bar,
+		doom->game->hud_location);
 }
 
-void		handle_player_ammo_bar(t_doom *doom)
+static int	handle_space_ammo_bar(t_doom *doom, int space)
+{
+	if (doom->mdl->player.weap_id == SHOTGUN)
+		space -= 20;
+	else
+		space -= 10;
+	return (space);
+}
+
+void	handle_player_ammo_bar(t_doom *doom)
 {
 	int		ammo;
 	int		i;
@@ -354,18 +366,21 @@ void		handle_player_ammo_bar(t_doom *doom)
 		if (doom->mdl->player.reload_time <= 0)
 		{
 			if (doom->mdl->player.weap_id == PISTOL)
-				draw_surface_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_pistol_ammo_bar, doom->game->hud_location);
+				draw_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40,
+					doom->sprites->txt_pistol_bar, doom->game->hud_location);
 			else if (doom->mdl->player.weap_id == SHOTGUN)
-				draw_surface_ignore_alpha((WIN_WIDTH - 10) + (space - 10), WIN_HEIGHT - 45, doom->sprites->txt_shotgun_ammo_bar, doom->game->hud_location);
+				draw_ignore_alpha(WIN_WIDTH - 10 + space - 10, WIN_HEIGHT - 45,
+					doom->sprites->txt_shotgun_bar, doom->game->hud_location);
 			else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
-				draw_surface_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40, doom->sprites->txt_assault_ammo_bar, doom->game->hud_location);
-			space -= doom->mdl->player.weap_id == SHOTGUN ? 20 : 10;
+				draw_ignore_alpha((WIN_WIDTH - 10) + space, WIN_HEIGHT - 40,
+					doom->sprites->txt_rifle_bar, doom->game->hud_location);
+			space = handle_space_ammo_bar(doom, space);
 		}
 		i++;
 	}
 }
 
-void		handle_clip_bar(t_doom *doom)
+void	handle_clip_bar(t_doom *doom)
 {
 	int		clips;
 	int		i;
@@ -376,37 +391,46 @@ void		handle_clip_bar(t_doom *doom)
 	i = 0;
 	while (i < clips)
 	{
-		draw_surface_ignore_alpha((WIN_WIDTH - 20) + space, WIN_HEIGHT - 80, doom->sprites->txt_clip_bar, doom->game->hud_location);
+		draw_ignore_alpha((WIN_WIDTH - 20) + space, WIN_HEIGHT - 80,
+			doom->sprites->txt_clip_bar, doom->game->hud_location);
 		space -= 20;
 		i++;
 	}
 }
 
-void		handle_weapon_bar_shaded(t_doom *doom)
+void	handle_weapon_bar_shaded(t_doom *doom)
 {
 	if (doom->mdl->player.weap_id == PISTOL)
-		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 150, 0, doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
+		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 150, 0,
+			doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
 	else if (doom->mdl->player.weap_id == SHOTGUN)
-		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 240, 0, doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
+		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 240, 0,
+			doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
 	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE)
-		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 250, 0, doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
+		draw_surface_with_alpha_cel_shaded(WIN_WIDTH - 250, 0,
+			doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
 }
 
-void		handle_weapon_bar(t_doom *doom)
+void	handle_weapon_bar(t_doom *doom)
 {
 	if (doom->game->cel_shade_hud)
 		return (handle_weapon_bar_shaded(doom));
 	if (doom->mdl->player.weap_id == PISTOL && !doom->mdl->player.is_running)
-		draw_surface_ignore_alpha(WIN_WIDTH - 150, 0, doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
-	else if (doom->mdl->player.weap_id == SHOTGUN && !doom->mdl->player.is_running)
-		draw_surface_ignore_alpha(WIN_WIDTH - 260, 0, doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
-	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE && !doom->mdl->player.is_running)
-		draw_surface_ignore_alpha(WIN_WIDTH - 260, 0, doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
+		draw_ignore_alpha(WIN_WIDTH - 150, 0,
+			doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
+	else if (doom->mdl->player.weap_id == SHOTGUN
+		&& !doom->mdl->player.is_running)
+		draw_ignore_alpha(WIN_WIDTH - 260, 0,
+			doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
+	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE
+		&& !doom->mdl->player.is_running)
+		draw_ignore_alpha(WIN_WIDTH - 260, 0,
+			doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
 }
 
-static void render_legacy_ch(t_model *mdl)
+static void	render_legacy_ch(t_model *mdl)
 {
-	t_line 	crosshair;
+	t_line	crosshair;
 
 	crosshair.buff = mdl->parent->game->buff;
 	crosshair.color = 0x00000000;
@@ -428,9 +452,9 @@ static void render_legacy_ch(t_model *mdl)
 	render_line(&crosshair);
 }
 
-static void render_pistol_ch(t_model *mdl)
+static void	render_pistol_ch(t_model *mdl)
 {
-	t_line 	crosshair;
+	t_line	crosshair;
 
 	crosshair.buff = mdl->parent->game->buff;
 	crosshair.color = 0x00ffffff;
@@ -452,9 +476,9 @@ static void render_pistol_ch(t_model *mdl)
 	render_line(&crosshair);
 }
 
-static void render_assault_rifle_ch(t_model *mdl)
+static void	render_assault_rifle_ch(t_model *mdl)
 {
-	t_line 	crosshair;
+	t_line	crosshair;
 
 	crosshair.buff = mdl->parent->game->buff;
 	crosshair.color = 0x00ffffff;
@@ -473,9 +497,9 @@ static void render_assault_rifle_ch(t_model *mdl)
 	render_line(&crosshair);
 }
 
-static void render_shotgun_ch(t_model *mdl)
+static void	render_shotgun_ch(t_model *mdl)
 {
-	t_line 	crosshair;
+	t_line	crosshair;
 
 	crosshair.buff = mdl->parent->game->buff;
 	crosshair.color = 0x00ffffff;
@@ -497,7 +521,7 @@ static void render_shotgun_ch(t_model *mdl)
 	render_line(&crosshair);
 }
 
-static void render_crosshair(t_model *mdl)
+static void	render_crosshair(t_model *mdl)
 {
 	if (mdl->player.weap_id == PISTOL)
 		render_pistol_ch(mdl);
@@ -507,7 +531,7 @@ static void render_crosshair(t_model *mdl)
 		render_assault_rifle_ch(mdl);
 }
 
-void		render_game_hud(t_doom *doom)
+void	render_game_hud(t_doom *doom)
 {
 	if (doom->game->hud_location == NULL)
 		doom->game->hud_location = doom->game->buff;
@@ -518,44 +542,8 @@ void		render_game_hud(t_doom *doom)
 	handle_clip_bar(doom);
 	handle_weapon_bar(doom);
 	if (doom->mdl->player.has_key)
-		draw_surface_ignore_alpha(WIN_WIDTH - 50, 300, doom->sprites->txt_key_hud, doom->game->hud_location);
+		draw_ignore_alpha(WIN_WIDTH - 50, 300, doom->sprites->txt_key_hud,
+			doom->game->hud_location);
 	if (!doom->game->show_info)
 		render_crosshair(doom->mdl);
-}
-
-static void render_character(char c, t_doom *doom, int x, int y)
-{
-	unsigned int 	*reference;
-	unsigned int	*pixels;
-	int 			i;
-	int 			j;
-	int 			k;
-
-	if (c >= 'A' && c <= 'Z')
-		c += 48;
-	i = 0;
-	k = 0;
-	pixels = doom->minimap->buff->pixels;				// here comes game buff
-	if (doom->menu->alphabet[(int)c])
-	{
-		reference = doom->menu->alphabet[(int)c]->pixels;
-		j = x + (WIN_WIDTH * y);
-		while (k < (doom->menu->alphabet[(int)c]->w * doom->menu->alphabet
-			[(int)c]->h))
-		{
-			j = i == doom->menu->alphabet[(int)c]->w ? j + WIN_WIDTH : j;
-			i = i == doom->menu->alphabet[(int)c]->w ? 0 : i;
-			pixels[i++ + j] = reference[k++];
-		}
-	}
-}
-
-void	game_print_alphabet(const char *str, t_doom *doom, int x, int y)
-{
-	while (*str)
-	{
-		render_character(*str, doom, x, y);
-		x += 50 * doom->minimap->scale;
-		str++;
-	}
 }

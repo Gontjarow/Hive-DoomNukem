@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/14 15:48:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:57:12 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static void	player_jumps(t_doom *doom)
 {
-	if (doom->mdl->player.weap_arr[JETPACK].do_own &&
-		doom->mdl->player.weap_arr[JETPACK].ammo_cur > 0)
+	if (doom->mdl->player.weap_arr[JETPACK].do_own
+		&& doom->mdl->player.weap_arr[JETPACK].ammo_cur > 0)
 	{
 		doom->mdl->player.is_flying = 1;
 		doom->mdl->player.weap_arr[JETPACK].ammo_cur--;
@@ -27,8 +27,8 @@ static void	player_jumps(t_doom *doom)
 		}
 		return ;
 	}
-	if (doom->mdl->player.is_jumping == 0 &&
-		doom->mdl->player.is_crouching == 0)
+	if (doom->mdl->player.is_jumping == 0
+		&& doom->mdl->player.is_crouching == 0)
 	{
 		doom->mdl->player.z_velocity += 3.0;
 		doom->mdl->player.is_jumping = 1;
@@ -79,7 +79,7 @@ static void	update_world(t_world *world)
 	room = mdl->room_first;
 	room_index = 0;
 	rooms = mdl->room_count;
-	while (~--rooms)
+	while (~ --rooms)
 	{
 		sector = &world->sectors[room_index];
 		sector->floor = room->floor_height / WORLD_SCALE;
@@ -136,7 +136,7 @@ static void	experimental_elevator(int active, int hard_reset)
 	}
 }
 
-static t_effect		*find_target_effect(t_doom *doom, int keypanel_id)
+static t_effect	*find_target_effect(t_doom *doom, int keypanel_id)
 {
 	int				ec;
 	t_effect		*effect;
@@ -155,13 +155,12 @@ static t_effect		*find_target_effect(t_doom *doom, int keypanel_id)
 	return (NULL);
 }
 
-static void			open_doors(t_doom *doom, t_effect *effect)
+static void	open_doors(t_doom *doom, t_effect *effect)
 {
 	int				pc;
 	t_wall			*portals;
 	t_effect		*target_effect;
 
-	
 	pc = doom->mdl->portal_count;
 	if (pc == 0)
 		return ;
@@ -194,13 +193,16 @@ static void			open_doors(t_doom *doom, t_effect *effect)
 	}
 }
 
-static void	player_switch_light(t_doom *doom, t_effect *effect, t_room *curr_room)
+static void	player_switch_light(t_doom *doom, t_effect *effect)
 {
+	t_room	*curr_room;
+
 	if (!doom->mdl->player.eff_pressed)
 	{
 		doom->mdl->player.eff_pressed = 1;
 		effect->activated = !effect->activated;
-		curr_room = room_by_id(check_location(doom, doom->mdl->player.x, doom->mdl->player.y));
+		curr_room = room_by_id(check_location(doom, doom->mdl->player.x,
+					doom->mdl->player.y));
 		curr_room->lit = effect->activated;
 		if (effect->activated)
 			effect->active_sprite = doom->sprites->txt_switch_off;
@@ -226,7 +228,6 @@ static void	player_switch_light(t_doom *doom, t_effect *effect, t_room *curr_roo
 static void	player_effector_interactions(t_doom *doom)
 {
 	int			ec;
-	t_room		*curr_room;
 	t_effect	*effect;
 	t_wall		*wall;
 
@@ -236,12 +237,12 @@ static void	player_effector_interactions(t_doom *doom)
 	effect = doom->mdl->effect_first;
 	while (ec--)
 	{
-		if (effect->type_id == EFFECT_LIGHTKNOB &&
-		player_collision_with_effects(doom, effect) == -1)
-			player_switch_light(doom, effect, curr_room);
-		if (effect->type_id == EFFECT_KEYPANEL &&
-			player_collision_with_effects(doom, effect) == -1 &&
-			doom->mdl->player.has_key && effect->activated == 0)
+		if (effect->type_id == EFFECT_LIGHTKNOB
+			&& player_collision_with_effects(doom, effect) == -1)
+			player_switch_light(doom, effect);
+		if (effect->type_id == EFFECT_KEYPANEL
+			&& player_collision_with_effects(doom, effect) == -1
+			&& doom->mdl->player.has_key && effect->activated == 0)
 		{
 			doom->mdl->player.has_key = 0;
 			effect->activated = 1;
@@ -256,7 +257,7 @@ static void	player_effector_interactions(t_doom *doom)
 	}
 }
 
-void		handle_player_action(t_doom *doom)
+void	handle_player_action(t_doom *doom)
 {
 	if (doom->keystates[SDL_SCANCODE_SPACE])
 		player_jumps(doom);

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 16:32:02 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/18 16:16:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:06:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,9 +353,9 @@ static void	load_effector_sprites(t_doom *doom)
 
 void		load_ammo_bars(t_doom *doom)
 {
-	doom->sprites->txt_pistol_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/pistolammo.png");
-	doom->sprites->txt_shotgun_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/shotgunammo.png");
-	doom->sprites->txt_assault_ammo_bar = load_texture(doom, "img/sprites/hud/ammobar/assaultammo.png");
+	doom->sprites->txt_pistol_bar = load_texture(doom, "img/sprites/hud/ammobar/pistolammo.png");
+	doom->sprites->txt_shotgun_bar = load_texture(doom, "img/sprites/hud/ammobar/shotgunammo.png");
+	doom->sprites->txt_rifle_bar = load_texture(doom, "img/sprites/hud/ammobar/assaultammo.png");
 	doom->sprites->txt_clip_bar = load_texture(doom, "img/sprites/hud/ammobar/cliptest.png");
 }
 
@@ -438,12 +438,12 @@ int			destroy_sprites(t_doom *doom)
 	doom->sprites->txt_panel_off = NULL;
 	SDL_FreeSurface(doom->sprites->txt_panel_on);
 	doom->sprites->txt_panel_on = NULL;
-	SDL_FreeSurface(doom->sprites->txt_pistol_ammo_bar);
-	doom->sprites->txt_pistol_ammo_bar = NULL;
-	SDL_FreeSurface(doom->sprites->txt_shotgun_ammo_bar);
-	doom->sprites->txt_shotgun_ammo_bar = NULL;
-	SDL_FreeSurface(doom->sprites->txt_assault_ammo_bar);
-	doom->sprites->txt_assault_ammo_bar = NULL;
+	SDL_FreeSurface(doom->sprites->txt_pistol_bar);
+	doom->sprites->txt_pistol_bar = NULL;
+	SDL_FreeSurface(doom->sprites->txt_shotgun_bar);
+	doom->sprites->txt_shotgun_bar = NULL;
+	SDL_FreeSurface(doom->sprites->txt_rifle_bar);
+	doom->sprites->txt_rifle_bar = NULL;
 	SDL_FreeSurface(doom->sprites->txt_clip_bar);
 	doom->sprites->txt_clip_bar = NULL;
 	SDL_FreeSurface(doom->sprites->txt_loading_none);

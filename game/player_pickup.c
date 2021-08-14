@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 17:20:47 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/12 17:18:32 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 20:36:19 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
+static void	handle_health_pickup(t_doom *doom, t_pickup *pickup)
 {
 	t_pickup	*current;
 	t_pickup	*prev;
@@ -31,7 +31,7 @@ static void		handle_health_pickup(t_doom *doom, t_pickup *pickup)
 	doom->mdl->pickup_count--;
 }
 
-static void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
+static void	handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 {
 	t_pickup	*current;
 	t_pickup	*prev;
@@ -53,7 +53,7 @@ static void		handle_ammo_pickup(t_doom *doom, t_pickup *pickup)
 	doom->mdl->pickup_count--;
 }
 
-static void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
+static void	handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 {
 	t_pickup	*current;
 	t_pickup	*prev;
@@ -72,7 +72,7 @@ static void		handle_weapon_pickup(t_doom *doom, t_pickup *pickup)
 	doom->mdl->pickup_count--;
 }
 
-static void		handle_level_exit(t_doom *doom)
+static void	handle_level_exit(t_doom *doom)
 {
 	puts("Reached level exit!");
 	if (Mix_Playing(7))
@@ -92,7 +92,7 @@ static void		handle_level_exit(t_doom *doom)
 	}
 }
 
-static void		handle_key_pickup(t_doom *doom, t_pickup *pickup)
+static void	handle_key_pickup(t_doom *doom, t_pickup *pickup)
 {
 	t_pickup	*current;
 	t_pickup	*prev;
@@ -109,7 +109,7 @@ static void		handle_key_pickup(t_doom *doom, t_pickup *pickup)
 	doom->mdl->pickup_count--;
 }
 
-void			handle_effect_pickup(t_doom *doom)
+void	handle_effect_pickup(t_doom *doom)
 {
 	int			ec;
 	t_effect	*effect;
@@ -120,14 +120,14 @@ void			handle_effect_pickup(t_doom *doom)
 	effect = doom->mdl->effect_first;
 	while (ec--)
 	{
-		if (effect->type_id == EFFECT_EXIT &&
-		player_collision_with_effects(doom, effect) == -1)
+		if (effect->type_id == EFFECT_EXIT
+			&& player_collision_with_effects(doom, effect) == -1)
 			handle_level_exit(doom);
 		effect = effect->next;
 	}
 }
 
-void			handle_pickup(t_doom *doom)
+void	handle_pickup(t_doom *doom)
 {
 	int			pc;
 	t_pickup	*pickup;
@@ -139,21 +139,21 @@ void			handle_pickup(t_doom *doom)
 	pickup = doom->mdl->pickup_first;
 	while (pc--)
 	{
-		if (pickup->flavor == PICKUP_HEALTH &&
-		player_collision_with_pickup(doom, pickup) == -1 &&
-		doom->mdl->player.hp.cur < 100)
+		if (pickup->flavor == PICKUP_HEALTH
+			&& player_collision_with_pickup(doom, pickup) == -1
+			&& doom->mdl->player.hp.cur < 100)
 			handle_health_pickup(doom, pickup);
-		else if (pickup->flavor == PICKUP_AMMO &&
-		player_collision_with_pickup(doom, pickup) == -1 &&
-		doom->mdl->player.weap_arr[pickup->weapon_type_id].ammo_res < 10)
+		else if (pickup->flavor == PICKUP_AMMO
+			&& player_collision_with_pickup(doom, pickup) == -1
+			&& doom->mdl->player.weap_arr[pickup->weapon_type_id].ammo_res < 10)
 			handle_ammo_pickup(doom, pickup);
-		else if (pickup->flavor == PICKUP_WEAPON &&
-		player_collision_with_pickup(doom, pickup) == -1 &&
-		doom->mdl->player.weap_arr[pickup->weapon_type_id].do_own == 0)
+		else if (pickup->flavor == PICKUP_WEAPON
+			&& player_collision_with_pickup(doom, pickup) == -1
+			&& doom->mdl->player.weap_arr[pickup->weapon_type_id].do_own == 0)
 			handle_weapon_pickup(doom, pickup);
-		else if (pickup->flavor == PICKUP_KEY &&
-		player_collision_with_pickup(doom, pickup) == -1 &&
-		doom->mdl->player.has_key == 0)
+		else if (pickup->flavor == PICKUP_KEY
+			&& player_collision_with_pickup(doom, pickup) == -1
+			&& doom->mdl->player.has_key == 0)
 			handle_key_pickup(doom, pickup);
 		pickup = pickup->next;
 	}

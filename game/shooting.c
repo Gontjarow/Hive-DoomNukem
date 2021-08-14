@@ -6,26 +6,26 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/18 16:11:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 20:49:12 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-unsigned int		check_location(t_doom *doom, int x, int y)
+unsigned int	check_location(t_doom *doom, int x, int y)
 {
 	int				location;
 	unsigned int	*pixels;
 
-	pixels = (unsigned int*)doom->mdl->poly_map->pixels;
+	pixels = (unsigned int *)doom->mdl->poly_map->pixels;
 	location = (int)x + (int)y * GAME_POLYMAP_WIDTH;
-	if (location < 0 || location >
-			((GAME_POLYMAP_WIDTH * GAME_POLYMAP_HEIGHT) - 1))
+	if (location < 0 || location > ((GAME_POLYMAP_WIDTH
+				* GAME_POLYMAP_HEIGHT) - 1))
 		return (UINT_ERROR_CONSTANT);
 	return ((int)(pixels[location]));
 }
 
-void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
+void	update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 {
 	if (enemy->id == id && enemy->hp.cur > 0)
 	{
@@ -36,8 +36,8 @@ void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 			enemy->anim.done = HURT;
 		}
 		enemy->ai.aggro = ACTIVE;
-		enemy->hp.cur -=
-		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].dmg;
+		enemy->hp.cur -= doom->mdl->player.weap_arr
+		[doom->mdl->player.weap_id].dmg;
 		if (enemy->hp.cur <= 0)
 		{
 			enemy->hp.cur = 0;
@@ -47,23 +47,23 @@ void				update_enemy_status(t_doom *doom, t_enemy *enemy, int id)
 	}
 }
 
-static void       aggro_enemies(t_doom *doom, t_enemy *enemy_hit)
+static void	aggro_enemies(t_doom *doom, t_enemy *enemy_hit)
 {
-   int		ec;
-   t_enemy	*enemy;
+	int			ec;
+	t_enemy		*enemy;
 
 	enemy = doom->mdl->enemy_first;
 	ec = doom->mdl->enemy_count;
 	while (ec--)
 	{
-    	if (enemy->ai.aggro == 0 && check_location(doom, enemy->x,
-			enemy->y) == check_location(doom, enemy_hit->x, enemy_hit->y))
-    		enemy->ai.aggro = 1;
-    	enemy = enemy->next;
+		if (!enemy->ai.aggro && check_location(doom, enemy->x,
+				enemy->y) == check_location(doom, enemy_hit->x, enemy_hit->y))
+			enemy->ai.aggro = 1;
+		enemy = enemy->next;
 	}
 }
 
-void				deal_damage(t_doom *doom, int enemy_id)
+void	deal_damage(t_doom *doom, int enemy_id)
 {
 	t_enemy	*enemy;
 	int		dx;
@@ -84,7 +84,7 @@ void				deal_damage(t_doom *doom, int enemy_id)
 	}
 }
 
-int					player_shoots_shotgun(t_doom *doom)
+int	player_shoots_shotgun(t_doom *doom)
 {
 	doom->mdl->player.rot -= 10;
 	player_shoots(doom);
@@ -96,13 +96,13 @@ int					player_shoots_shotgun(t_doom *doom)
 	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur += 2;
 }
 
-static void			check_poster_hit(t_doom *doom)
+static void	check_poster_hit(t_doom *doom)
 {
-	int		ec;
-	int		dx;
-	int		dy;
-	int		distance;
-	t_effect *effector;
+	int			ec;
+	int			dx;
+	int			dy;
+	int			distance;
+	t_effect	*effector;
 
 	ec = doom->mdl->effect_count;
 	if (ec == 0)
@@ -110,7 +110,7 @@ static void			check_poster_hit(t_doom *doom)
 	effector = doom->mdl->effect_first;
 	while (ec--)
 	{
-		if (effector->type_id == EFFECT_POSTER && effector->activated == 0)
+		if (effector->type_id == EFFECT_POSTER && !effector->activated)
 		{
 			dx = (int)doom->mdl->player.bullet_pos.x - effector->loc.x;
 			dy = (int)doom->mdl->player.bullet_pos.y - effector->loc.y;
@@ -126,12 +126,8 @@ static void			check_poster_hit(t_doom *doom)
 	}
 }
 
-static int			check_bullet_hitting_door(t_doom *doom, t_xy prev_loc, t_xy current_loc)
+static int	check_bullet_hitting_door(t_doom *doom, t_xy prev_loc, t_xy current_loc)
 {
-	// algorithm to loop through the mdl->portal(s?) linked list and check for intersections.
-	//this is not run on every frame, just the frames when bullet room_id has changed
-	// return (1) if intersecting closed door
-
 	int		pc;
 	t_wall	*portals;
 
@@ -148,7 +144,7 @@ static int			check_bullet_hitting_door(t_doom *doom, t_xy prev_loc, t_xy current
 	return (0);
 }
 
-int					player_shoots(t_doom *doom)
+int	player_shoots(t_doom *doom)
 {
 	int		enemy_id;
 	double	rad;
@@ -179,7 +175,6 @@ int					player_shoots(t_doom *doom)
 		current_room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.bullet_pos.x, doom->mdl->player.bullet_pos.y);
 		if (current_room_id != last_room_id)
 		{
-			// Different room_id for bullet, reroute to algorithm for checking hits against door
 			if (check_bullet_hitting_door(doom, cached_bullet_loc, (t_xy){doom->mdl->player.bullet_pos.x, doom->mdl->player.bullet_pos.y}))
 				break ;
 		}
@@ -196,7 +191,7 @@ int					player_shoots(t_doom *doom)
 	return (0);
 }
 
-static void			play_shoot_sounds(t_doom *doom)
+static void	play_shoot_sounds(t_doom *doom)
 {
 	static int mix_i = 0;
 
@@ -206,7 +201,7 @@ static void			play_shoot_sounds(t_doom *doom)
 		mix_i = 0;
 }
 
-void				handle_player_shooting(t_doom *doom)
+void	handle_player_shooting(t_doom *doom)
 {
 	if (doom->mdl->player.shooting && !doom->mdl->player.is_running)
 	{

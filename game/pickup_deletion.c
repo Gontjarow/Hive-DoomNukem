@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 18:15:41 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/02/01 18:25:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:33:50 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-t_pickup		*delete_first(t_doom *doom)
+t_pickup	*delete_first(t_doom *doom)
 {
 	t_pickup	*head;
 	t_pickup	*temp;
@@ -27,7 +27,7 @@ t_pickup		*delete_first(t_doom *doom)
 	return (head);
 }
 
-t_pickup		*delete_node(t_pickup *cur, t_pickup *prev, t_pickup *pickup)
+t_pickup	*delete_node(t_pickup *cur, t_pickup *prev, t_pickup *pickup)
 {
 	while (cur != NULL && cur->id != pickup->id)
 	{

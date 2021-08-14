@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 20:07:38 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/01/06 20:04:55 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:32:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-static void		rescale_minimap(t_wall *wall, t_doom *doom)
+static void	rescale_minimap(t_wall *wall, t_doom *doom)
 {
 	while (wall->start.x * doom->minimap->scale > MWIN_WIDTH)
 		doom->minimap->scale -= 0.1;
@@ -24,7 +24,7 @@ static void		rescale_minimap(t_wall *wall, t_doom *doom)
 		doom->minimap->scale -= 0.1;
 }
 
-void			print_minimap_walls(t_doom *doom)
+void	print_minimap_walls(t_doom *doom)
 {
 	int		wc;
 	t_wall	*wall;
@@ -46,7 +46,7 @@ void			print_minimap_walls(t_doom *doom)
 	}
 }
 
-static void		pickup_square(t_doom *doom, SDL_Surface *buff, t_point xy, int radius, uint32_t color)
+static void	pickup_square(t_doom *doom, SDL_Surface *buff, t_point xy, int radius, uint32_t color)
 {
 	unsigned int *pixels;
 	int address;
@@ -79,7 +79,7 @@ static void		pickup_square(t_doom *doom, SDL_Surface *buff, t_point xy, int radi
 	}
 }
 
-static void		pickup_cross(t_doom *doom, SDL_Surface *buff, t_point xy, int radius, uint32_t color)
+static void	pickup_cross(t_doom *doom, SDL_Surface *buff, t_point xy, int radius, uint32_t color)
 {
 	t_line 		horz_line;
 	t_line 		vert_line;
@@ -104,7 +104,7 @@ static void		pickup_cross(t_doom *doom, SDL_Surface *buff, t_point xy, int radiu
 // and when to use the editor scale so we dont need to recopy these functions just to add a line to the x.y coords
 // by MS
 
-static void		pickup_digit(t_doom *doom, SDL_Surface *buff, t_point xy, int digit, uint32_t color)
+static void	pickup_digit(t_doom *doom, SDL_Surface *buff, t_point xy, int digit, uint32_t color)
 {
 	t_line 		vert_line;
 	t_line 		horz_line;
@@ -321,7 +321,7 @@ static void		pickup_digit(t_doom *doom, SDL_Surface *buff, t_point xy, int digit
 		return ;
 }
 
-void			print_minimap_pickups(t_doom *doom)
+void	print_minimap_pickups(t_doom *doom)
 {
 	int			pc;
 	t_pickup	*pickup;

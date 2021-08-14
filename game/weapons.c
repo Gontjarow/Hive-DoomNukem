@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 16:53:41 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 20:59:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-void		init_player_weapon(t_doom *doom)
+void	init_player_weapon(t_doom *doom)
 {
 	init_hud(doom);
 	doom->mdl->player.weap_arr[0].ammo_cur = 12;
@@ -56,17 +56,21 @@ static void	player_swap_weapons(t_doom *doom)
 {
 	if (doom->mdl->player.reload_time <= 0)
 	{
-		if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr[PISTOL].do_own && doom->mdl->player.weap_id != PISTOL)
+		if (doom->keystates[SDL_SCANCODE_1] && doom->mdl->player.weap_arr
+			[PISTOL].do_own && doom->mdl->player.weap_id != PISTOL)
 		{
 			doom->mdl->player.weap_id = PISTOL;
 			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
 		}
-		if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr[SHOTGUN].do_own && doom->mdl->player.weap_id != SHOTGUN)
+		if (doom->keystates[SDL_SCANCODE_2] && doom->mdl->player.weap_arr
+			[SHOTGUN].do_own && doom->mdl->player.weap_id != SHOTGUN)
 		{
 			doom->mdl->player.weap_id = SHOTGUN;
 			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
 		}
-		if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr[ASSAULT_RIFLE].do_own && doom->mdl->player.weap_id != ASSAULT_RIFLE)
+		if (doom->keystates[SDL_SCANCODE_3] && doom->mdl->player.weap_arr
+			[ASSAULT_RIFLE].do_own && doom->mdl->player.weap_id
+			!= ASSAULT_RIFLE)
 		{
 			doom->mdl->player.weap_id = ASSAULT_RIFLE;
 			Mix_PlayChannel(-1, doom->sounds->mcWeaponPickup, 0);
@@ -76,8 +80,8 @@ static void	player_swap_weapons(t_doom *doom)
 
 static void	handle_ammo_calc(t_doom *doom)
 {
-	int dif;
-	int rest;
+	int	dif;
+	int	rest;
 
 	if (doom->mdl->player.weap_id == PISTOL)
 	{
@@ -86,8 +90,8 @@ static void	handle_ammo_calc(t_doom *doom)
 	}
 	else
 	{
-		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur =
-		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max;
+		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur
+			= doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max;
 		doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res--;
 	}
 }
@@ -96,19 +100,21 @@ static void	player_shoot_reload(t_doom *doom)
 {
 	if (doom->keystates[SDL_SCANCODE_R])
 	{
-		if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur !=
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max &&
-			doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res > 0)
+		if (doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur
+			!= doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_max
+			&& doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_res
+			> 0)
 		{
-			Mix_PlayChannel(-1, doom->mdl->player.weap_arr[doom->mdl->player.weap_id].reload_sound, 0);
+			Mix_PlayChannel(-1, doom->mdl->player.weap_arr
+			[doom->mdl->player.weap_id].reload_sound, 0);
 			doom->mdl->player.reload_time = doom->mdl->player.weap_arr
-				[doom->mdl->player.weap_id].reload_time;
+			[doom->mdl->player.weap_id].reload_time;
 			handle_ammo_calc(doom);
 		}
 	}
 }
 
-void		player_update_weapons(t_doom *doom)
+void	player_update_weapons(t_doom *doom)
 {
 	player_swap_weapons(doom);
 	player_shoot_reload(doom);

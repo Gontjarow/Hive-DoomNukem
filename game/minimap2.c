@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 20:03:18 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 15:32:19 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:29:22 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-static void		mcircle_enemy(t_doom *doom, t_enemy *enemy, unsigned int color)
+static void	mcircle_enemy(t_doom *doom, t_enemy *enemy, unsigned int color)
 {
 	unsigned int	*pixels;
 	int				radius;
@@ -30,8 +30,8 @@ static void		mcircle_enemy(t_doom *doom, t_enemy *enemy, unsigned int color)
 		{
 			scaled.x = enemy->x * doom->minimap->scale;
 			scaled.y = enemy->y * doom->minimap->scale;
-			if (x * x + y * y > radius * radius - radius && x * x + y * y <
-				radius * radius + radius)
+			if (x * x + y * y > radius * radius - radius
+				&& x * x + y * y < radius * radius + radius)
 				pixels[scaled.x + x + ((scaled.y + y) * MWIN_WIDTH)] = color;
 			x++;
 		}
@@ -40,7 +40,7 @@ static void		mcircle_enemy(t_doom *doom, t_enemy *enemy, unsigned int color)
 	}
 }
 
-void			print_minimap_enemies(t_doom *doom)
+void	print_minimap_enemies(t_doom *doom)
 {
 	t_enemy			*enemy;
 	t_line			line;
@@ -69,7 +69,7 @@ void			print_minimap_enemies(t_doom *doom)
 	}
 }
 
-static void		minimap_circle_player(t_doom *doom, unsigned int color)
+static void	minimap_circle_player(t_doom *doom, unsigned int color)
 {
 	unsigned int	*pixels;
 	int				radius;
@@ -87,8 +87,8 @@ static void		minimap_circle_player(t_doom *doom, unsigned int color)
 		{
 			scaled.x = (int)doom->mdl->player.x * doom->minimap->scale;
 			scaled.y = (int)doom->mdl->player.y * doom->minimap->scale;
-			if (x * x + y * y > radius * radius - radius && x * x + y * y <
-				radius * radius + radius)
+			if (x * x + y * y > radius * radius - radius
+				&& x * x + y * y < radius * radius + radius)
 				pixels[scaled.x + x + ((scaled.y + y) * MWIN_WIDTH)] = color;
 			x++;
 		}
@@ -97,7 +97,7 @@ static void		minimap_circle_player(t_doom *doom, unsigned int color)
 	}
 }
 
-void			print_minimap_player(t_doom *doom)
+void	print_minimap_player(t_doom *doom)
 {
 	t_line			line;
 	unsigned int	color;

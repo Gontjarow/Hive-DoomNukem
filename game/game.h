@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 15:19:06 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 20:10:20 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define GAME_POLYMAP_HEIGHT 3600
 
 typedef struct s_world	t_world;
-typedef struct	s_game
+typedef struct s_game
 {
 	struct SDL_Window	*win;
 	struct SDL_Surface	*buff;
@@ -60,8 +60,6 @@ void			init_player_weapon(t_doom *doom);
 void			handle_player_movement(t_doom *doom);
 void			handle_player_action(t_doom *doom);
 void			handle_pickup(t_doom *doom);
-void			game_print_alphabet(const char *str,
-									t_doom *doom, int x, int y);
 void			init_hud(t_doom *doom);
 void			render_game_hud(t_doom *doom);
 void			handle_game_hud(t_doom *doom);
@@ -78,7 +76,7 @@ void			enemy_shoot_the_player(t_doom *doom, t_enemy *enemy);
 void			handle_enemy_ai(t_doom *doom);
 void			handle_enemy_shooting(t_doom *doom, t_enemy *enemy);
 void			handle_enemy_movement(t_enemy *enemy,
-									t_doom *doom, t_point old);
+					t_doom *doom, t_point old);
 void			ai_assignment(t_doom *doom);
 void			check_aggro(t_doom *doom, t_enemy *enemy);
 void			check_sprite_orient(t_doom *doom, t_enemy *enemy);

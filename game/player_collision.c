@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/12 17:19:05 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:58:46 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-int			point_circle(double px, double py, double cx, double cy)
+int	point_circle(double px, double py, double cx, double cy)
 {
 	double	dist_x;
 	double	dist_y;
@@ -26,7 +26,7 @@ int			point_circle(double px, double py, double cx, double cy)
 	return (0);
 }
 
-double		dist(double px, double py, double x1, double y1)
+double	dist(double px, double py, double x1, double y1)
 {
 	double	distance;
 
@@ -34,7 +34,7 @@ double		dist(double px, double py, double x1, double y1)
 	return (distance);
 }
 
-int			line_point(t_doom *doom, t_coord p)
+int	line_point(t_doom *doom, t_coord p)
 {
 	double	d1;
 	double	d2;
@@ -43,16 +43,16 @@ int			line_point(t_doom *doom, t_coord p)
 
 	d1 = dist(p.x, p.y, doom->mdl->player.x, doom->mdl->player.y);
 	d2 = dist(p.x, p.y, doom->mdl->player.bullet_pos.x,
-				doom->mdl->player.bullet_pos.y);
+			doom->mdl->player.bullet_pos.y);
 	len = dist(doom->mdl->player.x, doom->mdl->player.y,
-		doom->mdl->player.bullet_pos.x, doom->mdl->player.bullet_pos.y);
+			doom->mdl->player.bullet_pos.x, doom->mdl->player.bullet_pos.y);
 	buffer = 0.001;
 	if (d1 + d2 >= len - buffer && d1 + d2 <= len + buffer)
 		return (1);
 	return (0);
 }
 
-int			check_hit(t_doom *doom)
+int	check_hit(t_doom *doom)
 {
 	int		ec;
 	t_coord	closest;
@@ -79,7 +79,7 @@ int			check_hit(t_doom *doom)
 	return (-1);
 }
 
-int			player_collision_with_effects(t_doom *doom, t_effect *effect)
+int	player_collision_with_effects(t_doom *doom, t_effect *effect)
 {
 	int		dx;
 	int		dy;

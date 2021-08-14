@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 17:22:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2020/12/15 18:16:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 16:12:00 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-static int			enemy_line_point(t_doom *doom, t_enemy *enemy, t_coord p)
+static int	enemy_line_point(t_doom *doom, t_enemy *enemy, t_coord p)
 {
 	double	d1;
 	double	d2;
@@ -28,7 +28,7 @@ static int			enemy_line_point(t_doom *doom, t_enemy *enemy, t_coord p)
 	return (0);
 }
 
-static t_coord		enemy_check_segment(t_doom *doom, t_enemy *enemy)
+static t_coord	enemy_check_segment(t_doom *doom, t_enemy *enemy)
 {
 	double		len;
 	double		dot;
@@ -38,16 +38,16 @@ static t_coord		enemy_check_segment(t_doom *doom, t_enemy *enemy)
 	dist.x = enemy->x - enemy->bullet_pos.x;
 	dist.y = enemy->y - enemy->bullet_pos.y;
 	len = sqrt((dist.x * dist.x) + (dist.y * dist.y));
-	dot = (((doom->mdl->player.x - enemy->x) *
-		(enemy->bullet_pos.x - enemy->x)) +
-			((doom->mdl->player.y - enemy->y) *
-				(enemy->bullet_pos.y - enemy->y))) / pow(len, 2);
+	dot = (((doom->mdl->player.x - enemy->x)
+				* (enemy->bullet_pos.x - enemy->x))
+			+ ((doom->mdl->player.y - enemy->y)
+				* (enemy->bullet_pos.y - enemy->y))) / pow(len, 2);
 	closest.x = enemy->x + (dot * (enemy->bullet_pos.x - enemy->x));
 	closest.y = enemy->y + (dot * (enemy->bullet_pos.y - enemy->y));
 	return (closest);
 }
 
-static int			enemy_check_distance(t_doom *doom, t_coord closest)
+static int	enemy_check_distance(t_doom *doom, t_coord closest)
 {
 	t_coord		dist;
 
@@ -58,14 +58,14 @@ static int			enemy_check_distance(t_doom *doom, t_coord closest)
 	return (0);
 }
 
-int					check_hit_on_player(t_doom *doom, t_enemy *enemy)
+int	check_hit_on_player(t_doom *doom, t_enemy *enemy)
 {
 	int			inside1;
 	int			inside2;
 	t_coord		closest;
 
 	inside1 = point_circle(enemy->x, enemy->y, doom->mdl->player.x,
-		doom->mdl->player.y);
+			doom->mdl->player.y);
 	inside2 = point_circle(enemy->bullet_pos.x,
 			enemy->bullet_pos.y, doom->mdl->player.x, doom->mdl->player.y);
 	if ((inside1 || inside2))

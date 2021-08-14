@@ -6,14 +6,14 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 17:19:10 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:26:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 #include "minimap.h"
 
-void		print_player_ray(t_doom *doom)
+void	print_player_ray(t_doom *doom)
 {
 	t_line	line;
 
@@ -27,10 +27,10 @@ void		print_player_ray(t_doom *doom)
 	doom->minimap->player_ray_timeout--;
 }
 
-void		print_enemy_ray(t_doom *doom)
+void	print_enemy_ray(t_doom *doom)
 {
 	t_line	line;
-	t_enemy *enemy;
+	t_enemy	*enemy;
 	int		ec;
 
 	ec = doom->mdl->enemy_count;
@@ -56,7 +56,7 @@ void		print_enemy_ray(t_doom *doom)
 	}
 }
 
-void		destroy_minimap(t_doom *doom)
+void	destroy_minimap(t_doom *doom)
 {
 	SDL_FreeSurface(doom->minimap->buff);
 	SDL_DestroyWindow(doom->minimap->win);
@@ -66,7 +66,7 @@ void		destroy_minimap(t_doom *doom)
 	doom->minimap = NULL;
 }
 
-void		update_minimap(t_doom *doom)
+void	update_minimap(t_doom *doom)
 {
 	flood_buffer(doom->minimap->buff, 0xff000000);
 	if (doom->minimap->player_ray_timeout > 0
@@ -81,15 +81,16 @@ void		update_minimap(t_doom *doom)
 	SDL_UpdateWindowSurface(doom->minimap->win);
 }
 
-void		init_minimap(t_doom *doom)
+void	init_minimap(t_doom *doom)
 {
 	int			win_x;
 	int			win_y;
 
-	if (!(doom->minimap = (t_minimap *)malloc(sizeof(t_minimap))))
+	doom->minimap = (t_minimap *)malloc(sizeof(t_minimap));
+	if (!(doom->minimap))
 		return ;
 	doom->minimap->win = SDL_CreateWindow("Debug Minimap",
-		SDL_WINDOWPOS_CENTERED, 0,
+			SDL_WINDOWPOS_CENTERED, 0,
 			MWIN_WIDTH, MWIN_HEIGHT, 0);
 	if (doom->minimap->win == NULL)
 		ft_die("Fatal error: Failed init of SDL_Window from minimap");
@@ -99,6 +100,7 @@ void		init_minimap(t_doom *doom)
 	doom->minimap->scale = 1.0;
 	doom->minimap->sprite_num = 0;
 	SDL_GetWindowPosition(doom->win, &win_x, &win_y);
-	SDL_SetWindowPosition(doom->game->win, (1920 / 2) - GAME_MIDWIDTH, win_y + 128);
+	SDL_SetWindowPosition(doom->game->win, (1920 / 2)
+		- GAME_MIDWIDTH, win_y + 128);
 	update_minimap(doom);
 }

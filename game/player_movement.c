@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 15:30:16 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 17:38:31 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 20:02:14 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-void			update_player_tail(t_doom *doom, double rad)
+void	update_player_tail(t_doom *doom, double rad)
 {
 	t_point	p;
 
@@ -22,7 +22,7 @@ void			update_player_tail(t_doom *doom, double rad)
 	doom->mdl->player.tail.y = p.y;
 }
 
-static void		moving_up_down(t_doom *doom, int signal, double rad)
+static void	moving_up_down(t_doom *doom, int signal, double rad)
 {
 	signal = (-1) * signal;
 	if (doom->mdl->player.is_crouching && doom->sounds->footstep_delay <= 0)
@@ -30,19 +30,21 @@ static void		moving_up_down(t_doom *doom, int signal, double rad)
 	else if (doom->mdl->player.is_running && doom->sounds->footstep_delay <= 0)
 		Mix_PlayChannel(-1, doom->sounds->mcRunning, 0);
 	else if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching
-			&& doom->sounds->footstep_delay <= 0 && !doom->mdl->player.is_flying)
+		&& doom->sounds->footstep_delay <= 0 && !doom->mdl->player.is_flying)
 		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
 	if (doom->sounds->footstep_delay <= 0)
 		doom->sounds->footstep_delay = 0.5;
-	doom->mdl->player.x = doom->mdl->player.x + ((float)signal *
-	((float)doom->mdl->player.mov_speed * doom->delta_time)) * -cos(rad);
-	doom->mdl->player.y = doom->mdl->player.y + ((float)signal *
-	((float)doom->mdl->player.mov_speed * doom->delta_time)) * -sin(rad);
+	doom->mdl->player.x = doom->mdl->player.x + ((float)signal
+			* ((float)doom->mdl->player.mov_speed * doom->delta_time))
+		* -cos(rad);
+	doom->mdl->player.y = doom->mdl->player.y + ((float)signal
+			* ((float)doom->mdl->player.mov_speed * doom->delta_time))
+		* -sin(rad);
 	update_player_tail(doom, rad);
 	handle_pickup(doom);
 }
 
-static void		strafe(t_doom *doom, int signal)
+static void	strafe(t_doom *doom, int signal)
 {
 	int			orig_rot;
 	double		strafe_rad;
@@ -50,7 +52,7 @@ static void		strafe(t_doom *doom, int signal)
 	orig_rot = doom->mdl->player.rot;
 	doom->mdl->player.rot = doom->mdl->player.rot + (90 * signal);
 	if (!doom->mdl->player.is_running && !doom->mdl->player.is_crouching
-			&& doom->sounds->footstep_delay <= 0 && !doom->mdl->player.is_flying)
+		&& doom->sounds->footstep_delay <= 0 && !doom->mdl->player.is_flying)
 		Mix_PlayChannel(-1, doom->sounds->mcWalking, 0);
 	if (doom->sounds->footstep_delay <= 0)
 		doom->sounds->footstep_delay = 0.5;
@@ -59,19 +61,19 @@ static void		strafe(t_doom *doom, int signal)
 	if (doom->mdl->player.rot >= 360)
 		doom->mdl->player.rot = 0 + (doom->mdl->player.rot) - 360;
 	strafe_rad = deg_to_rad(doom->mdl->player.rot);
-	doom->mdl->player.x = doom->mdl->player.x +
-	((((double)doom->mdl->player.mov_speed - 50) * doom->delta_time)) * -cos(strafe_rad);
-	doom->mdl->player.y = doom->mdl->player.y +
-	((((double)doom->mdl->player.mov_speed - 50) * doom->delta_time)) * -sin(strafe_rad);
+	doom->mdl->player.x = doom->mdl->player.x + ((((double)doom->mdl->player
+					.mov_speed - 50) * doom->delta_time)) * -cos(strafe_rad);
+	doom->mdl->player.y = doom->mdl->player.y + ((((double)doom->mdl->player
+					.mov_speed - 50) * doom->delta_time)) * -sin(strafe_rad);
 	doom->mdl->player.rot = orig_rot;
 	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
 	handle_pickup(doom);
 }
 
-static void		rotating_left_right(t_doom *doom, int signal)
+static void	rotating_left_right(t_doom *doom, int signal)
 {
-	doom->mdl->player.rot = doom->mdl->player.rot + (signal *
-							doom->mdl->player.rot_speed);
+	doom->mdl->player.rot = doom->mdl->player.rot + (signal
+			* doom->mdl->player.rot_speed);
 	if (doom->mdl->player.rot < 0)
 		doom->mdl->player.rot = 359;
 	if (doom->mdl->player.rot >= 360)
@@ -79,9 +81,8 @@ static void		rotating_left_right(t_doom *doom, int signal)
 	update_player_tail(doom, deg_to_rad(doom->mdl->player.rot));
 }
 
-static void no_go(t_model *mdl, t_coord old)
+static void	no_go(t_model *mdl, t_coord old)
 {
-		//puts("No go!");
 	mdl->player.x = old.x;
 	mdl->player.y = old.y;
 }
@@ -89,10 +90,10 @@ static void no_go(t_model *mdl, t_coord old)
 // TODO FINISH CROSSING_HEIGHTS CHECKS
 // 		CAN ALWAYS FALL DOWN TO LOWER HEIGHT ROOM
 // 		CAN NOT ALWAYS ENTER ROOM IF HEAD IS HITTING THE TOP CEILING OF THE OPENING
-static int check_crossing_heights(t_model *mdl, t_coord old, int room_test)
+static int	check_crossing_heights(t_model *mdl, t_coord old, int room_test)
 {
-	t_room *room;
-	int i;
+	t_room	*room;
+	int		i;
 
 	i = 0;
 	room = mdl->room_first;
@@ -115,7 +116,7 @@ static int check_crossing_heights(t_model *mdl, t_coord old, int room_test)
 	}
 }
 
-static void cross_boundaries(t_model *mdl, t_coord old)
+static void	cross_boundaries(t_model *mdl, t_coord old)
 {
 	static double 	prev_x, prev_y;
 	static int 		room_prev = -1;
@@ -146,7 +147,7 @@ static void cross_boundaries(t_model *mdl, t_coord old)
 		no_go(mdl, old);
 }
 
-static void		apply_gravity(t_doom *doom)
+static void	apply_gravity(t_doom *doom)
 {
 	doom->mdl->player.z += doom->mdl->player.z_velocity;
 	if ((int)doom->mdl->player.z > doom->mdl->player.room->roof_height)
@@ -157,37 +158,32 @@ static void		apply_gravity(t_doom *doom)
 	}
 	if ((int)doom->mdl->player.z > doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
-		//puts("reducing height!");
 		doom->mdl->player.z_velocity -= 0.25;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height
 		&& doom->mdl->player.z_velocity == 0.0)
 	{
-		//puts("bouncing up from the crouch!");
-		//doom->mdl->player.z += 1.0;
 		doom->mdl->player.z += 0.5;
 	}
 	else if ((int)doom->mdl->player.z < doom->mdl->player.room->floor_height + doom->mdl->player.height)
 	{
-		//puts("hit the floor with the feet!");
-		//printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 		doom->mdl->player.z = doom->mdl->player.room->floor_height + doom->mdl->player.height;
 		doom->mdl->player.z_velocity = 0.0;
 		doom->mdl->player.is_jumping = 0;
 		doom->mdl->player.is_flying = 0;
 	}
-	// printf("player.z %d | room.floor_height %d | player.height %d\n", (int)doom->mdl->player.z, doom->mdl->player.room->floor_height, doom->mdl->player.height);
 }
 
-static void		apply_velocity(t_doom *doom)
+static void	apply_velocity(t_doom *doom)
 {
-	if (doom->mdl->player.is_running && doom->mdl->player.mov_speed != doom->mdl->player.max_speed)
+	if (doom->mdl->player.is_running && doom->mdl->player.mov_speed
+		!= doom->mdl->player.max_speed)
 		doom->mdl->player.mov_speed += 100;
 	else if (!doom->mdl->player.is_running && doom->mdl->player.mov_speed > 300)
 		doom->mdl->player.mov_speed -= 100;
 }
 
-void			handle_player_movement(t_doom *doom)
+void	handle_player_movement(t_doom *doom)
 {
 	double	rad;
 	t_coord	old;
@@ -209,15 +205,24 @@ void			handle_player_movement(t_doom *doom)
 		rotating_left_right(doom, -1);
 	if (doom->keystates[SDL_SCANCODE_RIGHT])
 		rotating_left_right(doom, 1);
-	if (doom->keystates[SDL_SCANCODE_LSHIFT] && (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN]))
+	if (doom->keystates[SDL_SCANCODE_LSHIFT]
+		&& (doom->keystates[SDL_SCANCODE_UP]
+			|| doom->keystates[SDL_SCANCODE_DOWN]))
 	{
-		doom->mdl->player.z = doom->keystates[SDL_SCANCODE_UP] ? doom->mdl->player.z + 5 : doom->mdl->player.z - 5;
+		if (doom->keystates[SDL_SCANCODE_UP])
+			doom->mdl->player.z = doom->mdl->player.z + 5;
+		else
+			doom->mdl->player.z = doom->mdl->player.z - 5;
 		ft_putnbr(doom->mdl->player.z);
 		ft_putendl(" player Z position");
 	}
-	else if (doom->keystates[SDL_SCANCODE_UP] || doom->keystates[SDL_SCANCODE_DOWN])
+	else if (doom->keystates[SDL_SCANCODE_UP]
+		|| doom->keystates[SDL_SCANCODE_DOWN])
 	{
-		doom->mdl->player.height = doom->keystates[SDL_SCANCODE_UP] ? doom->mdl->player.height + 1 : doom->mdl->player.height - 1;
+		if (doom->keystates[SDL_SCANCODE_UP])
+			doom->mdl->player.height = doom->mdl->player.height + 1;
+		else
+			doom->mdl->player.height = doom->mdl->player.height - 1;
 		ft_putnbr(doom->mdl->player.height);
 		ft_putendl(" player height");
 	}

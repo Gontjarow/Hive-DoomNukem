@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/15 18:18:34 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/30 17:18:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 16:17:09 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-static void		rotate_left(t_doom *doom, t_enemy *enemy)
+static void	rotate_left(t_doom *doom, t_enemy *enemy)
 {
 	int		x;
 	int		y;
@@ -28,7 +28,7 @@ static void		rotate_left(t_doom *doom, t_enemy *enemy)
 	enemy->tail.y = y;
 }
 
-static void		rotate_right(t_doom *doom, t_enemy *enemy)
+static void	rotate_right(t_doom *doom, t_enemy *enemy)
 {
 	int		x;
 	int		y;
@@ -44,18 +44,22 @@ static void		rotate_right(t_doom *doom, t_enemy *enemy)
 	enemy->tail.y = y;
 }
 
-static int		orientation(t_doom *doom, t_enemy *enemy, int x, int y)
+static int	orientation(t_doom *doom, t_enemy *enemy, int x, int y)
 {
 	int		val;
 
-	val = (y - enemy->y) * (doom->mdl->player.x - x) -
-		(x - enemy->x) * (doom->mdl->player.y - y);
+	val = (y - enemy->y) * (doom->mdl->player.x - x)
+		- (x - enemy->x) * (doom->mdl->player.y - y);
 	if (val == 0)
 		return (0);
-	return ((val > 0) ? 1 : 2);
+	if (val > 0)
+		return (1);
+	else
+		return (2);
+	return (0);
 }
 
-void			rotate_enemy_towards_player(t_doom *doom, t_enemy *enemy)
+void	rotate_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 {
 	t_point	p;
 	int		orient;
@@ -74,7 +78,7 @@ void			rotate_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 	}
 }
 
-void			move_enemy_towards_player(t_doom *doom, t_enemy *enemy)
+void	move_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 {
 	t_point	old;
 	int		dist;
@@ -84,6 +88,6 @@ void			move_enemy_towards_player(t_doom *doom, t_enemy *enemy)
 	dist = calc_distance(enemy, doom);
 	if (check_location(doom, enemy->x, enemy->y) != -1
 		&& enemy->hp.cur > 0 && enemy->stun_time <= 0
-			&& !(dist < enemy->ai.min_dis))
+		&& !(dist < enemy->ai.min_dis))
 		handle_enemy_movement(enemy, doom, old);
 }

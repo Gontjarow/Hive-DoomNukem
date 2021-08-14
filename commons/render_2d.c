@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 14:21:22 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/30 14:55:21 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:02:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void		draw_rect_color(int x[2], int y[2], unsigned int color, SDL_Surface *buff)
 	}
 }
 
-void draw_surface_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
+void draw_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surface *buff)
 {
 	uint32_t *pix[2];
 	int i;

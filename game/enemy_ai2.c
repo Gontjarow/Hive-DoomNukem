@@ -6,13 +6,13 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 16:20:42 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 15:17:59 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 16:03:23 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-void		ai_ranged(t_doom *doom, t_enemy *enemy)
+void	ai_ranged(t_doom *doom, t_enemy *enemy)
 {
 	enemy->ai.mcEnemyDeath = doom->sounds->mcEnemyDeath;
 	enemy->ai.mcEnemyShoot = doom->sounds->mcLaserShot;
@@ -23,7 +23,7 @@ void		ai_ranged(t_doom *doom, t_enemy *enemy)
 	enemy->ai.dmg = 10;
 }
 
-void		ai_melee(t_doom *doom, t_enemy *enemy)
+void	ai_melee(t_doom *doom, t_enemy *enemy)
 {
 	enemy->ai.mcEnemyDeath = doom->sounds->mcDogDying;
 	enemy->ai.mcEnemyShoot = doom->sounds->mcDogShot;
@@ -34,7 +34,7 @@ void		ai_melee(t_doom *doom, t_enemy *enemy)
 	enemy->ai.dmg = 20;
 }
 
-void		ai_boss(t_doom *doom, t_enemy *enemy)
+void	ai_boss(t_doom *doom, t_enemy *enemy)
 {
 	enemy->ai.mcEnemyDeath = doom->sounds->mcEnemyDeath;
 	enemy->ai.mcEnemyShoot = doom->sounds->mcLaserShot;
@@ -45,7 +45,7 @@ void		ai_boss(t_doom *doom, t_enemy *enemy)
 	enemy->ai.dmg = 15;
 }
 
-void		ai_assignment(t_doom *doom)
+void	ai_assignment(t_doom *doom)
 {
 	int		ec;
 	t_enemy	*enemy;
@@ -66,10 +66,10 @@ void		ai_assignment(t_doom *doom)
 	}
 }
 
-void		handle_enemy_ai(t_doom *doom)
+void	handle_enemy_ai(t_doom *doom)
 {
 	int		ec;
-	t_enemy *enemy;
+	t_enemy	*enemy;
 
 	ec = doom->mdl->enemy_count;
 	if (ec == 0)

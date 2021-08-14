@@ -6,23 +6,24 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:07:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/07/04 21:04:43 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 20:32:41 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-void			init_player_z(t_doom *doom)
+void	init_player_z(t_doom *doom)
 {
-	int			room_id;
+	int	room_id;
 
-	room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x, doom->mdl->player.y);
-	doom->mdl->player.z = room_by_id(room_id)->floor_height + doom->mdl->player.height;
+	room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x,
+			doom->mdl->player.y);
+	doom->mdl->player.z = room_by_id(room_id)->floor_height
+		+ doom->mdl->player.height;
 }
 
-static int		check_eight_pos_points(t_doom *doom)
+static int	check_eight_pos_points(t_doom *doom, t_coord loc_id[8])
 {
-	t_coord		loc_id[8];
 	int			i;
 
 	loc_id[0].x = doom->mdl->player.x + 10;
@@ -41,60 +42,57 @@ static int		check_eight_pos_points(t_doom *doom)
 	loc_id[6].y = doom->mdl->player.y + 7;
 	loc_id[7].x = doom->mdl->player.x - 7;
 	loc_id[7].y = doom->mdl->player.y + 7;
-	i = 0;
-	while (i < 8)
+	i = -1;
+	while (++i < 8)
 	{
 		if (check_location(doom, loc_id[i].x, loc_id[i].y) == -1)
 			return (-1);
-		i++;
 	}
 	return (0);
 }
 
-static t_coord		check_segment(t_doom *doom, t_point start, t_point end)
+static t_coord	check_segment(t_doom *doom, t_point start, t_point end)
 {
 	t_coord	dist;
 	t_coord	closest;
 	double	dot;
 	double	len;
 
-	//player is start, bullet is end, enemy is player
 	dist.x = start.x - end.x;
 	dist.y = start.y - end.y;
 	len = sqrt((dist.x * dist.x) + (dist.y * dist.y));
 	dot = (((doom->mdl->player.x - start.x) * (end.x
-		- start.x)) + ((doom->mdl->player.y - start.y) *
-			(end.y - start.y)))
-				/ pow(len, 2);
-	closest.x = start.x + (dot *
-		(end.x - start.x));
-	closest.y = start.y + (dot *
-		(end.y - start.y));
+					- start.x)) + ((doom->mdl->player.y - start.y)
+				* (end.y - start.y)))
+		/ pow(len, 2);
+	closest.x = start.x + (dot
+			* (end.x - start.x));
+	closest.y = start.y + (dot
+			* (end.y - start.y));
 	return (closest);
 }
 
-static int			line_point_portal(t_doom *doom, t_coord p, t_point start, t_point end)
+static int	line_point_portal(t_doom *doom, t_coord p, t_point s, t_point end)
 {
 	double	d1;
 	double	d2;
 	double	len;
 	double	buffer;
 
-	//player is start, bullet is end, enemy is player
-	d1 = dist(p.x, p.y, start.x, start.y);
+	d1 = dist(p.x, p.y, s.x, s.y);
 	d2 = dist(p.x, p.y, end.x, end.y);
-	len = dist(start.x, start.y, end.x, end.y);
+	len = dist(s.x, s.y, end.x, end.y);
 	buffer = 0.001;
 	if (d1 + d2 >= len - buffer && d1 + d2 <= len + buffer)
 		return (1);
 	return (0);
 }
 
-static int		player_collision_portals(t_doom *doom)
+static int	player_collision_portals(t_doom *doom)
 {
 	int		pc;
 	t_coord	closest;
-	t_coord dist;
+	t_coord	dist;
 	t_wall	*portals;
 
 	pc = doom->mdl->portal_count;
@@ -106,8 +104,8 @@ static int		player_collision_portals(t_doom *doom)
 		if (portals->open == 0)
 		{
 			if ((point_circle(portals->start.x, portals->start.y,
-			doom->mdl->player.x, doom->mdl->player.y) || point_circle(portals->end.x,
-				portals->end.y, doom->mdl->player.x, doom->mdl->player.y)))
+						doom->mdl->player.x, doom->mdl->player.y) || point_circle(portals->end.x,
+					portals->end.y, doom->mdl->player.x, doom->mdl->player.y)))
 				return (-1);
 			closest = check_segment(doom, portals->start, portals->end);
 			if (!line_point_portal(doom, closest, portals->start, portals->end))
@@ -125,21 +123,25 @@ static int		player_collision_portals(t_doom *doom)
 	return (0);
 }
 
-void			validate_player_position(t_doom *doom, t_coord old)
+void	validate_player_position(t_doom *doom, t_coord old)
 {
-	static	int	last_room_id = -1;
+	static int	last_room_id = -1;
 	int			current_room;
 	int			location_id;
+	t_coord		loc_id[8];
 
 	location_id = check_location(doom, doom->mdl->player.x,
-								 doom->mdl->player.y);
-	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT ||
-		player_collision_with_enemies(doom) == -1 || check_eight_pos_points(doom) == -1 || player_collision_portals(doom) == -1)
+			doom->mdl->player.y);
+	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT
+		|| player_collision_with_enemies(doom)
+		== -1 || check_eight_pos_points(doom, loc_id) == -1
+		|| player_collision_portals(doom) == -1)
 	{
 		doom->mdl->player.x = old.x;
 		doom->mdl->player.y = old.y;
 	}
-	current_room = check_location(doom, doom->mdl->player.x, doom->mdl->player.y);
+	current_room = check_location(doom, doom->mdl->player.x,
+			doom->mdl->player.y);
 	if (last_room_id != current_room)
 	{
 		doom->mdl->player.room_id = current_room;

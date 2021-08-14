@@ -6,15 +6,15 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/13 15:16:38 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/06/13 15:26:39 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 16:04:34 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-void			check_aggro(t_doom *doom, t_enemy *enemy)
+void	check_aggro(t_doom *doom, t_enemy *enemy)
 {
-	int dist;
+	int	dist;
 
 	if (check_location(doom, doom->mdl->player.x, doom->mdl->player.y)
 		== check_location(doom, enemy->x, enemy->y))
@@ -34,7 +34,7 @@ static float	fix_angle(float angle)
 	return (angle);
 }
 
-static void		assign_orient(t_enemy *enemy, float angle)
+static void	assign_orient(t_enemy *enemy, float angle)
 {
 	if ((angle >= 0 && angle <= 45) || (angle <= 360 && angle >= 315))
 		enemy->anim.orient = FRONT;
@@ -46,7 +46,7 @@ static void		assign_orient(t_enemy *enemy, float angle)
 		enemy->anim.orient = BACK;
 }
 
-void			check_sprite_orient(t_doom *doom, t_enemy *enemy)
+void	check_sprite_orient(t_doom *doom, t_enemy *enemy)
 {
 	int		off;
 	t_xy	delta;

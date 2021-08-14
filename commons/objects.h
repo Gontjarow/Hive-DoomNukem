@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/14 15:42:11 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 17:06:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,9 +279,9 @@ typedef struct 			s_sprites
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;
 	struct SDL_Surface	**txt_fuel_bar;
-	struct SDL_Surface	*txt_assault_ammo_bar;
-	struct SDL_Surface	*txt_shotgun_ammo_bar;
-	struct SDL_Surface	*txt_pistol_ammo_bar;
+	struct SDL_Surface	*txt_rifle_bar;
+	struct SDL_Surface	*txt_shotgun_bar;
+	struct SDL_Surface	*txt_pistol_bar;
 	struct SDL_Surface	*txt_jetpack_ammo_pickup;
 	struct SDL_Surface	*txt_clip_bar;
 	struct SDL_Surface	*txt_key_hud;
@@ -459,7 +459,7 @@ void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
  * */
 
 void					draw_rect_color(int x[2], int y[2], unsigned int color, SDL_Surface *buff);
-void					draw_surface_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
+void					draw_ignore_alpha(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
 void					render_winning_screen(t_doom *doom, int reset);
 void					render_losing_screen(t_doom *doom, int reset);
 void					render_loading_screen(t_doom *doom, const char *label, SDL_Surface *txt_screen, int reset);
