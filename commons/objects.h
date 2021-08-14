@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/14 17:06:08 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/14 21:07:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ typedef struct 			s_enemy
 	struct SDL_Surface	*active_sprite;
 }						t_enemy;
 
+#define MAX_EFFECT_COUNT 4
 typedef struct 			s_wall
 {
 	struct s_point		start;
@@ -181,6 +182,8 @@ typedef struct 			s_wall
 	SDL_Surface			*active_sprite;
 	struct s_wall		*next;
 	int					can_portal;
+	struct s_effect		*effects[MAX_EFFECT_COUNT];
+	int					effect_count;
 	int					open;
 	int					portal_type;
 }						t_wall;
@@ -194,7 +197,7 @@ typedef struct 			s_room
 	int 				wall_count;
 	int 				floor_height;
 	int 				roof_height;
-	int					has_ceiling; 
+	int					has_ceiling;
 	int					is_hallway;
 	int					slope_floor;
 	int					slope_roof;
@@ -275,7 +278,7 @@ typedef struct 			s_sprites
 	struct SDL_Surface **txt_wall;
 	struct SDL_Surface **txt_floor;
 	struct SDL_Surface *txt_door;
-	
+
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;
 	struct SDL_Surface	**txt_fuel_bar;
@@ -472,9 +475,10 @@ void					draw_visible(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
 void					draw_surface(int x, int y, SDL_Surface *surf, SDL_Surface *buff);
 void					flood_buffer(SDL_Surface *buff, uint32_t color);
 void					set_protected_color(uint32_t color);
-int 					set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
+int						set_pixel_safe(SDL_Surface *buff, int x, int y, uint32_t color);
 uint32_t				get_pixel(SDL_Surface *surface, int x, int y);
-void 					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
+void					set_pixel(SDL_Surface *buff, int x, int y, uint32_t color);
+void					set_pixel_dark(SDL_Surface *buff, int x, int y, uint32_t color);
 
 /*
  * from rotation_math.c

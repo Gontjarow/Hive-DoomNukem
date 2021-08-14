@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom-nukem.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/05/29 15:36:23 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/12 15:13:34 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@ void		ft_die(const char *error_message)
 void		ft_assert(int eval, const char *error_message)
 {
 	if (eval == 0)
+	{
+		ft_putendl(error_message);
+		exit(0);
+	}
+}
+
+void		ft_crash_if(int eval, const char *error_message)
+{
+	if (eval == 1)
 	{
 		ft_putendl(error_message);
 		exit(0);

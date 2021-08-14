@@ -23,6 +23,12 @@
 # define SPRITE_SCALE 2.5
 # define BYTE_TRANSPARENT 0xFF
 # define COLOR_TRANSPARENT 0xFF00FF
+# define DARK_MASK 0b111111001111110011111100
+# define FUNC_SETPIXEL int (*fp)(SDL_Surface *, int, int, uint32_t)
+
+// For wall effect drawing
+# define POSTER_WIDTH 0.2
+# define POSTER_HALF (POSTER_WIDTH / 2)
 
 // For line clipping
 # define LINE_SIDES_CROSS -1
@@ -68,50 +74,16 @@ typedef struct	s_xy_line
 	signed	color;
 }				t_xy_line;
 
-typedef t_xyzw	t_dir;
-typedef t_xyzw	t_pos;
-typedef t_xyzw	t_vert;
-
-typedef struct	s_matrix
-{
-	double m[4][4];
-}				t_matrix;
-
-# define Xx m[0][0]
-# define Xy m[1][0]
-# define Xz m[2][0]
-# define Xw m[3][0]
-
-# define Yx m[0][1]
-# define Yy m[1][1]
-# define Yz m[2][1]
-# define Yw m[3][1]
-
-# define Zx m[0][2]
-# define Zy m[1][2]
-# define Zz m[2][2]
-# define Zw m[3][2]
-
-# define Tx m[0][3]
-# define Ty m[1][3]
-# define Tz m[2][3]
-# define Tw m[3][3]
-
-typedef struct	s_cam
-{
-	t_xyz	pos;
-	t_xyz	rot;
-}				t_cam;
-
 typedef struct	s_sector
 {
+	int			room_id;
 	double		floor;
 	double		ceil;
 	unsigned	vertex_count;
 	t_xy		*vertex;
 	signed		*neighbors;
 	int			has_ceiling;
-	SDL_Surface **active_sprites;
+	SDL_Surface	**textures;
 }				t_sector;
 
 typedef struct	s_section
@@ -123,13 +95,14 @@ typedef struct	s_section
 
 typedef struct	s_camera
 {
-	signed	sector_id;
-	t_xyz	position;
-	t_xyz	velocity;
-	double	angle;
-	double	sin;
-	double	cos;
-	double	yaw;
+	signed		sector_id;
+	t_xyz		position;
+	t_xyz		velocity;
+	double		angle;
+	double		sin;
+	double		cos;
+	double		yaw;
+	t_xy_line	*bounds;
 }				t_camera;
 
 typedef struct	s_world
@@ -148,6 +121,44 @@ typedef struct	s_queue
 	t_section	*rear;
 }				t_queue;
 
+typedef struct	s_wdata
+{
+	signed		vertex;
+	t_room		*room;
+	SDL_Surface	*texture;
+	t_xy_line	scale;
+	t_xy_line	preclip;
+	t_xy_line	render;
+	t_xy_line	ceil;
+	t_xy_line	floor;
+	int			x1;
+	int			x2;
+	int			neighbor_id;
+	double		ceil_angle;
+	double		floor_angle;
+	t_xy_line	start_clip;
+	double		clipped_start;
+	double		visible_ratio;
+	double		x_step;
+	t_sector	*connecting;
+}				t_wdata;
+
+typedef struct	s_stripe
+{
+	int		x;			// screen_x
+	int		y;			// screen_y
+	double	tx;			// texture_x
+	double	ty;			// texture_x
+	double	x_delta;	// texture X delta
+	double	y_delta;	// texture Y delta
+	double	depth;		// Z buffer
+	int		y1;			// top pixel
+	int		y2;			// bottom pixel
+	int		top;		// absolute screen boundary
+	int		bot;		// absolute screen boundary
+	t_xy	render_width;
+}				t_stripe;
+
 double			*get_zbuffer();
 t_world			*get_world();
 SDL_Surface		*get_bricks_tex(t_doom *doom);
@@ -155,12 +166,14 @@ SDL_Surface		*get_border_tex(t_doom *doom);
 SDL_Surface		*get_panorama_tex(t_doom *doom);
 void			destroy_world(t_world *world);
 t_world			*load_world(t_world *world);
+void			link_wall_decorators();
 
 void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			drawline(t_xy_line line, SDL_Surface *surface);
 void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
+void			draw_sprite(t_wdata saved, t_stripe screen, FUNC_SETPIXEL);
 void			vertical_line(int column, int start, int end, int color);
-void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth);
+void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth, FUNC_SETPIXEL);
 void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom);
 void			vertical_sprite(SDL_Surface *active_sprite, int screen_x, int tex_x, t_xy range, double depth);
 void			vertical_shade(int column, int start, int end, int color);
@@ -172,9 +185,16 @@ void			render_enemies(t_doom *doom);
 void			render_pickups(t_doom *doom);
 void			render_effectors(t_doom *doom);
 
+// Somewhat generalized render functions
+t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
+uint32_t		texture_pixel(SDL_Surface *tex, int x, int y);
+int				zbuffer_ok(int index, double depth);
+t_xy_line		viewer_facing_wall(t_xy location, t_world *world);
+
 t_queue			*get_queue();
 void			queue_add(int id, int left, int right);
 void			queue_pop();
+void			print_queue(t_queue *queue);
 
 /*
 ** Math is fun, okay? ⤵️
@@ -188,6 +208,7 @@ double			value_changed(int initialize, double value);
 
 void			vec2p(const char *name, t_xy v);
 t_xy			vec2(double x, double y);
+t_xy			veci2(t_point v);
 t_xyz			vec23(t_xy v, double z);
 t_xy			vec2_add(t_xy a, t_xy b);
 t_xy			vec2_sub(t_xy a, t_xy b);

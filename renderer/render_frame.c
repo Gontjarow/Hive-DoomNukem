@@ -203,6 +203,7 @@ t_world			*load_world(t_world *world)
 		t_sector *sector = &world->sectors[room_index];
 
 		// Sector init
+		sector->room_id = room_index;
 		sector->vertex_count = room->wall_count;
 		sector->floor = room->floor_height / WORLD_SCALE;
 		sector->ceil = room->roof_height / WORLD_SCALE;
@@ -215,7 +216,7 @@ t_world			*load_world(t_world *world)
 		int vertices = sector->vertex_count;
 		sector->neighbors = malloc((vertices  ) * sizeof(*sector->neighbors));
 		sector->vertex    = malloc((vertices+1) * sizeof(*sector->vertex)   );
-		sector->active_sprites = malloc((vertices) * sizeof(SDL_Surface*));
+		sector->textures  = malloc((vertices  ) * sizeof(SDL_Surface*));
 
 		// Init allocated memory
 		int vertex = 0;
@@ -231,8 +232,12 @@ t_world			*load_world(t_world *world)
 		int walls = sector->vertex_count; //room->wall_count;
 		while (i < walls)
 		{
-			sector->active_sprites[i] = wall->active_sprite;
+			sector->textures[i] = wall->active_sprite;
 			sector->vertex[i++] = vec2_div(vec2(wall->start.x, wall->start.y), WORLD_SCALE);
+
+			wall->effect_count = 0; // init while we're here anyway...
+			bzero(wall->effects, sizeof(wall->effects));
+
 			wall = wall->next;
 		}
 		sector->vertex[i] = sector->vertex[0];
@@ -243,7 +248,16 @@ t_world			*load_world(t_world *world)
 		room = room->next;
 	}
 
+	if (mdl->effect_count > 1)
+		link_wall_decorators();
+
 	ft_bzero(&world->player, sizeof(world->player));
+
+	world->player.bounds = set_clip_bounds(
+		vec2(-GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
+		vec2(+GAME_MIDWIDTH, -GAME_WIN_HEIGHT),
+		vec2(+GAME_MIDWIDTH, NEAR_PLANE),
+		vec2(-GAME_MIDWIDTH, NEAR_PLANE));
 
 	world->screen_y_top = malloc(sizeof(int) * GAME_WIN_WIDTH);
 	world->screen_y_bot = malloc(sizeof(int) * GAME_WIN_WIDTH);
@@ -253,6 +267,32 @@ t_world			*load_world(t_world *world)
 
 	// print_data(world);
 	return (world);
+}
+
+// Iterates through all effects and assigns them to individual t_wall arrays,
+// up to but not including MAX_EFFECT_COUNT.
+void	link_wall_decorators()
+{
+	t_effect	*effect = get_model()->effect_first->next;
+	int			ec = get_model()->effect_count;
+	int			i = 1;
+
+	while (i < ec)
+	{
+		printf("%i < %i\n", i, ec);
+
+		t_wall *wall = wall_by_id(effect->target_id);
+		printf("\twall %i\n", wall->id);
+
+		if (wall->effect_count < MAX_EFFECT_COUNT)
+		{
+			printf("\tassign %i = %p\n", wall->effect_count, effect);
+			wall->effects[wall->effect_count] = effect;
+			++wall->effect_count;
+		}
+		effect = effect->next;
+		++i;
+	}
 }
 
 void			render_frame(t_doom *doom)
