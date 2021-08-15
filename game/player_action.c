@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 17:51:12 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 19:59:50 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,30 +169,29 @@ static void	open_doors(t_doom *doom, t_effect *effect)
 	{
 		if (portals->portal_type == DOOR_PORTAL)
 		{
-			// if (effect->type_id == EFFECT_LEVER)				// WIP
-			// {
-			// 	printf("EFFECT_LEVER->target_id: %d | PORTAL->id: %d\n", effect->target_id, portals->id);
-			// 	if (effect->target_id == portals->id && effect->activated)
-			// 	{
-			// 		portals->open = 1;
-			// 		portals->active_sprite = doom->sprites->txt_transparent;
-			// 	}
-			// 	else if (effect->target_id == portals->id && !effect->activated)
-			// 	{
-			// 		portals->open = 0;
-			// 		portals->active_sprite = doom->sprites->txt_door;
-			// 	}
-			// }
-			// else
-			// {
-				// printf("EFFECT_TARGET->target_id: %d | PORTAL->id: %d\n", target_effect->target_id, portals->id);
-				target_effect = find_target_effect(doom, effect->id);
-				if (target_effect->target_id == portals->id)		// this means they are connected: keypanel to door
+			if (effect->type_id == EFFECT_LEVER)
+			{
+				printf("EFFECT_LEVER->target_id: %d | PORTAL->id: %d\n", effect->target_id, portals->id);
+				if (effect->target_id == portals->id && !effect->activated)
 				{
 					portals->open = 1;
-					portals->active_sprite = doom->sprites->txt_transparent;					//change the portal sprite to transparent?
+					portals->active_sprite = doom->sprites->txt_transparent;
 				}
-			// }
+				else if (effect->target_id == portals->id && effect->activated)
+				{
+					portals->open = 0;
+					portals->active_sprite = doom->sprites->txt_door;
+				}
+			}
+			else
+			{
+				target_effect = find_target_effect(doom, effect->id);
+				if (target_effect->target_id == portals->id)
+				{
+					portals->open = 1;
+					portals->active_sprite = doom->sprites->txt_transparent;
+				}
+			}
 		}
 		portals = portals->next;
 	}
@@ -202,32 +201,36 @@ static void	player_switch_light(t_doom *doom, t_effect *effect)
 {
 	t_room	*curr_room;
 
+	curr_room = room_by_wall_id(effect->target_id, doom->mdl);
+	if (effect->activated > 1)
+		effect->activated = 1;
 	if (!doom->mdl->player.eff_pressed)
 	{
 		doom->mdl->player.eff_pressed = 1;
 		effect->activated = !effect->activated;
-		curr_room = room_by_wall_id(effect->target_id, doom->mdl);
 		curr_room->lit = !curr_room->lit;
 		if (effect->activated)
-			effect->active_sprite = doom->sprites->txt_switch_off;
-		else
 			effect->active_sprite = doom->sprites->txt_switch_on;
+		else
+			effect->active_sprite = doom->sprites->txt_switch_off;
 	}
 }
 
-// static void	player_switch_lever(t_doom *doom, t_effect *effect)		//WIP
-// {
-// 	if (!doom->mdl->player.eff_pressed)
-// 	{
-// 		doom->mdl->player.eff_pressed = 1;
-// 		effect->activated = !effect->activated;
-// 		if (effect->activated)
-// 			effect->active_sprite = doom->sprites->txt_lever_off;
-// 		else
-// 			effect->active_sprite = doom->sprites->txt_lever_on;
-// 		open_doors(doom, effect);
-// 	}
-// }
+static void	player_switch_lever(t_doom *doom, t_effect *effect)
+{
+	if (effect->activated > 1)
+		effect->activated = 1;
+	if (!doom->mdl->player.eff_pressed)
+	{
+		doom->mdl->player.eff_pressed = 1;
+		effect->activated = !effect->activated;
+		if (effect->activated)
+			effect->active_sprite = doom->sprites->txt_lever_on;
+		else
+			effect->active_sprite = doom->sprites->txt_lever_off;
+		open_doors(doom, effect);
+	}
+}
 
 static void	player_effector_interactions(t_doom *doom)
 {
@@ -246,17 +249,16 @@ static void	player_effector_interactions(t_doom *doom)
 			player_switch_light(doom, effect);
 		if (effect->type_id == EFFECT_KEYPANEL
 			&& player_collision_with_effects(doom, effect) == -1
-			&& doom->mdl->player.has_key && effect->activated == 0)
+			&& doom->mdl->player.has_key && !effect->activated)
 		{
 			doom->mdl->player.has_key = 0;
 			effect->activated = 1;
 			effect->active_sprite = doom->sprites->txt_panel_on;
 			open_doors(doom, effect);
 		}
-		// if (effect->type_id == EFFECT_LEVER &&
-		// player_collision_with_effects(doom, effect) == -1)	// WIP
-		// 	player_switch_lever(doom, effect);
-
+		if (effect->type_id == EFFECT_LEVER
+			&& player_collision_with_effects(doom, effect) == -1)
+			player_switch_lever(doom, effect);
 		effect = effect->next;
 	}
 }
@@ -275,10 +277,10 @@ void	handle_player_action(t_doom *doom)
 		player_run(doom);
 	if (!doom->keystates[SDL_SCANCODE_LSHIFT] && doom->mdl->player.run_lock)
 		player_run(doom);
-	if (doom->keystates[SDL_SCANCODE_E] && !doom->mdl->player.eff_pressed)
-		player_effector_interactions(doom);
 	if (!doom->keystates[SDL_SCANCODE_E] && doom->mdl->player.eff_pressed)
 		doom->mdl->player.eff_pressed = 0;
+	if (doom->keystates[SDL_SCANCODE_E] && !doom->mdl->player.eff_pressed)
+		player_effector_interactions(doom);
 	if (doom->keystates[SDL_SCANCODE_P])
 		debug_model_effects();
 	if (doom->keystates[SDL_SCANCODE_L])

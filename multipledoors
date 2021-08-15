@@ -23,7 +23,7 @@
 [Wall] id = 22 | start.x = 414 | start.y = 29 | end.x = 575 | end.y = 192 | texture_id = 1
 [Wall] id = 23 | start.x = 575 | start.y = 192 | end.x = 454 | end.y = 297 | texture_id = 1
 
-[Room] id = 0 | first_wall_id = 0 | wall_count = 8 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 0 | first_wall_id = 0 | wall_count = 8 | floor_height = 100 | roof_height = 200 | has_ceiling = 0 | slope_floor = 1 | slope_roof = 1
 [Room] id = 1 | first_wall_id = 8 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
 [Room] id = 2 | first_wall_id = 12 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
 [Room] id = 3 | first_wall_id = 16 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
