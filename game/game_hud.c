@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 15:31:09 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 17:17:13 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -417,15 +417,15 @@ void	handle_weapon_bar(t_doom *doom)
 		return (handle_weapon_bar_shaded(doom));
 	if (doom->mdl->player.weap_id == PISTOL && !doom->mdl->player.is_running)
 		draw_ignore_alpha(WIN_WIDTH - 150, 0,
-			doom->mdl->player.weap_arr[0].weap_img, doom->game->hud_location);
+			doom->sprites->txt_pistol_image, doom->game->hud_location);
 	else if (doom->mdl->player.weap_id == SHOTGUN
 		&& !doom->mdl->player.is_running)
 		draw_ignore_alpha(WIN_WIDTH - 260, 0,
-			doom->mdl->player.weap_arr[1].weap_img, doom->game->hud_location);
+			doom->sprites->txt_shotgun_image, doom->game->hud_location);
 	else if (doom->mdl->player.weap_id == ASSAULT_RIFLE
 		&& !doom->mdl->player.is_running)
 		draw_ignore_alpha(WIN_WIDTH - 260, 0,
-			doom->mdl->player.weap_arr[2].weap_img, doom->game->hud_location);
+			doom->sprites->txt_rifle_image, doom->game->hud_location);
 }
 
 static void	render_legacy_ch(t_model *mdl)
@@ -542,7 +542,7 @@ void	render_game_hud(t_doom *doom)
 	handle_clip_bar(doom);
 	handle_weapon_bar(doom);
 	if (doom->mdl->player.has_key)
-		draw_ignore_alpha(WIN_WIDTH - 90, 300, doom->sprites->txt_key_hud,
+		draw_ignore_alpha(WIN_WIDTH - 90, 280, doom->sprites->txt_key_hud,
 			doom->game->hud_location);
 	if (!doom->game->show_info)
 		render_crosshair(doom->mdl);
