@@ -210,18 +210,18 @@ static void	fill_lever_effect_data(t_model *mdl, t_wall *door)
 static void create_lever_effectors(t_model *mdl)
 {
 	t_effect	*new_effect;	
-	t_wall		*portals = mdl->portal_first;
+	t_wall		*portal = mdl->portal_first;
 	int			pc = mdl->portal_count;
 
 	while (pc--)
 	{
-		if (portals->portal_type != DOOR_PORTAL)
+		if (portal->portal_type != DOOR_PORTAL || already_targeted_door_portal(portal))
 		{
-			portals = portals->next;
+			portal = portal->next;
 			continue;
 		}
 		ft_putendl("Debug (Kalle): Created an EFFECT_LEVER!");
-		fill_lever_effect_data(mdl, portals);
+		fill_lever_effect_data(mdl, portal);
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
 		if (!new_effect)
 			ft_die("Fatal error: Could not malloc new_effect at create_lever_effectors!");
@@ -230,7 +230,7 @@ static void create_lever_effectors(t_model *mdl)
 		if (mdl->effect_count == 1)
 			mdl->effect_first = mdl->effects;
 		mdl->effects = new_effect;
-		portals = portals->next;
+		portal = portal->next;
 	}	
 }
 
