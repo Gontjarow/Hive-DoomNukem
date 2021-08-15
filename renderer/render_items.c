@@ -148,7 +148,7 @@ void		render_sprites(t_doom *doom, int i)
 	e = doom->mdl->enemy_first;
 	while (~--i)
 	{
-		render_sprite(vec2i(e->x, e->y), e->active_sprite, find_enemy_room(e));
+		render_sprite(point(e->x, e->y), e->active_sprite, find_enemy_room(e));
 		e = e->next;
 	}
 }

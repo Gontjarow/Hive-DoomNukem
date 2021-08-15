@@ -10,12 +10,17 @@ t_xy	vec2(double x, double y)
 	return ((t_xy){x, y});
 }
 
+t_point	point(int x, int y)
+{
+	return ((t_point){x, y});
+}
+
 t_xy	veci2(t_point v)
 {
 	return (vec2(v.x, v.y));
 }
 
-t_xy	vec2i(t_xy v)
+t_point	vec2i(t_xy v)
 {
 	return ((t_point){v.x, v.y});
 }

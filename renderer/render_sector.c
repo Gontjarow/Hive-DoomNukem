@@ -160,7 +160,17 @@ void	draw_portal_stripes(t_sector *sector, t_wdata saved, t_stripe screen)
 	signed		connecting_y_start     = connecting_yawed_ceil.start.y + (screen.x_delta * connecting_ceil_angle);
 	signed		connecting_y_stop      = connecting_yawed_floor.start.y + (screen.x_delta * connecting_floor_angle);
 
+	// top
 	vertical_wall(screen.x, screen.tx, vec2(screen.y1, connecting_y_start), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	//door
+	// t_wall *w = wall_by_id(saved.room->first_wall_id + saved.vertex);
+	// printf("getting door sprite...\n");
+	// if (w->active_sprite)
+	// {
+	// 	printf("door sprite: %p\n", w->active_sprite);
+	// 	vertical_wall(screen.x, screen.tx, vec2(connecting_y_start, connecting_y_stop), w->active_sprite, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	// }
+	//bottom
 	vertical_wall(screen.x, screen.tx, vec2(connecting_y_stop, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 
 	if (connecting_y_start > screen.top) world->screen_y_top[screen.x] = connecting_y_start;
@@ -273,6 +283,7 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 		calculate_ratios(&saved);
 
 		//! Draw vertical lines left-to-right.
+		// printf("new portal\n");
 		draw_single_wall(sector, saved);
 
 		//! Debug view.
