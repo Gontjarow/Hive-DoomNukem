@@ -380,6 +380,7 @@ void 					effect_mouse_motion(int x, int y);
 void 					effect_left_click(int x, int y);
 void 					effect_right_click(int x, int y);
 void 					effect_middle_click(int x, int y);
+int     				already_targeted_door_portal(t_wall *portal);
 int     				already_lightknobbed_room(t_room *room);
 int     				effect_lightknob_wall(t_wall *wall);
 void        			remove_effect(int id);

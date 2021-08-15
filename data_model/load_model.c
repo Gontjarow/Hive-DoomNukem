@@ -191,12 +191,12 @@ static void	fill_lever_effect_data(t_model *mdl, t_wall *door)
 	t_xy		door_vec;
 	t_xy		lever_position;
 
-	// Target.x means to convey, that for target_id (door), render on 80% between 0,1 to the right and 50% between 0,1 on the vertical axis
-	mdl->effects->target.x = 80;
+	// Target.x means to convey, that for target_id (door), render on 20% between 0,1 to the right and 50% between 0,1 on the vertical axis
+	mdl->effects->target.x = 20;
 	mdl->effects->target.y = 50;
 	// Here it could also calculate similar position to the 2D world coordinates to the loc.x and loc.y data fields
 	door_vec = vec2(door->end.x - door->start.x, door->end.y - door->start.y);
-	lever_position = vec2_add(vec2(door->start.x, door->start.y), vec2_mul(vec2_norm(door_vec), 0.8f * vec2_mag(door_vec)));
+	lever_position = vec2_add(vec2(door->start.x, door->start.y), vec2_mul(vec2_norm(door_vec), 0.2f * vec2_mag(door_vec)));
 	mdl->effects->loc.x = (int)lever_position.x;
 	mdl->effects->loc.y = (int)lever_position.y;
 	// Assign the correct effector type_id, id and default the active sprite to txt_lever_on sprite and target_id to the door of which lever it is
@@ -210,18 +210,18 @@ static void	fill_lever_effect_data(t_model *mdl, t_wall *door)
 static void create_lever_effectors(t_model *mdl)
 {
 	t_effect	*new_effect;	
-	t_wall		*portals = mdl->portal_first;
+	t_wall		*portal = mdl->portal_first;
 	int			pc = mdl->portal_count;
 
 	while (pc--)
 	{
-		if (portals->portal_type != DOOR_PORTAL)
+		if (portal->portal_type != DOOR_PORTAL || already_targeted_door_portal(portal))
 		{
-			portals = portals->next;
+			portal = portal->next;
 			continue;
 		}
 		ft_putendl("Debug (Kalle): Created an EFFECT_LEVER!");
-		fill_lever_effect_data(mdl, portals);
+		fill_lever_effect_data(mdl, portal);
 		new_effect = (t_effect*)malloc(sizeof(t_effect));
 		if (!new_effect)
 			ft_die("Fatal error: Could not malloc new_effect at create_lever_effectors!");
@@ -230,7 +230,7 @@ static void create_lever_effectors(t_model *mdl)
 		if (mdl->effect_count == 1)
 			mdl->effect_first = mdl->effects;
 		mdl->effects = new_effect;
-		portals = portals->next;
+		portal = portal->next;
 	}	
 }
 

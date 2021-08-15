@@ -1,0 +1,41 @@
+[Wall] id = 0 | start.x = 545 | start.y = 548 | end.x = 480 | end.y = 456 | texture_id = 1
+[Wall] id = 1 | start.x = 480 | start.y = 456 | end.x = 493 | end.y = 325 | texture_id = 1
+[Wall] id = 2 | start.x = 493 | start.y = 325 | end.x = 590 | end.y = 251 | texture_id = 1
+[Wall] id = 3 | start.x = 590 | start.y = 251 | end.x = 764 | end.y = 230 | texture_id = 1
+[Wall] id = 4 | start.x = 764 | start.y = 230 | end.x = 973 | end.y = 304 | texture_id = 1
+[Wall] id = 5 | start.x = 973 | start.y = 304 | end.x = 1010 | end.y = 373 | texture_id = 1
+[Wall] id = 6 | start.x = 1010 | start.y = 373 | end.x = 963 | end.y = 497 | texture_id = 1
+[Wall] id = 7 | start.x = 963 | start.y = 497 | end.x = 875 | end.y = 559 | texture_id = 1
+[Wall] id = 8 | start.x = 875 | start.y = 559 | end.x = 744 | end.y = 590 | texture_id = 1
+[Wall] id = 9 | start.x = 744 | start.y = 590 | end.x = 545 | end.y = 548 | texture_id = 1
+[Wall] id = 10 | start.x = 1010 | start.y = 373 | end.x = 1100 | end.y = 349 | texture_id = 1
+[Wall] id = 11 | start.x = 1100 | start.y = 349 | end.x = 1209 | end.y = 336 | texture_id = 1
+[Wall] id = 12 | start.x = 1209 | start.y = 336 | end.x = 1313 | end.y = 362 | texture_id = 1
+[Wall] id = 13 | start.x = 1313 | start.y = 362 | end.x = 1365 | end.y = 422 | texture_id = 1
+[Wall] id = 14 | start.x = 1365 | start.y = 422 | end.x = 1350 | end.y = 510 | texture_id = 1
+[Wall] id = 15 | start.x = 1350 | start.y = 510 | end.x = 1228 | end.y = 592 | texture_id = 1
+[Wall] id = 16 | start.x = 1228 | start.y = 592 | end.x = 1068 | end.y = 614 | texture_id = 1
+[Wall] id = 17 | start.x = 1068 | start.y = 614 | end.x = 963 | end.y = 497 | texture_id = 1
+[Wall] id = 18 | start.x = 963 | start.y = 497 | end.x = 1010 | end.y = 373 | texture_id = 1
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 10 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = -1 | slope_roof = -1
+[Room] id = 1 | first_wall_id = 10 | wall_count = 9 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = -1 | slope_roof = -1
+
+[Portal] id = 0 | start.x = 963 | start.y = 497 | end.x = 1010 | end.y = 373 | portal_type = 2
+
+[Enemy] id = 0 | x = 1129 | y = 404 | rot = 330 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 1228 | y = 419 | rot = 9 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 2 | x = 1187 | y = 508 | rot = 143 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 3 | x = 1085 | y = 528 | rot = 171 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Effect] id = 0 | type_id = 0 | loc.x = 1297 | loc.y = 462 | target.x = 0 | target.y = 0 | target_id = 0
+
+[Pickup] id = 0 | loc.x = 749 | loc.y = 506 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 1 | loc.x = 742 | loc.y = 368 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 2 | loc.x = 822 | loc.y = 337 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 3 | loc.x = 1116 | loc.y = 454 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 4 | loc.x = 1229 | loc.y = 466 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 5 | loc.x = 1264 | loc.y = 490 | flavor = 0 | weapon_type_id = 0
+[Pickup] id = 6 | loc.x = 1169 | loc.y = 551 | flavor = 0 | weapon_type_id = 0
+
+[Player] spawn.x = 571 | spawn.y = 390 | rot = 186

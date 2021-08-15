@@ -274,7 +274,7 @@ static int		add_keypanel_target_effector(int portal_id, t_point winning_hit, t_m
 	return (new_id);
 }
 
-static int		already_targeted_door_portal(t_wall *portal)
+int				already_targeted_door_portal(t_wall *portal)
 {
 	t_effect	*effect;
 	int			ec;
