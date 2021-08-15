@@ -29,19 +29,32 @@ t_room		*find_effect_room(t_effect *ptr)
 {
 	if (ptr->type_id == EFFECT_EXIT)
 	{
-		return room_by_id(
+		return (room_by_id(
 			room_id_from_polymap(
 				doom_ptr()->mdl->poly_map,
 				ptr->loc.x,
-				ptr->loc.y));
+				ptr->loc.y)));
 	}
 	else
 	{
-		return room_by_wall_id(ptr->target_id, doom_ptr()->mdl);
+		return (room_by_wall_id(ptr->target_id, doom_ptr()->mdl));
 	}
 }
 
-calculate_sprite_floor_ceil(t_room *room, t_world *world, t_xy_line sprite, t_wdata *out)
+t_room		*find_pickup_room(t_pickup *ptr)
+{
+	return (room_by_id(room_id_from_polymap(
+		doom_ptr()->mdl->poly_map, ptr->loc.x, ptr->loc.y)));
+}
+
+t_room		*find_enemy_room(t_enemy *ptr)
+{
+	return (room_by_id(room_id_from_polymap(
+			doom_ptr()->mdl->poly_map, ptr->x, ptr->y)));
+}
+
+void		calculate_sprite_floor_ceil(
+	t_room *room, t_world *world, t_xy_line sprite, t_wdata *out)
 {
 	double base;
 	double yawed;
@@ -76,13 +89,13 @@ void		render_sprite(t_point loc, SDL_Surface *tex, t_room *room)
 {
 	t_world		*world;
 	t_wdata		saved;
+	t_xy_line	sprite;
 
+	sprite = viewer_facing_wall(veci2(loc), world);
 	world = get_world();
-	t_xy location = veci2(loc);
-	t_xy_line sprite = viewer_facing_wall(location, world);
 
 	if (sprite.start.y > NEAR_PLANE)
-		return;
+		return ;
 
 	saved.texture = tex;
 
@@ -94,7 +107,7 @@ void		render_sprite(t_point loc, SDL_Surface *tex, t_room *room)
 
 	//! Ignore impossible.
 	if (saved.x1 >= saved.x2 || saved.x2 < 0 || saved.x1 >= GAME_WIN_WIDTH)
-		return;
+		return ;
 
 	calculate_sprite_floor_ceil(room, world, sprite, &saved);
 
@@ -105,33 +118,37 @@ void		render_sprite(t_point loc, SDL_Surface *tex, t_room *room)
 
 	if (doom_ptr()->game->show_info)
 	{
-		t_xy_line debug;
-		debug = line_add_offset(sprite, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT - 100));
+		t_xy_line debug = line_add_offset(sprite,
+			vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT - 100));
 		drawline(debug, doom_ptr()->game->buff);
 	}
 }
 
-void		render_sprites(t_doom *doom)
+void		render_sprites(t_doom *doom, int i)
 {
-	signed		i;
-	t_effect	*effect;
-	t_pickup	*pickup;
+	t_effect	*ef;
+	t_pickup	*pu;
+	t_enemy		*e;
 
 	i = doom->mdl->effect_count;
-	effect = doom->mdl->effect_first;
+	ef = doom->mdl->effect_first;
 	while (~--i)
 	{
-		render_sprite(effect->loc, effect->active_sprite,
-			find_effect_room(effect));
-		effect = effect->next;
+		render_sprite(ef->loc, ef->active_sprite, find_effect_room(ef));
+		ef = ef->next;
 	}
 	i = doom->mdl->pickup_count;
-	pickup = doom->mdl->pickup_first;
+	pu = doom->mdl->pickup_first;
 	while (~--i)
 	{
-		render_sprite(pickup->loc, pickup->active_sprite,
-			room_by_id(room_id_from_polymap(
-				doom->mdl->poly_map, pickup->loc.x, pickup->loc.y)));
-		pickup = pickup->next;
+		render_sprite(pu->loc, pu->active_sprite, find_effect_room(pu));
+		pu = pu->next;
+	}
+	i = doom->mdl->enemy_count;
+	e = doom->mdl->enemy_first;
+	while (~--i)
+	{
+		render_sprite(vec2i(e->x, e->y), e->active_sprite, find_enemy_room(e));
+		e = e->next;
 	}
 }

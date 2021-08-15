@@ -34,6 +34,14 @@
 [Portal] id = 2 | start.x = 445 | start.y = 450 | end.x = 567 | end.y = 540 | portal_type = 2
 [Portal] id = 3 | start.x = 575 | start.y = 192 | end.x = 454 | end.y = 297 | portal_type = 2
 
+[Enemy] id = 0 | x = 437 | y = 534 | rot = 132 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 1 | x = 427 | y = 159 | rot = 239 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 2 | x = 885 | y = 182 | rot = 109 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 3 | x = 974 | y = 154 | rot = 342 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 4 | x = 941 | y = 584 | rot = 152 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 5 | x = 482 | y = 560 | rot = 187 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+[Enemy] id = 6 | x = 424 | y = 589 | rot = 338 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
 [Effect] id = 0 | type_id = 0 | loc.x = 361 | loc.y = 96 | target.x = 0 | target.y = 0 | target_id = 0
 [Effect] id = 1 | type_id = 2 | loc.x = 613 | loc.y = 541 | target.x = 80 | target.y = 50 | target_id = 5
 [Effect] id = 2 | type_id = 4 | loc.x = 510 | loc.y = 498 | target.x = 50 | target.y = 50 | target_id = 2

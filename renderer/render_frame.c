@@ -338,7 +338,5 @@ void			render_frame(t_doom *doom)
 	// for (int i = 0; i < GAME_WIN_WIDTH * GAME_WIN_HEIGHT; ++i)
 	// 	printf("[%4i] = %f\n", i, zbuffer[i]);
 
-	// enemies don't have a "current sector" so they must be drawn together.
-	render_enemies(doom);
-	render_sprites(doom);
+	render_sprites(doom, 0);
 }
