@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/14 21:35:25 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 17:10:16 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,6 +289,9 @@ typedef struct 			s_sprites
 	struct SDL_Surface	*txt_jetpack_ammo_pickup;
 	struct SDL_Surface	*txt_clip_bar;
 	struct SDL_Surface	*txt_key_hud;
+	struct SDL_Surface	*txt_rifle_image;
+	struct SDL_Surface	*txt_pistol_image;
+	struct SDL_Surface	*txt_shotgun_image;
 
 	// Pickup Sprites
 	struct SDL_Surface	*txt_health_pickup;
