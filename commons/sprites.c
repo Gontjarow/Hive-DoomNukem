@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 16:32:02 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 15:12:29 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 17:12:45 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,6 +358,9 @@ void		load_ammo_bars(t_doom *doom)
 	doom->sprites->txt_shotgun_bar = load_texture(doom, "img/sprites/hud/ammobar/shotgunammo.png");
 	doom->sprites->txt_rifle_bar = load_texture(doom, "img/sprites/hud/ammobar/assaultammo.png");
 	doom->sprites->txt_clip_bar = load_texture(doom, "img/sprites/hud/ammobar/cliptest.png");
+	doom->sprites->txt_rifle_image = load_texture(doom, "img/sprites/hud/weaponbar/ak47.png");
+	doom->sprites->txt_pistol_image = load_texture(doom, "img/sprites/hud/weaponbar/colt.png");
+	doom->sprites->txt_shotgun_image = load_texture(doom, "img/sprites/hud/weaponbar/shotgun.png");
 }
 
 static void load_loading_screen(t_doom *doom)
@@ -427,8 +430,14 @@ static void	set_single_sprite_null(t_doom *doom)
 
 int			destroy_sprites(t_doom *doom)
 {
-	// total of 67 allocated sprites -> 67 free surfaces calls - done
+	// total of 70 allocated sprites -> 70 free surfaces calls - done
 	// Single pointer surfaces
+	SDL_FreeSurface(doom->sprites->txt_rifle_image);
+	doom->sprites->txt_rifle_image = NULL;
+	SDL_FreeSurface(doom->sprites->txt_pistol_image);
+	doom->sprites->txt_pistol_image = NULL;
+	SDL_FreeSurface(doom->sprites->txt_shotgun_image);
+	doom->sprites->txt_shotgun_image = NULL;
 	SDL_FreeSurface(doom->sprites->txt_transparent);
 	doom->sprites->txt_transparent = NULL;
 	SDL_FreeSurface(doom->sprites->txt_lever_off);
