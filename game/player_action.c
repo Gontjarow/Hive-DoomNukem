@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 15:27:34 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 15:45:26 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ static void	player_switch_light(t_doom *doom, t_effect *effect)
 		effect->activated = !effect->activated;
 		curr_room = room_by_id(check_location(doom, doom->mdl->player.x,
 					doom->mdl->player.y));
-		curr_room->lit = effect->activated;
+		curr_room->lit = !curr_room->lit;
 		if (effect->activated)
 			effect->active_sprite = doom->sprites->txt_switch_off;
 		else

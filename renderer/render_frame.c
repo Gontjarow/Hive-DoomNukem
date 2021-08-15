@@ -279,14 +279,14 @@ void	link_wall_decorators()
 
 	while (i < ec)
 	{
-		printf("%i < %i\n", i, ec);
+		// printf("%i < %i\n", i, ec);
 
 		t_wall *wall = wall_by_id(effect->target_id);
-		printf("\twall %i\n", wall->id);
+		// printf("\twall %i\n", wall->id);
 
 		if (wall->effect_count < MAX_EFFECT_COUNT)
 		{
-			printf("\tassign %i = %p\n", wall->effect_count, effect);
+			// printf("\tassign %i = %p\n", wall->effect_count, effect);
 			wall->effects[wall->effect_count] = effect;
 			++wall->effect_count;
 		}
