@@ -74,6 +74,28 @@ static t_effect	*effect_by_id(int id)
 	return (NULL);
 }
 
+static void		swap_first_with_latest(t_model *mdl)
+{
+		t_effect	*new_effect;
+
+		mdl->effects->id = mdl->effect_count;
+		mdl->effects->type_id = mdl->effect_first->type_id;
+		mdl->effects->loc.x = mdl->effect_first->loc.x;
+		mdl->effects->loc.y = mdl->effect_first->loc.y;
+		mdl->effects->target.x = mdl->effect_first->target.x;
+		mdl->effects->target.y = mdl->effect_first->target.y;
+		mdl->effects->target_id = mdl->effect_first->target_id;
+		mdl->effects->active_sprite = mdl->effect_first->active_sprite;		
+		new_effect = (t_effect*)malloc(sizeof(t_effect));
+		if (!new_effect)
+			ft_die("Fatal error: Could not malloc new_effect at swap_first_with_latest!");
+		mdl->effects->next = new_effect;
+		mdl->effect_count++;
+		if (mdl->effect_count == 1)
+			mdl->effect_first = mdl->effects;
+		mdl->effects = new_effect;
+}
+
 static void 	effect_plant_exit(int x, int y)
 {
 	t_model		*mdl;
@@ -82,9 +104,17 @@ static void 	effect_plant_exit(int x, int y)
 	mdl = get_model();
 	if (mdl->effect_count > 0)
 	{
+		if (mdl->effect_first->type_id != EFFECT_EXIT)
+		{
+			swap_first_with_latest(mdl);
+			mdl->effect_first->type_id = EFFECT_EXIT;
+			mdl->effect_first->target.x = 0;
+			mdl->effect_first->target.y = 0;
+			mdl->effect_first->target_id = 0;
+			mdl->effect_first->active_sprite = NULL;
+		}
 		mdl->effect_first->loc.x = x;
 		mdl->effect_first->loc.y = y;
-		//puts("Replaced Level Exit Effector!");
 	}
 	else
 	{
@@ -672,7 +702,8 @@ void 			effect_swap_type(void)
 		effect_logic()->following_up_on = -1;
 		effect_logic()->last_plant_id = -1;
 	}
-	if (effect_logic()->plant_type == EFFECT_EXIT && get_model()->effect_count > 0)
+	if (effect_logic()->plant_type == EFFECT_EXIT && get_model()->effect_count > 0
+		&& get_model()->effect_first->type_id == EFFECT_EXIT)
 	{
 		effect_logic()->plant_type = EFFECT_POSTER;
 		effect_logic()->plant_dir = UPWARD;

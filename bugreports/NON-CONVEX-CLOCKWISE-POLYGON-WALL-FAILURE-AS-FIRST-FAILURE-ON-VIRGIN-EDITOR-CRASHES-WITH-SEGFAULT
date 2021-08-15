@@ -1,0 +1,5 @@
+confirmed
+
+Create one non-convex-clockwise-polygon-wall and it will fail. Then start doing a second wall, and it will seg fault.
+
+Will fix! 
