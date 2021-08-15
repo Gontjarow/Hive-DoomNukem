@@ -117,5 +117,5 @@ void 		destroy_model(t_doom *doom)
 	free(doom->mdl);
 	doom->mdl = NULL;
 	singleton_manager(NULL, SINGLETON_MDL, 1);
-	//puts("MODEL EVAPORATED!!!");
+	puts("MODEL EVAPORATED!!!");
 }

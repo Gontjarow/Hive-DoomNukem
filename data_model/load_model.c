@@ -236,16 +236,15 @@ static void create_lever_effectors(t_model *mdl)
 
 static void	create_data_model(t_doom *doom, char *map_file_path)
 {
-	//puts("CREATE DATA BORN!!!!");
+	puts("DATA MODEL BORN!!!!");
 	ft_putstr("Loaded mapfile data from file: ");
 	ft_putendl(map_file_path);
 	map_to_model(doom->map, doom->mdl);
 	link_mdl_wall_textures(doom->mdl);
 	link_mdl_rooms(doom->mdl);
-	create_lever_effectors(doom->mdl);
 	expand_mdl_polygon_maps(doom->mdl);
-	//if (doom->edt_quit)
-	//	void_polymap_door_ranks(doom->mdl);
+	if (doom->edt_quit)
+		create_lever_effectors(doom->mdl);
 }
 
 static void assign_player_room(t_doom *doom)

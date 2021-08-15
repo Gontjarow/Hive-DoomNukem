@@ -42,12 +42,10 @@ void			edt_mouse_down(t_doom *doom)
 static void		handle_regular_numbers(t_doom *doom)
 {
 	int i;
-	static int	scancodes[9] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3,
-								   SDL_SCANCODE_4, SDL_SCANCODE_5, SDL_SCANCODE_6, SDL_SCANCODE_7,
-								   SDL_SCANCODE_8, SDL_SCANCODE_9 };
+	static int	scancodes[3] = { SDL_SCANCODE_1 , SDL_SCANCODE_2 , SDL_SCANCODE_3 };
 
 	i = 0;
-	while (i < 9)
+	while (i < 3)
 	{
 		if (doom->keystates[scancodes[i++]])
 		{
@@ -62,8 +60,17 @@ static void		handle_regular_numbers(t_doom *doom)
 				select_change_zoom(get_state());
 				return ;
 			}
+			if (get_state()->gui == mode_planting())
+			{
+				if (i == 0 || i > 3)
+					return ;
+				get_state()->selected_ai_type = i;
+				printf("Selected ai_type [%d] for planting (1=RANGED 2=MELEE 3=BOSS)\n", i);
+				planting_change_zoom(get_state());
+				return ;
+			}
 			get_state()->selected_weapon_type = i;
-			printf("Selected weapon type %d\n", get_state()->selected_weapon_type);
+			printf("Selected type [%d] for pickups (1=SHOTGUN 2=ASSAULT RIFLE 3=JET PACK)\n", get_state()->selected_weapon_type);
 			if (get_state()->gui == mode_pickups())
 				pickups_refresh_preview();
 			break ;
@@ -86,7 +93,7 @@ static void 	handle_shifted_numbers(t_doom *doom)
 		if (doom->keystates[scancodes[i++]])
 		{
 			get_state()->selected_sprite_id = (i);
-			printf("Selected sprite_id %d\n", get_state()->selected_sprite_id);
+			printf("Shift selected [%d] using handle_shifted_numbers in editor_input!\n", get_state()->selected_sprite_id);
 			break ;
 		}
 	}
@@ -109,9 +116,6 @@ void			edt_keystate_input(t_doom *doom)
 	static int 	lock_t = 0;
 	static int 	lock_b = 0;
 	static int	lock_c = 0;
-	static int lock_j = 0;
-	static int lock_k = 0;
-	static int lock_l = 0;
 	static int	lock_del = 0;
 
 	handle_keyboard_scrolling(doom);
@@ -252,30 +256,6 @@ void			edt_keystate_input(t_doom *doom)
 			get_state()->grid_size /= 2;
 		get_state()->gui->change_zoom(get_state());
 		lock_b = 1;
-	}
-
-	if (lock_j && !doom->keystates[SDL_SCANCODE_J])
-		lock_j = 0;
-	else if (doom->keystates[SDL_SCANCODE_J] && !lock_j)
-	{
-		get_state()->selected_ai_type = 0;
-		puts("Pressed J: Selected AI type ranged (0)");
-	}
-
-	if (lock_k && !doom->keystates[SDL_SCANCODE_K])
-		lock_k = 0;
-	else if (doom->keystates[SDL_SCANCODE_K] && !lock_k)
-	{
-		get_state()->selected_ai_type = 1;
-		puts("Pressed K: Selected AI type melee (1)");
-	}
-
-	if (lock_l && !doom->keystates[SDL_SCANCODE_L])
-		lock_l = 0;
-	else if (doom->keystates[SDL_SCANCODE_L] && !lock_l)
-	{
-		get_state()->selected_ai_type = 2;
-		puts("Pressed L: Selected AI type boss (2)");
 	}
 
 	if (lock_del && !doom->keystates[SDL_SCANCODE_DELETE])
