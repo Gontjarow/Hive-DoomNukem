@@ -182,8 +182,7 @@ void			render_frame(t_doom *doom);
 void			render_sky(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom);
 void			render_enemies(t_doom *doom);
-void			render_pickups(t_doom *doom);
-void			render_effectors(t_doom *doom);
+void			render_sprites(t_doom *doom);
 
 // Somewhat generalized render functions
 t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
