@@ -41,6 +41,37 @@ t_room		*find_effect_room(t_effect *ptr)
 	}
 }
 
+calculate_sprite_floor_ceil(t_room *room, t_world *world, t_xy_line sprite, t_wdata *out)
+{
+	double base;
+	double yawed;
+
+	base = room->floor_height / WORLD_SCALE;
+	yawed = sprite.start.y * world->player.yaw;
+
+	out->floor.start.y = base - world->player.position.z;
+	out->floor.start.y = (out->floor.start.y + yawed) * out->scale.start.y;
+	out->floor.start.y = GAME_MIDHEIGHT - out->floor.start.y;
+
+	out->ceil.start.y = (base + EYE_HEIGHT) - world->player.position.z;
+	out->ceil.start.y = (out->ceil.start.y + yawed) * out->scale.start.y;
+	out->ceil.start.y = GAME_MIDHEIGHT - out->ceil.start.y;
+}
+
+t_stripe	init_stripe(t_wdata saved, t_xy start)
+{
+	t_stripe screen;
+
+	screen.x = saved.x1;
+	screen.y = saved.ceil.start.y;
+	screen.y1 = saved.ceil.start.y;
+	screen.y2 = saved.floor.start.y;
+	screen.x_delta = saved.texture->w / (double)(saved.x2 - saved.x1);
+	screen.y_delta = saved.texture->h / (double)(screen.y2 - screen.y1);
+	screen.depth = start.y + 0.1;
+	return (screen);
+}
+
 void		render_sprite(t_point loc, SDL_Surface *tex, t_room *room)
 {
 	t_world		*world;
@@ -65,29 +96,17 @@ void		render_sprite(t_point loc, SDL_Surface *tex, t_room *room)
 	if (saved.x1 >= saved.x2 || saved.x2 < 0 || saved.x1 >= GAME_WIN_WIDTH)
 		return;
 
-	saved.floor.start.y = room->floor_height / WORLD_SCALE - world->player.position.z;
-	saved.floor.start.y = GAME_MIDHEIGHT - (saved.floor.start.y + sprite.start.y * world->player.yaw) * saved.scale.start.y;
+	calculate_sprite_floor_ceil(room, world, sprite, &saved);
 
-	saved.ceil.start.y = room->floor_height / WORLD_SCALE + EYE_HEIGHT - world->player.position.z;
-	saved.ceil.start.y = GAME_MIDHEIGHT - (saved.ceil.start.y + sprite.start.y * world->player.yaw) * saved.scale.start.y;
-
-	t_stripe screen;
-	screen.x = saved.x1;
-	screen.y = saved.ceil.start.y;
-	screen.y1 = saved.ceil.start.y;
-	screen.y2 = saved.floor.start.y;
-	screen.depth = sprite.start.y + 0.1;
-	screen.x_delta = saved.texture->w / (double)(saved.x2 - saved.x1);
-	screen.y_delta = saved.texture->h / (double)(screen.y2 - screen.y1);
 	if (room->lit)
-		draw_sprite(saved, screen, set_pixel);
+		draw_sprite(saved, init_stripe(saved, sprite.start), set_pixel);
 	else
-		draw_sprite(saved, screen, set_pixel_dark);
+		draw_sprite(saved, init_stripe(saved, sprite.start), set_pixel_dark);
 
 	if (doom_ptr()->game->show_info)
 	{
 		t_xy_line debug;
-		debug = line_add_offset(sprite, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT-100));
+		debug = line_add_offset(sprite, vec2(GAME_MIDWIDTH, GAME_WIN_HEIGHT - 100));
 		drawline(debug, doom_ptr()->game->buff);
 	}
 }
@@ -102,7 +121,8 @@ void		render_sprites(t_doom *doom)
 	effect = doom->mdl->effect_first;
 	while (~--i)
 	{
-		render_sprite(effect->loc, effect->active_sprite, find_effect_room(effect));
+		render_sprite(effect->loc, effect->active_sprite,
+			find_effect_room(effect));
 		effect = effect->next;
 	}
 	i = doom->mdl->pickup_count;
@@ -110,7 +130,8 @@ void		render_sprites(t_doom *doom)
 	while (~--i)
 	{
 		render_sprite(pickup->loc, pickup->active_sprite,
-			room_by_id(room_id_from_polymap(doom->mdl->poly_map, pickup->loc.x, pickup->loc.y)));
+			room_by_id(room_id_from_polymap(
+				doom->mdl->poly_map, pickup->loc.x, pickup->loc.y)));
 		pickup = pickup->next;
 	}
 }
