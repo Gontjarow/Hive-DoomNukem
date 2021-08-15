@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/15 17:10:16 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 20:39:56 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -459,7 +459,7 @@ void 					render_line(t_line *l);
 void					careful_render_line(t_line *l);
 void					preserve_render_line(t_line *l);
 void					unpreserve_render_line(t_line *l);
-void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
+// void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
 
 /*
  * from render_2d.c
@@ -488,7 +488,7 @@ void					set_pixel_dark(SDL_Surface *buff, int x, int y, uint32_t color);
  * from rotation_math.c
  */
 
-int						check_sprite_facing(t_enemy *enemy, t_model *mdl);
+// int						check_sprite_facing(t_enemy *enemy, t_model *mdl);
 double					angle_abc(t_point a, t_point b, t_point c);
 int			 			tail_degree_rot(t_point location, t_point *tail);
 

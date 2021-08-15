@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   line.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 18:47:22 by krusthol          #+#    #+#             */
-/*   Updated: 2020/09/15 15:31:27 by krusthol         ###   ########.fr       */
+/*   Updated: 2021/08/15 20:28:08 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -463,14 +463,14 @@ void			unpreserve_render_line(t_line *l)
 	}
 }
 
-void			render_line_simple(t_doom *doom, t_xy a, t_xy b, int c)
-{
-	t_line line;
-	line.x1 = a.x;
-	line.y1 = a.y;
-	line.x2 = b.x;
-	line.y2 = b.y;
-	line.color = c;
-	line.buff = doom->minimap->buff;
-	render_line(&line);
-}
+// void			render_line_simple(t_doom *doom, t_xy a, t_xy b, int c)
+// {
+// 	t_line line;
+// 	line.x1 = a.x;
+// 	line.y1 = a.y;
+// 	line.x2 = b.x;
+// 	line.y2 = b.y;
+// 	line.color = c;
+// 	line.buff = doom->minimap->buff;
+// 	render_line(&line);
+// }

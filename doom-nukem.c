@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doom-nukem.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:00:00 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/12 15:13:34 by ngontjar         ###   ########.fr       */
+/*   Updated: 2021/08/15 20:27:18 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,9 @@ static void	init_doom(t_doom *doom)
 	doom->chapter_index = 0;
 	doom->edt_quit = 1;
 	doom->game_quit = 1;
-	doom->minimap_quit = 1;
 	doom->menu_out_of_focus = 0;
 	doom->edt = NULL;
 	doom->keystates = NULL;
-	doom->minimap = NULL;
 	doom->mdl = NULL;
 	doom->map = NULL;
 }
@@ -75,8 +73,6 @@ static int	destroy_and_quit(t_doom *doom)
 		destroy_edt(doom);
 	if (!doom->game_quit)
 		destroy_game(doom);
-	if (!doom->minimap_quit)
-		destroy_minimap(doom);
 	if (doom->mdl)
 		destroy_model(doom);
 	destroy_sounds(doom);

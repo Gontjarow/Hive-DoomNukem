@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 19:59:50 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 20:06:33 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,6 @@ static void	open_doors(t_doom *doom, t_effect *effect)
 		{
 			if (effect->type_id == EFFECT_LEVER)
 			{
-				printf("EFFECT_LEVER->target_id: %d | PORTAL->id: %d\n", effect->target_id, portals->id);
 				if (effect->target_id == portals->id && !effect->activated)
 				{
 					portals->open = 1;

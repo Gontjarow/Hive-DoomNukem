@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:44:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/04/03 17:08:24 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 20:28:52 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,17 +135,8 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
 	ai_assignment(doom);
     // PLAYER X, Y IN MODEL IS -1 AND -1, CAUSING MINIMAP LINE OFF BUFFER?
     //printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
-    if (DEBUG == 1)
-    {
-		init_minimap(doom);
-		SDL_SetWindowPosition(doom->minimap->win, 0, 0);
-		SDL_RaiseWindow(doom->game->win);
-	}
-    else
-	{
-		if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
-	 		ft_putendl("Warning: Failed to capture mouse to window!");
-	}
+	if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
+	 	ft_putendl("Warning: Failed to capture mouse to window!");
     SDL_UpdateWindowSurface(doom->game->win);
     Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
     init_player_z(doom);
@@ -253,11 +244,6 @@ static void cycle_animation(t_doom *doom)
 
 void		game_quit(t_doom *doom)
 {
-	if (DEBUG == 1)
-	{
-		doom->minimap_quit = 1;
-		destroy_minimap(doom);
-	}
     if (Mix_Playing(7))
         Mix_HaltChannel(7);
 	doom->game_quit = 1;

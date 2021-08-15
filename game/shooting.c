@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/14 20:49:12 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 20:34:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,11 +157,6 @@ int	player_shoots(t_doom *doom)
 	doom->mdl->player.bullet_pos.x = doom->mdl->player.x;
 	doom->mdl->player.bullet_pos.y = doom->mdl->player.y;
 	last_room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x, doom->mdl->player.y);
-	if (DEBUG == 1)
-	{
-		doom->minimap->player_ray_color = 0xffff0000;
-		doom->minimap->player_ray_timeout = 15;
-	}
 	doom->mdl->player.shoot_cd = doom->mdl->player.weap_arr
 								[doom->mdl->player.weap_id].cooldown;
 	doom->mdl->player.weap_arr[doom->mdl->player.weap_id].ammo_cur--;
@@ -182,11 +177,7 @@ int	player_shoots(t_doom *doom)
 		check_poster_hit(doom);
 		enemy_id = check_hit(doom);
 		if (enemy_id >= 0)
-		{
-			if (DEBUG == 1)
-				doom->minimap->player_ray_color = 0xff00ff00;
 			deal_damage(doom, enemy_id);
-		}
 	}
 	return (0);
 }

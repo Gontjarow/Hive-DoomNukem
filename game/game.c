@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 14:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/14 17:12:41 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 20:31:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,6 @@ static void	handle_show_loading(t_doom *doom)
 		else if (!Mix_Playing(7) && doom->chapter_index == 3)
 			Mix_PlayChannel(7, doom->sounds->mcBoss, -1);
 	}
-	if (DEBUG == 1)
-		update_minimap(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
 	return ;
 }
@@ -229,8 +227,6 @@ void	game_render(t_doom *doom)
 	handle_player_shooting(doom);
 	handle_enemy_ai(doom);
 	animate_portals(doom);
-	if (DEBUG == 1)
-		update_minimap(doom);
 	render_frame(doom);
 	render_game_hud(doom);
 	SDL_UpdateWindowSurface(doom->game->win);
