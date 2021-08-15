@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 20:00:45 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/14 17:23:50 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 15:31:09 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -542,7 +542,7 @@ void	render_game_hud(t_doom *doom)
 	handle_clip_bar(doom);
 	handle_weapon_bar(doom);
 	if (doom->mdl->player.has_key)
-		draw_ignore_alpha(WIN_WIDTH - 50, 300, doom->sprites->txt_key_hud,
+		draw_ignore_alpha(WIN_WIDTH - 90, 300, doom->sprites->txt_key_hud,
 			doom->game->hud_location);
 	if (!doom->game->show_info)
 		render_crosshair(doom->mdl);

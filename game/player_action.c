@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/14 17:57:12 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 15:27:34 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,12 +171,17 @@ static void	open_doors(t_doom *doom, t_effect *effect)
 		{
 			// if (effect->type_id == EFFECT_LEVER)				// WIP
 			// {
-			// 	// printf("EFFECT_LEVER->target_id: %d | PORTAL->id: %d\n", effect->target_id, portals->id);
-			// 	if (effect->target_id == portals->id)
-			// 	{
-			// 		portals->open = 1;
-			// 		portals->active_sprite = NULL;
-			// 	}
+				// printf("EFFECT_LEVER->target_id: %d | PORTAL->id: %d\n", effect->target_id, portals->id);
+				// if (effect->target_id == portals->id && effect->activated)
+				// {
+					// portals->open = 1;
+					// portals->active_sprite = doom->sprites->txt_transparent;
+				// }
+				// else if (effect->target_id == portals->id && !effect->activated)
+				// {
+					// portals->open = 0;
+					// portals->active_sprite = doom->sprites->txt_door;
+				// }
 			// }
 			// else
 			// {
@@ -185,7 +190,7 @@ static void	open_doors(t_doom *doom, t_effect *effect)
 				if (target_effect->target_id == portals->id)		// this means they are connected: keypanel to door
 				{
 					portals->open = 1;
-					portals->active_sprite = NULL;					//change the portal sprite to transparent?
+					portals->active_sprite = doom->sprites->txt_transparent;					//change the portal sprite to transparent?
 				}
 			// }
 		}

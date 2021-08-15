@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 16:32:02 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/14 17:06:08 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/15 15:12:29 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,6 +349,7 @@ static void	load_effector_sprites(t_doom *doom)
 	doom->sprites->txt_panel_on = load_texture(doom, "img/textures/effectors/panel_on.png");
 	doom->sprites->txt_lever_off = load_texture(doom, "img/textures/effectors/lever_off.png");
 	doom->sprites->txt_lever_on = load_texture(doom, "img/textures/effectors/lever_on.png");
+	doom->sprites->txt_transparent = load_texture(doom, "img/textures/effectors/transparent.png");
 }
 
 void		load_ammo_bars(t_doom *doom)
@@ -426,8 +427,10 @@ static void	set_single_sprite_null(t_doom *doom)
 
 int			destroy_sprites(t_doom *doom)
 {
-	// total of 66 allocated sprites -> 66 free surfaces calls - done
+	// total of 67 allocated sprites -> 67 free surfaces calls - done
 	// Single pointer surfaces
+	SDL_FreeSurface(doom->sprites->txt_transparent);
+	doom->sprites->txt_transparent = NULL;
 	SDL_FreeSurface(doom->sprites->txt_lever_off);
 	doom->sprites->txt_lever_off = NULL;
 	SDL_FreeSurface(doom->sprites->txt_lever_on);
