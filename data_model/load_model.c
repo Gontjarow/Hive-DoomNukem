@@ -186,15 +186,53 @@ static void print_map_strings(t_mapfile *map)
 	ft_putendl("Printed all map strings!");
 }
 
-/* Depreceated. Do not use! Remove with same time as removing testing code for data embedding
-static void create_model_appended(t_doom *doom)
+static void	fill_lever_effect_data(t_model *mdl, t_wall *door)
 {
-	ft_putendl("Loaded appended mapfile data!");
-	print_map_strings(doom->map);
-	map_to_model(doom->map, doom->mdl);
-	link_mdl_rooms(doom->mdl);
-	expand_mdl_polygon_maps(doom->mdl);
-}*/
+	t_xy		door_vec;
+	t_xy		lever_position;
+
+	// Target.x means to convey, that for target_id (door), render on 80% between 0,1 to the right and 50% between 0,1 on the vertical axis
+	mdl->effects->target.x = 80;
+	mdl->effects->target.y = 50;
+	// Here it could also calculate similar position to the 2D world coordinates to the loc.x and loc.y data fields
+	door_vec = vec2(door->end.x - door->start.x, door->end.y - door->start.y);
+	lever_position = vec2_add(vec2(door->start.x, door->start.y), vec2_mul(vec2_norm(door_vec), 0.8f * vec2_mag(door_vec)));
+	mdl->effects->loc.x = (int)lever_position.x;
+	mdl->effects->loc.y = (int)lever_position.y;
+	// Assign the correct effector type_id, id and default the active sprite to txt_lever_on sprite and target_id to the door of which lever it is
+	mdl->effects->id = mdl->effect_count;
+	mdl->effects->type_id = EFFECT_LEVER;
+	mdl->effects->active_sprite = doom_ptr()->sprites->txt_lever_on;
+	mdl->effects->target_id = door->id;
+}
+
+// For each PORTAL_DOOR, loop and create EFFECT_LEVER type of effector
+static void create_lever_effectors(t_model *mdl)
+{
+	t_effect	*new_effect;	
+	t_wall		*portals = mdl->portal_first;
+	int			pc = mdl->portal_count;
+
+	while (pc--)
+	{
+		if (portals->portal_type != DOOR_PORTAL)
+		{
+			portals = portals->next;
+			continue;
+		}
+		ft_putendl("Debug (Kalle): Created an EFFECT_LEVER!");
+		fill_lever_effect_data(mdl, portals);
+		new_effect = (t_effect*)malloc(sizeof(t_effect));
+		if (!new_effect)
+			ft_die("Fatal error: Could not malloc new_effect at create_lever_effectors!");
+		mdl->effects->next = new_effect;
+		mdl->effect_count++;
+		if (mdl->effect_count == 1)
+			mdl->effect_first = mdl->effects;
+		mdl->effects = new_effect;
+		portals = portals->next;
+	}	
+}
 
 static void	create_data_model(t_doom *doom, char *map_file_path)
 {
@@ -204,9 +242,10 @@ static void	create_data_model(t_doom *doom, char *map_file_path)
 	map_to_model(doom->map, doom->mdl);
 	link_mdl_wall_textures(doom->mdl);
 	link_mdl_rooms(doom->mdl);
+	create_lever_effectors(doom->mdl);
 	expand_mdl_polygon_maps(doom->mdl);
-	if (doom->edt_quit)
-		void_polymap_door_ranks(doom->mdl);
+	//if (doom->edt_quit)
+	//	void_polymap_door_ranks(doom->mdl);
 }
 
 static void assign_player_room(t_doom *doom)
