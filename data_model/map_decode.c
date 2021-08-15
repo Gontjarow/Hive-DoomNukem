@@ -40,7 +40,7 @@ static void			map_effect_to_model(const int *fields, t_model *mdl)
 	}
 	if (mdl->effects->type_id == EFFECT_LIGHTKNOB)
 	{
-		mdl->effects->activated = 0;
+		mdl->effects->activated = 1;
 		mdl->effects->active_sprite = doom_ptr()->sprites->txt_switch_on;
 	}
 	if (mdl->effects->type_id == EFFECT_TARGET)
