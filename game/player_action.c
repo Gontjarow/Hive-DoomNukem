@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 20:06:33 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/17 15:15:44 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,8 +201,6 @@ static void	player_switch_light(t_doom *doom, t_effect *effect)
 	t_room	*curr_room;
 
 	curr_room = room_by_wall_id(effect->target_id, doom->mdl);
-	if (effect->activated > 1)
-		effect->activated = 1;
 	if (!doom->mdl->player.eff_pressed)
 	{
 		doom->mdl->player.eff_pressed = 1;
@@ -217,8 +215,6 @@ static void	player_switch_light(t_doom *doom, t_effect *effect)
 
 static void	player_switch_lever(t_doom *doom, t_effect *effect)
 {
-	if (effect->activated > 1)
-		effect->activated = 1;
 	if (!doom->mdl->player.eff_pressed)
 	{
 		doom->mdl->player.eff_pressed = 1;

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/05/08 20:46:37 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/17 15:14:34 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,7 @@ static void	fill_lever_effect_data(t_model *mdl, t_wall *door)
 	mdl->effects->type_id = EFFECT_LEVER;
 	mdl->effects->active_sprite = doom_ptr()->sprites->txt_lever_on;
 	mdl->effects->target_id = door->id;
+	mdl->effects->activated = 1;
 }
 
 // For each PORTAL_DOOR, loop and create EFFECT_LEVER type of effector
