@@ -81,7 +81,7 @@ t_stripe	init_stripe(t_wdata saved, t_xy start)
 	screen.y2 = saved.floor.start.y;
 	screen.x_delta = saved.texture->w / (double)(saved.x2 - saved.x1);
 	screen.y_delta = saved.texture->h / (double)(screen.y2 - screen.y1);
-	screen.depth = start.y + 0.1;
+	screen.depth = start.y;
 	return (screen);
 }
 
