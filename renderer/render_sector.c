@@ -115,8 +115,8 @@ void	draw_solid_stripe(t_sector *sector, t_wdata saved, t_stripe screen)
 	vertical_wall(screen.x, screen.tx, vec2(screen.y1, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 
 	if (sector->has_ceiling)
-		vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), -INFINITY, (saved.room->lit ? set_pixel : set_pixel_dark));
-	vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), -INFINITY, (saved.room->lit ? set_pixel : set_pixel_dark));
+		vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 
 	//! Draw posters
 	t_wall *w = wall_by_id(saved.room->first_wall_id + saved.vertex);
@@ -145,8 +145,8 @@ void	draw_portal_stripes(t_sector *sector, t_wdata saved, t_stripe screen)
 	world = get_world();
 
 	if (sector->has_ceiling)
-		vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), -INFINITY, (saved.room->lit ? set_pixel : set_pixel_dark));
-	vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), -INFINITY, (saved.room->lit ? set_pixel : set_pixel_dark));
+		vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 
 	double		connecting_ceil        = saved.connecting->ceil - world->player.position.z;
 	t_xy_line	connecting_yawed_ceil  = calculate_yawed(connecting_ceil, saved.render, saved.scale, world->player.yaw);
@@ -160,7 +160,16 @@ void	draw_portal_stripes(t_sector *sector, t_wdata saved, t_stripe screen)
 	signed		connecting_y_start     = connecting_yawed_ceil.start.y + (screen.x_delta * connecting_ceil_angle);
 	signed		connecting_y_stop      = connecting_yawed_floor.start.y + (screen.x_delta * connecting_floor_angle);
 
+	// top
 	vertical_wall(screen.x, screen.tx, vec2(screen.y1, connecting_y_start), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	//door
+	t_wall *w = wall_by_id(saved.room->first_wall_id + saved.vertex);
+	w = portal_by_wall(w);
+	if (w->portal_type == DOOR_PORTAL)
+	{
+		vertical_wall(screen.x, screen.tx, vec2(connecting_y_start, connecting_y_stop), w->active_sprite, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	}
+	//bottom
 	vertical_wall(screen.x, screen.tx, vec2(connecting_y_stop, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 
 	if (connecting_y_start > screen.top) world->screen_y_top[screen.x] = connecting_y_start;
@@ -294,7 +303,6 @@ void			render_sector(t_sector *sector, t_section *section, t_doom *doom)
 			drawline(line_xy(vec2_add(center, vec2(-50,0)), vec2_add(center, vec2(50,0)), 0xff0000), doom->game->buff);
 
 			// if (saved.vertex == 0) drawline(line_add_offset(saved.start_clip, debug_view_offset), doom->game->buff);
-
 		}
 
 		++saved.vertex;

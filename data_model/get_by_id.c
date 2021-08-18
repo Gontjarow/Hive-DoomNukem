@@ -72,3 +72,18 @@ t_wall				*wall_by_id(int id)
 	return (NULL);
 }
 
+t_wall	*portal_by_wall(t_wall *wall)
+{
+	t_wall	*portal;
+	int		pc;
+
+	portal = get_model()->portal_first;
+	pc = get_model()->portal_count;
+	while (pc--)
+	{
+		if (matching_walls(wall, portal))
+			return (portal);
+		portal = portal->next;
+	}
+	return (NULL);
+}
