@@ -182,7 +182,7 @@ void			render_frame(t_doom *doom);
 void			render_sky(t_doom *doom);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom);
 void			render_enemies(t_doom *doom);
-void			render_sprites(t_doom *doom);
+void			render_sprites(t_doom *doom, int i);
 
 // Somewhat generalized render functions
 t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
@@ -207,7 +207,9 @@ double			value_changed(int initialize, double value);
 
 void			vec2p(const char *name, t_xy v);
 t_xy			vec2(double x, double y);
+t_point			point(int x, int y);
 t_xy			veci2(t_point v);
+t_point			vec2i(t_xy v);
 t_xyz			vec23(t_xy v, double z);
 t_xy			vec2_add(t_xy a, t_xy b);
 t_xy			vec2_sub(t_xy a, t_xy b);
