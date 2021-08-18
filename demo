@@ -33,7 +33,7 @@
 [Room] id = 1 | first_wall_id = 3 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
 [Room] id = 2 | first_wall_id = 7 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
 [Room] id = 3 | first_wall_id = 11 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
-[Room] id = 4 | first_wall_id = 15 | wall_count = 7 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 4 | first_wall_id = 15 | wall_count = 7 | floor_height = 120 | roof_height = 300 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
 [Room] id = 5 | first_wall_id = 22 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
 [Room] id = 6 | first_wall_id = 26 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
 

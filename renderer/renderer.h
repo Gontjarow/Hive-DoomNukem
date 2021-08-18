@@ -27,7 +27,7 @@
 # define FUNC_SETPIXEL int (*fp)(SDL_Surface *, int, int, uint32_t)
 
 // For wall effect drawing
-# define POSTER_WIDTH 0.2
+# define POSTER_WIDTH 0.333
 # define POSTER_HALF (POSTER_WIDTH / 2)
 
 // For line clipping
@@ -127,13 +127,13 @@ typedef struct	s_wdata
 	t_room		*room;
 	SDL_Surface	*texture;
 	t_xy_line	scale;
-	t_xy_line	preclip;
+	t_xy_line	preclip;		// original line
 	t_xy_line	render;
 	t_xy_line	ceil;
 	t_xy_line	floor;
-	int			x1;
-	int			x2;
-	int			neighbor_id;
+	int			x1;				// left start (bounded)
+	int			x2;				// right stop (bounded)
+	int			neighbor_id;	// room id
 	double		ceil_angle;
 	double		floor_angle;
 	t_xy_line	start_clip;
@@ -172,6 +172,7 @@ void			draw(unsigned int *pixel, t_xy start, t_xy end, int color);
 void			drawline(t_xy_line line, SDL_Surface *surface);
 void			draw_box(t_xy center, int radius, int color, SDL_Surface *surface);
 void			draw_sprite(t_wdata saved, t_stripe screen, FUNC_SETPIXEL);
+void			draw_vertical(t_wdata saved, t_stripe screen, FUNC_SETPIXEL);
 void			vertical_line(int column, int start, int end, int color);
 void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, double depth, FUNC_SETPIXEL);
 void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex, t_doom *doom);
@@ -187,6 +188,8 @@ void			render_sprites(t_doom *doom, int i);
 
 // Somewhat generalized render functions
 t_xy_line		calculate_yawed(double height, t_xy_line wall, t_xy_line scale, double yaw);
+void			calculate_yawed_wall_height(t_sector *sector, t_xy_line scale, t_wdata *saved);
+void			calculate_wall_angles(t_wdata *saved);
 t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
 uint32_t		texture_pixel(SDL_Surface *tex, int x, int y);
 int				zbuffer_ok(int index, double depth);

@@ -49,27 +49,38 @@ void	render_wall(t_sector *sector, t_wdata saved)
 void	draw_solid_stripe(t_sector *sector, t_wdata saved, t_stripe screen)
 {
 	//! wall
-	vertical_wall(screen.x, screen.tx, vec2(screen.y1, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	draw_vertical(saved, screen, (saved.room->lit ? set_pixel : set_pixel_dark));
 
 	//! ceil/floor
-	if (sector->has_ceiling)
-		vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
-	vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	// if (sector->has_ceiling)
+		// vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	// vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 
 	//! Draw posters
-	t_wall *w = wall_by_id(saved.room->first_wall_id + saved.vertex);
-	int ec = 0;
+	render_posters(saved, screen);
+}
+
+render_posters(t_wdata saved, t_stripe screen)
+{
+	t_wall		*w;
+	signed		ec;
+	double		h;
+	t_stripe	poster;
+
+	w = wall_by_id(saved.room->first_wall_id + saved.vertex);
+	ec = 0;
 	while (ec < w->effect_count)
 	{
-		t_effect *e = w->effects[ec];
-		SDL_Surface *tex = e->active_sprite;
-		double h = e->target.x / 100.0;
-		// within draw range
-		if ((h - POSTER_HALF) <= screen.tx && screen.tx <= (h + POSTER_HALF))
+		saved.texture = w->effects[ec]->active_sprite;
+		h = w->effects[ec]->target.x / 100.0;
+		// poster within draw range
+		if (w->effects[ec]->type_id == EFFECT_POSTER
+			&& (h - POSTER_HALF) <= screen.tx && screen.tx <= (h + POSTER_HALF))
 		{
-			// value ÷ range = (0, 1)
-			double poster_x = (screen.tx - (h - POSTER_HALF)) / ((h + POSTER_HALF) - (h - POSTER_HALF));
-			vertical_wall(screen.x, poster_x, vec2(screen.y1, screen.y2), tex, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+			poster = screen;
+			poster.tx = (screen.tx - (h - POSTER_HALF))
+				/ ((h + POSTER_HALF) - (h - POSTER_HALF));
+			draw_vertical(saved, poster, (saved.room->lit ? set_pixel : set_pixel_dark));
 		}
 		++ec;
 	}
@@ -77,37 +88,46 @@ void	draw_solid_stripe(t_sector *sector, t_wdata saved, t_stripe screen)
 
 void	draw_portal_stripes(t_sector *sector, t_wdata saved, t_stripe screen)
 {
-	t_world	*world;
+	t_world		*world;
+	t_stripe	part;
+	t_wdata		copy;
 
 	world = get_world();
 
-	if (sector->has_ceiling)
-		vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
-	vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	//! ceil/floor
+	// if (sector->has_ceiling)
+		// vertical_wall(screen.x, screen.tx, vec2(screen.top, screen.y1), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+	// vertical_wall(screen.x, screen.tx, vec2(screen.y2, screen.bot), get_border_tex(doom_ptr()), screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 
-	double		connecting_ceil        = saved.connecting->ceil - world->player.position.z;
-	t_xy_line	connecting_yawed_ceil  = calculate_yawed(connecting_ceil, saved.render, saved.scale, world->player.yaw);
+	calculate_yawed_wall_height(sector, saved.scale, &saved);
 
-	double		connecting_floor       = saved.connecting->floor - world->player.position.z;
-	t_xy_line	connecting_yawed_floor = calculate_yawed(connecting_floor, saved.render, saved.scale, world->player.yaw);
+	calculate_wall_angles(&saved);
 
-	double		connecting_ceil_angle  = (connecting_yawed_ceil.stop.y - connecting_yawed_ceil.start.y) / (double)(saved.x2 - saved.x1);
-	double		connecting_floor_angle = (connecting_yawed_floor.stop.y - connecting_yawed_floor.start.y) / (double)(saved.x2 - saved.x1);
+	signed		connecting_y_start     = saved.ceil.start.y + (screen.x_delta * saved.ceil_angle);
+	signed		connecting_y_stop      = saved.floor.start.y + (screen.x_delta * saved.floor_angle);
 
-	signed		connecting_y_start     = connecting_yawed_ceil.start.y + (screen.x_delta * connecting_ceil_angle);
-	signed		connecting_y_stop      = connecting_yawed_floor.start.y + (screen.x_delta * connecting_floor_angle);
+	//! top
+	part = screen;
+	part.y2 = connecting_y_start;
+	draw_vertical(saved, part, (saved.room->lit ? set_pixel : set_pixel_dark));
 
-	// top
-	vertical_wall(screen.x, screen.tx, vec2(screen.y1, connecting_y_start), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 	//door
 	t_wall *w = wall_by_id(saved.room->first_wall_id + saved.vertex);
 	w = portal_by_wall(w);
 	if (w->portal_type == DOOR_PORTAL)
 	{
-		vertical_wall(screen.x, screen.tx, vec2(connecting_y_start, connecting_y_stop), w->active_sprite, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+		copy = saved;
+		copy.texture = w->active_sprite;
+		part = screen;
+		part.y1 = connecting_y_start;
+		part.y2 = connecting_y_stop;
+		draw_vertical(copy, part, (saved.room->lit ? set_pixel : set_pixel_dark));
 	}
-	//bottom
-	vertical_wall(screen.x, screen.tx, vec2(connecting_y_stop, screen.y2), saved.texture, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
+
+	//! bottom
+	part = screen;
+	part.y1 = connecting_y_stop;
+	draw_vertical(saved, part, (saved.room->lit ? set_pixel : set_pixel_dark));
 
 	if (connecting_y_start > screen.top) world->screen_y_top[screen.x] = connecting_y_start;
 	if (connecting_y_stop  < screen.bot) world->screen_y_bot[screen.x] = connecting_y_stop;

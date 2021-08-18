@@ -204,6 +204,47 @@ void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex
 	}
 }
 
+// NOTE: screen.x NOT ASSIGNED here because only one column is drawn.
+// NOTE: Unlike draw_sprite, which draws entire texture.
+void			draw_vertical(t_wdata saved, t_stripe screen, FUNC_SETPIXEL)
+{
+	screen.ty = 0;
+	screen.y_delta = (double)saved.texture->h / (screen.y2 - screen.y1);
+
+	int top = get_world()->screen_y_top[screen.x];
+	if (screen.y1 < top) // come within section
+	{
+		screen.ty += screen.y_delta * (top - screen.y1);
+		screen.y1 = top;
+	}
+
+	int bot = get_world()->screen_y_bot[screen.x];
+	if (bot < screen.y2) // stop within section
+	{
+		screen.y2 = bot;
+	}
+
+	ft_crash_if(screen.tx < 0 || screen.tx > 1, "screen.tx OOB, need clamp");
+	// screen.tx = clamp(screen.tx, 0, 1);
+
+	while (screen.y1 <= screen.y2 && screen.y1 < GAME_WIN_HEIGHT)
+	{
+		uint32_t color = texture_pixel(saved.texture, screen.tx * saved.texture->w, screen.ty);
+		if (color != COLOR_TRANSPARENT && color >> 24 != 0x00)
+		{
+			if (zbuffer_ok(GAME_WIN_WIDTH * screen.y1 + screen.x, screen.depth))
+			{
+				fp(doom_ptr()->game->buff, screen.x, screen.y1, color);
+				get_zbuffer()[GAME_WIN_WIDTH * screen.y1 + screen.x] = screen.depth;
+			}
+		}
+		screen.ty += screen.y_delta;
+		screen.y1++;
+	}
+}
+
+// NOTE: screen.x assigned here because the entire sprite will be drawn.
+// NOTE: Unlike draw_vertical, which only draws to a preset x.
 void			draw_sprite(t_wdata saved, t_stripe screen, FUNC_SETPIXEL)
 {
 	screen.x = saved.x1;
@@ -310,7 +351,7 @@ int				zbuffer_ok(int index, double depth)
 	double *zbuffer;
 
 	zbuffer = get_zbuffer();
-	if (zbuffer[index] < depth)
+	if (zbuffer[index] <= depth)
 	{
 		return (1);
 	}
