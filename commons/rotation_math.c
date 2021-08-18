@@ -6,11 +6,16 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 15:19:54 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/15 20:40:26 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 18:23:02 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
+
+double	deg_to_rad(int deg)
+{
+	return (deg * M_PI / 180);
+}
 
 static int		closer_to_player_compare(int a, int b, t_point pta, t_point ptb)
 {

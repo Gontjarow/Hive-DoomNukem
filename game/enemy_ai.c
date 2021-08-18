@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:41:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/18 15:50:27 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 17:49:14 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,31 +32,42 @@ void	enemy_update_cooldown(t_doom *doom, t_enemy *enemy)
 		enemy->stun_time -= 1 * doom->delta_time;
 }
 
+static int	bullet_moving_validation(int last_id, t_enemy *enemy, t_doom *doom)
+{
+	t_xy	cached_bullet_loc;
+	int		current_room_id;
+
+	cached_bullet_loc.x = enemy->bullet_pos.x;
+	cached_bullet_loc.y = enemy->bullet_pos.y;
+	enemy->bullet_pos.x += 1 * -cos(deg_to_rad(enemy->rot));
+	enemy->bullet_pos.y += 1 * -sin(deg_to_rad(enemy->rot));
+	current_room_id = room_id_from_polymap(doom->mdl->poly_map,
+			enemy->bullet_pos.x, enemy->bullet_pos.y);
+	if (current_room_id != last_id)
+	{
+		if (check_bullet_hitting_door(doom, cached_bullet_loc
+				, (t_xy){enemy->bullet_pos.x, enemy->bullet_pos.y}))
+			return (-1);
+	}
+	return (0);
+}
+
 void	enemy_shoot_the_player(t_doom *doom, t_enemy *enemy)
 {
 	int		did_hit;
 	int		last_room_id;
-	int		current_room_id;
-	t_xy	cached_bullet_loc;
 
 	did_hit = 0;
 	enemy->shoot_cd = 1;
 	enemy->bullet_pos.x = enemy->x;
 	enemy->bullet_pos.y = enemy->y;
-	last_room_id = room_id_from_polymap(doom->mdl->poly_map, enemy->x, enemy->y);
+	last_room_id = room_id_from_polymap(doom->mdl->poly_map,
+			enemy->x, enemy->y);
 	while (check_location(doom, enemy->bullet_pos.x,
 			enemy->bullet_pos.y) != -1 && did_hit == 0)
 	{
-		cached_bullet_loc.x = enemy->bullet_pos.x;
-		cached_bullet_loc.y = enemy->bullet_pos.y;
-		enemy->bullet_pos.x += 1 * -cos(deg_to_rad(enemy->rot));
-		enemy->bullet_pos.y += 1 * -sin(deg_to_rad(enemy->rot));
-		current_room_id = room_id_from_polymap(doom->mdl->poly_map, enemy->bullet_pos.x, enemy->bullet_pos.y);
-		if (current_room_id != last_room_id)
-		{
-			if (check_bullet_hitting_door(doom, cached_bullet_loc, (t_xy){enemy->bullet_pos.x, enemy->bullet_pos.y}))
-				break ;
-		}
+		if (bullet_moving_validation(last_room_id, enemy, doom) == -1)
+			break ;
 		did_hit = check_hit_on_player(doom, enemy);
 		if (did_hit == 1)
 			deal_damage_on_player(doom, enemy);

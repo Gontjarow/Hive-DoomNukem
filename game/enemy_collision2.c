@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 15:01:29 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/18 15:59:31 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 18:14:00 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,9 @@ static t_coord	check_segment(t_point start, t_point end, t_enemy *enemy)
 	return (closest);
 }
 
-static int	enemy_collision_with_portals(t_doom *doom, t_enemy *enemy)
+static int	enemy_collision_portals(t_doom *doom, t_enemy *enemy, t_coord c)
 {
 	int		pc;
-	t_coord	closest;
-	t_coord	dist;
 	t_wall	*portals;
 
 	pc = doom->mdl->portal_count;
@@ -90,19 +88,15 @@ static int	enemy_collision_with_portals(t_doom *doom, t_enemy *enemy)
 	{
 		if (portals->open == 0)
 		{
-			if ((point_circle(portals->start.x, portals->start.y,
-						enemy->x, enemy->y) || point_circle(portals->end.x,
-					portals->end.y, enemy->x, enemy->y)))
+			if (validate_portal_collision(portals, enemy) == -1)
 				return (-1);
-			closest = check_segment(portals->start, portals->end, enemy);
-			if (!line_point_portal(doom, closest, portals->start, portals->end))
+			c = check_segment(portals->start, portals->end, enemy);
+			if (!line_point_portal(doom, c, portals->start, portals->end))
 			{
 				portals = portals->next;
 				continue ;
 			}
-			dist.x = closest.x - enemy->x;
-			dist.y = closest.y - enemy->y;
-			if (sqrt((dist.x * dist.x) + (dist.y * dist.y)) <= 10)
+			if (validate_portal_dist(c, enemy) == -1)
 				return (-1);
 		}
 		portals = portals->next;
@@ -112,11 +106,13 @@ static int	enemy_collision_with_portals(t_doom *doom, t_enemy *enemy)
 
 int	enemy_collision(t_doom *doom, t_enemy *enemy)
 {
+	t_coord	closest;
+
 	if (enemy_collision_with_enemies(doom, enemy) == -1)
 		return (-1);
 	if (enemy_collision_with_player(doom, enemy) == -1)
 		return (-1);
-	if (enemy_collision_with_portals(doom, enemy) == -1)
+	if (enemy_collision_portals(doom, enemy, closest) == -1)
 		return (-1);
 	return (0);
 }

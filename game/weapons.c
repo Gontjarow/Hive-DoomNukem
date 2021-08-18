@@ -6,51 +6,11 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 20:21:46 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 17:14:15 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 19:07:25 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
-
-void	init_player_weapon(t_doom *doom)
-{
-	init_hud(doom);
-	doom->mdl->player.weap_arr[0].ammo_cur = 12;
-	doom->mdl->player.weap_arr[0].ammo_res = 1;
-	doom->mdl->player.weap_arr[0].ammo_max = 12;
-	doom->mdl->player.weap_arr[0].cooldown = 60 / 600.0;
-	doom->mdl->player.weap_arr[0].dmg = 15;
-	doom->mdl->player.weap_arr[0].reload_time = 1.5;
-	doom->mdl->player.weap_arr[0].fire_sound = doom->sounds->mcPistolShot;
-	doom->mdl->player.weap_arr[0].reload_sound = doom->sounds->mcPistolRld;
-	doom->mdl->player.weap_arr[0].weap_img = load_texture(doom, "img/weapons/coltest.png");
-	doom->mdl->player.weap_arr[0].do_own = 1;
-	doom->mdl->player.weap_arr[1].ammo_cur = 5;
-	doom->mdl->player.weap_arr[1].ammo_res = 5;
-	doom->mdl->player.weap_arr[1].ammo_max = 5;
-	doom->mdl->player.weap_arr[1].cooldown = 60 / 120.0;
-	doom->mdl->player.weap_arr[1].dmg = 40;
-	doom->mdl->player.weap_arr[1].reload_time = 3.5;
-	doom->mdl->player.weap_arr[1].fire_sound = doom->sounds->mcShotgunShot;
-	doom->mdl->player.weap_arr[1].reload_sound = doom->sounds->mcShotgunRld;
-	doom->mdl->player.weap_arr[1].weap_img = load_texture(doom, "img/weapons/shotguntest.png");
-	doom->mdl->player.weap_arr[1].do_own = 0;
-	doom->mdl->player.weap_arr[2].ammo_cur = 30;
-	doom->mdl->player.weap_arr[2].ammo_res = 3;
-	doom->mdl->player.weap_arr[2].ammo_max = 30;
-	doom->mdl->player.weap_arr[2].cooldown = 60 / 600.0;
-	doom->mdl->player.weap_arr[2].dmg = 30;
-	doom->mdl->player.weap_arr[2].reload_time = 2;
-	doom->mdl->player.weap_arr[2].fire_sound = doom->sounds->mcAssaultShot;
-	doom->mdl->player.weap_arr[2].reload_sound = doom->sounds->mcAssaultRld;
-	doom->mdl->player.weap_arr[2].weap_img = load_texture(doom, "img/weapons/aktest.png");
-	doom->mdl->player.weap_arr[2].do_own = 0;
-	doom->mdl->player.weap_arr[3].do_own = 0;
-	doom->mdl->player.weap_arr[3].ammo_res = 0;
-	doom->mdl->player.weap_arr[3].ammo_cur = 1000;
-	doom->mdl->player.weap_arr[3].ammo_max = 1000;
-	doom->mdl->player.weap_arr[3].weap_img = load_texture(doom, "img/weapons/jetpack.png");
-}
 
 static void	player_swap_weapons(t_doom *doom)
 {
@@ -124,4 +84,17 @@ void	player_update_weapons(t_doom *doom)
 		doom->mdl->player.reload_time -= 1 * doom->delta_time;
 	if (doom->sounds->jetpack_delay > 0)
 		doom->sounds->jetpack_delay -= 1 * doom->delta_time;
+}
+
+void	destroy_weapon_img(t_doom *doom)
+{
+	int	n;
+
+	n = 0;
+	while (n < 3)
+	{
+		SDL_FreeSurface(doom->mdl->player.weap_arr[n].weap_img);
+		doom->mdl->player.weap_arr[n].weap_img = NULL;
+		n++;
+	}
 }

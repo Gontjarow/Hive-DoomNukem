@@ -6,21 +6,11 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:07:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/18 16:00:53 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 20:30:02 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
-
-void	init_player_z(t_doom *doom)
-{
-	int	room_id;
-
-	room_id = room_id_from_polymap(doom->mdl->poly_map, doom->mdl->player.x,
-			doom->mdl->player.y);
-	doom->mdl->player.z = room_by_id(room_id)->floor_height
-		+ doom->mdl->player.height;
-}
 
 static int	check_eight_pos_points(t_doom *doom, t_coord loc_id[8])
 {
@@ -88,11 +78,28 @@ int	line_point_portal(t_doom *doom, t_coord p, t_point s, t_point end)
 	return (0);
 }
 
-static int	player_collision_portals(t_doom *doom)
+static int	validate_point_portal(t_doom *doom, t_wall *portals)
+{
+	if ((point_circle(portals->start.x, portals->start.y,
+				doom->mdl->player.x, doom->mdl->player.y)
+			|| point_circle(portals->end.x,
+				portals->end.y, doom->mdl->player.x, doom->mdl->player.y)))
+		return (-1);
+	return (0);
+}
+
+static int	validate_distance_portal(t_doom *doom, t_coord dist, t_coord c)
+{
+	dist.x = c.x - doom->mdl->player.x;
+	dist.y = c.y - doom->mdl->player.y;
+	if (sqrt((dist.x * dist.x) + (dist.y * dist.y)) <= 10)
+		return (-1);
+	return (0);
+}
+
+static int	player_collision_portals(t_doom *doom, t_coord c, t_coord dist)
 {
 	int		pc;
-	t_coord	closest;
-	t_coord	dist;
 	t_wall	*portals;
 
 	pc = doom->mdl->portal_count;
@@ -103,19 +110,15 @@ static int	player_collision_portals(t_doom *doom)
 	{
 		if (portals->open == 0)
 		{
-			if ((point_circle(portals->start.x, portals->start.y,
-						doom->mdl->player.x, doom->mdl->player.y) || point_circle(portals->end.x,
-					portals->end.y, doom->mdl->player.x, doom->mdl->player.y)))
+			if (validate_point_portal(doom, portals) == -1)
 				return (-1);
-			closest = check_segment(doom, portals->start, portals->end);
-			if (!line_point_portal(doom, closest, portals->start, portals->end))
+			c = check_segment(doom, portals->start, portals->end);
+			if (!line_point_portal(doom, c, portals->start, portals->end))
 			{
 				portals = portals->next;
 				continue ;
 			}
-			dist.x = closest.x - doom->mdl->player.x;
-			dist.y = closest.y - doom->mdl->player.y;
-			if (sqrt((dist.x * dist.x) + (dist.y * dist.y)) <= 10)
+			if (validate_distance_portal(doom, dist, c) == -1)
 				return (-1);
 		}
 		portals = portals->next;
@@ -135,7 +138,8 @@ void	validate_player_position(t_doom *doom, t_coord old)
 	if (location_id == -1 || location_id == UINT_ERROR_CONSTANT
 		|| player_collision_with_enemies(doom)
 		== -1 || check_eight_pos_points(doom, loc_id) == -1
-		|| player_collision_portals(doom) == -1)
+		|| player_collision_portals(doom, (t_coord){0, 0},
+		(t_coord){0, 0}) == -1)
 	{
 		doom->mdl->player.x = old.x;
 		doom->mdl->player.y = old.y;
