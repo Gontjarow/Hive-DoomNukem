@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/18 15:48:57 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 16:33:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ static t_effect	*find_target_effect(t_doom *doom, int keypanel_id)
 			return (effect);
 		effect = effect->next;
 	}
-	ft_putendl("WARNING!! RETURN VALUE IN FIND_TARGET_EFFECT IS NULL");
+	ft_die("WARNING!! RETURN VALUE IN FIND_TARGET_EFFECT IS NULL");
 	return (NULL);
 }
 
