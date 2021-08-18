@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/17 15:15:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 15:48:57 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ static void	open_doors(t_doom *doom, t_effect *effect)
 				if (effect->target_id == portals->id && !effect->activated)
 				{
 					portals->open = 1;
-					portals->active_sprite = doom->sprites->txt_transparent;
+					portals->active_sprite = doom->sprites->txt_door_frame;
 				}
 				else if (effect->target_id == portals->id && effect->activated)
 				{

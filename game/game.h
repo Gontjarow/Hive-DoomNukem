@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/14 20:10:20 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 16:01:28 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ int				player_collision_with_exit(t_doom *doom, t_effect *level_exit);
 int				check_hit(t_doom *doom);
 int				point_circle(double px, double py, double cx, double cy);
 int				line_point(t_doom *doom, t_coord p);
+int				line_point_portal(t_doom *doom, t_coord p, t_point s, t_point end);
 int				is_point_circle(t_enemy *enemy, t_doom *doom);
 int				player_check_distance(t_enemy *enemy, t_coord closest);
+int				check_bullet_hitting_door(t_doom *doom, t_xy prev, t_xy curr);
 double			dist(double px, double py, double x1, double y1);
 t_coord			player_check_segment(t_doom *doom, t_enemy *enemy);
 void			player_update_weapons(t_doom *doom);
