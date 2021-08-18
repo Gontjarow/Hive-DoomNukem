@@ -331,7 +331,7 @@ static void			map_portal_to_model(const int *fields, t_model *mdl)
 	{
 		mdl->portals->open = 0;
 		// Here should come the almost transparent texture?
-		// mdl->portals->active_sprite = doom_ptr()->sprites->txt_door;
+		mdl->portals->active_sprite = doom_ptr()->sprites->txt_window;
 	}
 	mdl->portal_count++;
 	if (mdl->portal_count == 1)

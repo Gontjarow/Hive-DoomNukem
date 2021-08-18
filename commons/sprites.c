@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 16:32:02 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 17:12:45 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 17:00:49 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ static int	load_texture_sprite(t_doom *doom)
 		free(path);
 	}
 	doom->sprites->txt_door = load_texture(doom, "img/textures/wall/door.png");
+	doom->sprites->txt_door_frame = load_texture(doom, "img/textures/wall/door_frame.png");
+	doom->sprites->txt_window = load_texture(doom, "img/textures/wall/window.png");
 }
 
 static int	load_ranged_sprite(t_doom *doom, char *path, int i)
@@ -430,8 +432,12 @@ static void	set_single_sprite_null(t_doom *doom)
 
 int			destroy_sprites(t_doom *doom)
 {
-	// total of 70 allocated sprites -> 70 free surfaces calls - done
+	// total of 72 allocated sprites -> 72 free surfaces calls - done
 	// Single pointer surfaces
+	SDL_FreeSurface(doom->sprites->txt_window);
+	doom->sprites->txt_window = NULL;
+	SDL_FreeSurface(doom->sprites->txt_door_frame);
+	doom->sprites->txt_door_frame = NULL;
 	SDL_FreeSurface(doom->sprites->txt_rifle_image);
 	doom->sprites->txt_rifle_image = NULL;
 	SDL_FreeSurface(doom->sprites->txt_pistol_image);

@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/18 16:43:51 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/17 15:15:44 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 16:33:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ static t_effect	*find_target_effect(t_doom *doom, int keypanel_id)
 			return (effect);
 		effect = effect->next;
 	}
-	ft_putendl("WARNING!! RETURN VALUE IN FIND_TARGET_EFFECT IS NULL");
+	ft_die("WARNING!! RETURN VALUE IN FIND_TARGET_EFFECT IS NULL");
 	return (NULL);
 }
 
@@ -174,7 +174,7 @@ static void	open_doors(t_doom *doom, t_effect *effect)
 				if (effect->target_id == portals->id && !effect->activated)
 				{
 					portals->open = 1;
-					portals->active_sprite = doom->sprites->txt_transparent;
+					portals->active_sprite = doom->sprites->txt_door_frame;
 				}
 				else if (effect->target_id == portals->id && effect->activated)
 				{

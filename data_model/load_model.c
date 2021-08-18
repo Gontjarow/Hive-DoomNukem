@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/18 17:13:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/17 15:14:34 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 17:07:53 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,11 +192,11 @@ static void	fill_lever_effect_data(t_model *mdl, t_wall *door)
 	t_xy		lever_position;
 
 	// Target.x means to convey, that for target_id (door), render on 20% between 0,1 to the right and 50% between 0,1 on the vertical axis
-	mdl->effects->target.x = 20;
-	mdl->effects->target.y = 50;
+	mdl->effects->target.x = 90;
+	mdl->effects->target.y = 90;
 	// Here it could also calculate similar position to the 2D world coordinates to the loc.x and loc.y data fields
 	door_vec = vec2(door->end.x - door->start.x, door->end.y - door->start.y);
-	lever_position = vec2_add(vec2(door->start.x, door->start.y), vec2_mul(vec2_norm(door_vec), 0.2f * vec2_mag(door_vec)));
+	lever_position = vec2_add(vec2(door->start.x, door->start.y), vec2_mul(vec2_norm(door_vec), 0.1f * vec2_mag(door_vec)));
 	mdl->effects->loc.x = (int)lever_position.x;
 	mdl->effects->loc.y = (int)lever_position.y;
 	// Assign the correct effector type_id, id and default the active sprite to txt_lever_on sprite and target_id to the door of which lever it is

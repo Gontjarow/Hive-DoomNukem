@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:07:12 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/14 20:32:41 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 16:00:53 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static t_coord	check_segment(t_doom *doom, t_point start, t_point end)
 	return (closest);
 }
 
-static int	line_point_portal(t_doom *doom, t_coord p, t_point s, t_point end)
+int	line_point_portal(t_doom *doom, t_coord p, t_point s, t_point end)
 {
 	double	d1;
 	double	d2;

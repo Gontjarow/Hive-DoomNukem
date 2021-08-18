@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:59:05 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/15 20:34:25 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 15:50:00 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ static void	check_poster_hit(t_doom *doom)
 	}
 }
 
-static int	check_bullet_hitting_door(t_doom *doom, t_xy prev_loc, t_xy current_loc)
+int	check_bullet_hitting_door(t_doom *doom, t_xy prev, t_xy curr)
 {
 	int		pc;
 	t_wall	*portals;
