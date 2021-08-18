@@ -165,7 +165,7 @@ void	draw_portal_stripes(t_sector *sector, t_wdata saved, t_stripe screen)
 	//door
 	t_wall *w = wall_by_id(saved.room->first_wall_id + saved.vertex);
 	w = portal_by_wall(w);
-	if (w->portal_type == DOOR_PORTAL)
+	if (w->portal_type == DOOR_PORTAL || w->portal_type == WINDOW_PORTAL)
 	{
 		vertical_wall(screen.x, screen.tx, vec2(connecting_y_start, connecting_y_stop), w->active_sprite, screen.depth, (saved.room->lit ? set_pixel : set_pixel_dark));
 	}

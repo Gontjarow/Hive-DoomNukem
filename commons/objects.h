@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/18 15:23:22 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/18 16:58:03 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,6 +280,7 @@ typedef struct 			s_sprites
 	struct SDL_Surface *txt_door;
 	struct SDL_Surface *txt_transparent;
 	struct SDL_Surface *txt_door_frame;
+	struct SDL_Surface *txt_window;
 
 	// HUD Sprites
 	struct SDL_Surface	**txt_health_bar;
