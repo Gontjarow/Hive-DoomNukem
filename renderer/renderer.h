@@ -180,11 +180,13 @@ void			vertical_shade(int column, int start, int end, int color);
 
 void			render_frame(t_doom *doom);
 void			render_sky(t_doom *doom);
+void			render_wall(t_sector *sector, t_wdata saved);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom);
 void			render_enemies(t_doom *doom);
 void			render_sprites(t_doom *doom, int i);
 
 // Somewhat generalized render functions
+t_xy_line		calculate_yawed(double height, t_xy_line wall, t_xy_line scale, double yaw);
 t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
 uint32_t		texture_pixel(SDL_Surface *tex, int x, int y);
 int				zbuffer_ok(int index, double depth);
