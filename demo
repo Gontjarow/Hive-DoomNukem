@@ -1,0 +1,65 @@
+[Wall] id = 0 | start.x = 55 | start.y = 110 | end.x = 270 | end.y = 67 | texture_id = 1
+[Wall] id = 1 | start.x = 270 | start.y = 67 | end.x = 249 | end.y = 197 | texture_id = 1
+[Wall] id = 2 | start.x = 249 | start.y = 197 | end.x = 55 | end.y = 110 | texture_id = 1
+[Wall] id = 3 | start.x = 270 | start.y = 67 | end.x = 400 | end.y = 107 | texture_id = 1
+[Wall] id = 4 | start.x = 400 | start.y = 107 | end.x = 363 | end.y = 265 | texture_id = 1
+[Wall] id = 5 | start.x = 363 | start.y = 265 | end.x = 249 | end.y = 197 | texture_id = 1
+[Wall] id = 6 | start.x = 249 | start.y = 197 | end.x = 270 | end.y = 67 | texture_id = 1
+[Wall] id = 7 | start.x = 400 | start.y = 107 | end.x = 555 | end.y = 213 | texture_id = 1
+[Wall] id = 8 | start.x = 555 | start.y = 213 | end.x = 451 | end.y = 318 | texture_id = 1
+[Wall] id = 9 | start.x = 451 | start.y = 318 | end.x = 363 | end.y = 265 | texture_id = 1
+[Wall] id = 10 | start.x = 363 | start.y = 265 | end.x = 400 | end.y = 107 | texture_id = 1
+[Wall] id = 11 | start.x = 555 | start.y = 213 | end.x = 656 | end.y = 385 | texture_id = 1
+[Wall] id = 12 | start.x = 656 | start.y = 385 | end.x = 515 | end.y = 463 | texture_id = 1
+[Wall] id = 13 | start.x = 515 | start.y = 463 | end.x = 451 | end.y = 318 | texture_id = 1
+[Wall] id = 14 | start.x = 451 | start.y = 318 | end.x = 555 | end.y = 213 | texture_id = 1
+[Wall] id = 15 | start.x = 656 | start.y = 385 | end.x = 747 | end.y = 488 | texture_id = 1
+[Wall] id = 16 | start.x = 747 | start.y = 488 | end.x = 744 | end.y = 657 | texture_id = 1
+[Wall] id = 17 | start.x = 744 | start.y = 657 | end.x = 654 | end.y = 707 | texture_id = 1
+[Wall] id = 18 | start.x = 654 | start.y = 707 | end.x = 460 | end.y = 681 | texture_id = 1
+[Wall] id = 19 | start.x = 460 | start.y = 681 | end.x = 455 | end.y = 526 | texture_id = 1
+[Wall] id = 20 | start.x = 455 | start.y = 526 | end.x = 515 | end.y = 463 | texture_id = 1
+[Wall] id = 21 | start.x = 515 | start.y = 463 | end.x = 656 | end.y = 385 | texture_id = 1
+[Wall] id = 22 | start.x = 747 | start.y = 488 | end.x = 964 | end.y = 490 | texture_id = 1
+[Wall] id = 23 | start.x = 964 | start.y = 490 | end.x = 967 | end.y = 665 | texture_id = 1
+[Wall] id = 24 | start.x = 967 | start.y = 665 | end.x = 744 | end.y = 657 | texture_id = 1
+[Wall] id = 25 | start.x = 744 | start.y = 657 | end.x = 747 | end.y = 488 | texture_id = 1
+[Wall] id = 26 | start.x = 411 | start.y = 817 | end.x = 460 | end.y = 681 | texture_id = 1
+[Wall] id = 27 | start.x = 460 | start.y = 681 | end.x = 654 | end.y = 707 | texture_id = 1
+[Wall] id = 28 | start.x = 654 | start.y = 707 | end.x = 645 | end.y = 849 | texture_id = 1
+[Wall] id = 29 | start.x = 645 | start.y = 849 | end.x = 411 | end.y = 817 | texture_id = 1
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 3 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 1 | first_wall_id = 3 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 2 | first_wall_id = 7 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 3 | first_wall_id = 11 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 4 | first_wall_id = 15 | wall_count = 7 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 5 | first_wall_id = 22 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 6 | first_wall_id = 26 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+
+[Portal] id = 0 | start.x = 249 | start.y = 197 | end.x = 270 | end.y = 67 | portal_type = 1
+[Portal] id = 1 | start.x = 363 | start.y = 265 | end.x = 400 | end.y = 107 | portal_type = 1
+[Portal] id = 2 | start.x = 451 | start.y = 318 | end.x = 555 | end.y = 213 | portal_type = 1
+[Portal] id = 3 | start.x = 515 | start.y = 463 | end.x = 656 | end.y = 385 | portal_type = 1
+[Portal] id = 4 | start.x = 744 | start.y = 657 | end.x = 747 | end.y = 488 | portal_type = 2
+[Portal] id = 5 | start.x = 460 | start.y = 681 | end.x = 654 | end.y = 707 | portal_type = 2
+
+[Enemy] id = 0 | x = 549 | y = 794 | rot = 286 | hp = 75 | wep.type_id = 1 | ai.type_id = 0 | sprite_id = 0
+
+[Effect] id = 0 | type_id = 0 | loc.x = 920 | loc.y = 583 | target.x = 0 | target.y = 0 | target_id = 0
+[Effect] id = 1 | type_id = 1 | loc.x = 457 | loc.y = 603 | target.x = 50 | target.y = 50 | target_id = 19
+[Effect] id = 2 | type_id = 2 | loc.x = 699 | loc.y = 682 | target.x = 50 | target.y = 50 | target_id = 17
+[Effect] id = 3 | type_id = 4 | loc.x = 745 | loc.y = 578 | target.x = 50 | target.y = 50 | target_id = 4
+[Effect] id = 4 | type_id = 3 | loc.x = 162 | loc.y = 88 | target.x = 7 | target.y = 50 | target_id = 0
+[Effect] id = 5 | type_id = 3 | loc.x = 335 | loc.y = 87 | target.x = 11 | target.y = 50 | target_id = 3
+[Effect] id = 6 | type_id = 3 | loc.x = 477 | loc.y = 160 | target.x = 7 | target.y = 50 | target_id = 7
+[Effect] id = 7 | type_id = 3 | loc.x = 605 | loc.y = 299 | target.x = 7 | target.y = 50 | target_id = 11
+[Effect] id = 8 | type_id = 3 | loc.x = 701 | loc.y = 436 | target.x = 10 | target.y = 50 | target_id = 15
+[Effect] id = 9 | type_id = 3 | loc.x = 855 | loc.y = 489 | target.x = 9 | target.y = 50 | target_id = 22
+[Effect] id = 10 | type_id = 3 | loc.x = 435 | loc.y = 749 | target.x = 10 | target.y = 50 | target_id = 26
+
+[Pickup] id = 0 | loc.x = 569 | loc.y = 389 | flavor = 1 | weapon_type_id = 1
+[Pickup] id = 1 | loc.x = 566 | loc.y = 325 | flavor = 2 | weapon_type_id = 1
+[Pickup] id = 2 | loc.x = 468 | loc.y = 796 | flavor = 3 | weapon_type_id = 0
+
+[Player] spawn.x = 178 | spawn.y = 124 | rot = 12

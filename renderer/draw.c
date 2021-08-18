@@ -121,11 +121,13 @@ void			vertical_wall(int screen_x, double tex_x, t_xy range, SDL_Surface *tex, d
 	while (range.x <= range.y && range.x < GAME_WIN_HEIGHT)
 	{
 		color = texture_pixel(tex, tex_x * tex->w, tex_y);
-		if (color != COLOR_TRANSPARENT)
+		if (color != COLOR_TRANSPARENT && color >> 24 != 0x00)
 		{
-			fp(doom_ptr()->game->buff, screen_x, range.x, color);
-			// pixels[GAME_WIN_WIDTH * (int)range.x + screen_x] = color;
-			zbuffer[GAME_WIN_WIDTH * (int)range.x + screen_x] = depth;
+			if (zbuffer_ok(GAME_WIN_WIDTH * (int)range.x + screen_x, depth))
+			{
+				fp(doom_ptr()->game->buff, screen_x, range.x, color);
+				zbuffer[GAME_WIN_WIDTH * (int)range.x + screen_x] = depth;
+			}
 		}
 		tex_y += y_step;
 		range.x++;

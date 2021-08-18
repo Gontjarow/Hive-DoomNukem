@@ -91,8 +91,8 @@ void		render_sprite(t_point loc, SDL_Surface *tex, t_room *room)
 	t_wdata		saved;
 	t_xy_line	sprite;
 
-	sprite = viewer_facing_wall(veci2(loc), world);
 	world = get_world();
+	sprite = viewer_facing_wall(veci2(loc), world);
 
 	if (sprite.start.y > NEAR_PLANE)
 		return ;
@@ -141,7 +141,7 @@ void		render_sprites(t_doom *doom, int i)
 	pu = doom->mdl->pickup_first;
 	while (~--i)
 	{
-		render_sprite(pu->loc, pu->active_sprite, find_effect_room(pu));
+		render_sprite(pu->loc, pu->active_sprite, find_pickup_room(pu));
 		pu = pu->next;
 	}
 	i = doom->mdl->enemy_count;

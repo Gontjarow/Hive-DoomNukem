@@ -18,7 +18,7 @@ typedef struct 			SDL_Surface SDL_Surface;
 # define 				WAV_SWORD "wav/sword.wav"
 # define				WAV_THUNDER "wav/thunder.wav"
 # define 				IMG_THUNDER0 "img/thunder/0.png"
-# define				WAV_PISTOLRLD "wav/pistolreload.wav" 
+# define				WAV_PISTOLRLD "wav/pistolreload.wav"
 # define				WAV_ASSAULTRLD "wav/assaultreload.wav"
 # define				WAV_SHOTGUNRLD "wav/shotgunreload.wav"
 # define				WAV_PISTOLSHOT "wav/pistolshot.wav"
@@ -172,5 +172,6 @@ void 					relink_model_walls(t_wall *relinking_wall);
 t_room					*room_by_id(int id);
 t_wall					*wall_by_id(int id);
 t_wall					*portal_by_id(int id);
+t_wall					*portal_by_wall(t_wall *wall);
 
 #endif
