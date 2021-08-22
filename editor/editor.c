@@ -141,8 +141,8 @@ void				init_edt(t_doom *doom, int argc, char **argv)
 	if (!doom->edt->buff)
 		ft_die("Fatal error: Could not retrieve buffer of Level Editor window.");
 	flood_buffer(doom->edt->buff, 0xff000000);
-	//doom->edt_state = get_state();
 	get_state()->gui->activate(get_state());
+	doom->edt->map_exists = 0;
 	doom->edt->map = NULL;
 	doom->edt->map_supplied = (argc == 2) ? 1 : 0;
 	doom->edt->map_path = (argc == 2) ? argv[1] : NULL;
@@ -154,10 +154,12 @@ void			    destroy_edt(t_doom *doom)
 {
 	if (doom->edt->map_supplied)
 	{
+		if (!doom->edt->map_exists)
+			doom->edt->map = init_mapfile();
 		create_strings_from_model(doom->mdl, doom->edt->map);
 		if (doom->mdl->player.x == -1 || doom->mdl->player.y == -1)
 			ft_putendl("Warning: Player position not supplied, did not save mapfile.");
-		else if (doom->map->was_filled)
+		else if (doom->map != NULL && doom->map->was_filled)
 		{
 			if (edt_handle_confirm_save(doom) == 1)
 				if (!(overwrite_mapfile(doom->edt->map_path, doom->edt->map)))

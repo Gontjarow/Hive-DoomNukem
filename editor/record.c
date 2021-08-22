@@ -94,7 +94,8 @@ int			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_cou
 	}
 	mdl->rooms->first_wall_id = mdl->rooms->first_wall->id;
 	can_be_recorded = is_clockwise_convex_polygon(mdl->rooms, mdl->rooms->first_wall, mdl->rooms->wall_count);
-	add_room_polymap(mdl->rooms, mdl->poly_map, get_conv_colors());
+	if (add_room_polymap(mdl->rooms, mdl->poly_map, get_conv_colors()) > 32)
+		can_be_recorded = 0;
 	mdl->rooms->next = next_room;
 	mdl->rooms = next_room;
 	if (!can_be_recorded)

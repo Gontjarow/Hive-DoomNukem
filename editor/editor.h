@@ -197,6 +197,7 @@ typedef struct 			s_editor
 	struct s_mapfile	*map;
 	char 				*map_path;
 	int 				map_supplied;
+	int					map_exists;
 }						t_editor;
 
 /*
@@ -461,7 +462,7 @@ void					create_strings_from_model(t_model *mdl, t_mapfile *map);
 int						room_id_from_polymap(SDL_Surface *polymap, int x, int y);
 uint32_t				*get_debug_convs(void);
 uint32_t				*get_conv_colors(void);
-void        			add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors);
+int         			add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors);
 void 					repaint_polymap(t_model *mdl);
 
 /*

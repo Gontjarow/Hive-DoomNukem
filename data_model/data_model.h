@@ -116,6 +116,7 @@ void	 				destroy_model(t_doom *doom);
  * from load_model.c
  * */
 
+int						mapfile_opens(t_doom *doom, char* map_path);
 void	 				destroy_mapdata(t_doom *doom);
 int 					load_model(t_doom *doom);
 

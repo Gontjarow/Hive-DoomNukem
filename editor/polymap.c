@@ -242,14 +242,28 @@ void 		wipe_room_polygon_map(t_room *room, t_doom *doom)
 
 // TODO OPTIMIZE AWAY FROM SET_PIXEL
 
-void		add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors)
+static int warn_taken_pixel(int x, int y, SDL_Surface *polymap, int room_id)
 {
+    static int warned_pixel_count = 0;
+
+    if (get_pixel(polymap, x, y) != 0xffffffff)
+    {
+        printf("Polymap drawing over taken pixel at (%d, %d) coordinate [Room_id = %d] Total warnings: %d\n", x, y, room_id, ++warned_pixel_count);
+        return (1);
+    }
+    return (0);
+}
+
+int		    add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors)
+{
+    int warnings;
     int bound_x;
     int bound_y;
     int x_start;
     int x;
     int y;
 
+    warnings = 0;
     bound_x = find_farthest_x(room);
     bound_y = find_farthest_y(room);
     x_start = find_nearest_x(bound_x, room);
@@ -260,12 +274,17 @@ void		add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors
         while (x < bound_x)
         {
             if (inside_room(x, y, room))
-				set_pixel(polymap, x, y, conv_colors[room->id]);
+            {
+                warnings += warn_taken_pixel(x, y, polymap, room->id);
+                set_pixel(polymap, x, y, conv_colors[room->id]);
+            }
+				
             x++;
         }
         x = x_start;
         y++;
     }
+    return (warnings);
 }
 
 void 		repaint_polymap(t_model *mdl)

@@ -2,7 +2,6 @@
 
 void		init_model(t_doom *doom)
 {
-	//puts("MODEL BORN!!!");
 	// Mallocing model data type itself and linking parent pointer
 	doom->mdl = (t_model*)malloc(sizeof(t_model));
 	if (!doom->mdl)
@@ -117,5 +116,4 @@ void 		destroy_model(t_doom *doom)
 	free(doom->mdl);
 	doom->mdl = NULL;
 	singleton_manager(NULL, SINGLETON_MDL, 1);
-	puts("MODEL EVAPORATED!!!");
 }

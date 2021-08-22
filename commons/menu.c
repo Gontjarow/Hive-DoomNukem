@@ -124,6 +124,15 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
         }
         return ;
     }
+    else if (argc == 2 && !mapfile_opens(doom, argv[1]))
+    {
+        if (ms_since(200, &spam_lock))
+        {
+            ft_putendl("The level specified as argument does not open or exist as a file!");
+            Mix_PlayChannel(-1, doom->sounds->mcSteam, 0);
+        }
+        return ;
+    }
     SDL_MinimizeWindow(doom->win);
     doom->buff = SDL_GetWindowSurface(doom->win);
     init_game(doom, argc, argv);
@@ -133,8 +142,6 @@ static void	start_game_from_menu(t_doom *doom, int argc, char **argv)
     doom->game->world = load_world(get_world());
     init_enemy_sprite(doom);
 	ai_assignment(doom);
-    // PLAYER X, Y IN MODEL IS -1 AND -1, CAUSING MINIMAP LINE OFF BUFFER?
-    //printf("x %f | %f\n", doom->mdl->player.x, doom->mdl->player.y);
 	if (SDL_SetRelativeMouseMode(SDL_TRUE) != 0)
 	 	ft_putendl("Warning: Failed to capture mouse to window!");
     SDL_UpdateWindowSurface(doom->game->win);
