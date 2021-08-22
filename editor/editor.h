@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   editor.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ngontjar <niko.gontjarow@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 14:57:53 by krusthol          #+#    #+#             */
-/*   Updated: 2020/11/06 14:59:44 by krusthol         ###   ########.fr       */
+/*   Updated: 2021/08/22 16:52:14 by ngontjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -459,6 +459,7 @@ void					create_strings_from_model(t_model *mdl, t_mapfile *map);
  * */
 
 int						room_id_from_polymap(SDL_Surface *polymap, int x, int y);
+int						room_id_from_polymap4(SDL_Surface *polymap, int x, int y);
 uint32_t				*get_debug_convs(void);
 uint32_t				*get_conv_colors(void);
 void        			add_room_polymap(t_room *room, SDL_Surface *polymap, uint32_t *conv_colors);

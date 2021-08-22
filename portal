@@ -1,0 +1,32 @@
+[Wall] id = 0 | start.x = 609 | start.y = 322 | end.x = 609 | end.y = 586 | texture_id = 1
+[Wall] id = 1 | start.x = 609 | start.y = 586 | end.x = 251 | end.y = 586 | texture_id = 1
+[Wall] id = 2 | start.x = 251 | start.y = 586 | end.x = 251 | end.y = 321 | texture_id = 1
+[Wall] id = 3 | start.x = 251 | start.y = 321 | end.x = 609 | end.y = 322 | texture_id = 1
+[Wall] id = 4 | start.x = 609 | start.y = 322 | end.x = 1003 | end.y = 322 | texture_id = 1
+[Wall] id = 5 | start.x = 1003 | start.y = 322 | end.x = 1003 | end.y = 593 | texture_id = 1
+[Wall] id = 6 | start.x = 1003 | start.y = 593 | end.x = 609 | end.y = 586 | texture_id = 1
+[Wall] id = 7 | start.x = 609 | start.y = 586 | end.x = 609 | end.y = 322 | texture_id = 1
+[Wall] id = 8 | start.x = 1003 | start.y = 322 | end.x = 1127 | end.y = 622 | texture_id = 1
+[Wall] id = 9 | start.x = 1127 | start.y = 622 | end.x = 1024 | end.y = 610 | texture_id = 1
+[Wall] id = 10 | start.x = 1024 | start.y = 610 | end.x = 1003 | end.y = 593 | texture_id = 1
+[Wall] id = 11 | start.x = 1003 | start.y = 593 | end.x = 1003 | end.y = 322 | texture_id = 1
+[Wall] id = 12 | start.x = 1027 | start.y = 704 | end.x = 1024 | end.y = 610 | texture_id = 1
+[Wall] id = 13 | start.x = 1024 | start.y = 610 | end.x = 1127 | end.y = 622 | texture_id = 1
+[Wall] id = 14 | start.x = 1127 | start.y = 622 | end.x = 1108 | end.y = 721 | texture_id = 1
+[Wall] id = 15 | start.x = 1108 | start.y = 721 | end.x = 1027 | end.y = 704 | texture_id = 1
+
+[Room] id = 0 | first_wall_id = 0 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 1 | first_wall_id = 4 | wall_count = 4 | floor_height = 120 | roof_height = 180 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 2 | first_wall_id = 8 | wall_count = 4 | floor_height = 100 | roof_height = 200 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+[Room] id = 3 | first_wall_id = 12 | wall_count = 4 | floor_height = 120 | roof_height = 180 | has_ceiling = 1 | slope_floor = 1 | slope_roof = 1
+
+[Portal] id = 0 | start.x = 609 | start.y = 586 | end.x = 609 | end.y = 322 | portal_type = 1
+[Portal] id = 1 | start.x = 1003 | start.y = 593 | end.x = 1003 | end.y = 322 | portal_type = 1
+[Portal] id = 2 | start.x = 1024 | start.y = 610 | end.x = 1127 | end.y = 622 | portal_type = 2
+
+[Effect] id = 0 | type_id = 3 | loc.x = 430 | loc.y = 586 | target.x = 5 | target.y = 50 | target_id = 1
+[Effect] id = 1 | type_id = 3 | loc.x = 806 | loc.y = 322 | target.x = 5 | target.y = 50 | target_id = 4
+[Effect] id = 2 | type_id = 3 | loc.x = 1065 | loc.y = 472 | target.x = 4 | target.y = 50 | target_id = 8
+[Effect] id = 3 | type_id = 3 | loc.x = 1025 | loc.y = 657 | target.x = 20 | target.y = 50 | target_id = 12
+
+[Player] spawn.x = 272 | spawn.y = 461 | rot = 360

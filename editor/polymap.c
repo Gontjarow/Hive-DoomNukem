@@ -1,5 +1,28 @@
 #include "doom-nukem.h"
 
+/*
+** Does 4 additional checks for nearby pixels.
+*/
+int				room_id_from_polymap4(SDL_Surface *polymap, int x, int y)
+{
+	int out;
+
+	out = room_id_from_polymap(polymap, x, y);
+	if (out != -1)
+		return (out);
+	out = room_id_from_polymap(polymap, x+1, y);
+	if (out != -1)
+		return (out);
+	out = room_id_from_polymap(polymap, x-1, y);
+	if (out != -1)
+		return (out);
+	out = room_id_from_polymap(polymap, x, y+1);
+	if (out != -1)
+		return (out);
+	out = room_id_from_polymap(polymap, x, y-1);
+	return (out);
+}
+
 int				room_id_from_polymap(SDL_Surface *polymap, int x, int y)
 {
 	unsigned int	*pixels;
