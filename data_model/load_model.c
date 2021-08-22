@@ -257,19 +257,34 @@ static void assign_player_room(t_doom *doom)
 	doom->mdl->player.room = room_by_id(location_id);
 }
 
+int		mapfile_opens(t_doom *doom, char* map_path)
+{
+	int opened;
+
+	opened = open(map_path, O_RDONLY);
+	if (opened > 1)
+	{
+		close(opened);
+		return (1);
+	}	
+	return (0);
+}
+
 int			load_model(t_doom *doom)
 {
 	init_model(doom);
 	if (!doom->edt_quit)
 	{
+		if (doom->edt->map_supplied)
+			doom->edt->map_exists = mapfile_opens(doom, doom->edt->map_path);
 		if (!doom->edt->map_supplied)
 		{
-//			if (!load_appended(doom))
-//				ft_putendl("Failed to load appended map file, tried because no map was supplied as argument.");
-//			else
-//				create_model_appended(doom);
 			return (1);
 		}
+		else if (!mapfile_opens(doom, doom->edt->map_path))
+		{
+			return (1);
+		}			
 		else if (!stringify_mapfile(doom, doom->edt->map_path))
 			return (0);
 		create_data_model(doom, doom->edt->map_path);
