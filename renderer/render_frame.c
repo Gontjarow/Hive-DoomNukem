@@ -197,7 +197,7 @@ t_world			*load_world(t_world *world)
 	t_room *room = mdl->room_first;
 	int room_index = 0;
 	int rooms = mdl->room_count;
-	while (~--rooms)
+	while (rooms--)
 	{
 		// Pointer to sector to modify
 		t_sector *sector = &world->sectors[room_index];

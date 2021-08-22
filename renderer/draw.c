@@ -204,6 +204,14 @@ void			vertical_floor(int screen_x, t_xy floor_pos, t_xy range, SDL_Surface *tex
 	}
 }
 
+void			draw_vertical_column(t_wdata *saved, t_stripe *screen)
+{
+	if (saved->room->lit)
+		draw_vertical(*saved, *screen, set_pixel);
+	else
+		draw_vertical(*saved, *screen, set_pixel_dark);
+}
+
 // NOTE: screen.x NOT ASSIGNED here because only one column is drawn.
 // NOTE: Unlike draw_sprite, which draws entire texture.
 void			draw_vertical(t_wdata saved, t_stripe screen, FUNC_SETPIXEL)

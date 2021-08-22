@@ -132,21 +132,22 @@ void		render_sprites(t_doom *doom, int i)
 
 	i = doom->mdl->effect_count;
 	ef = doom->mdl->effect_first;
-	while (~--i)
+	while (i--)
 	{
-		render_sprite(ef->loc, ef->active_sprite, find_effect_room(ef));
+		if (ef->type_id != EFFECT_POSTER)
+			render_sprite(ef->loc, ef->active_sprite, find_effect_room(ef));
 		ef = ef->next;
 	}
 	i = doom->mdl->pickup_count;
 	pu = doom->mdl->pickup_first;
-	while (~--i)
+	while (i--)
 	{
 		render_sprite(pu->loc, pu->active_sprite, find_pickup_room(pu));
 		pu = pu->next;
 	}
 	i = doom->mdl->enemy_count;
 	e = doom->mdl->enemy_first;
-	while (~--i)
+	while (i--)
 	{
 		render_sprite(point(e->x, e->y), e->active_sprite, find_enemy_room(e));
 		e = e->next;
