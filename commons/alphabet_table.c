@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   alphabet_table.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 19:28:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/02/03 19:28:28 by krusthol         ###   ########.fr       */
+/*   Updated: 2021/08/22 18:15:41 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-void					*get_alphabet_tables(int type)
+void	*get_alphabet_tables(int type)
 {
-	static SDL_Scancode	alphabet[TABLE_SIZE] = { SDL_SCANCODE_A, SDL_SCANCODE_B,
+	static SDL_Scancode	alphabet[TABLE_SIZE] = {SDL_SCANCODE_A, SDL_SCANCODE_B,
 		SDL_SCANCODE_C, SDL_SCANCODE_D, SDL_SCANCODE_E, SDL_SCANCODE_F,
 		SDL_SCANCODE_G, SDL_SCANCODE_H, SDL_SCANCODE_I, SDL_SCANCODE_J,
 		SDL_SCANCODE_K, SDL_SCANCODE_L, SDL_SCANCODE_M, SDL_SCANCODE_N,
 		SDL_SCANCODE_O, SDL_SCANCODE_P, SDL_SCANCODE_Q, SDL_SCANCODE_R,
 		SDL_SCANCODE_S, SDL_SCANCODE_T, SDL_SCANCODE_U, SDL_SCANCODE_V,
 		SDL_SCANCODE_W, SDL_SCANCODE_X, SDL_SCANCODE_Y, SDL_SCANCODE_Z,
-		SDL_SCANCODE_PERIOD, SDL_SCANCODE_BACKSPACE };
-	static char			chars[TABLE_SIZE] = { 'a', 'b', 'c', 'd', 'e',
+		SDL_SCANCODE_PERIOD, SDL_SCANCODE_BACKSPACE};
+	static char			chars[TABLE_SIZE] = {'a', 'b', 'c', 'd', 'e',
 		'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
-		'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '.', 8 };
+		'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '.', 8};
 
 	if (type == SCANCODES)
 		return (&alphabet);
@@ -32,10 +32,10 @@ void					*get_alphabet_tables(int type)
 		return (&chars);
 }
 
-int						table_index(char c)
+int	table_index(char c)
 {
-	int					i;
-	char				*table;
+	int		i;
+	char	*table;
 
 	table = get_alphabet_tables(CHARS);
 	i = TABLE_SIZE;
@@ -48,7 +48,7 @@ int						table_index(char c)
 	return (-1);
 }
 
-static int				accept_character(char c, char *buff, int *i)
+static int	accept_character(char c, char *buff, int *i)
 {
 	if (!(c == 8 || c == 0))
 	{
@@ -63,9 +63,9 @@ static int				accept_character(char c, char *buff, int *i)
 	return (1);
 }
 
-static int				clear_table_hits(int *hits, int *passes)
+static int	clear_table_hits(int *hits, int *passes)
 {
-	int					i;
+	int	i;
 
 	i = TABLE_SIZE;
 	while (i--)
@@ -76,13 +76,13 @@ static int				clear_table_hits(int *hits, int *passes)
 	return (0);
 }
 
-int						propose_character(char c, char *buff, int *i, int index)
+int	propose_character(char c, char *buff, int *i, int index)
 {
 	int					accepted;
 	double				now_time;
-	static double		last_time[TABLE_SIZE] = { 0.0 };
-	static int			repeated_hit[TABLE_SIZE] = { 0 };
-	static int			passed_initial_delay[TABLE_SIZE] = { 0 };
+	static double		last_time[TABLE_SIZE] = {0.0};
+	static int			repeated_hit[TABLE_SIZE] = {0};
+	static int			passed_initial_delay[TABLE_SIZE] = {0};
 
 	accepted = 0;
 	now_time = SDL_GetTicks();

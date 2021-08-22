@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/22 16:48:01 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/22 19:18:11 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -458,6 +458,20 @@ void					careful_render_line(t_line *l);
 void					preserve_render_line(t_line *l);
 void					unpreserve_render_line(t_line *l);
 // void					render_line_simple(t_doom *doom, t_xy a, t_xy b, int c);
+
+/*
+ * from animations.c
+ * */
+
+void					animation_switch(t_enemy *enemy, t_doom *doom);
+void					animate_idle(t_enemy *enemy, t_doom *doom);
+void					animate_walk(t_enemy *enemy, t_doom *doom);
+void					animate_attack(t_enemy *enemy, t_doom *doom);
+void					animate_hurt(t_enemy *enemy, t_doom *doom);
+void					animate_portals(t_doom *doom);
+void					animate_ranged_hurt(t_enemy *enemy, t_doom *doom);
+void					animate_melee_hurt(t_enemy *enemy, t_doom *doom);
+void					animate_boss_hurt(t_enemy *enemy, t_doom *doom);
 
 /*
  * from render_2d.c

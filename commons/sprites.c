@@ -6,16 +6,16 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/05 16:32:02 by msuarez-          #+#    #+#             */
-/*   Updated: 2021/08/18 17:00:49 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/22 20:02:32 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "doom-nukem.h"
 
-static char *extension_num_path(char *folder, char c, char *extension)
+static char	*extension_num_path(char *folder, char c, char *extension)
 {
-	char *path;
-	char *join;
+	char	*path;
+	char	*join;
 
 	join = ft_strnew(1);
 	join[0] = c;
@@ -102,36 +102,36 @@ static int	load_ranged_sprite(t_doom *doom, char *path, int i)
 	return (1);
 }
 
-static void		copy_from_atlas(int x, int y, SDL_Surface *atlas, SDL_Surface *buff)
-{
-	int *pix[2];
-	int i;
-	int iter;
-	int limit_x;
-	int limit_total;
-	int to;
-	int from;
+// static void	copy_from_atlas(int x, int y, SDL_Surface *atlas, SDL_Surface *buff)
+// {
+// 	int *pix[2];
+// 	int i;
+// 	int iter;
+// 	int limit_x;
+// 	int limit_total;
+// 	int to;
+// 	int from;
 
-	iter = 0;
-	i = x;
-	limit_x = x + buff->w;
-	limit_total = buff->w * buff->h;
-	pix[0] = (int*)buff->pixels;
-	pix[1] = (int*)atlas->pixels;
-	while (iter < limit_total)
-	{
-		x = i;
-		while (x < limit_x)
-		{
-			from = (atlas->w * y) + x;
-			to = iter;
-			pix[0][to] = pix[1][from];
-			x++;
-			iter++;
-		}
-		y++;
-	}
-}
+// 	iter = 0;
+// 	i = x;
+// 	limit_x = x + buff->w;
+// 	limit_total = buff->w * buff->h;
+// 	pix[0] = (int*)buff->pixels;
+// 	pix[1] = (int*)atlas->pixels;
+// 	while (iter < limit_total)
+// 	{
+// 		x = i;
+// 		while (x < limit_x)
+// 		{
+// 			from = (atlas->w * y) + x;
+// 			to = iter;
+// 			pix[0][to] = pix[1][from];
+// 			x++;
+// 			iter++;
+// 		}
+// 		y++;
+// 	}
+// }
 
 static int	load_melee_sprite(t_doom *doom, char *path, int i)
 {
@@ -253,7 +253,7 @@ static int	load_boss_sprite(t_doom *doom, char *path, int i)
 	return (1);
 }
 
-void		init_enemy_sprite(t_doom *doom)
+void	init_enemy_sprite(t_doom *doom)
 {
 	int		ec;
 	t_enemy	*enemy;
@@ -274,7 +274,7 @@ void		init_enemy_sprite(t_doom *doom)
 	}
 }
 
-int			load_pickup_sprite(t_doom *doom)
+int	load_pickup_sprite(t_doom *doom)
 {
 	doom->sprites->txt_health_pickup = load_texture(doom, "img/pickups/health.png");
 	doom->sprites->txt_shotgun_ammo_pickup = load_texture(doom, "img/pickups/shotgunammo.png");
@@ -284,7 +284,7 @@ int			load_pickup_sprite(t_doom *doom)
 	return (1);
 }
 
-void		load_health_bars(t_doom *doom, char *path, int i)
+void	load_health_bars(t_doom *doom, char *path, int i)
 {
 	if (!(doom->sprites->txt_health_bar = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 11)))
 		return ;
@@ -299,7 +299,7 @@ void		load_health_bars(t_doom *doom, char *path, int i)
 	doom->sprites->txt_health_bar[10] = load_texture(doom, "img/sprites/hud/healthbar/health_10.png");
 }
 
-void		load_fuel_bars(t_doom *doom, char *path, int i)
+void	load_fuel_bars(t_doom *doom, char *path, int i)
 {
 	if (!(doom->sprites->txt_fuel_bar = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * 11)))
 		return ;
@@ -354,7 +354,7 @@ static void	load_effector_sprites(t_doom *doom)
 	doom->sprites->txt_transparent = load_texture(doom, "img/textures/effectors/transparent.png");
 }
 
-void		load_ammo_bars(t_doom *doom)
+void	load_ammo_bars(t_doom *doom)
 {
 	doom->sprites->txt_pistol_bar = load_texture(doom, "img/sprites/hud/ammobar/pistolammo.png");
 	doom->sprites->txt_shotgun_bar = load_texture(doom, "img/sprites/hud/ammobar/shotgunammo.png");
@@ -365,7 +365,7 @@ void		load_ammo_bars(t_doom *doom)
 	doom->sprites->txt_shotgun_image = load_texture(doom, "img/sprites/hud/weaponbar/shotgun.png");
 }
 
-static void load_loading_screen(t_doom *doom)
+static void	load_loading_screen(t_doom *doom)
 {
 	doom->sprites->txt_loading_none = load_texture(doom, "img/loading/chapter_none.png");
 	doom->sprites->txt_loading_0 = load_texture(doom, "img/loading/first_chapter.png");
@@ -373,16 +373,15 @@ static void load_loading_screen(t_doom *doom)
 	doom->sprites->txt_loading_2 = load_texture(doom, "img/loading/third_chapter.png");
 	doom->sprites->txt_loading_won = load_texture(doom, "img/loading/won.png");
 	doom->sprites->txt_loading_lost = load_texture(doom, "img/loading/lost.png");
-	//puts("LOADING SCREEN IMAGES LOADED TO MEMORY");
 }
 
-int			load_sprites(t_doom *doom)
+int	load_sprites(t_doom *doom)
 {
 	char	i;
 	char	*path;
 
 	if (doom->sprites == NULL)
-		doom->sprites = (t_sprites*)malloc(sizeof(t_sprites));
+		doom->sprites = (t_sprites *)malloc(sizeof(t_sprites));
 	else
 		ft_putendl("Warning: Doom->sprites was not NULL when load_sprites");
 	if (doom->sprites == NULL)
@@ -398,90 +397,5 @@ int			load_sprites(t_doom *doom)
 	load_loading_screen(doom);
 	load_portal_sprite(doom, path, i);
 	load_effector_sprites(doom);
-	return (1);
-}
-
-static void	set_single_sprite_null(t_doom *doom)
-{
-	doom->sprites->txt_ranged_front_attack = NULL;
-	doom->sprites->txt_ranged_left_attack = NULL;
-	doom->sprites->txt_ranged_right_attack = NULL;
-	doom->sprites->txt_ranged_front_idle = NULL;
-	doom->sprites->txt_ranged_left_idle = NULL;
-	doom->sprites->txt_ranged_right_idle = NULL;
-	doom->sprites->txt_ranged_back_idle = NULL;
-	doom->sprites->txt_melee_front_idle = NULL;
-	doom->sprites->txt_melee_left_idle = NULL;
-	doom->sprites->txt_melee_right_idle = NULL;
-	doom->sprites->txt_melee_back_idle = NULL;
-	doom->sprites->txt_boss_front_idle = NULL;
-	doom->sprites->txt_boss_left_idle = NULL;
-	doom->sprites->txt_boss_right_idle = NULL;
-	doom->sprites->txt_boss_back_idle = NULL;
-	doom->sprites->txt_health_pickup = NULL;
-	doom->sprites->txt_shotgun_ammo_pickup = NULL;
-	doom->sprites->txt_assault_ammo_pickup = NULL;
-	doom->sprites->txt_jetpack_ammo_pickup = NULL;
-	doom->sprites->txt_key_hud = NULL;
-	doom->sprites->txt_light_off = NULL;
-	doom->sprites->txt_light_on =  NULL;
-	doom->sprites->txt_switch_off = NULL;
-	doom->sprites->txt_switch_on = NULL;
-	doom->sprites->txt_poster_off = NULL;
-}
-
-int			destroy_sprites(t_doom *doom)
-{
-	// total of 72 allocated sprites -> 72 free surfaces calls - done
-	// Single pointer surfaces
-	SDL_FreeSurface(doom->sprites->txt_window);
-	doom->sprites->txt_window = NULL;
-	SDL_FreeSurface(doom->sprites->txt_door_frame);
-	doom->sprites->txt_door_frame = NULL;
-	SDL_FreeSurface(doom->sprites->txt_rifle_image);
-	doom->sprites->txt_rifle_image = NULL;
-	SDL_FreeSurface(doom->sprites->txt_pistol_image);
-	doom->sprites->txt_pistol_image = NULL;
-	SDL_FreeSurface(doom->sprites->txt_shotgun_image);
-	doom->sprites->txt_shotgun_image = NULL;
-	SDL_FreeSurface(doom->sprites->txt_transparent);
-	doom->sprites->txt_transparent = NULL;
-	SDL_FreeSurface(doom->sprites->txt_lever_off);
-	doom->sprites->txt_lever_off = NULL;
-	SDL_FreeSurface(doom->sprites->txt_lever_on);
-	doom->sprites->txt_lever_on = NULL;
-	SDL_FreeSurface(doom->sprites->txt_poster_on);
-	doom->sprites->txt_poster_on = NULL;
-	SDL_FreeSurface(doom->sprites->txt_panel_off);
-	doom->sprites->txt_panel_off = NULL;
-	SDL_FreeSurface(doom->sprites->txt_panel_on);
-	doom->sprites->txt_panel_on = NULL;
-	SDL_FreeSurface(doom->sprites->txt_pistol_bar);
-	doom->sprites->txt_pistol_bar = NULL;
-	SDL_FreeSurface(doom->sprites->txt_shotgun_bar);
-	doom->sprites->txt_shotgun_bar = NULL;
-	SDL_FreeSurface(doom->sprites->txt_rifle_bar);
-	doom->sprites->txt_rifle_bar = NULL;
-	SDL_FreeSurface(doom->sprites->txt_clip_bar);
-	doom->sprites->txt_clip_bar = NULL;
-	SDL_FreeSurface(doom->sprites->txt_loading_none);
-	doom->sprites->txt_loading_none = NULL;
-	SDL_FreeSurface(doom->sprites->txt_loading_0);
-	doom->sprites->txt_loading_0 = NULL;
-	SDL_FreeSurface(doom->sprites->txt_loading_1);
-	doom->sprites->txt_loading_1 = NULL;
-	SDL_FreeSurface(doom->sprites->txt_loading_2);
-	doom->sprites->txt_loading_2 = NULL;
-	SDL_FreeSurface(doom->sprites->txt_loading_won);
-	doom->sprites->txt_loading_won = NULL;
-	SDL_FreeSurface(doom->sprites->txt_loading_lost);
-	doom->sprites->txt_loading_lost = NULL;
-	destroy_single_sprites(doom);
-	set_single_sprite_null(doom);
-	destroy_walls_floors(doom);
-	destroy_enemies(doom);
-	destroy_pickups(doom);
-	free(doom->sprites);
-	doom->sprites = NULL;
 	return (1);
 }
