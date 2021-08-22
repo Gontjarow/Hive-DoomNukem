@@ -227,7 +227,7 @@ void			draw_vertical(t_wdata saved, t_stripe screen, FUNC_SETPIXEL)
 	}
 
 	int bot = get_world()->screen_y_bot[screen.x];
-	if (bot < screen.y2) // stop within section
+	if (screen.y2 > bot) // stop within section
 	{
 		screen.y2 = bot;
 	}

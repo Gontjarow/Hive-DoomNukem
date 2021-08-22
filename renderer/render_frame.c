@@ -1,5 +1,14 @@
 #include "doom-nukem.h"
 
+void	narrow_drawable_area(int y_top, int y_bot, int x)
+{
+	t_world *world;
+
+	world = get_world();
+	if (y_top > world->screen_y_top[x]) world->screen_y_top[x] = y_top;
+	if (y_bot < world->screen_y_bot[x]) world->screen_y_bot[x] = y_bot;
+}
+
 void			*memset_f(void *b, double c, size_t count)
 {
 	double *p;
@@ -318,7 +327,7 @@ void			render_frame(t_doom *doom)
 	zbuffer = get_zbuffer();
 	memset_f(            zbuffer,      -INFINITY, GAME_WIN_WIDTH * GAME_WIN_HEIGHT);
 	memset_i(world->screen_y_top,              0, GAME_WIN_WIDTH);
-	memset_i(world->screen_y_bot, GAME_WIN_WIDTH, GAME_WIN_WIDTH);
+	memset_i(world->screen_y_bot, GAME_WIN_HEIGHT, GAME_WIN_WIDTH);
 	// flood_buffer(doom->game->buff, 0x112233);
 	render_sky(doom);
 

@@ -183,6 +183,7 @@ void			vertical_shade(int column, int start, int end, int color);
 void			render_frame(t_doom *doom);
 void			render_sky(t_doom *doom);
 void			render_wall(t_sector *sector, t_wdata saved);
+void			render_portal_connectors(t_wdata saved, t_stripe screen);
 void			render_sector(t_sector *sector, t_section *section, t_doom *doom);
 void			render_enemies(t_doom *doom);
 void			render_sprites(t_doom *doom, int i);
@@ -195,6 +196,7 @@ t_xy_line		calculate_horizontal_scale(t_xy_line segment, t_xy_line *out);
 uint32_t		texture_pixel(SDL_Surface *tex, int x, int y);
 int				zbuffer_ok(int index, double depth);
 t_xy_line		viewer_facing_wall(t_xy location, t_world *world);
+void			narrow_drawable_area(int y_top, int y_bot, int x);
 
 t_queue			*get_queue();
 void			queue_add(int id, int left, int right);
@@ -204,6 +206,12 @@ void			print_queue(t_queue *queue);
 /*
 ** Math is fun, okay? ⤵️
 */
+
+typedef struct	s_irange
+{
+	int	low;
+	int	high;
+}				t_irange;
 
 double			clamp(double n, double min, double max);
 double			max(double a, double b);
