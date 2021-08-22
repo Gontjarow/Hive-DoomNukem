@@ -69,7 +69,7 @@ typedef uint32_t 		(*logic_colors)(int type);
 # define GRID_START_SIZE		32
 # define DOUBLE_CLICK_COOLDOWN	24
 # define STRING_ENTER_MAPFILE	"input mapfile name with a..z and ."
-# define STRING_VALID_CHAR_INFO	"save and confirm with enter"
+# define STRING_VALID_CHAR_INFO	"save with enter discard with esc"
 # define STRING_CONFIRM_SAVING	"do you want to save changes to map"
 # define WARNING_NON_CONVEX		"WARNING: NON-CONVEX polygon detected!"
 # define WARNING_NON_CONVEX_CW	"WARNING: NON-CONVEX clockwise polygon detected!"

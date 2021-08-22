@@ -165,8 +165,15 @@ void			    destroy_edt(t_doom *doom)
 	    if (doom->edt->map_path)
 	        free(doom->edt->map_path);
 	    doom->edt->map_path = ask_to_save(doom);
-        if (!write_mapfile(doom->edt->map_path, doom->edt->map))
-            ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
+		if (doom->edt->map_path != NULL)
+		{
+			if (!write_mapfile(doom->edt->map_path, doom->edt->map))
+            	ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
+			doom->menu->update_argc_argv = 1;
+        	doom->menu->added_arg = ft_strdup(doom->edt->map_path);
+			free(doom->edt->map_path);
+			doom->edt->map_path = NULL;
+		}        
         if (doom->edt->map != NULL)
 		{
 			destroy_mapfile(doom->edt->map);
@@ -174,10 +181,8 @@ void			    destroy_edt(t_doom *doom)
 		}
         doom->edt->map = NULL;
         SDL_Delay(500);
-        doom->menu->update_argc_argv = 1;
-        doom->menu->added_arg = ft_strdup(doom->edt->map_path);
-        free(doom->edt->map_path);
-    }
+	}
+	
 	//TODO SEPARATE INTO A FUNCTION?
 	if (doom->map != NULL && doom->map->was_filled)
 	{

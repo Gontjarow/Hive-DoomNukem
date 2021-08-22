@@ -160,6 +160,8 @@ static void	start_editor_from_menu(t_doom *doom, int argc, char **argv)
         ft_die("Fatal error: Could not load model when entering Editor from the main menu.");
     load_resources(doom->mdl);
     get_state()->saving_choice = 1;
+    get_state()->gui = mode_polydraw();
+    get_state()->gui->activate(get_state());
     redraw_editor_to_backbuffer(0xffffffff);
     SDL_UpdateWindowSurface(doom->edt->win);
     Mix_PlayChannel( -1, doom->sounds->mcSword, 0 );
@@ -336,6 +338,7 @@ void		window_and_menu_events(t_doom *doom, int argc, char **argv)
 	{
             //puts("FIRING EVENT OUTCOME D!");
 		doom->edt_quit = 1;
+        doom->esc_lock = 60;
 		destroy_edt(doom);
 		destroy_model(doom);
 		doom->menu->esc_lock = 40;
