@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 18:17:53 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/18 16:58:03 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/22 16:48:01 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,8 @@ typedef struct 			s_player
 	struct s_room		*room;
 	struct SDL_Surface	*active_health_bar;
 	struct SDL_Surface	*active_fuel_bar;
-	struct SDL_Surface	*hud_num[10];
 	struct s_coord		bullet_pos;
-	struct s_weapon		weap_arr[10];
+	struct s_weapon		weap_arr[4];
 	struct s_point		tail;
 	struct s_health		hp;
 	struct s_weapon		wep;
@@ -133,9 +132,6 @@ typedef struct          s_ai
 
 typedef struct			s_animation
 {
-	// SDL_Surface 		**surfaces;
-	// int 				frames;
-	// int 				current;
 	int					dead;
 	int					count;
 	int					orient;
