@@ -27,10 +27,10 @@ t_xy_line	viewer_facing_wall(t_xy location, t_world *world)
 
 t_room		*find_effect_room(t_effect *ptr)
 {
-	if (ptr->type_id == EFFECT_EXIT)
+	if (ptr->type_id == EFFECT_EXIT || ptr->type_id == EFFECT_LEVER)
 	{
 		return (room_by_id(
-			room_id_from_polymap(
+			room_id_from_polymap4(
 				doom_ptr()->mdl->poly_map,
 				ptr->loc.x,
 				ptr->loc.y)));
