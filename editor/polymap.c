@@ -292,6 +292,7 @@ void 		repaint_polymap(t_model *mdl)
 	t_room	*room;
 	int 	rc;
 
+    puts("Repainting polymap");
 	room = mdl->room_first;
 	rc = mdl->room_count;
 	flood_buffer(mdl->poly_map, 0xffffffff);
@@ -300,5 +301,5 @@ void 		repaint_polymap(t_model *mdl)
 		add_room_polymap(room, mdl->poly_map, get_conv_colors());
 		room = room->next;
 	}
-		//puts("Repainted polymap succesfully!");
+	puts("Done repainting polymap");
 }

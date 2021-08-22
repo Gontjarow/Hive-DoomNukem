@@ -28,7 +28,10 @@ void			edt_mouse_down(t_doom *doom)
 	state = get_state();
 	if (doom->event.type == SDL_MOUSEWHEEL)
 	{
-		edt_cycle_mode(state);
+		if (doom->event.wheel.y > 0)
+			edt_cycle_mode_forward(state);
+		else
+			edt_cycle_mode_backward(state);
 		return ;
 	}
 	if (doom->event.button.button == SDL_BUTTON_LEFT)
@@ -101,6 +104,7 @@ static void 	handle_shifted_numbers(t_doom *doom)
 
 void			edt_keystate_input(t_doom *doom)
 {
+	static int	lock_i = 0;
 	static int	lock_q = 0;
 	static int	lock_w = 0;
 	static int	lock_s = 0;
@@ -132,18 +136,24 @@ void			edt_keystate_input(t_doom *doom)
 		lock_q = 1;
 	}
 
+	if (lock_i && !doom->keystates[SDL_SCANCODE_I])
+		lock_i = 0;
+	if (doom->keystates[SDL_SCANCODE_I] && !lock_i)
+	{
+		debug_model_player();
+		debug_model_enemies();
+		debug_model_walls();
+		debug_model_rooms();
+		debug_model_effects();
+		debug_model_chain();
+		debug_model_pickups();
+		lock_i = 1;
+	}
 	if (lock_w)
 		lock_w--;
 	else if (doom->keystates[SDL_SCANCODE_W] && !lock_w)
 	{
 		effect_adjust(1, 1);
-		//debug_model_player();
-		//debug_model_enemies();
-		//debug_model_walls();
-		//debug_model_rooms();
-		//debug_model_effects();
-		//debug_model_chain();
-		//debug_model_pickups();
 		lock_w = 1;
 	}
 	if (lock_s)

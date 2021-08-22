@@ -324,7 +324,8 @@ t_gui					*mode_polydraw(void);
  * */
 
 void 					trigger_protection(int clear);
-void		 			edt_cycle_mode(t_state *state);
+void		 			edt_cycle_mode_forward(t_state *state);
+void		 			edt_cycle_mode_backward(t_state *state);
 void					edt_outward_zoom(void);
 void					edt_inward_zoom(void);
 t_state					*get_state(void);

@@ -45,11 +45,28 @@ void 	debug_model_enemies(void)
 	}
 }
 
+static void debug_ongoing_walls()
+{
+	t_wall	*wall;
+	
+	printf("mdl->walls: ");
+	if (get_model()->walls == NULL)
+		printf("NULL\n");
+	else
+	{
+		wall = get_model()->walls;
+
+		printf("Wall id: %d | start: %d %d | end: %d %d\n",
+			   wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
+	}
+}
+
 void 	debug_model_walls(void)
 {
 	int		wc;
 	t_wall	*wall;
 
+	debug_ongoing_walls();
 	wc = get_model()->wall_count;
 	if (wc == 0)
 		return (ft_putendl("Outputting no data to console for model's walls, wall count was 0."));
@@ -73,17 +90,6 @@ void 	debug_model_walls(void)
 			wall = wall->next;
 		}
 	}
-
-	printf("mdl->walls: ");
-	if (get_model()->walls == NULL)
-		printf("NULL\n");
-	else
-	{
-		wall = get_model()->walls;
-
-		printf("Wall id: %d | start: %d %d | end: %d %d\n",
-			   wall->id, wall->start.x, wall->start.y, wall->end.x, wall->end.y);
-	}
 }
 
 void	debug_model_rooms(void)
@@ -91,8 +97,9 @@ void	debug_model_rooms(void)
 	t_room	*rooms;
 	int		rc;
 
-	if (get_model()->room_count != 0)
-		rc = get_model()->room_count;
+	if (get_model()->room_count == 0)
+		return (ft_putendl("Outputting no data to console for model's rooms, room count was 0."));
+	rc = get_model()->room_count;
 	rooms = get_model()->room_first;
 	puts("Outputting data for model's rooms:");
 	while (rc--)

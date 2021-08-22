@@ -28,7 +28,23 @@ void 				trigger_protection(int clear)
 	triggers++;
 }
 
-void		 		edt_cycle_mode(t_state *state)
+void		 		edt_cycle_mode_backward(t_state *state)
+{
+	state->gui->deactivate(state);
+	if (state->gui == mode_polydraw())
+		state->gui = mode_effect();
+	else if (state->gui == mode_effect())
+		state->gui = mode_pickups();
+	else if (state->gui == mode_pickups())
+		state->gui = mode_planting();
+	else if (state->gui == mode_planting())
+		state->gui = mode_select();
+	else if (state->gui == mode_select())
+		state->gui = mode_polydraw();
+	state->gui->activate(state);
+}
+
+void		 		edt_cycle_mode_forward(t_state *state)
 {
 	state->gui->deactivate(state);
 	if (state->gui == mode_polydraw())

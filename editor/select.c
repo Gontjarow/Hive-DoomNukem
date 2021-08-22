@@ -121,8 +121,7 @@ void 			select_delete_room(void)
 	if (select_logic()->selected_room_id == -1)
 		return;
 	delete_portals_by_room(room_by_id(select_logic()->selected_room_id), get_model());
-	delete_room(room_by_id(select_logic()->selected_room_id),
-		room_by_id(select_logic()->selected_room_id)->wall_count, get_model());
+	delete_room(room_by_id(select_logic()->selected_room_id), room_by_id(select_logic()->selected_room_id)->wall_count, get_model());
 	select_logic()->selected_room_id = -1;
 	select_change_zoom(get_state());
 	get_state()->saving_choice = 0;
