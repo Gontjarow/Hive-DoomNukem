@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   editor_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: krusthol <krusthol@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 19:11:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/03/04 19:12:23 by krusthol         ###   ########.fr       */
+/*   Updated: 2021/08/22 15:05:58 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void		handle_regular_numbers(t_doom *doom)
 			{
 				if (i == 0 || i > 3)
 					return ;
-				get_state()->selected_ai_type = i;
+				get_state()->selected_ai_type = i - 1;
 				printf("Selected ai_type [%d] for planting (1=RANGED 2=MELEE 3=BOSS)\n", i);
 				planting_change_zoom(get_state());
 				return ;
