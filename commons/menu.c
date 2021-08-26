@@ -6,7 +6,7 @@
 /*   By: msuarez- <msuarez-@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/14 17:44:00 by krusthol          #+#    #+#             */
-/*   Updated: 2021/08/15 20:28:52 by msuarez-         ###   ########.fr       */
+/*   Updated: 2021/08/26 18:32:17 by msuarez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,8 +232,9 @@ void		load_animation(t_menu *menu)
 		join = path;
 		path = ft_strjoin(path, ".png");
 		free(join);
-		if (!(menu->ani_thunder.surfaces[i] = (SDL_Surface*)malloc(sizeof(SDL_Surface))))
-			ft_die("Fatal error: Could not malloc SDL_Surface in menu->ani_thunder->surfaces.");
+        // Unecessary allocation was causing leaks
+		// if (!(menu->ani_thunder.surfaces[i] = (SDL_Surface*)malloc(sizeof(SDL_Surface))))
+		// 	ft_die("Fatal error: Could not malloc SDL_Surface in menu->ani_thunder->surfaces.");
 		menu->ani_thunder.surfaces[i] = load_texture(menu->parent, path);
 		free(path);
 		if (menu->ani_thunder.surfaces[i] == NULL)
