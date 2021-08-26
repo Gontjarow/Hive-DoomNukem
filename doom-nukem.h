@@ -47,6 +47,7 @@ typedef struct			s_doom
 	int 				edt_quit;
 	int 				game_quit;
 	int					minimap_quit;
+	int					esc_lock;
 	int 				menu_out_of_focus;
 	float				fps;
 	float				delta_time;

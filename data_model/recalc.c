@@ -6,6 +6,7 @@ void	 		recalc_wall_ids(t_model *mdl)
 	int 		wc;
 	int 		i;
 
+	puts("Recalcing wall_ids");
 	i = 0;
 	wall = mdl->wall_first;
 	wc = mdl->wall_count;
@@ -14,6 +15,7 @@ void	 		recalc_wall_ids(t_model *mdl)
 		wall->id = i++;
 		wall = wall->next;
 	}
+	puts("Done recalcing wall_ids");
 }
 
 void			recalc_room_ids(t_model *mdl)
@@ -22,6 +24,7 @@ void			recalc_room_ids(t_model *mdl)
 	int 		rc;
 	int 		i;
 
+	puts("Recalcing room_ids");
 	i = 0;
 	room = mdl->room_first;
 	rc = mdl->room_count;
@@ -30,6 +33,7 @@ void			recalc_room_ids(t_model *mdl)
 		room->id = i++;
 		room = room->next;
 	}
+	puts("Done recalcing room_ids");
 }
 
 void 			relink_model_walls(t_wall *relinking_wall)

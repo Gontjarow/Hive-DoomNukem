@@ -100,8 +100,7 @@ int			record_room(t_model *mdl, t_wall *room_first_wall, int prev_rooms_wall_cou
 	mdl->rooms = next_room;
 	if (!can_be_recorded)
 	{
-		delete_room(room_by_id(mdl->room_count - 1),
-			room_by_id(mdl->room_count - 1)->wall_count, mdl);
+		delete_room(room_by_id(mdl->room_count - 1), room_by_id(mdl->room_count - 1)->wall_count, mdl);
 		Mix_PlayChannel(-1, doom_ptr()->sounds->mcPlop, 0);
 		get_state()->gui->change_zoom(get_state());
 		return (0);

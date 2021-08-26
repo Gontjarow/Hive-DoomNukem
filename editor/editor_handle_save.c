@@ -46,6 +46,18 @@ int 			edt_handle_confirm_save(t_doom *doom)
 	return (get_state()->saving_choice);
 }
 
+static void				draw_discarding(t_doom *doom)
+{
+	get_state()->gui->change_zoom(get_state());
+	flood_buffer(doom->edt->buff, 0xff000000);
+	SDL_BlitSurface(editor_back_buffer()->buff, NULL, doom->edt->buff, NULL);
+	editor_back_buffer()->rendering_on = 0;
+	edt_gridify();
+	print_glyph_str("discarded map", doom->edt->buff, 480, 860);
+	print_glyph_str("returning to menu", doom->edt->buff, 922, 860);
+	SDL_UpdateWindowSurface(doom_ptr()->edt->win);
+}
+
 char					*ask_to_save(t_doom *doom)
 {
 	int					finished;
@@ -63,6 +75,13 @@ char					*ask_to_save(t_doom *doom)
 	{
 		SDL_PumpEvents();
 		doom->keystates = SDL_GetKeyboardState(NULL);
+		if (doom->esc_lock && !doom->keystates[SDL_SCANCODE_ESCAPE])
+			doom->esc_lock--;
+		if (doom->keystates[SDL_SCANCODE_ESCAPE] && !doom->esc_lock)
+		{	
+			draw_discarding(doom);
+			return (NULL);
+		}
 		if (doom->keystates[SDL_SCANCODE_RETURN])
 			finished = 1;
 		keystate_input(&input, &i, doom);

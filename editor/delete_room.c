@@ -79,7 +79,12 @@ void			delete_room(t_room *room, int del_count, t_model *mdl)
 	}
 	reduce_remaining_fwids(room, del_count, mdl);
 	mdl->wall_count -= del_count;
-	if (mdl->room_first == room)
+	if (mdl->room_first == room && mdl->room_count == 1)
+	{
+		mdl->room_first = mdl->rooms;
+		mdl->wall_first = mdl->walls;
+	}
+	else if (mdl->room_first == room)
 	{
 		mdl->room_first = room->next;
 		mdl->wall_first = room->next->first_wall;

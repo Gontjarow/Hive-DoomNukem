@@ -12,23 +12,7 @@
 
 #include "doom-nukem.h"
 
-// PHASE I - FLESH OUT FEATURE SET
-
-// PROBLEM (A) - KEYPANELS TARGETING DOORS - READY TO PRESENT
-//	FOR EFFECT TO NOT BE CANCELED, IT NEEDS TO BE LINKED WITH A SECOND PARITY EFFECTOR, WHICH HAS AN UPSIDEDOWN TRIANGLE
-//	THE SECOND PARITY EFFECTOR LOCATES ONTO A DOOR_PORTAL TO MARK THE TARGET DOOR PORTAL
-// 	EFFECTORS ARE IN ID -+1 PAIRS, WITH THE FIRST EFFECTOR HAVING SET TARGET_ID TO ATTACHED WALL_ID AND SHOWING UPWARD TRIANGLE
-// 	THE LATTER EFFECTOR IS THE TARGET DOOR LINKER, WHICH, IF NEVER GIVEN, INVALIDATES AND DESTROYS THE FIRST UPWARD EFFECTOR
-// 	SECOND EFFECTOR TARGET ID IS THE ATTACHED PORTAL_ID OF THE TARGETED DOOR_PORTAL AND IS SHOWING DOWNWARD TRIANGLE
-//  SECOND EFFECTOR EFFECT TYPE_ID IS EFFECT_TARGET ENUM
-// 	CHECK THAT SHOULD PUTS COMMENTED LOCATIONS IN CODE ARE HANDLED FOR THE FOLLOWING_UP_ON LOGIC IN EFFECT_LOGIC
-
-// PROBLEM (B) - AUTO LIGHTKNOBBING - READY TO PRESENT
-//	LIGHTSWITCH KNOB NEEDS TO GET SPAWNED ONE PER ROOM AUTOMATICALLY IF NOT DEFINED IN EDITOR, FIRST NON-PORTAL WALL IN EACH ROOM
-
-// PROBLEM (C) - DENYING SINKING PLAYER TO DOORS - ALGORITHM IS MISSING, PRESENT THE ARCHITECTURE FIRST
-// 	VOID PIXELS BEYOND CLOSED DOORS IN POLYMAP, WHICH ON OPEN FILL WITH THE CORRECT ROOM_ID COLOR
-
+// DEBUG CRASH WHEN DELETING LAST ROOM AND DRAWING NEXT ROOM
 
 // PHASE II - VALIDATION AND CRASH PROOFING, DEBUGGER RUNNING THROUGH BUG REPORTS
 
@@ -36,12 +20,8 @@
 //		IF PLACED EFFECTORS ON WALLS, CAN_PORTAL = 0 ? OR JUST DESTROY EFFECTORS ?
 //		MAINLY CAN_PORTAL = 0 FOR ADJACENT WALLS ? OR TOO RESTRICTIVE ?
 //		IF THESE IDEAS ARE NOT USEFUL, REMOVE CAN_PORTAL FROM CODEBASE AND RELY ON POLYDRAW OVERDRAW CHECKS FOR VALIDITY
-// VALIDATE NON OVERLAPPING ROOMS BY CHECKING POLYMAP FOR OVERDRAW (IGNORING EDGE LINES)
-// 		FOOTPRINT POLYMAP CHECK COLOR IS 0 BUT IGNORE EDGE LINES (WHITE PIXELS)
 // LINKED LIST MEMORY LEAKS HANDLING
 // STATIC POINTERS IN SINGLETONS ETC
-
-
 
 
 // PHASE III - GRUNT WORK, MINOR ADDITIONS
@@ -185,8 +165,15 @@ void			    destroy_edt(t_doom *doom)
 	    if (doom->edt->map_path)
 	        free(doom->edt->map_path);
 	    doom->edt->map_path = ask_to_save(doom);
-        if (!write_mapfile(doom->edt->map_path, doom->edt->map))
-            ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
+		if (doom->edt->map_path != NULL)
+		{
+			if (!write_mapfile(doom->edt->map_path, doom->edt->map))
+            	ft_putendl("Warning: Could not save mapfile, write_mapfile failed.");
+			doom->menu->update_argc_argv = 1;
+        	doom->menu->added_arg = ft_strdup(doom->edt->map_path);
+			free(doom->edt->map_path);
+			doom->edt->map_path = NULL;
+		}        
         if (doom->edt->map != NULL)
 		{
 			destroy_mapfile(doom->edt->map);
@@ -194,10 +181,8 @@ void			    destroy_edt(t_doom *doom)
 		}
         doom->edt->map = NULL;
         SDL_Delay(500);
-        doom->menu->update_argc_argv = 1;
-        doom->menu->added_arg = ft_strdup(doom->edt->map_path);
-        free(doom->edt->map_path);
-    }
+	}
+	
 	//TODO SEPARATE INTO A FUNCTION?
 	if (doom->map != NULL && doom->map->was_filled)
 	{
